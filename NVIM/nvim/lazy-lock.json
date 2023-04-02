@@ -1,0 +1,12 @@
+{
+  "LuaSnip": { "branch": "master", "commit": "500981ff6cefc7343e3959ef0f939bd0bfd49ba9" },
+  "autolist.nvim": { "branch": "main", "commit": "6bf883384b30cf9d2c692f4c5c16b43660488573" },
+  "friendly-snippets": { "branch": "main", "commit": "25ddcd96540a2ce41d714bd7fea2e7f75fea8ead" },
+  "lazy.nvim": { "branch": "main", "commit": "887eb75591520a01548134c4623617b639289d0b" },
+  "mini.tabline": { "branch": "main", "commit": "dd2366e6d07c9b5d6ee83d75078ad0f899d34a2c" },
+  "nvim-cmp": { "branch": "main", "commit": "983453e32cb35533a119725883c04436d16c0120" },
+  "nvim-lspconfig": { "branch": "master", "commit": "736c39e4bab977f0171c78328415c6402c58e64a" },
+  "nvim-treesitter": { "branch": "master", "commit": "25b656a4b771ee7d440e506280b9ae546d6f7233" },
+  "onedark.nvim": { "branch": "master", "commit": "77b89b13068206f35918d8cf229bf591c4e7dcd7" },
+  "plenary.nvim": { "branch": "master", "commit": "253d34830709d690f013daf2853a9d21ad7accab" }
+}
