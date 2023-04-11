@@ -1,30 +1,35 @@
 return {
   {
+    -- "hrsh7th/cmp-buffer"
     dir = "~/.config/nvim/src/plugins/" .. "__cmp-buffer",
     event = "InsertEnter"
   },
   {
+    -- "hrsh7th/cmp-nvim-lsp"
     dir = "~/.config/nvim/src/plugins/" .. "__cmp-nvim-lsp",
     event = "InsertEnter"
   },
   {
+    -- "hrsh7th/cmp-path"
     dir = "~/.config/nvim/src/plugins/" .. "__cmp-path",
     event = "InsertEnter"
   },
   {
+    -- "saadparwaiz1/cmp_luasnip"
     dir = "~/.config/nvim/src/plugins/" .. "__cmp_luasnip",
     event = "InsertEnter"
   },
   {
+    -- "hrsh7th/cmp-cmdline"
     dir = "~/.config/nvim/src/plugins/" .. "__cmp-cmdline",
-    keys = { ":" }
+    keys = ":"
   },
   {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
     keys = { ":" },
     dependencies = {
-      -- "hrsh7th/cmp-nvim-lua",
+      "hrsh7th/cmp-nvim-lua",
     },
     config = function()
       local cmp = require("cmp")

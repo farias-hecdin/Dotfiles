@@ -15,7 +15,7 @@ return {
     config = function()
       require("nvim-treesitter.configs").setup({
         -- List of parsers to ignore installing (for "all")
-        -- ignore_install = { "css" },
+        ignore_install = { "css" },
         -- enable syntax highlighting
         highlight = {
           enable = true, -- false will disable the whole extension
@@ -52,11 +52,6 @@ return {
         -- auto install above language parsers
         auto_install = false,
       })
-
-      vim.treesitter.set_query("javascript", "injections", "")
-      vim.treesitter.set_query("typescript", "injections", "")
-      vim.treesitter.set_query("bash", "injections", "")
-      vim.treesitter.set_query("lua", "injections", "")
     end
   }
 }

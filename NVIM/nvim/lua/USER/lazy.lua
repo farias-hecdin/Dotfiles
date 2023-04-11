@@ -48,7 +48,7 @@ require("lazy").setup("USER.modules", {
       ft = " ",
       cmd = " ",
       event = " ",
-      keys = " ",
+      keys = " ",
     }
   },
   performance = {

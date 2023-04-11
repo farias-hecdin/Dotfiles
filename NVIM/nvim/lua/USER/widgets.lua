@@ -8,11 +8,13 @@ end
 -- Word counter
 W.app_counter = function()
   local wc = vim.api.nvim_eval("wordcount()")
-  local icon = " "
-  if wc["visual_words"] then
-    return icon .. wc["visual_words"]
+  local word = " "
+  local char = ":"
+  if wc["visual_chars"] then
+    return
+      word .. wc["visual_words"] .. char .. wc["visual_chars"]
   else
-    return icon .. wc["words"]
+    return word .. wc["words"]
   end
 end
 

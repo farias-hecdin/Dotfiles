@@ -123,7 +123,7 @@ map("n", "<leader>tx", ":tabclose<cr>", {desc="Tabs: close"})
 
 
 -- @File explorer
-map("n", "<leader>eo", ":NnnExplorer %:p:h<cr>", {desc="Explorer: open"})
+map("n", "<leader>eo", ":NnnExplorer<cr>", {desc="Explorer: open"})
 map("n", "<leader>ef", ":NnnPicker %:p:h<cr>",   {desc="Explorer: float"})
 
 

@@ -1,5 +1,6 @@
 return {
   {
+    -- "beauwilliams/focus.nvim"
     dir = "~/.config/nvim/src/plugins/" .. "focus-nvim",
     event = "CursorMoved",
     config = function()
@@ -8,7 +9,6 @@ return {
   },
   {
     -- url = "https://gitlab.com/yorickpeterse/nvim-window.git",
-    -- commit = "dd0a6b230003ef35524853d71e5413f88fd2ba74",
     dir = "~/.config/nvim/src/plugins/" .. "__nvim-window",
     keys = { "<C-s>" },
     config = function()

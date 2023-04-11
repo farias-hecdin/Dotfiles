@@ -15,7 +15,7 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    ft = {"html", "js", "ts", "jsx", "vue", "css"},
+    ft = { "html", "js", "ts", "jsx", "vue", "css" },
     pin = true,
     config = function()
       local lspconfig = require('lspconfig')
@@ -23,6 +23,7 @@ return {
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities.textDocument.completion.completionItem.snippetSupport = true
 
+      --( https://github.com/aca/emmet-ls )
       lspconfig.emmet_ls.setup({
         -- on_attach = on_attach,
         capabilities = capabilities,
