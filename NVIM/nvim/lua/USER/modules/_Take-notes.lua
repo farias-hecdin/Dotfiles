@@ -1,7 +1,6 @@
 return {
   {
     --"phaazon/mind.nvim",
-    --branch = "v2.2",
     dir = "~/.config/nvim/src/plugins/" .. "__mind-nvim",
     cmd = "MindOpenMain",
     config = function()

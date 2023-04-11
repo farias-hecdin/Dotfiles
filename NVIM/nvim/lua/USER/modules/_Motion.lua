@@ -5,7 +5,7 @@ return {
     keys = { "," },
     config = function()
       require("mini.jump2d").setup({
-        labels = 'abcdefghijklmnopqrstuvwxyz123456789',
+        labels = 'abcdefghijklmnopqrstuvwxyz',
         mappings = {
           start_jumping = ',',
         },

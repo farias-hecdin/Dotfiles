@@ -4,41 +4,40 @@ local autocmd = vim.api.nvim_create_autocmd   -- Create autocommand
 
 
 -- Use relative numbers in normal mode only for an active buffer (https://tinyurl.com/27vvebdb)
-local numbertoggle_ = augroup("numbertoggle", { clear = true })
+local _numbertoggle_ = augroup("numbertoggle", { clear = true })
 autocmd({ "BufEnter","FocusGained","InsertLeave" }, {
-  pattern = { "*" },
+  pattern = "*",
   command = "set relativenumber",
-  group = numbertoggle_
+  group = _numbertoggle_
 })
 autocmd({ "BufLeave","FocusLost","InsertEnter" }, {
-  pattern = { "*" },
+  pattern = "*",
   command = "set norelativenumber",
-  group = numbertoggle_
+  group = _numbertoggle_
 })
 
 
 -- Start terminal in insert mode (https://tinyurl.com/28yty2xd)
-local bufcheck_ = augroup("bufcheck", {clear = true})
-autocmd({ "TermOpen" }, {
-  group    = bufcheck_,
+local _bufcheck_ = augroup("bufcheck", {clear = true})
+autocmd("TermOpen", {
+  group    = _bufcheck_,
   pattern  = "*",
   command  = "startinsert | set winfixheight"
 })
 
 
 -- Remove unwanted spaces
-autocmd({ "InsertLeave" }, {
-  pattern = { "*" },
+autocmd("InsertLeave", {
+  pattern = "*",
   command = [[%s/\s\+$//e]],
 })
 
 
 -- Don"t auto commenting new lines
 autocmd("BufEnter", {
-  pattern = "",
+  pattern = "*",
   command = "set fo-=c fo-=r fo-=o"
 })
-
 
 ---WORKAROUND
 autocmd({ "BufEnter","BufAdd","BufNew","BufNewFile","BufWinEnter" }, {
@@ -117,10 +116,22 @@ autocmd({ "InsertEnter", "WinLeave" }, {
 
 autocmd("TermEnter", {
   callback = function()
+    -- setlocal nonumber
+    -- setlocal norelativenumber
     vim.cmd([[
-      setlocal nonumber
-      setlocal norelativenumber
       hi TermCursor guifg=#FFA000 guibg=NONE
     ]])
   end
+})
+
+local _colorcolumn_ = augroup("colorcolumn", { clear = true })
+autocmd({ "InsertEnter" }, {
+  pattern = "*",
+  command = "set colorcolumn=80",
+  group = _numbertoggle_
+})
+autocmd({ "InsertLeave" }, {
+  pattern = "*",
+  command = "set colorcolumn=0",
+  group = _numbertoggle_
 })
