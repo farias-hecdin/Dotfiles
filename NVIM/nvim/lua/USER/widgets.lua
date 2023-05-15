@@ -22,10 +22,10 @@ end
 W.app_lazy = function()
   local stats = require("lazy").stats()
   local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-  return " " .. ms .. "ms"
+  return " " .. tostring(ms) .. "ms"
 end
 
--- Date
+-- Date and hour
 W.app_date = function()
   local time = " " .. os.date("%I:%M%p")
   local date = " " .. os.date("(%A) %v")

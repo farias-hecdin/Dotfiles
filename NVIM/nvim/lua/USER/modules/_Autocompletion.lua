@@ -1,27 +1,29 @@
+local D = require("USER.dir")
+
 return {
   {
-    -- "hrsh7th/cmp-buffer"
-    dir = "~/.config/nvim/src/plugins/" .. "__cmp-buffer",
+    -- "hrsh7th/cmp-buffer",
+    dir = D.plugin .. "cmp-buffer",
     event = "InsertEnter"
   },
   {
-    -- "hrsh7th/cmp-nvim-lsp"
-    dir = "~/.config/nvim/src/plugins/" .. "__cmp-nvim-lsp",
+    -- "hrsh7th/cmp-nvim-lsp",
+    dir = D.plugin .. "cmp-nvim-lsp",
     event = "InsertEnter"
   },
   {
-    -- "hrsh7th/cmp-path"
-    dir = "~/.config/nvim/src/plugins/" .. "__cmp-path",
+    -- "hrsh7th/cmp-path",
+    dir = D.plugin .. "cmp-path",
     event = "InsertEnter"
   },
   {
-    -- "saadparwaiz1/cmp_luasnip"
-    dir = "~/.config/nvim/src/plugins/" .. "__cmp_luasnip",
+    -- "saadparwaiz1/cmp_luasnip",
+    dir = D.plugin .. "cmp_luasnip",
     event = "InsertEnter"
   },
   {
-    -- "hrsh7th/cmp-cmdline"
-    dir = "~/.config/nvim/src/plugins/" .. "__cmp-cmdline",
+    -- "hrsh7th/cmp-cmdline",
+    dir = D.plugin .. "cmp-cmdline",
     keys = ":"
   },
   {
@@ -52,17 +54,17 @@ return {
           }
         },
         mapping = cmp.mapping.preset.insert({
-          ["<Up>"]      = cmp.mapping(cmp.mapping.select_prev_item(), {"i", "c"}), -- previous suggestion
-          ["<Down>"]    = cmp.mapping(cmp.mapping.select_next_item(), {"i", "c"}), -- next suggestion
-          ["<C-p>"]     = cmp.mapping.select_prev_item(), -- previous suggestions
-          ["<C-n>"]     = cmp.mapping.select_next_item(), -- next suggestion
-          ["<C-u>"]     = cmp.mapping.scroll_docs(-4), -- scrolling documentation
-          ["<C-d>"]     = cmp.mapping.scroll_docs(4), -- scrolling documentation
-          ["<C-e>"]     = cmp.mapping.abort(), -- abort completion window
-          ["<Esc>"]     = cmp.mapping.close(), -- close completion window
+          ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item(), {"i", "c"}), -- previous suggestion
+          ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item(), {"i", "c"}), -- next suggestion
+          ["<C-p>"] = cmp.mapping.select_prev_item(), -- previous suggestions
+          ["<C-n>"] = cmp.mapping.select_next_item(), -- next suggestion
+          ["<C-u>"] = cmp.mapping.scroll_docs(-4), -- scrolling documentation
+          ["<C-d>"] = cmp.mapping.scroll_docs(4), -- scrolling documentation
+          ["<C-e>"] = cmp.mapping.abort(), -- abort completion window
+          ["<Esc>"] = cmp.mapping.close(), -- close completion window
           ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
-          ['<C-y>']     = cmp.mapping.confirm({select = true}), -- accept suggestions
-          ["<CR>"]      = cmp.mapping.confirm({ select = false }), -- accept suggestions
+          ['<C-y>'] = cmp.mapping.confirm({ select = true }), -- accept suggestions
+          ["<CR>"] = cmp.mapping.confirm({ select = false }), -- accept suggestions
           -- Active suggestions
           ["<Tab>"] = cmp.mapping(function(fallback)
             local col = vim.fn.col(".") - 1
@@ -96,39 +98,31 @@ return {
         sources = cmp.config.sources({
           {
             name = "path", -- For file system paths
-            keyword_length = 2,
             max_item_count = 5,
-            priority = 40,
           },
           {
             name = "nvim_lsp", -- For lsp
-            keyword_length = 2,
             max_item_count = 5,
-            priority = 60,
           },
           {
             name = "buffer", -- For text within current buffer
-            keyword_length = 2,
             max_item_count = 5,
-            priority = 100,
           },
           {
             name = "luasnip", -- For luasnip users
-            keyword_length = 2,
             max_item_count = 5,
-            priority = 80,
           },
         }),
         -- configure icons
         formatting = {
-          fields = {"menu","abbr", "kind"},
+          fields = { "menu","abbr", "kind" },
           format = function(entry, item)
             local menu_icon = {
-              buffer   = " ",
-              cmdline  = " ",
-              luasnip  = " ",
+              buffer = " ",
+              cmdline = " ",
+              luasnip = " ",
               nvim_lsp = " ",
-              path     = " ",
+              path = " ",
             }
             item.menu = menu_icon[entry.source.name]
             return item
@@ -149,7 +143,7 @@ return {
           }}
         )
       })
-      vim.opt.completeopt = {"menu", "menuone", "noselect"}
+      vim.opt.completeopt = { "menu", "menuone", "noselect" }
     end
   },
 }

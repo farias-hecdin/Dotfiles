@@ -1,8 +1,9 @@
+local D = require("USER.dir")
+
 return {
   {
     "L3MON4D3/LuaSnip",
     event = "InsertEnter",
-    pin = true,
     dependencies = {
       "rafamadriz/friendly-snippets",
     },
@@ -15,19 +16,25 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    ft = { "html", "js", "ts", "jsx", "vue", "css" },
-    pin = true,
     config = function()
       local lspconfig = require('lspconfig')
       local configs = require('lspconfig/configs')
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-      --( https://github.com/aca/emmet-ls )
+      -- Emmet_ls ( https://github.com/aca/emmet-ls )
       lspconfig.emmet_ls.setup({
         -- on_attach = on_attach,
         capabilities = capabilities,
-        filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'vue', 'css', 'sass', 'scss' },
+        filetypes = {
+          'html',
+          'typescriptreact',
+          'javascriptreact',
+          'vue',
+          'css',
+          'sass',
+          'scss'
+        },
         init_options = {
           html = {
             options = {

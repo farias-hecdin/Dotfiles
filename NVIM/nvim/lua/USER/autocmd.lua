@@ -18,11 +18,11 @@ autocmd({ "BufLeave","FocusLost","InsertEnter" }, {
 
 
 -- Start terminal in insert mode (https://tinyurl.com/28yty2xd)
-local _bufcheck_ = augroup("bufcheck", {clear = true})
+local _bufcheck_ = augroup("bufcheck", { clear = true })
 autocmd("TermOpen", {
-  group    = _bufcheck_,
-  pattern  = "*",
-  command  = "startinsert | set winfixheight"
+  group  = _bufcheck_,
+  pattern = "*",
+  command = "startinsert | set winfixheight"
 })
 
 
@@ -39,12 +39,13 @@ autocmd("BufEnter", {
   command = "set fo-=c fo-=r fo-=o"
 })
 
----WORKAROUND
+
+-- Workaround
 autocmd({ "BufEnter","BufAdd","BufNew","BufNewFile","BufWinEnter" }, {
   group = augroup("TS_FOLD_WORKAROUND", {}),
   callback = function()
     vim.opt.foldmethod = "expr"
-    vim.opt.foldexpr   = "nvim_treesitter#foldexpr()"
+    vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
   end
 })
 
@@ -56,7 +57,7 @@ autocmd("TextYankPost", {
     vim.highlight.on_yank()
   end,
   pattern = "*",
-  group   = highlight_group,
+  group = highlight_group,
 })
 
 
@@ -95,7 +96,7 @@ autocmd("FileType", {
 
 
 -- Show cursor line only in active window
-autocmd({ "InsertLeave", "WinEnter" }, {
+autocmd({ "InsertLeave","WinEnter" }, {
   callback = function()
     local ok, cl = pcall(vim.api.nvim_win_get_var, 0, "auto-cursorline")
     if ok and cl then
@@ -104,7 +105,7 @@ autocmd({ "InsertLeave", "WinEnter" }, {
     end
   end,
 })
-autocmd({ "InsertEnter", "WinLeave" }, {
+autocmd({ "InsertEnter","WinLeave" }, {
   callback = function()
     local cl = vim.wo.cursorline
     if cl then
@@ -114,16 +115,18 @@ autocmd({ "InsertEnter", "WinLeave" }, {
   end,
 })
 
+
+-- Cahnge cursor highlight
 autocmd("TermEnter", {
   callback = function()
-    -- setlocal nonumber
-    -- setlocal norelativenumber
     vim.cmd([[
       hi TermCursor guifg=#FFA000 guibg=NONE
     ]])
   end
 })
 
+
+-- Active or desactive colorcolumn
 local _colorcolumn_ = augroup("colorcolumn", { clear = true })
 autocmd({ "InsertEnter" }, {
   pattern = "*",

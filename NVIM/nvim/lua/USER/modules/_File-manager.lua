@@ -1,8 +1,10 @@
+local D = require("USER.dir")
+
 return {
   {
     -- "luukvbaal/nnn.nvim",
-    dir = "~/.config/nvim/src/plugins/" .. "__nnn-nvim",
-    cmd = {"NnnExplorer", "NnnPicker"},
+    dir = D.plugin .. "nnn.nvim",
+    cmd = { "NnnExplorer", "NnnPicker" },
     keys = { "<leader>e" },
     config = function()
       require("nnn").setup({

@@ -1,7 +1,10 @@
+local D = require("USER.dir")
+
 return {
   {
-    -- 'lucastavaresa/simpleIndentGuides.nvim',
-    dir = "~/.config/nvim/src/plugins/" .. "__simple-indent-guides",
+    -- "lucastavaresa/simpleIndentGuides.nvim",
+    dir = D.plugin .. "simpleIndentGuides.nvim",
+    lazy = false,
     config = function()
       vim.opt.list = true -- enable in all buffers
       require("simpleIndentGuides").setup("┊", "ˉ")
@@ -9,15 +12,12 @@ return {
   },
   {
     -- "echasnovski/mini.indentscope",
-    dir= "~/.config/nvim/src/plugins/" .. "__mini-indentscope",
+    dir= D.plugin .. "mini.indentscope",
     event = "InsertEnter",
     config = function()
       require('mini.indentscope').setup {
         draw = {
           animation = require('mini.indentscope').gen_animation.none(),
-        },
-        options = {
-          border = 'both',
         },
         symbol = "│"
       }

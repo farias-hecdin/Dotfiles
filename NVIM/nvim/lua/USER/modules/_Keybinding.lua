@@ -1,7 +1,9 @@
+local D = require("USER.dir")
+
 return {
   {
     -- "folke/which-key.nvim",
-    dir = "~/.config/nvim/src/plugins/" .. "__which-key",
+    dir = D.plugin .. "which-key.nvim",
     keys = { "<leader>" },
     config = function()
       require("which-key").setup({

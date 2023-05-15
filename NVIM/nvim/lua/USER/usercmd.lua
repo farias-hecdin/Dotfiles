@@ -6,22 +6,27 @@ usercmd("LongParagraphs",
   function()
     vim.cmd([[/\%>300v.\+]])
   end,
-  {desc = "Highlight long paragraphs"}
+  {
+    desc = "Highlight long paragraphs"
+  }
 )
 usercmd("LongLines",
   function()
     vim.cmd([[/\%>120v.\+]])
   end,
-  {desc = "Highlight long lines"}
+  {
+    desc = "Highlight long lines"
+  }
 )
-
 
 -- Plugin: WindowNvim
 usercmd("WindowNvim",
   function()
     vim.cmd("lua require('nvim-window').pick()")
   end,
-  {desc = "WindowNvim"}
+  {
+    desc = "WindowNvim"
+  }
 )
 
 -- Plugin: MiniStarter
@@ -37,13 +42,14 @@ usercmd("MiniStarter",
   }
 )
 
-
 -- Utils: Treesitter on/off
 usercmd("TSOn",
   function()
     vim.cmd("TSBufEnable highlight")
   end,
-  {desc = "Treesitter On"}
+  {
+    desc = "Treesitter On"
+  }
 )
 usercmd("TSOff",
   function()
@@ -55,6 +61,7 @@ usercmd("TSOff",
   }
 )
 
+-- Plugin: Quickmath
 usercmd("QuickmathNow",
   function()
     vim.cmd('enew')
