@@ -1,0 +1,1 @@
+local a={}function a.memoize(b,c)local d=setmetatable({},{__mode='kv'})return function(...)local e=c(...)if d[e]==nil then local f=b(...)d[e]=f~=nil and f or vim.NIL end;local f=d[e]return f~=vim.NIL and f or nil end end;return a

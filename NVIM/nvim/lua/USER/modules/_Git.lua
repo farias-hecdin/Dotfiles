@@ -1,17 +1,19 @@
+local D = require("USER.dir")
+
 return {
   {
     -- "lewis6991/gitsigns.nvim",
-    dir = "~/.config/nvim/src/plugins/" .. "__gitsigns-nvim",
+    dir = D.plugin .. "gitsigns.nvim",
     event = "InsertLeave",
     config = function()
       require("gitsigns").setup({
         signs = {
-          add          = { text = '' },
-          change       = { text = '' },
-          delete       = { text = '' },
-          topdelete    = { text = '' },
+          add = { text = '' },
+          change = { text = '' },
+          delete = { text = '' },
+          topdelete = { text = '' },
           changedelete = { text = '' },
-          untracked    = { text = '' },
+          untracked = { text = '' },
         },
       })
     end

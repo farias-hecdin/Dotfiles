@@ -1,6 +1,7 @@
 return {
   { -- https://github.com/navarasu/onedark.nvim
     "navarasu/onedark.nvim",
+    lazy = false,
     priority = 1000,
     config = function()
       require("onedark").setup({
@@ -9,22 +10,22 @@ return {
           -- functions = "italic"
         },
         colors = {
-          bg0    = "#000000",
-          bg1    = "#000000",
-          blue   = "#CB9DEE",
+          bg0 = "#000000",
+          bg1 = "#000000",
+          blue = "#CB9DEE",
           purple = "#A454E2",
         },
         highlights = {
           ["@text.strong"]            = { fg="#D0D0D0" },
           ["@comment"]                = { fg="#007272" },
           Comment                     = { fg="#007272" },
-          ColorColumn                 = { bg="#660000" },
+          ColorColumn                 = { bg="#330000" },
           TreesitterContext           = { bg="#061D3A" },
           TreesitterContextLineNumber = { bg="#0A3161" },
           CursorLine                  = { bg="#181C20" },
           CursorLineNr                = { fg="#2BBB4F" },
           Whitespace                  = { fg="#313131" }, -- SimpleIndentGuide
-          MiniIndentscopeSymbol       = { fg="#777777" },
+          MiniIndentscopeSymbol       = { fg="#666666" },
           MatchParen                  = { fg="#fff000", bg="#000088" },
           MiniTablineCurrent          = { fg="#000000", bg="#2BBB4F", fmt="NONE" },
           MiniTablineFill             = { fg="#000000", bg="#000000", fmt="NONE" },

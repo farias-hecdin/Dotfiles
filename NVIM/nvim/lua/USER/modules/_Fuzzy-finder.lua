@@ -1,7 +1,9 @@
+local D = require("USER.dir")
+
 return {
   {
     -- "ibhagwan/fzf-lua",
-    dir = "~/.config/nvim/src/plugins/" .. "__fzf-lua",
+    dir = D.plugin .. "fzf-lua",
     keys = { "<leader>F" },
     cmd = "FzfLua",
     config = function()

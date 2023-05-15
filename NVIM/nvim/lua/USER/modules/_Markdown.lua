@@ -1,15 +1,9 @@
+local D = require("USER.dir")
+
 return {
   {
-    -- "whitestarrain/md-section-number.nvim",
-    dir = "~/.config/nvim/src/plugins/" .. "__md-section-number",
-    ft = "markdown",
-    config = function()
-      require("md_section_number").setup()
-    end
-  },
-  {
     -- "AntonVanAssche/md-headers.nvim",
-    dir = "~/.config/nvim/src/plugins/" .. "__md-headers",
+    dir = D.plugin .. "md-headers.nvim",
     ft = "markdown",
     config = function()
       require("md-headers").setup()
@@ -17,21 +11,21 @@ return {
   },
   {
     -- "antonk52/markdowny.nvim",
-    dir = "~/.config/nvim/src/plugins/" .. "__md-markdowny-nvim",
+    dir = D.plugin .. "markdowny.nvim",
     keys = { "<C-i>", "<C-l>", "<C-b>" },
+    ft = "markdown",
     config = function()
       require('markdowny').setup()
     end
   },
   {
     "gaoDean/autolist.nvim",
-    -- dir = "~/.config/nvim/src/plugins/" .. "__md-autolist-nvim",
-    pin = true,
+    -- dir = D.plugin .. "autolist.nvim",
     ft = "markdown",
     config = function()
       local autolist = require("autolist")
       autolist.setup()
-      --autolist.create_mapping_hook("i", "<CR>", autolist.new)
+      -- autolist.create_mapping_hook("i", "<CR>", autolist.new)
       autolist.create_mapping_hook("i", "<Tab>", autolist.indent)
       -- autolist.create_mapping_hook("i", "<S-Tab>", autolist.indent, "<C-D>")
       autolist.create_mapping_hook("n", "o", autolist.new)
@@ -43,7 +37,7 @@ return {
       vim.api.nvim_create_autocmd("TextChanged", {
         pattern = "*",
         callback = function()
-          vim.cmd.normal({autolist.force_recalculate(nil, nil), bang = false})
+          vim.cmd.normal({ autolist.force_recalculate(nil, nil), bang = false })
         end
       })
     end,

@@ -1,16 +1,20 @@
+local D = require("USER.dir")
+
 return {
   {
-    -- "samjwill/nvim-unception"
-    dir = "~/.config/nvim/src/plugins/" .. "nvim-unception",
-    event = "InsertEnter",
-    init = function()
-      -- Optional settings go here!
-      -- e.g.) vim.g.unception_open_buffer_in_new_tab = true
-    end
+    -- 'willothy/flatten.nvim',
+    dir = D.plugin .. "flatten.nvim",
+    config = true,
+    -- or pass configuration with
+    -- opts = {  }
+    -- Ensure that it runs first to minimize delay when opening file from terminal
+    lazy = false,
+    priority = 1001,
   },
   {
     -- "jbyuki/quickmath.nvim",
-    dir = "~/.config/nvim/src/plugins/" .. "quickmath-nvim",
+    dir = D.plugin .. "quickmath-nvim",
+    config = true,
     cmd = { "Quickmath", "QuickmathNow" },
   },
 }

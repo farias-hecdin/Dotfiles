@@ -1,11 +1,12 @@
+local D = require("USER.dir")
+
 return {
   {
-    --"phaazon/mind.nvim",
-    dir = "~/.config/nvim/src/plugins/" .. "__mind-nvim",
+    -- "phaazon/mind.nvim",
+    dir = D.plugin .. "mind.nvim",
     cmd = "MindOpenMain",
     config = function()
       require("mind").setup()
-
       -- normal = {
       --   ["<cr>"] = "open_data",
       --   ["<s-cr>"] = "open_data_index",

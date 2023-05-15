@@ -1,7 +1,9 @@
+local D = require("USER.dir")
+
 return {
   {
-    -- Djancyp/outline
-    dir = "~/.config/nvim/src/plugins/" .. "outline",
+    -- "Djancyp/outline",
+    dir = D.plugin .. "outline",
     cmd = "BSOpen",
     config = function()
       require('outline').setup()
@@ -9,8 +11,8 @@ return {
   },
   {
     -- "tmillr/sos.nvim",
-    dir = "~/.config/nvim/src/plugins/" .. "__sos-nvim",
-    event = "TextChangedI",
+    dir = D.plugin .. "sos.nvim",
+    event = { "TextChanged", "TextChangedI" },
     config = function()
       require("sos").setup({
         -- Whether to enable the plugin
@@ -22,7 +24,7 @@ return {
         -- started), and a countdown of `timeout` milliseconds begins. Further buffer
         -- changes will then debounce the timer. After firing, the timer is not
         -- started again until the next buffer change.
-        timeout = 15000,
+        timeout = 5000,
 
         -- Set, and manage, Vim's 'autowrite' option (see :h 'autowrite'). Allowing
         -- sos to "manage" the option makes it so that all autosaving functionality

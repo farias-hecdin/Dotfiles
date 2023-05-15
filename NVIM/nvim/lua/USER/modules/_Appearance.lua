@@ -1,26 +1,29 @@
+local W = require("USER.widgets")
+local D = require("USER.dir")
+
 return {
-   {
-     "echasnovski/mini.tabline",
-     -- dir = "~/.config/nvim/src/plugins/" .. "__mini-tabline",
-     config = function()
-       require("mini.tabline").setup({
-         show_icons = false, -- or 
-         tabpage_section = "right",
-       })
-     end
+  {
+    -- "echasnovski/mini.tabline",
+    dir = D.plugin .. "mini.tabline",
+    lazy = false,
+    config = function()
+      require("mini.tabline").setup({
+        show_icons = true, -- or 
+        tabpage_section = "right",
+      })
+    end
   },
   {
     -- "echasnovski/mini.starter",
-    dir = "~/.config/nvim/src/plugins/" .. "__mini-starter",
+    dir = D.plugin .. "mini.starter",
     cmd = "MiniStarter",
     config = function()
       local starter = require("mini.starter")
-
       starter.setup({
         autoopen = false,
         items = {
-          starter.sections.recent_files(5, true),
           starter.sections.recent_files(20, false),
+          -- Custom items
           edit = { action = "enew", name = "Edit a new buffer", section = "Builtin (actions)" },
           quit = { action = "qall", name = "Quit Nvim", section = "Builtin (actions)" },
           explorer = { action = "NnnPicker", name = "File manager", section = "Builtin (actions)" },
@@ -38,63 +41,62 @@ return {
   },
   {
     -- "tamton-aquib/staline.nvim",
-    dir = "~/.config/nvim/src/plugins/" .. "__staline-nvim",
+    dir = D.plugin .. "staline.nvim",
+    lazy = false,
     config = function()
       require("staline").setup({
         defaults = {
           expand_null_ls = false, -- This expands out all the null-ls sources to be shown
           full_path = false,
-          line_column = " [%l/%L]:%c 並 %p%%", -- `:h stl` to see all flags.
+          line_column = "[%l/%L]:%c 並 %p%%", -- `:h stl` to see all flags.
           fg = "#000000", -- Foreground text color.
           bg = "#000000", -- Default background is transparent.
-          inactive_color   = "#000000",
+          inactive_color = "#000000",
           inactive_bgcolor = "#000000",
           true_colors = true, -- true lsp colors.
           font_active = "none", -- "bold", "italic", "bold,italic", etc
-          mod_symbol = "  ",
-          lsp_client_symbol = " ",
+          mod_symbol = " ",
+          lsp_client_symbol = " ",
           branch_symbol = " ",
           null_ls_symbol = "" -- A symbol to indicate that a source is coming from null-ls
         },
         mode_colors = {
           R = "#CC5500",
-          -- S = "",
           V = "#40C4FF",
           c = "#FFFFFF",
           i = "#FFFF00",
-          -- ic = "",
           n = "#2BBB4F",
           r = "#F88379",
-          -- s = "",
           t = "#FFA000",
-          v = "#0091EA", -- etc..
+          v = "#0091EA",
         },
         mode_icons = {
-          R  = "REP",
-          S  = "SEL",
-          V  = "V-L",
-          c  = "COM",
-          i  = "INS",
-          ic = "I-C",
-          n  = "NOR",
-          r  = "R-L",
-          s  = "SEL",
-          t  = "TER",
-          v  = "VIS", -- etc..
+          [""] = " R-V",
+          ["R"] = " REP",
+          ["S"] = " SEL",
+          ["V"] = " V-L",
+          ["c"] = " COM",
+          ["i"] = " INS",
+          ["ic"] = " I-C",
+          ["n"] = " NOR",
+          ["r"] = " R-L",
+          ["s"] = " SEL",
+          ["t"] = " TER",
+          ["v"] = " VIS",
         },
         sections = {
-          left  = {"-mode", "file_size","counter", "%m", "branch"},
-          mid   = {" ", "-line_column", " "},
-          right = {"lsp_name"," ","diagnostics", "lazy", "-clock"}
+          left = { "-mode", "file_size", "counter", "%m", "branch" },
+          mid = { " ", "line_column" },
+          right = { "lsp_name", " ", "diagnostics", "lazy", "-clock" }
         },
         lsp_symbols = {
           Error = " ",
           Info = " ",
           Warn = " ",
-          Hint = ""
+          Hint = " "
         },
         special_table = {
-          help = { "Help", " " },
+          help = { "Help", " " },
         }
       })
     end
