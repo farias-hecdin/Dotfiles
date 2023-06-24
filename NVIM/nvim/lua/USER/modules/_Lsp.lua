@@ -46,9 +46,13 @@ return {
       })
       -- List of LSP server (https://langserver.org/#arbitraryExecutionFootnote)
       lsp.ensure_installed({
-        "tsserver",     -- Javascript/Typescript
-        -- "phpactor",  -- PHP
-        -- "pyright",   -- Python
+        -- "tsserver", -- Javascript/Typescript
+        -- "phpactor", -- PHP
+        -- "pyright", -- Python
+        -- "rust-analyzer", -- Rust
+        -- "gopls", -- "Golang"
+        -- "bash-language-server", -- Bash
+        -- "kotlin-language-server", -- Kotlin
       })
       lsp.nvim_workspace()
       lsp.setup()

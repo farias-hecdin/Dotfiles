@@ -2,19 +2,6 @@ local D = require("USER.dir")
 
 return {
   {
-    "L3MON4D3/LuaSnip",
-    event = "InsertEnter",
-    dependencies = {
-      "rafamadriz/friendly-snippets",
-    },
-    config = function()
-      -- Load vs-code like snippets from plugins (e.g. friendly-snippets)
-      require("luasnip.loaders.from_vscode").lazy_load(
-        -- { paths = { "./src/snippets" } }
-      )
-    end
-  },
-  {
     "neovim/nvim-lspconfig",
     config = function()
       local lspconfig = require('lspconfig')
@@ -28,12 +15,10 @@ return {
         capabilities = capabilities,
         filetypes = {
           'html',
-          'typescriptreact',
           'javascriptreact',
+          'svelte',
+          'typescriptreact',
           'vue',
-          'css',
-          'sass',
-          'scss'
         },
         init_options = {
           html = {

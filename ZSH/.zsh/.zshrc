@@ -1,11 +1,13 @@
 # More information (https://dev.to/hbenvenutti/using-zsh-without-omz-4gch)
 
 # Zsh init ====================================================================
+
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export ZSH=$HOME/.zsh
 
 
 # History config ==============================================================
+
 export HISTFILE=$ZSH/.zsh_history
 export HISTSIZE=10000 # How many commands zsh will load to memory.
 export SAVEHIST=10000 # How many commands history will save on file.
@@ -25,32 +27,31 @@ setopt INC_APPEND_HISTORY_TIME # Append command to history file immediately afte
 # Themes
 source $ZSH/themes/z-style/z-style.zsh-theme
 
-# Editing support
-source $ZSH/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-# source $ZSH/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
-source $ZSH/plugins/zsh-vi-mode/zsh-vi-mode.zsh
-
 # Motion
 source $ZSH/plugins/jump/jump.plugin.zsh
 source $ZSH/plugins/z/z.sh
+
+# Editing support
+source $ZSH/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+source $ZSH/plugins/zsh-vi-mode/zsh-vi-mode.zsh
 
 # Git
 source $ZSH/plugins/git/git.plugin.zsh
 
 
 # Alias =======================================================================
+
 alias C="clear"
-alias q="exit"
 alias R="exec zsh"
+alias q="exit"
 
 # General tools
-alias v="nvim"
-alias e="nnn"
 alias d="ncdu"
+alias e="nnn"
+alias v="nvim"
 
 # Git
 alias g="lazygit"
-alias ga="git add"
 
 # Tmux
 alias t="tmux"
@@ -85,7 +86,7 @@ bindkey "^[[B" down-line-or-beginning-search  # [Typing+Down] - Fuzzy find histo
 # bindkey "^[[1;5C" forward-word  # [Ctrl+Right] - Move forward one word
 # bindkey "^[[1;5D" backward-word  # [Ctrl+Left] - Move backward one word
 # bindkey "^e" edit-command-line  # [Ctrl+e] - Use $EDITOR to write a command
-bindkey " " magic-space  # [Space] - Do history expansion
+# bindkey " " magic-space  # [Space] - Do history expansion
 # bindkey -M vicmd "/" fzf-history-widget  # [Slash] - Search history with fzf
 #
 # export KEYTIMEOUT=1 # Disable delay when changing modes

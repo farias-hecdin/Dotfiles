@@ -2,6 +2,13 @@ local D = require("USER.dir")
 
 return {
   {
+    "echasnovski/mini.files",
+    keys = { "<leader>em" },
+    config = function()
+      require('mini.files').setup()
+    end,
+  },
+  {
     -- "luukvbaal/nnn.nvim",
     dir = D.plugin .. "nnn.nvim",
     cmd = { "NnnExplorer", "NnnPicker" },

@@ -2,16 +2,7 @@ local D = require("USER.dir")
 
 return {
   {
-    -- "nvim-treesitter/nvim-treesitter-context",
-    dir = D.plugin .. "nvim-treesitter-context",
-    event = "InsertEnter",
-    config = function()
-      require("treesitter-context").setup()
-    end
-  },
-  {
     "nvim-treesitter/nvim-treesitter",
-    pin = true,
     event = { "BufReadPost", "BufNewFile" },
     config = function()
       require("nvim-treesitter.configs").setup({
@@ -25,9 +16,6 @@ return {
             return file
           end,
         },
-        matchup = {
-          enable = true,
-        },
         -- enable indentation
         indent = {
           enable = true,
@@ -39,14 +27,18 @@ return {
         ensure_installed = {
           "astro",
           "bash",
+          "go",
           "html",
           "javascript",
+          "kotlin",
           "lua",
           "markdown",
           "markdown_inline",
           "php",
           "python",
+          "rust",
           "sql",
+          "svelte",
           "typescript",
           "vue",
         },

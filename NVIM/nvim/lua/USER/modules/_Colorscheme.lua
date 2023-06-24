@@ -18,6 +18,7 @@ return {
         highlights = {
           ["@text.strong"]            = { fg="#D0D0D0" },
           ["@comment"]                = { fg="#007272" },
+          ["@function"]               = { fmt="italic" },
           Comment                     = { fg="#007272" },
           ColorColumn                 = { bg="#330000" },
           TreesitterContext           = { bg="#061D3A" },
@@ -29,13 +30,17 @@ return {
           MatchParen                  = { fg="#fff000", bg="#000088" },
           MiniTablineCurrent          = { fg="#000000", bg="#2BBB4F", fmt="NONE" },
           MiniTablineFill             = { fg="#000000", bg="#000000", fmt="NONE" },
-          MiniTablineHidden           = { fg="#BBBBBB", bg="#000000", fmt="NONE" },
+          MiniTablineHidden           = { fg="#BBBBBB", bg="#222222", fmt="NONE" },
           MiniTablineModifiedCurrent  = { fg="#000000", bg="#FFF000", fmt="NONE" },
           MiniTablineModifiedHidden   = { fg="#000000", bg="#888888", fmt="NONE" },
           MiniTablineModifiedVisible  = { fg="#000000", bg="#FFF77F", fmt="NONE" },
           MiniTablineTabpagesection   = { fg="#00B7EB", bg="#000000", fmt="NONE" },
           MiniTablineVisible          = { fg="#000000", bg="#19702F", fmt="NONE" },
           MiniJump2dSpot              = { fg="#FFF000", fmt="NONE" },
+          MiniHipatternsFixme         = { fg="#000000", bg="#FF5733" },
+          MiniHipatternsHack          = { fg="#000000", bg="#FFF77F" },
+          MiniHipatternsTodo          = { fg="#000000", bg="#BBBBBB" },
+          MiniHipatternsNote          = { fg="#000000", bg="#00B7EB" },
         }
       })
       vim.cmd([[colorscheme onedark]])

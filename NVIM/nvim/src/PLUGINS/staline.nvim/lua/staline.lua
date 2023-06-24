@@ -163,7 +163,7 @@ M.get_statusline = function(status, x)
   M.sections['right_sep_double'] = "%#MidSep#"..t.right_separator.."%#DoubleSep#"..t.right_separator
   M.sections['lsp']              = get_lsp()
   M.sections['diagnostics']      = get_lsp()
-  M.sections['lsp_name']         = lsp_client_name()
+  M.sections['lsp_name']         = string.sub(lsp_client_name(), 1, 25)
   M.sections['cwd']              = " " .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. " "
 
   local staline = ""

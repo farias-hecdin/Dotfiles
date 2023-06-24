@@ -2,23 +2,13 @@ local D = require("USER.dir")
 
 return {
   {
-    -- "hrsh7th/cmp-buffer",
-    dir = D.plugin .. "cmp-buffer",
-    event = "InsertEnter"
-  },
-  {
     -- "hrsh7th/cmp-nvim-lsp",
     dir = D.plugin .. "cmp-nvim-lsp",
     event = "InsertEnter"
   },
   {
-    -- "hrsh7th/cmp-path",
-    dir = D.plugin .. "cmp-path",
-    event = "InsertEnter"
-  },
-  {
-    -- "saadparwaiz1/cmp_luasnip",
-    dir = D.plugin .. "cmp_luasnip",
+    -- "hrsh7th/cmp-buffer",
+    dir = D.plugin .. "cmp-buffer",
     event = "InsertEnter"
   },
   {
@@ -27,20 +17,29 @@ return {
     keys = ":"
   },
   {
+    -- "hrsh7th/cmp-path",
+    dir = D.plugin .. "cmp-path",
+    event = "InsertEnter"
+  },
+  {
+    -- "hrsh7th/cmp-vsnip",
+    dir = D.plugin .. "cmp-vsnip",
+    event = "InsertEnter"
+  },
+  {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
     keys = { ":" },
     dependencies = {
-      "hrsh7th/cmp-nvim-lua",
+      "hrsh7th/vim-vsnip",
     },
     config = function()
       local cmp = require("cmp")
-      local luasnip = require('luasnip')
 
       cmp.setup({
         snippet = {
           expand = function(args)
-            require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+            vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
           end,
         },
         window = {
@@ -76,41 +75,25 @@ return {
               cmp.complete()
             end
           end, {"i", "s"}),
-          -- Luasnip placeholder (next)
-          ['<C-f>'] = cmp.mapping(function(fallback)
-            if luasnip.jumpable(1) then
-              luasnip.jump(1)
-            else
-              fallback()
-            end
-          end, {'i', 's'}),
-          -- Luasnip placeholder (back)
-          ['<C-b>'] = cmp.mapping(function(fallback)
-            if luasnip.jumpable(-1) then
-              luasnip.jump(-1)
-            else
-              fallback()
-            end
-          end, {'i', 's'}),
         }),
 
         -- sources for autocompletion
         sources = cmp.config.sources({
           {
             name = "path", -- For file system paths
-            max_item_count = 5,
+            max_item_count = 9,
           },
           {
             name = "nvim_lsp", -- For lsp
-            max_item_count = 5,
+            max_item_count = 9,
           },
           {
             name = "buffer", -- For text within current buffer
-            max_item_count = 5,
+            max_item_count = 9,
           },
           {
-            name = "luasnip", -- For luasnip users
-            max_item_count = 5,
+            name = "vsnip", -- For vsnip users
+            max_item_count = 9,
           },
         }),
         -- configure icons
@@ -120,7 +103,7 @@ return {
             local menu_icon = {
               buffer = " ",
               cmdline = " ",
-              luasnip = " ",
+              vsnip = " ",
               nvim_lsp = " ",
               path = " ",
             }
