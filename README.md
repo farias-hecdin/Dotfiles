@@ -1,4 +1,4 @@
-# dot.files
+![logo dotfiles](./assets/logo-dotfiles-min.png)
 
 Un repositorio de respaldo de los archivos de configuración.
 
