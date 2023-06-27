@@ -116,7 +116,7 @@ autocmd({ "InsertEnter","WinLeave" }, {
 })
 
 
--- Cahnge cursor highlight
+-- Change cursor highlight
 autocmd("TermEnter", {
   callback = function()
     vim.cmd([[

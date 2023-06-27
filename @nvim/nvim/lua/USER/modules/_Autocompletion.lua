@@ -32,6 +32,7 @@ return {
     keys = { ":" },
     dependencies = {
       "hrsh7th/vim-vsnip",
+      "rafamadriz/friendly-snippets"
     },
     config = function()
       local cmp = require("cmp")
