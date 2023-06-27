@@ -42,8 +42,8 @@ return {
           group = "[+] ", -- symbol prepended to a group
         },
         popup_mappings = {
-          scroll_down = "<C-j>", -- binding to scroll down inside the popup
-          scroll_up = "<C-k>", -- binding to scroll up inside the popup
+          scroll_down = "<C-Down>", -- binding to scroll down inside the popup
+          scroll_up = "<C-Up>", -- binding to scroll up inside the popup
         },
         window = {
           border = "rounded", -- none, single, double, shadow
