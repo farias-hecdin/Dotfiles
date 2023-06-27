@@ -3,7 +3,7 @@ En este repositorio encontrarás mis archivos de configuración (dotfiles) para 
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents** 
+**Table of Contents**
 
 - [Dotfiles](#dotfiles)
   - [Instalación](#instalaci%C3%B3n)
@@ -24,12 +24,30 @@ Para usar estos dotfiles sigue los siguientes paso:
    git clone https://github.com/farias-hecdin/dotfiles.git
    ```
 
-   2. Copia todos los archivos o solo aquellos que necesites y muévelo a su respetivo directorio ¡Y disfruta de la configuración!
+   2. Copia todos los archivos o solo aquellos que necesites y muévelos a sus respetivos directorio ¡Y disfruta de la configuración!
 
 ### Neovim
 El [directorio](./@nvim/) @nvim contiene mi configuración de Neovim. Agrega algunos atajos de teclado útiles, temas, plugins y opciones de configuración personalizadas.
 
-Para instalarlo sigue los siguientes pasos:
+<details>
+  <summary>Pre-requisitos</summary>
+  <ul>
+    <li>
+      <b>clang</b> - Para compilar e instalar correctamente los parsers de lenguaje con treesitter.<code>pkg install clang</code>
+    </li>
+    <li>
+      <b>termux-api</b> - Para copiar texto al portapapeles.<code>pkg install termux-api</code>
+    </li>
+    <li>
+      <b>fzf</b> - Para utilizar la herramienta el buscador fuzzy finder en neovim<code>pkg install fzf</code>
+    </li>
+    <li>
+      <b>nnn</b> - Para utilizar el gestor de archivos Nnn en neovim.<code>pkg install nnn</code>
+    </li>
+  </ul>
+</details>
+
+Para instalar la configuración sigue los siguientes pasos:
 
    * Para evitar conflictos, borra tu antigua configuración o crea un respaldo.
 
@@ -42,6 +60,7 @@ Para instalarlo sigue los siguientes pasos:
    ```bash
    cp -r ./@nvim/nvim/ ~/.config/
    ```
+
 
 ### Tmux
 En el [directorio](./@tmux/) @tmux se encuentra el archivo tmux.conf de contiene mi configuración de Tmux, que mejora la interfaz de usuario y agrega algunos atajos de teclado.
