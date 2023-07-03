@@ -82,24 +82,24 @@ return {
         sources = cmp.config.sources({
           {
             name = "path", -- For file system paths
-            max_item_count = 9,
+            max_item_count = 20,
           },
           {
             name = "nvim_lsp", -- For lsp
-            max_item_count = 9,
+            max_item_count = 10,
           },
           {
             name = "buffer", -- For text within current buffer
-            max_item_count = 9,
+            max_item_count = 5,
           },
           {
             name = "vsnip", -- For vsnip users
-            max_item_count = 9,
+            max_item_count = 5,
           },
         }),
         -- configure icons
         formatting = {
-          fields = { "menu","abbr", "kind" },
+          fields = { "abbr", "menu", "kind" },
           format = function(entry, item)
             local menu_icon = {
               buffer = "󱔏 ",

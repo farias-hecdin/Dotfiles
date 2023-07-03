@@ -1,4 +1,5 @@
 {
+  "flybuf.nvim": { "branch": "main", "commit": "fe1fbd9699f6988a1db3b2e2ffa599154784c6e1" },
   "friendly-snippets": { "branch": "main", "commit": "5749f093759c29e3694053d048ceb940fe12c3d3" },
   "lazy.nvim": { "branch": "main", "commit": "e6bf3a0d9c4899dcf832270f79bb1cee8fbc506e" },
   "lsp-zero.nvim": { "branch": "v2.x", "commit": "9c9201eb3a3aace6746e3b85ca38adb4f73d4857" },

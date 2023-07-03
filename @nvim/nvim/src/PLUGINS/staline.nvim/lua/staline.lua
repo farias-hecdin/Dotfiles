@@ -76,6 +76,10 @@ end
 
 local lsp_client_name = function()
   local clients = {}
+  local clients_name = ""
+  local the_symbol = t.lsp_client_symbol
+  local name_max_lenght = t.lsp_client_character -- defaults "12"
+
   for _, client in pairs(vim.lsp.get_active_clients()) do
     if t.expand_null_ls then
       if client.name == 'null-ls' then
@@ -89,25 +93,23 @@ local lsp_client_name = function()
       clients[#clients + 1] = client.name
     end
   end
-  return t.lsp_client_symbol .. table.concat(clients, ', ')
-end
+  clients_name = table.concat(clients, ', ')
 
--- NOTE: Only show 20 characters if the "lsp_client_name" name is too long
-local lsp_truncateName = function()
-  local max_lenght = t.lsp_client_character
-  local client_name = lsp_client_name()
-
-  if max_lenght == 0 then
-    return client_name
+  -- NOTE: Only show XX characters if the "clients_name" is too long
+  if name_max_lenght == 0 then
+    return the_symbol .. clients_name
   else
-    local client_lenght = string.len(client_name)
-    if client_lenght >= max_lenght then
-      return string.sub(client_name, 1, max_lenght + 4) .. "..."
-    else
-      return client_name
+    local clients_lenght = string.len(clients_name)
+    local clients_truncateName = ""
+
+    if clients_lenght >= name_max_lenght then
+      clients_truncateName = string.sub(clients_name, 1, name_max_lenght)
+      clients_truncateName = #clients .. ":(" .. clients_truncateName .. "...)"
     end
+    return the_symbol .. clients_truncateName
   end
 end
+
 
 -- TODO: check colors inside function type
 local parse_section = function(section)
@@ -180,7 +182,7 @@ M.get_statusline = function(status, x)
   M.sections['right_sep_double'] = "%#MidSep#"..t.right_separator.."%#DoubleSep#"..t.right_separator
   M.sections['lsp']              = get_lsp()
   M.sections['diagnostics']      = get_lsp()
-  M.sections['lsp_name']         = lsp_truncateName()
+  M.sections['lsp_name']         = lsp_client_name()
   M.sections['cwd']              = " " .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. " "
 
   local staline = ""

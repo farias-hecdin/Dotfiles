@@ -1,3 +1,11 @@
 local D = require("USER.dir")
 
-return {}
+return {
+  {
+    'glepnir/flybuf.nvim',
+    cmd = 'FlyBuf',
+    config = function()
+      require('flybuf').setup({})
+    end,
+  },
+}

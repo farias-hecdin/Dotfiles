@@ -10,6 +10,13 @@ local map = vim.keymap.set
 -- * terminal mode = "t",
 -- * command mode  = "c",
 
+-- Undo
+map("n", "<C-u>", "<ESC>u")
+
+-- Open a line below/above the cursor
+map("i", "<C-j>", "<ESC>o")
+map("i", "<C-k>", "<ESC>O")
+
 -- Return normal mode
 map("i", "jk", "<ESC>")
 map("i", "kj", "<ESC>")

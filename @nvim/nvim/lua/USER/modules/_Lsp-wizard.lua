@@ -29,20 +29,20 @@ return {
             cancel_installation = "<C-c>",
           },
         },
-        max_concurrent_installers = 2,
+        max_concurrent_installers = 1,
       })
 
       -- LspZero
       local lsp = require("lsp-zero")
       lsp.preset("recommended") -- recommended / lsp-compe / lsp-only / manual-setup
+      lsp.set_sign_icons({
+        error = "",
+        warn = "",
+        hint = "",
+        info = ""
+      })
       lsp.set_preferences({
         suggest_lsp_servers = true,
-        sign_icons = {
-          error = "E",
-          warn = "W",
-          hint = "H",
-          info = "I"
-        }
       })
       -- List of LSP server (https://langserver.org/#arbitraryExecutionFootnote)
       lsp.ensure_installed({
