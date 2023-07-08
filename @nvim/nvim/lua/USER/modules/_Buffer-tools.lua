@@ -2,11 +2,17 @@ local D = require("USER.dir")
 
 return {
   {
-    -- "Djancyp/outline",
-    dir = D.plugin .. "outline",
-    cmd = "BSOpen",
+    -- "glepnir/flybuf.nvim",
+    dir = D.plugin .. "__flybuf.nvim",
+    cmd = "FlyBuf",
     config = function()
-      require("outline").setup()
+      require("flybuf").setup({
+        hotkey = "1234567890qwertyuiopasdfghjklzxcvbnm", -- hotkye
+        border = "single", -- border
+        quit = "q",   -- quit flybuf window
+        mark = "L",   -- mark as delet or cancel delete
+        delete = "X", -- delete marked buffers or buffers which cursor in
+      })
     end
   },
   {

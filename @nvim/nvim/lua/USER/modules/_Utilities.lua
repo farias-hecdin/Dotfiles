@@ -14,7 +14,7 @@ return {
   {
     -- "jbyuki/quickmath.nvim",
     dir = D.plugin .. "quickmath-nvim",
-    config = true,
     cmd = { "Quickmath", "QuickmathNow" },
+    config = true,
   },
 }

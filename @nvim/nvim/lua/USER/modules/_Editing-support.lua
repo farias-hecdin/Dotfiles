@@ -12,7 +12,7 @@ return {
   {
     -- "echasnovski/mini.cursorword",
     dir = D.plugin .. "mini.cursorword",
-    event = "InsertEnter",
+    event = "CursorMoved",
     config = function()
       require("mini.cursorword").setup()
     end
@@ -21,6 +21,7 @@ return {
     -- "echasnovski/mini.pairs",
     dir = D.plugin .. "mini.pairs",
     event = "InsertEnter",
+    enabled = false,
     config = function()
       require("mini.pairs").setup()
     end
@@ -28,7 +29,7 @@ return {
   {
     -- "echasnovski/mini.comment",
     dir = D.plugin .. "mini.comment",
-    keys = {{ "gc", mode = "v" }},
+    keys = {{ mode="n", "gc" }, { mode="v", "gc" }},
     config = function()
       require("mini.comment").setup({
         -- Module mappings. Use `""` (empty string) to disable one.
@@ -37,7 +38,7 @@ return {
           -- Normal and Visual modes
           comment = "gc",
           -- Toggle comment on current line
-          comment_line = "gC",
+          comment_line = "gcc",
           -- Define "comment" textobject (like `dgc` - delete whole comment block)
           textobject = "gc",
         },
@@ -47,7 +48,7 @@ return {
   {
     -- "echasnovski/mini.hipatterns",
     dir = D.plugin .. "mini.hipatterns",
-    event = "InsertEnter",
+    event = "CursorMoved",
     config = function()
       local hipatterns = require("mini.hipatterns")
       hipatterns.setup({
@@ -57,6 +58,7 @@ return {
           hack  = { pattern = "%f[%w]()HACK()%f[%W]",  group = "MiniHipatternsHack"  },
           todo  = { pattern = "%f[%w]()TODO()%f[%W]",  group = "MiniHipatternsTodo"  },
           note  = { pattern = "%f[%w]()NOTE()%f[%W]",  group = "MiniHipatternsNote"  },
+          here  = { pattern = "%f[%w]()HERE()%f[%W]",  group = "MiniHipatternsHere"  },
           -- Highlight hex color strings (`#FFFF00`) using that color
           hex_color = hipatterns.gen_highlighter.hex_color(),
         },

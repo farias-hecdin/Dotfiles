@@ -4,6 +4,7 @@ return {
   {
     -- "folke/which-key.nvim",
     dir = D.plugin .. "which-key.nvim",
+    event = "VeryLazy",
     keys = { "<leader>" },
     config = function()
       require("which-key").setup({

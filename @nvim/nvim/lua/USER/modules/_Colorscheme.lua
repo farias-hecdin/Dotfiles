@@ -1,6 +1,9 @@
+local D = require("USER.dir")
+
 return {
-  { -- https://github.com/navarasu/onedark.nvim
-    "navarasu/onedark.nvim",
+  { -- ( https://github.com/navarasu/onedark.nvim )
+    -- "navarasu/onedark.nvim",
+    dir = D.plugin .. "onedark.nvim",
     lazy = false,
     priority = 1000,
     config = function()
@@ -25,6 +28,7 @@ return {
           MatchParen                  = { fg="#fff000", bg="#000088" },
           MiniHipatternsFixme         = { fg="#000000", bg="#FF5733" },
           MiniHipatternsHack          = { fg="#000000", bg="#FFF77F" },
+          MiniHipatternsHere          = { fg="#000000", bg="#FFFF00" },
           MiniHipatternsNote          = { fg="#000000", bg="#00B7EB" },
           MiniHipatternsTodo          = { fg="#000000", bg="#BBBBBB" },
           MiniIndentscopeSymbol       = { fg="#666666" },
@@ -37,9 +41,7 @@ return {
           MiniTablineModifiedVisible  = { fg="#000000", bg="#FFF77F", fmt="NONE" },
           MiniTablineTabpagesection   = { fg="#00B7EB", bg="#000000", fmt="NONE" },
           MiniTablineVisible          = { fg="#000000", bg="#19702F", fmt="NONE" },
-          TreesitterContext           = { bg="#061D3A" },
-          TreesitterContextLineNumber = { bg="#0A3161" },
-          Visual                      = { bg="#000066", fg="#cccccc" },
+          Visual                      = { bg="#000066", fg="#CCCCCC" },
           Whitespace                  = { fg="#313131" }, -- SimpleIndentGuide
         }
       })
