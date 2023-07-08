@@ -41,7 +41,7 @@ return {
   },
   {
     -- "tamton-aquib/staline.nvim",
-    dir = D.plugin .. "staline.nvim",
+    dir = D.plugin .. "__staline.nvim",
     lazy = false,
     config = function()
       require("staline").setup({
@@ -94,7 +94,7 @@ return {
           Error = " ",
           Info = " ",
           Warn = " ",
-          Hint = " "
+          Hint = "󰌵 "
         },
         special_table = {
           help = { "Help", " " },

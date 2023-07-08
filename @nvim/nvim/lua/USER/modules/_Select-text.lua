@@ -2,10 +2,14 @@ local D = require("USER.dir")
 
 return {
   {
+    -- "mg979/vim-visual-multi",
+    dir = D.plugin .. "vim-visual-multi",
+    keys = {{ mode="n", "<C-n>" }, { mode="v", "<C-n>" }},
+  },
+  {
     -- "echasnovski/mini.surround",
     dir = D.plugin .. "mini.surround",
-    lazy = false,
-    -- keys = {{ "s", mode="v" }},
+    event = "ModeChanged",
     config = function()
       require("mini.surround").setup(
         -- No need to copy this inside `setup()`. Will be used automatically.
@@ -15,17 +19,17 @@ return {
           custom_surroundings = nil,
 
           -- Duration (in ms) of highlight when calling `MiniSurround.highlight()`
-          highlight_duration = 200,
+          highlight_duration = 5000,
 
           -- Module mappings. Use `''` (empty string) to disable one.
           mappings = {
             add = 'sa', -- Add surrounding in 'Normal' and 'Visual modes'
-            delete = 'sd', -- Delete surrounding
-            find = 'sf', -- Find surrounding (to the right)
-            find_left = 'sF', -- Find surrounding (to the left)
-            highlight = 'sh', -- Highlight surrounding
-            replace = 'sr', -- Replace surrounding
-            update_n_lines = 'sn', -- Update `n_lines`
+            delete = 'sD', -- Delete surrounding
+            find = 'sl', -- Find surrounding (to the right)
+            find_left = 'sh', -- Find surrounding (to the left)
+            highlight = 'sH', -- Highlight surrounding
+            replace = 'sR', -- Replace surrounding
+            update_n_lines = 'sN', -- Update `n_lines`
 
             suffix_last = 'l', -- Suffix to search with "prev" method
             suffix_next = 'n', -- Suffix to search with "next" method

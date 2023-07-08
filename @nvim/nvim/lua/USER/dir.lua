@@ -1,5 +1,5 @@
 local D = {
-  plugin = "~/.config/nvim/src/PLUGINS/"
+  plugin = "~/.config/nvim/src/PluginVault/",
 }
 
 return D

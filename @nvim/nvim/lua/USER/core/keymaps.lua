@@ -10,6 +10,8 @@ local map = vim.keymap.set
 -- * terminal mode = "t",
 -- * command mode  = "c",
 
+--
+
 -- Undo
 map("n", "<C-u>", "<ESC>u")
 
@@ -89,7 +91,8 @@ map("n", "<leader>bn", ":bn<cr>",     {desc="Buffer: next"})
 map("n", "<leader>bp", ":bp<cr>",     {desc="Buffer: previous"})
 map("n", "<leader>ba", ":ls<cr>",     {desc="Buffer: all"})
 map("n", "<leader>bx", ":bd<cr>",     {desc="Buffer: close"})
-map("n", "<leader>bl", ":BSOpen<cr>", {desc="Buffer: list"})
+-- map("n", "<leader>bl", ":BSOpen<cr>", {desc="Buffer: list"})
+map("n", "<leader>bl", ":FlyBuf<cr>", {desc="Buffer: list"})
 
 -- Refresh
 map("n", "<leader>%", ":source %<cr>", {desc="Refresh"})
@@ -177,21 +180,22 @@ local wk = require("which-key")
 
 wk.register(
   {
-    ["<leader>."] = {name = "Move"},
-    ["<leader>C"] = {name = "Cmp"},
-    ["<leader>F"] = {name = "Fuzzy finder"},
-    ["<leader>M"] = {name = "Markdown"},
-    ["<leader>T"] = {name = "Treesitter"},
-    ["<leader>b"] = {name = "Buffer"},
-    ["<leader>e"] = {name = "Explorer"},
-    ["<leader>f"] = {name = "File"},
-    ["<leader>l"] = {name = "Letter"},
-    ["<leader>m"] = {name = "Select"},
-    ["<leader>n"] = {name = "Number"},
-    ["<leader>p"] = {name = "Paste"},
-    ["<leader>s"] = {name = "Split/Window"},
-    ["<leader>t"] = {name = "Tabs"},
-    ["<leader>w"] = {name = "Wrap"},
+    ["<leader>\\"] = {name = "Vim visual multi"},
+    ["<leader>."]  = {name = "Move"},
+    ["<leader>C"]  = {name = "Cmp"},
+    ["<leader>F"]  = {name = "Fuzzy finder"},
+    ["<leader>M"]  = {name = "Markdown"},
+    ["<leader>T"]  = {name = "Treesitter"},
+    ["<leader>b"]  = {name = "Buffer"},
+    ["<leader>e"]  = {name = "Explorer"},
+    ["<leader>f"]  = {name = "File"},
+    ["<leader>l"]  = {name = "Letter"},
+    ["<leader>m"]  = {name = "Select"},
+    ["<leader>n"]  = {name = "Number"},
+    ["<leader>p"]  = {name = "Paste"},
+    ["<leader>s"]  = {name = "Split/Window"},
+    ["<leader>t"]  = {name = "Tabs"},
+    ["<leader>w"]  = {name = "Wrap"},
   },
   {mode = "n"}
 )

@@ -2,7 +2,8 @@ local D = require("USER.dir")
 
 return {
   {
-    "echasnovski/mini.files",
+    -- "echasnovski/mini.files",
+    dir = D.plugin .. "mini.files",
     lazy = false,
     config = function()
       require("mini.files").setup(
