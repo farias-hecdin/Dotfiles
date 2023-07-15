@@ -1,6 +1,14 @@
-local D = require("USER.dir")
+local D = require("USER.utils.dir")
 
 return {
+  {
+    "Djancyp/outline",
+    dir = D.plugin .. "outline",
+    cmd = "BSOpen",
+    config = function()
+      require('outline').setup()
+    end
+  },
   {
     -- "glepnir/flybuf.nvim",
     dir = D.plugin .. "__flybuf.nvim",

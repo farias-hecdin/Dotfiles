@@ -1,4 +1,4 @@
-local D = require("USER.dir")
+local D = require("USER.utils.dir")
 
 return {
   {

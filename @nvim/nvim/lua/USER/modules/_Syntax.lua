@@ -1,4 +1,4 @@
-local D = require("USER.dir")
+local D = require("USER.utils.dir")
 
 return {
   {
@@ -37,7 +37,6 @@ return {
           "php",
           "python",
           "rust",
-          "sql",
           "svelte",
           "typescript",
           "vue",

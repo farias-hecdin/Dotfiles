@@ -1,5 +1,5 @@
-local W = require("USER.widgets")
-local D = require("USER.dir")
+local W = require("USER.utils.widgets")
+local D = require("USER.utils.dir")
 
 return {
   {
@@ -22,29 +22,37 @@ return {
       starter.setup({
         autoopen = false,
         items = {
-          starter.sections.recent_files(20, false),
           -- Custom actions
-          edit = { action = "enew", name = "Edit a new buffer", section = "Builtin (actions)" },
-          quit = { action = "qall", name = "Quit Nvim", section = "Builtin (actions)" },
-          explorer = { action = "NnnPicker", name = "File manager", section = "Builtin (actions)" },
-          fuzzy = { action = "FzfLua", name = "Fuzzy finder", section = "Builtin (actions)" },
+          { action = "bdelete", name = "Exit this buffer", section = "Builtin (actions)" },
+          { action = "qall", name = "Quit Nvim", section = "Builtin (actions)" },
+          { action = "enew", name = "Create a new buffer", section = "Builtin (actions)" },
+          { action = "NnnPicker", name = "Open file manager", section = "Builtin (actions)" },
+          { action = "FzfLua", name = "Open fuzzy finder", section = "Builtin (actions)" },
+          starter.sections.recent_files(9, true),
+          starter.sections.recent_files(30, false),
         },
         content_hooks = {
           starter.gen_hook.adding_bullet(),
           starter.gen_hook.indexing("section"),
           starter.gen_hook.padding(8, 1),
         },
-        header = require("USER.widgets").app_date(),
+        header = W.app_date_and_time(),
         footer = "<C-c> Close this buffer",
       })
     end
   },
   {
     -- "tamton-aquib/staline.nvim",
+    -- "farias-hecdin/staline.nvim",
     dir = D.plugin .. "__staline.nvim",
     lazy = false,
     config = function()
       require("staline").setup({
+        slots = {
+          counter = function() return "" .. W.app_counter() .. " " end,
+          lazy = function() return " " .. W.app_lazy() .. " " end,
+          clock = function() return " " .. W.app_clock() .. " " end,
+        },
         defaults = {
           expand_null_ls = false, -- This expands out all the null-ls sources to be shown
           full_path = false,
@@ -55,46 +63,47 @@ return {
           inactive_bgcolor = "#000000",
           true_colors = true, -- true lsp colors.
           font_active = "none", -- "bold", "italic", "bold,italic", etc
-          mod_symbol = " ",
+          mod_symbol = " ",
           lsp_client_symbol = " ",
-          lsp_client_character = 12,
+          lsp_client_character_length = 12,
           branch_symbol = " ",
           null_ls_symbol = "" -- A symbol to indicate that a source is coming from null-ls
         },
         mode_colors = {
-          R = "#CC5500",
-          V = "#40C4FF",
-          c = "#FFFFFF",
-          i = "#FFFF00",
-          n = "#2BBB4F",
-          r = "#F88379",
-          t = "#FFA000",
-          v = "#0091EA",
+          ["c"]  = "#FFFFFF",
+          ["n"]  = "#2BBB4F",
+          ["i"]  = "#FFFF00",
+          ["v"]  = "#0091EA",
+          ["V"]  = "#90CAF9",
+          [""] = "#BA68C8",
+          ["r"]  = "#F06292",
+          ["R"]  = "#CC5500",
+          ["t"]  = "#FFA000",
         },
         mode_icons = {
-          [""] = " R-V",
-          ["R"] = " REP",
-          ["S"] = " SEL",
-          ["V"] = " V-L",
-          ["c"] = " COM",
-          ["i"] = " INS",
-          ["ic"] = " I-C",
-          ["n"] = " NOR",
-          ["r"] = " R-L",
-          ["s"] = " SEL",
-          ["t"] = " TER",
-          ["v"] = " VIS",
+          ["c"]  = " COM",
+          ["n"]  = " NOR",
+          ["i"]  = " INS",
+          ["v"]  = " VIS",
+          ["V"]  = " V-L",
+          [""] = " V-V",
+          ["r"]  = " REP",
+          ["R"]  = " R-L",
+          ["t"]  = " TER",
+          ["s"]  = " SEL",
+          ["S"]  = " S-L",
+          ["ic"] = " IC ",
         },
         sections = {
-          left = { "-mode", "file_size", "counter", "%m", "branch" },
-          mid = { " ", "line_column" },
-          right = { "lsp_name", " ", "diagnostics", "lazy", "-clock" }
+          left  = { "-mode", "file_size", "counter", "%m", "branch" },
+          mid   = { "line_column" },
+          right = { "lsp_name", " ", "diagnostics", "lazy", "-clock", }
         },
         lsp_symbols = {
           Error = " ",
-          Info = " ",
+          Info = " ",
           Warn = " ",
-          Hint = "󰌵 "
+          Hint = " "
         },
         special_table = {
           help = { "Help", " " },

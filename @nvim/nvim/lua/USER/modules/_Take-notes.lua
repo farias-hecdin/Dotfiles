@@ -1,4 +1,4 @@
-local D = require("USER.dir")
+local D = require("USER.utils.dir")
 
 return {
   {
@@ -8,10 +8,10 @@ return {
     config = function()
       require("mind").setup()
       -- normal = {
-      --   ["<cr>"] = "open_data",
-      --   ["<s-cr>"] = "open_data_index",
-      --   ["<tab>"] = "toggle_node",
-      --   ["<s-tab>"] = "toggle_node",
+      --   ["<tab>"] = "open_data",
+      --   ["<s-tab>"] = "open_data_index",
+      --   ["<cr>"] = "toggle_node",
+      --   ["<s-cr>"] = "toggle_node",
       --   ["/"] = "select_path",
       --   ["$"] = "change_icon_menu",
       --   c = "add_inside_end_index",
@@ -30,8 +30,8 @@ return {
       --   x = "select",
       -- }
       -- selection = {
-      --   ["<cr>"] = "open_data",
-      --   ["<s-tab>"] = "toggle_node",
+      --   ["<tab>"] = "open_data",
+      --   ["<s-cr>"] = "toggle_node",
       --   ["/"] = "select_path",
       --   I = "move_inside_start",
       --   i = "move_inside_end",

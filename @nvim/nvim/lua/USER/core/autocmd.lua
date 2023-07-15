@@ -3,21 +3,23 @@ local augroup = vim.api.nvim_create_augroup -- Create/get autocommand group
 local autocmd = vim.api.nvim_create_autocmd -- Create autocommand
 
 
--- Use relative numbers in normal mode only for an active buffer (https://tinyurl.com/27vvebdb)
+-- Use relative numbers in normal mode only for an active buffer --------------
+-- (https://tinyurl.com/27vvebdb)
 local _numbertoggle_ = augroup("numbertoggle", { clear = true })
 autocmd({ "BufEnter","FocusGained","InsertLeave" }, {
   pattern = "*",
-  command = "set relativenumber",
+  command = "set relativenumber nofoldenable",
   group = _numbertoggle_
 })
 autocmd({ "BufLeave","FocusLost","InsertEnter" }, {
   pattern = "*",
-  command = "set norelativenumber",
+  command = "set norelativenumber nofoldenable",
   group = _numbertoggle_
 })
 
 
--- Start terminal in insert mode (https://tinyurl.com/28yty2xd)
+-- Start terminal in insert mode ----------------------------------------------
+-- (https://tinyurl.com/28yty2xd)
 local _bufcheck_ = augroup("bufcheck", { clear = true })
 autocmd("TermOpen", {
   group  = _bufcheck_,
@@ -26,21 +28,37 @@ autocmd("TermOpen", {
 })
 
 
--- Remove unwanted spaces
+-- Remove unwanted spaces -----------------------------------------------------
 autocmd("InsertLeave", {
   pattern = "*",
   command = [[%s/\s\+$//e]]
 })
 
 
--- Don't auto commenting new lines
+-- Lsp diagnostic enabled/disabled --------------------------------------------
+-- ( https://github.com/neovim/neovim/issues/13324#issuecomment-1592038788)
+-- autocmd({"BufNew", "InsertEnter"}, {
+-- -- or vim.api.nvim_create_autocmd({"BufNew", "TextChanged", "TextChangedI", "TextChangedP", "TextChangedT"}, {
+--   callback = function(args)
+--     vim.diagnostic.disable(args.buf)
+--   end
+-- })
+--
+-- autocmd({"BufWrite"}, {
+--   callback = function(args)
+--     vim.diagnostic.enable(args.buf)
+--   end
+-- })
+
+
+-- Don't auto commenting new lines --------------------------------------------
 autocmd("BufEnter", {
   pattern = "*",
   command = "set fo-=c fo-=r fo-=o"
 })
 
 
--- Workaround
+-- Workaround -----------------------------------------------------------------
 autocmd({ "BufEnter","BufAdd","BufNew","BufNewFile","BufWinEnter" }, {
   group = augroup("TS_FOLD_WORKAROUND", {}),
   callback = function()
@@ -50,7 +68,7 @@ autocmd({ "BufEnter","BufAdd","BufNew","BufNewFile","BufWinEnter" }, {
 })
 
 
--- See `:help vim.highlight.on_yank()`
+-- See `:help vim.highlight.on_yank()` ----------------------------------------
 local highlight_group = augroup("YankHighlight", { clear = true })
 autocmd("TextYankPost", {
   callback = function()
@@ -61,13 +79,13 @@ autocmd("TextYankPost", {
 })
 
 
--- Check if we need to reload the file when it changed
+-- Check if we need to reload the file when it changed ------------------------
 autocmd("FocusGained", {
   command = "checktime"
 })
 
 
--- Windows to close
+-- Windows to close -----------------------------------------------------------
 autocmd("FileType", {
   pattern = {
     "OverseerForm",
@@ -95,7 +113,7 @@ autocmd("FileType", {
 })
 
 
--- Show cursor line only in active window
+-- Show cursor line only in active window -------------------------------------
 autocmd({ "InsertLeave","WinEnter" }, {
   callback = function()
     local ok, cl = pcall(vim.api.nvim_win_get_var, 0, "auto-cursorline")
@@ -116,7 +134,7 @@ autocmd({ "InsertEnter","WinLeave" }, {
 })
 
 
--- Change cursor highlight
+-- Change cursor highlight ----------------------------------------------------
 autocmd("TermEnter", {
   callback = function()
     vim.cmd([[
@@ -126,7 +144,7 @@ autocmd("TermEnter", {
 })
 
 
--- Active or desactive colorcolumn
+-- Active or desactive colorcolumn --------------------------------------------
 local _colorcolumn_ = augroup("colorcolumn", { clear = true })
 autocmd({ "InsertEnter" }, {
   pattern = "*",

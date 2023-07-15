@@ -16,6 +16,7 @@ opt.confirm = true -- "confirm" message
 opt.cursorline = true -- highlight the current cursor line
 opt.expandtab = true -- convert tabs to spaces
 opt.fileencoding = "utf-8" -- the encoding written to a file
+opt.foldlevelstart= 99
 opt.foldlevel = 99
 opt.foldmethod = "syntax"
 opt.hidden = true -- hide files in the background instead of closing them

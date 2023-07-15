@@ -1,12 +1,26 @@
-local D = require("USER.dir")
+local D = require("USER.utils.dir")
 
 return {
   {
     -- "beauwilliams/focus.nvim",
     dir = D.plugin .. "focus.nvim",
-    event = "CursorMoved",
+    event = "WinLeave",
     config = function()
       require("focus").setup()
+    end
+  },
+  {
+    -- "nvim-zh/colorful-winsep.nvim",
+    dir = D.plugin .. "colorful-winsep.nvim",
+    event = "WinNew",
+    config = true,
+  },
+  {
+    -- "famiu/bufdelete.nvim",
+    dir = D.plugin .. "bufdelete.nvim",
+    event = "WinNew",
+    config = function()
+      require('bufdelete')
     end
   },
   {
