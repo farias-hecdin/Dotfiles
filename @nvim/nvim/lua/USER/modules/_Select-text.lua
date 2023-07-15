@@ -1,11 +1,6 @@
-local D = require("USER.dir")
+local D = require("USER.utils.dir")
 
 return {
-  {
-    -- "mg979/vim-visual-multi",
-    dir = D.plugin .. "vim-visual-multi",
-    keys = {{ mode="n", "<C-n>" }, { mode="v", "<C-n>" }},
-  },
   {
     -- "echasnovski/mini.surround",
     dir = D.plugin .. "mini.surround",
@@ -58,12 +53,16 @@ return {
   {
     -- "roobert/search-replace.nvim",
     dir =  D.plugin .. "search-replace.nvim",
-    keys = {{ "<C-r>", mode="v" }},
+    keys = {{ "<leader>r", mode="v" }, { "<leader>r", mode="n" }},
     config = function()
-      require("search-replace").setup()
+      require("search-replace").setup({
+      -- optionally override defaults
+      default_replace_single_buffer_options = "gcI",
+      default_replace_multi_buffer_options = "egcI",
+      })
       -- Keybinding
       local map = vim.api.nvim_set_keymap
-      map("v", "<C-r>",      "<CMD>SearchReplaceSingleBufferVisualSelection<CR>", {desc = "Replace: Visual"})
+      map("v", "<leader>r",  "<CMD>SearchReplaceSingleBufferVisualSelection<CR>", {desc = "Replace: Visual"})
       map("n", "<leader>rs", "<CMD>SearchReplaceSingleBufferSelections<CR>", {desc = "Replace: Single"})
       map("n", "<leader>rm", "<CMD>SearchReplaceMultiBufferSelections<CR>", {desc = "Replace: Multi"})
       -- Show the effects of a search / replace in a live preview window

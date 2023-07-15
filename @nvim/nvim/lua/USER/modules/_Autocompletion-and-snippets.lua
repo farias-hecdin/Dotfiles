@@ -1,4 +1,4 @@
-local D = require("USER.dir")
+local D = require("USER.utils.dir")
 
 return {
   {
@@ -32,8 +32,7 @@ return {
     event = "InsertEnter",
   },
   {
-    -- "rafamadriz/friendly-snippets",
-    dir = D.plugin .. "friendly-snippets",
+    "rafamadriz/friendly-snippets",
     event = "InsertEnter",
   },
   {
@@ -43,6 +42,7 @@ return {
     keys = { ":" },
     config = function()
       local cmp = require("cmp")
+      local icons = require('USER.utils.icons').lspkind
 
       cmp.setup({
         snippet = {
@@ -65,8 +65,8 @@ return {
           ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item(), {"i", "c"}), -- next suggestion
           ["<C-p>"] = cmp.mapping.select_prev_item(), -- previous suggestions
           ["<C-n>"] = cmp.mapping.select_next_item(), -- next suggestion
-          ["<C-u>"] = cmp.mapping.scroll_docs(-4), -- scrolling documentation
-          ["<C-d>"] = cmp.mapping.scroll_docs(4), -- scrolling documentation
+          ["<C-k>"] = cmp.mapping.scroll_docs(-4), -- scrolling documentation
+          ["<C-j>"] = cmp.mapping.scroll_docs(4), -- scrolling documentation
           ["<C-e>"] = cmp.mapping.abort(), -- abort completion window
           ["<Esc>"] = cmp.mapping.close(), -- close completion window
           ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
@@ -89,7 +89,7 @@ return {
         sources = cmp.config.sources({
           {
             name = "path", -- For file system paths
-            max_item_count = 20,
+            max_item_count = 10,
           },
           {
             name = "nvim_lsp", -- For lsp
@@ -104,20 +104,29 @@ return {
             max_item_count = 5,
           },
         }),
+        sorting = {
+          comparators = {
+            cmp.config.compare.exact,
+            -- cmp.config.compare.score,
+            cmp.config.compare.recently_used,
+          }
+        },
         -- configure icons
         formatting = {
           fields = { "abbr", "menu", "kind" },
-          format = function(entry, item)
-            local menu_icon = {
-              buffer = "󱔏 ",
-              cmdline = " ",
-              vsnip = " ",
-              nvim_lsp = " ",
-              path = " ",
-            }
-            item.menu = menu_icon[entry.source.name]
-            return item
-          end,
+          format = function(entry, vim_item)
+            local vim_kind = vim_item.kind
+            vim_item.kind = (icons[vim_kind] or "") .. " " .. vim_kind .. " "
+
+            vim_item.dup = ({
+              vsnip = 0,
+              nvim_lsp = 0,
+              nvim_lua = 0,
+              buffer = 0,
+            })[entry.source.name] or 0
+
+            return vim_item
+          end
         },
       })
 
@@ -125,9 +134,7 @@ return {
       cmp.setup.cmdline(":", {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources(
-          {{
-            name = "path"
-          }},
+          {{ name = "path" }},
           {{
             name = "cmdline",
             option = { ignore_cmds = {"Man", "!"} }

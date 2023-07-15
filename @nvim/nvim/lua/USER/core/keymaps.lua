@@ -1,6 +1,6 @@
 local map = vim.keymap.set
 
--- Keymaps generales ==========================================================
+-- Keymaps generales ----------------------------------------------------------
 --
 -- Modos
 -- * normal mode   = "n",
@@ -10,7 +10,12 @@ local map = vim.keymap.set
 -- * terminal mode = "t",
 -- * command mode  = "c",
 
---
+-- Replace
+map("v", "<leader>R", ":SearchReplaceSingleBufferVisualSelection<cr>", {desc="Replace: selection"})
+
+-- Gitsigns
+map("n", "<leader>Gd", ":Gitsigns diffthis<cr>",     {desc="Gitsigns: diff"})
+map("n", "<leader>Gp", ":Gitsigns preview_hunk<cr>", {desc="Gitsigns: preview"})
 
 -- Undo
 map("n", "<C-u>", "<ESC>u")
@@ -36,6 +41,10 @@ map({"n", "x"}, "x", '"_x')
 
 -- MiniStarter
 map("n", "<leader>S", ":lua require('mini.starter').open()<cr>", {desc="Starter"})
+
+-- Diffview
+map("n", "<leader>Do", ":DiffviewOpen<cr>", {desc="Diffview: open"})
+map("n", "<leader>Dc", ":DiffviewClose<cr>", {desc="Diffview: close"})
 
 -- Oldfiles
 map("n", "<leader>o", ":browse oldfiles<cr>", {desc="Old files"})
@@ -91,8 +100,8 @@ map("n", "<leader>bn", ":bn<cr>",     {desc="Buffer: next"})
 map("n", "<leader>bp", ":bp<cr>",     {desc="Buffer: previous"})
 map("n", "<leader>ba", ":ls<cr>",     {desc="Buffer: all"})
 map("n", "<leader>bx", ":bd<cr>",     {desc="Buffer: close"})
--- map("n", "<leader>bl", ":BSOpen<cr>", {desc="Buffer: list"})
-map("n", "<leader>bl", ":FlyBuf<cr>", {desc="Buffer: list"})
+map("n", "<leader>bl", ":BSOpen<cr>", {desc="Buffer: list"})
+map("n", "<leader>bo", ":FlyBuf<cr>", {desc="Buffer: list alt"})
 
 -- Refresh
 map("n", "<leader>%", ":source %<cr>", {desc="Refresh"})
@@ -147,7 +156,7 @@ map("n", "<leader>sw", ":WindowNvim<cr>", {desc="Split: check"})
 map("n", "<leader>\'", ":WindowNvim<cr>", {desc="Split: check"})
 
 -- Easier pasting
-map("v", "p", '"_dP',              {desc="Paste"}) -- Paste over currently selected text without yanking it
+map("v", "p", '"_dP',              {desc="Paste"})
 map("n", "p", "gp",                {desc="Paste"})
 map("n", "<leader>pk", ":pu!<cr>", {desc="Paste: up"})
 map("n", "<leader>pj", ":pu<cr>",  {desc="Paste: down"})
@@ -171,31 +180,36 @@ map("n", "<leader>W", ":checkhealth which_key<cr>", {desc="Which key"})
 map("n", "<leader>Cd", ":lua require('cmp').setup.buffer {enabled = false}<cr>", {desc="Cmp: disable"})
 map("n", "<leader>Ce", ":lua require('cmp').setup.buffer {enabled = true}<cr>",  {desc="Cmp: enabled"})
 
--- URL handling (https://sbulav.github.io/vim/neovim-opening-urls)
+-- URL handling ( https://sbulav.github.io/vim/neovim-opening-urls )
 map("n", "gx", ':call jobstart(["xdg-open", expand("<cfile>")], {"detach": v:true})<cr>', {desc="Open: link"})
 
 
--- Which_key register =========================================================
-local wk = require("which-key")
+-- Which_key register ---------------------------------------------------------
+local which_key = require("which-key")
 
-wk.register(
-  {
-    ["<leader>\\"] = {name = "Vim visual multi"},
-    ["<leader>."]  = {name = "Move"},
-    ["<leader>C"]  = {name = "Cmp"},
-    ["<leader>F"]  = {name = "Fuzzy finder"},
-    ["<leader>M"]  = {name = "Markdown"},
-    ["<leader>T"]  = {name = "Treesitter"},
-    ["<leader>b"]  = {name = "Buffer"},
-    ["<leader>e"]  = {name = "Explorer"},
-    ["<leader>f"]  = {name = "File"},
-    ["<leader>l"]  = {name = "Letter"},
-    ["<leader>m"]  = {name = "Select"},
-    ["<leader>n"]  = {name = "Number"},
-    ["<leader>p"]  = {name = "Paste"},
-    ["<leader>s"]  = {name = "Split/Window"},
-    ["<leader>t"]  = {name = "Tabs"},
-    ["<leader>w"]  = {name = "Wrap"},
-  },
-  {mode = "n"}
+which_key.register({
+  ["<leader>."]  = {name = "Move"},
+  ["<leader>C"]  = {name = "Cmp"},
+  ["<leader>D"]  = {name = "Diffview"},
+  ["<leader>F"]  = {name = "Fuzzy Finder"},
+  ["<leader>M"]  = {name = "Markdown"},
+  ["<leader>T"]  = {name = "Treesitter"},
+  ["<leader>b"]  = {name = "Buffer"},
+  ["<leader>e"]  = {name = "Explorer"},
+  ["<leader>f"]  = {name = "File"},
+  ["<leader>l"]  = {name = "Letter"},
+  ["<leader>m"]  = {name = "Select"},
+  ["<leader>n"]  = {name = "Number"},
+  ["<leader>p"]  = {name = "Paste"},
+  ["<leader>s"]  = {name = "Split/Window"},
+  ["<leader>t"]  = {name = "Tabs"},
+  ["<leader>w"]  = {name = "Wrap"},
+  }, {mode = "n"}
+)
+
+which_key.register({
+  ["<leader>."]  = {name = "Tabs/move"},
+  ["<leader>l"]  = {name = "Letter"},
+  ["<leader>m"]  = {name = "Select"},
+  }, {mode = "v"}
 )
