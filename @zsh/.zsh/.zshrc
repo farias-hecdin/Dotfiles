@@ -45,34 +45,43 @@ source $ZSH/plugins/git-status/git-status.plugin.zsh
 alias q="exit"
 alias C="clear"
 alias R="exec zsh"
-alias Cp="cp -iv"
-alias Mv="mv -iv"
-alias Rm="rm -iv"
+alias cP="cp -iv"
+alias mV="mv -iv"
+alias rM="rm -iv"
 
 # App configuration
-alias zconfig="nvim ~/.zsh/"
-alias tconfig="nvim ~/.tmux.conf"
-alias gconfig="nvim ~/.gitconfig"
+alias zConfig="nvim ~/.zsh/"
+alias tConfig="nvim ~/.tmux.conf"
+alias gConfig="nvim ~/.gitconfig"
+alias nConfig="nvim ~/.config/nvim/"
 
 # App
-alias d="ncdu"
 alias e="nnn"
-alias v="nvim"
-alias g="lazygit"
-alias fzfe="fzf -e"
+alias ed="nvim"
+alias fzE="fzf -e"
+
+# Du
+alias duC="ncdu"
+alias duG="gdu"
+
+# Git
+alias gt="lazygit"
+alias gtLast="git log -1 HEAD --stat"
+alias gtRemote="git remote -v"
+alias gtRemoteChange="git remote set-url origin"
 
 # Tmux
 alias tx="tmux"
-alias txl="tmux list-sessions"
-alias txn="tmux new-session -s"
-alias txk="tmux kill-server -t"
-alias txa="tmux attach -t"
+alias txList="tmux list-sessions"
+alias txNew="tmux new-session -s"
+alias txKill="tmux kill-server -t"
+alias txAttach="tmux attach -t"
 
 # Jump
 alias ju="jump"
-alias jum="mark"
-alias jul="marks"
-alias juu="unmarks"
+alias juAdd="mark"
+alias juList="marks"
+alias juDelete="unmarks"
 
 
 # Keybinding ==================================================================
