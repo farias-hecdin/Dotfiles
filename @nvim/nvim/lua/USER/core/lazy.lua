@@ -1,12 +1,4 @@
--- LAZY EVENTS
--- * "InsertEnter", (load a plugin when entering Insert mode)
--- * "TextChangedI", (After a change was made to the text in the current buffer in Insert mode)
--- * "InsertLeave", (Just after leaving Insert mode)
--- * "BufEnter *.lua",
--- * "VeryLazy", (load later)
-
-
--- LAZY INSTALLATION
+-- Lazy installation
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -21,7 +13,7 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 
--- PLUGIN SETUP
+-- Plugin setup
 require("lazy").setup("USER.modules", {
   defaults = {
     lazy = true, -- should plugins be lazy-loaded?
@@ -41,14 +33,14 @@ require("lazy").setup("USER.modules", {
     border = "rounded",
     --border = { "┏", "━", "┓", "┃", "┛","━", "┗", "┃" },
     icons = {
-      lazy = "󰒲 ",
-      loaded = " ",
+      lazy       = "󰒲 ",
+      loaded     = " ",
       not_loaded = " ",
-      start = " ",
-      ft = " ",
-      cmd = " ",
-      event = " ",
-      keys = " ",
+      start      = " ",
+      ft         = " ",
+      cmd        = " ",
+      event      = " ",
+      keys       = " ",
     }
   },
   performance = {

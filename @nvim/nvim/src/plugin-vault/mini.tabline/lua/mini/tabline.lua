@@ -390,6 +390,7 @@ H.get_nonunique_tab_ids = function()
   return vim.tbl_flatten(vim.tbl_filter(function(x) return #x > 1 end, label_tab_ids))
 end
 
+-- @NOTE:
 -- Fit tabline to maximum displayed width -------------------------------------
 H.fit_width = function()
   H.update_center_buf_id()

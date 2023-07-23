@@ -1,7 +1,7 @@
 local D = require("USER.utils.dir")
 
 return {
-  { -- ( https://github.com/navarasu/onedark.nvim )
+  {
     -- "navarasu/onedark.nvim",
     dir = D.plugin .. "onedark.nvim",
     lazy = false,
@@ -21,6 +21,8 @@ return {
         highlights = {
           ["@comment"]                = { fg="#007272" },
           ["@text.strong"]            = { fg="#D0D0D0" },
+          RainbowDelimiterLv1         = { fg="#FFEE68"},
+          RainbowDelimiterLv2         = { fg="#CC9057"},
           CmpItemAbbrMatch            = { fg="#0074D9", fmt="bold" },
           ColorColumn                 = { bg="#330000" },
           Comment                     = { fg="#007272" },

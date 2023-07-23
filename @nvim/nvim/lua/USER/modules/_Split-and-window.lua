@@ -18,7 +18,8 @@ return {
   {
     -- "famiu/bufdelete.nvim",
     dir = D.plugin .. "bufdelete.nvim",
-    event = "WinNew",
+    keys = "<leader>sx",
+    -- event = "WinNew",
     config = function()
       require('bufdelete')
     end
