@@ -5,33 +5,33 @@ local autocmd = vim.api.nvim_create_autocmd -- Create autocommand
 
 -- Use relative numbers in normal mode only for an active buffer --------------
 -- (https://tinyurl.com/27vvebdb)
-local _numbertoggle_ = augroup("numbertoggle", { clear = true })
+local number_toggle = augroup("numbertoggle", { clear = true })
 autocmd({ "BufEnter","FocusGained","InsertLeave" }, {
   pattern = "*",
   command = "set relativenumber nofoldenable",
-  group = _numbertoggle_
+  group   = number_toggle,
 })
 autocmd({ "BufLeave","FocusLost","InsertEnter" }, {
   pattern = "*",
   command = "set norelativenumber nofoldenable",
-  group = _numbertoggle_
+  group   = number_toggle,
 })
 
 
 -- Start terminal in insert mode ----------------------------------------------
 -- (https://tinyurl.com/28yty2xd)
-local _bufcheck_ = augroup("bufcheck", { clear = true })
+local buf_check = augroup("bufcheck", { clear = true })
 autocmd("TermOpen", {
-  group  = _bufcheck_,
   pattern = "*",
-  command = "startinsert | set winfixheight"
+  command = "startinsert | set winfixheight",
+  group   = buf_check,
 })
 
 
 -- Remove unwanted spaces -----------------------------------------------------
 autocmd("InsertLeave", {
   pattern = "*",
-  command = [[%s/\s\+$//e]]
+  command = [[%s/\s\+$//e]],
 })
 
 
@@ -54,13 +54,13 @@ autocmd("InsertLeave", {
 -- Don't auto commenting new lines --------------------------------------------
 autocmd("BufEnter", {
   pattern = "*",
-  command = "set fo-=c fo-=r fo-=o"
+  command = "set fo-=c fo-=r fo-=o",
 })
 
 
 -- Workaround -----------------------------------------------------------------
 autocmd({ "BufEnter","BufAdd","BufNew","BufNewFile","BufWinEnter" }, {
-  group = augroup("TS_FOLD_WORKAROUND", {}),
+  group    = augroup("TS_FOLD_WORKAROUND", {}),
   callback = function()
     vim.opt.foldmethod = "expr"
     vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
@@ -74,14 +74,14 @@ autocmd("TextYankPost", {
   callback = function()
     vim.highlight.on_yank()
   end,
-  pattern = "*",
-  group = highlight_group
+  pattern  = "*",
+  group    = highlight_group,
 })
 
 
 -- Check if we need to reload the file when it changed ------------------------
 autocmd("FocusGained", {
-  command = "checktime"
+  command = "checktime",
 })
 
 
@@ -145,14 +145,14 @@ autocmd("TermEnter", {
 
 
 -- Active or desactive colorcolumn --------------------------------------------
-local _colorcolumn_ = augroup("colorcolumn", { clear = true })
+local color_column = augroup("colorcolumn", { clear = true })
 autocmd({ "InsertEnter" }, {
   pattern = "*",
   command = "set colorcolumn=80",
-  group = _numbertoggle_
+  group   = color_column,
 })
 autocmd({ "InsertLeave" }, {
   pattern = "*",
   command = "set colorcolumn=0",
-  group = _numbertoggle_
+  group   = color_column,
 })

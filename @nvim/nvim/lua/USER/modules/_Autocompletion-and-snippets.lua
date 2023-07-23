@@ -61,17 +61,17 @@ return {
           }
         },
         mapping = cmp.mapping.preset.insert({
-          ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item(), {"i", "c"}), -- previous suggestion
-          ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item(), {"i", "c"}), -- next suggestion
-          ["<C-p>"] = cmp.mapping.select_prev_item(), -- previous suggestions
-          ["<C-n>"] = cmp.mapping.select_next_item(), -- next suggestion
-          ["<C-k>"] = cmp.mapping.scroll_docs(-4), -- scrolling documentation
-          ["<C-j>"] = cmp.mapping.scroll_docs(4), -- scrolling documentation
-          ["<C-e>"] = cmp.mapping.abort(), -- abort completion window
-          ["<Esc>"] = cmp.mapping.close(), -- close completion window
+          ["<Up>"]      = cmp.mapping(cmp.mapping.select_prev_item(), {"i", "c"}), -- previous suggestion
+          ["<Down>"]    = cmp.mapping(cmp.mapping.select_next_item(), {"i", "c"}), -- next suggestion
+          ["<C-p>"]     = cmp.mapping.select_prev_item(), -- previous suggestions
+          ["<C-n>"]     = cmp.mapping.select_next_item(), -- next suggestion
+          ["<C-k>"]     = cmp.mapping.scroll_docs(-4), -- scrolling documentation
+          ["<C-j>"]     = cmp.mapping.scroll_docs(4), -- scrolling documentation
+          ["<C-e>"]     = cmp.mapping.abort(), -- abort completion window
+          ["<Esc>"]     = cmp.mapping.close(), -- close completion window
           ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
-          ["<C-y>"] = cmp.mapping.confirm({ select = true }), -- accept suggestions
-          ["<CR>"] = cmp.mapping.confirm({ select = false }), -- accept suggestions
+          ["<C-y>"]     = cmp.mapping.confirm({ select = true }), -- accept suggestions
+          ["<CR>"]      = cmp.mapping.confirm({ select = false }), -- accept suggestions
           -- Active suggestions
           ["<Tab>"] = cmp.mapping(function(fallback)
             local col = vim.fn.col(".") - 1
@@ -88,20 +88,24 @@ return {
         -- sources for autocompletion
         sources = cmp.config.sources({
           {
-            name = "path", -- For file system paths
-            max_item_count = 10,
-          },
-          {
             name = "nvim_lsp", -- For lsp
-            max_item_count = 10,
-          },
-          {
-            name = "buffer", -- For text within current buffer
-            max_item_count = 5,
+            max_item_count = 20,
+            priority = 1000
           },
           {
             name = "vsnip", -- For vsnip users
-            max_item_count = 5,
+            max_item_count = 20,
+            priority = 750
+          },
+          {
+            name = "buffer", -- For text within current buffer
+            max_item_count = 20,
+            priority = 500
+          },
+          {
+            name = "path", -- For file system paths
+            max_item_count = 20,
+            priority = 250
           },
         }),
         sorting = {
@@ -117,7 +121,6 @@ return {
           format = function(entry, vim_item)
             local vim_kind = vim_item.kind
             vim_item.kind = (icons[vim_kind] or "") .. " " .. vim_kind .. " "
-
             vim_item.dup = ({
               vsnip = 0,
               nvim_lsp = 0,
@@ -135,10 +138,7 @@ return {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources(
           {{ name = "path" }},
-          {{
-            name = "cmdline",
-            option = { ignore_cmds = {"Man", "!"} }
-          }}
+          {{ name = "cmdline", option = {ignore_cmds = {"Man", "!"}} }}
         )
       })
       vim.opt.completeopt = { "menu", "menuone", "noselect" }

@@ -55,23 +55,23 @@ return {
         highlighters = {
           -- Highlight standalone "FIXME:", " HACK:", "TODO:", "NOTE:", "PERF:"
 
-          bug   = { pattern = "%f[%a]BUG:",   group = "MiniHipatternsFixme" },
-          fix   = { pattern = "%f[%a]FIX:",   group = "MiniHipatternsFixme" },
-          fixme = { pattern = "%f[%a]FIXME:", group = "MiniHipatternsFixme" },
-          issue = { pattern = "%f[%a]ISSUE:", group = "MiniHipatternsFixme" },
+          bug   = { pattern = "%f[%a]BUG",   group = "MiniHipatternsFixme" },
+          fix   = { pattern = "%f[%a]FIX",   group = "MiniHipatternsFixme" },
+          fixme = { pattern = "%f[%a]FIXME", group = "MiniHipatternsFixme" },
+          issue = { pattern = "%f[%a]ISSUE", group = "MiniHipatternsFixme" },
 
-          hack    = { pattern = "%f[%a]HACK:",    group = "MiniHipatternsHack" },
-          warning = { pattern = "%f[%a]WARNING:", group = "MiniHipatternsHack" },
-          warn    = { pattern = "%f[%a]WARN:",    group = "MiniHipatternsHack" },
+          hack    = { pattern = "%f[%a]HACK",    group = "MiniHipatternsHack" },
+          warning = { pattern = "%f[%a]WARNING", group = "MiniHipatternsHack" },
+          warn    = { pattern = "%f[%a]WARN",    group = "MiniHipatternsHack" },
 
-          todo  = { pattern = "%f[%a]TODO:", group = "MiniHipatternsTodo" },
-          test  = { pattern = "%f[%a]TEST:", group = "MiniHipatternsTodo" },
+          todo  = { pattern = "%f[%a]TODO", group = "MiniHipatternsTodo" },
+          test  = { pattern = "%f[%a]TEST", group = "MiniHipatternsTodo" },
 
-          note  = { pattern = "%f[%a]NOTE:", group = "MiniHipatternsNote" },
-          info  = { pattern = "%f[%a]INFO:", group = "MiniHipatternsNote" },
+          note  = { pattern = "%f[%a]NOTE", group = "MiniHipatternsNote" },
+          info  = { pattern = "%f[%a]INFO", group = "MiniHipatternsNote" },
 
-          perf     = { pattern = "%f[%a]PERF:",     group = "MiniHipatternsPerf" },
-          optimize = { pattern = "%f[%a]OPTIMIZE:", group = "MiniHipatternsPerf" },
+          perf     = { pattern = "%f[%a]PERF",     group = "MiniHipatternsPerf" },
+          optimize = { pattern = "%f[%a]OPTIMIZE", group = "MiniHipatternsPerf" },
 
           -- Highlight hex color strings (`#FFFF00`) using that color
           hex_color = hipatterns.gen_highlighter.hex_color(),

@@ -171,11 +171,11 @@ M.get_statusline = function(status)
 
     -- NOTE: Slot for creating new sections in the configuration table in the "slots" index.
     if conf.slots ~= nil then
-        for i, value in pairs(slot_table) do
+        for key, value in pairs(slot_table) do
             if type(value) ~= "function" then
-                M.sections[i] = tostring(value)
+                M.sections[key] = tostring(value)
             else
-                M.sections[i] = value()
+                M.sections[key] = value()
             end
         end
     end

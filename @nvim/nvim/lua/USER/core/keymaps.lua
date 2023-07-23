@@ -10,8 +10,19 @@ local map = vim.keymap.set
 -- * terminal mode = "t",
 -- * command mode  = "c",
 
--- Replace
-map("v", "<leader>R", ":SearchReplaceSingleBufferVisualSelection<cr>", {desc="Replace: selection"})
+-- LspSystem  (more: ../modules/_Lsp-wizard-and-config.lua)
+map("n", "<leader>Ll", ":Lspsystem show_line_diagnostics<cr>",      {desc="Lsp: diagn. line"})
+map("n", "<leader>Ld", ":Lspsystem show_buf_diagnostics<cr>",       {desc="Lsp: diagn. buffer"})
+map("n", "<leader>Lw", ":Lspsystem show_workspace_diagnostics<cr>", {desc="Lsp: diagn. workspace"})
+map("n", "<leader>Lg", ":Lspsystem goto_definition<cr>",            {desc="Lsp: goto definition"})
+map("n", "<leader>Lp", ":Lspsystem peek_definition<cr>",            {desc="Lsp: peek definition"})
+map("n", "<leader>Lh", ":Lspsystem hover_doc<cr>",                  {desc="Lsp: hover doc"})
+map("n", "<leader>La",  ":Lspsystem code_action<cr>",               {desc="Lsp: actions"})
+map("n", "gh",          ":Lspsystem hover_doc<cr>",                 {desc="[LSP] hover doc"})
+map("n", "gd",          ":Lspsystem show_buf_diagnostics<cr>",      {desc="[LSP] diagn. buffer"})
+
+-- Search mode
+map("v", "<leader>s", "y/<C-r>\"", {desc="Search: text selected"})
 
 -- Gitsigns
 map("n", "<leader>Gd", ":Gitsigns diffthis<cr>",     {desc="Gitsigns: diff"})
@@ -42,10 +53,6 @@ map({"n", "x"}, "x", '"_x')
 -- MiniStarter
 map("n", "<leader>S", ":lua require('mini.starter').open()<cr>", {desc="Starter"})
 
--- Diffview
-map("n", "<leader>Do", ":DiffviewOpen<cr>", {desc="Diffview: open"})
-map("n", "<leader>Dc", ":DiffviewClose<cr>", {desc="Diffview: close"})
-
 -- Oldfiles
 map("n", "<leader>o", ":browse oldfiles<cr>", {desc="Old files"})
 
@@ -63,13 +70,16 @@ map("n", "<leader>wd", ":set nowrap<cr>", {desc="Wrap: disabled"})
 
 -- Fzf-lua
 map("n", "<leader>Fo", ":FzfLua<cr>",          {desc="Fzf: open"})
+map("n", "<leader>Fg", ":FzfLua grep<cr>",     {desc="Fzf: grep"})
 map("n", "<leader>Ff", ":FzfLua files cwd=~/", {desc="Fzf: search"})
 
 -- Markdown
-map("v", "<C-b>", ":lua require('markdowny').bold()<cr>",   {desc="Md: bold",})
-map("v", "<C-i>", ":lua require('markdowny').italic()<cr>", {desc="Md: italic"})
-map("v", "<C-l>", ":lua require('markdowny').link()<cr>",   {desc="Md: link"})
-map("n", "<leader>Mm", ":MarkdownHeaders<cr>",              {desc="Md: table of content"})
+map("v", "<C-b>",      ":lua require('markdowny').bold()<cr>",   {desc="Md: bold",})
+map("v", "<C-i>",      ":lua require('markdowny').italic()<cr>", {desc="Md: italic"})
+map("v", "<C-l>",      ":lua require('markdowny').link()<cr>",   {desc="Md: link"})
+map("n", "<leader>Mt", ":MdTocToggle<cr>",                       {desc="Md: open TOC"})
+map("n", "<leader>Mu", ":MdUpdateNumber<cr>",                    {desc="Md: add/update number"})
+map("n", "<leader>Mx", ":MdCleanNumber<cr>",                     {desc="Md: clean number"})
 
 -- Cut, Copy and Paste
 map("v", "<C-x>", ":!termux-clipboard-set<cr>") -- “Ctrl-x” to cut
@@ -118,8 +128,8 @@ map("n", "<leader>tx", ":tabclose<cr>", {desc="Tabs: close"})
 
 -- File explorer
 map("n", "<leader>eo", ":NnnExplorer<cr>",          {desc="Explorer: sidebar"})
-map("n", "<leader>ef", ":NnnPicker %:p:h<cr>",      {desc="Explorer: float"})
-map("n", "<leader>em", ":lua MiniFiles.open()<cr>", {desc="Explorer: open"})
+map("n", "<leader>ef", ":NnnPicker %:p:h<cr>",      {desc="Explorer: float (active buffer)"})
+map("n", "<leader>em", ":lua MiniFiles.open()<cr>", {desc="Explorer: miller columns"})
 
 -- Clear search with <esc>
 map("n", "<esc>", "<cmd>noh<cr><esc>", {desc="Escape and clear hlsearch"})
@@ -151,7 +161,8 @@ map("n", "<leader>se", "<C-w>=",                   {desc="Window: equal size"})
 -- Split
 map("n", "<leader>sH", "<C-w>v",          {desc="Split: horizontal"})
 map("n", "<leader>sV", "<C-w>s",          {desc="Split: vertical"})
-map("n", "<leader>sx", ":close<cr>",      {desc="Split: close"})
+map("n", "<leader>sq", ":close<cr>",      {desc="Split: quit"})
+map("n", "<leader>sx", ":Bdelete<cr>",    {desc="Split: close"})
 map("n", "<leader>sw", ":WindowNvim<cr>", {desc="Split: check"})
 map("n", "<leader>\'", ":WindowNvim<cr>", {desc="Split: check"})
 
@@ -162,7 +173,8 @@ map("n", "<leader>pk", ":pu!<cr>", {desc="Paste: up"})
 map("n", "<leader>pj", ":pu<cr>",  {desc="Paste: down"})
 
 -- Duplicate lines
-map("x", "<leader>d", "y<cmd>:pu<cr>", {desc="Duplicate a line"})
+map("x", "<leader>d", ":'<,'>y|put!<cr>", {desc="Duplicate: all line"})
+map("n", "<leader>d", "yyP<cr>",          {desc="Duplicate: an line"})
 
 -- Better up/down
 map("n", "j", "v:count == 0 ? 'gj' : 'j' ", {expr=true, silent=true})
@@ -171,7 +183,7 @@ map("v", "j", "v:count == 0 ? 'gj' : 'j' ", {expr=true, silent=true})
 map("v", "k", "v:count == 0 ? 'gk' : 'k' ", {expr=true, silent=true})
 
 -- Lazy
-map("n", "<leader>L", ":Lazy<cr>", {desc="Lazy"})
+map("n", "<leader>Z", ":Lazy<cr>", {desc="Lazy"})
 
 -- Which_key
 map("n", "<leader>W", ":checkhealth which_key<cr>", {desc="Which key"})
@@ -190,8 +202,8 @@ local which_key = require("which-key")
 which_key.register({
   ["<leader>."]  = {name = "Move"},
   ["<leader>C"]  = {name = "Cmp"},
-  ["<leader>D"]  = {name = "Diffview"},
   ["<leader>F"]  = {name = "Fuzzy Finder"},
+  ["<leader>G"]  = {name = "Gitsigns"},
   ["<leader>M"]  = {name = "Markdown"},
   ["<leader>T"]  = {name = "Treesitter"},
   ["<leader>b"]  = {name = "Buffer"},

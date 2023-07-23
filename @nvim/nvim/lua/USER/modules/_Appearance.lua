@@ -23,20 +23,20 @@ return {
         autoopen = false,
         items = {
           -- Custom actions
-          { action = "bdelete", name = "Exit this buffer", section = "Builtin (actions)" },
-          { action = "qall", name = "Quit Nvim", section = "Builtin (actions)" },
+          { action = "bdelete", name = "Exit", section = "Builtin (actions)" },
+          { action = "qall", name = "Quit Neovim", section = "Builtin (actions)" },
           { action = "enew", name = "Create a new buffer", section = "Builtin (actions)" },
-          { action = "NnnPicker", name = "Open file manager", section = "Builtin (actions)" },
-          { action = "FzfLua", name = "Open fuzzy finder", section = "Builtin (actions)" },
-          starter.sections.recent_files(9, true),
-          starter.sections.recent_files(30, false),
+          { action = "NnnPicker %:p:h", name = "Open File manager", section = "Builtin (actions)" },
+          { action = "FzfLua", name = "Open Fuzzy finder", section = "Builtin (actions)" },
+          starter.sections.recent_files(25, true),
+          starter.sections.recent_files(25, false),
         },
         content_hooks = {
           starter.gen_hook.adding_bullet(),
           starter.gen_hook.indexing("section"),
           starter.gen_hook.padding(8, 1),
         },
-        header = W.app_date_and_time(),
+        header = W.app_date() .. "  " .. W.app_clock(),
         footer = "<C-c> Close this buffer",
       })
     end
@@ -64,7 +64,7 @@ return {
           true_colors = true, -- true lsp colors.
           font_active = "none", -- "bold", "italic", "bold,italic", etc
           mod_symbol = " ",
-          lsp_client_symbol = " ",
+          lsp_client_symbol = " ",
           lsp_client_character_length = 12,
           branch_symbol = " ",
           null_ls_symbol = "" -- A symbol to indicate that a source is coming from null-ls

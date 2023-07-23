@@ -30,11 +30,4 @@ W.app_lazy = function()
   return " " .. tostring(ms) .. "ms"
 end
 
--- Date and hour
-W.app_date_and_time = function()
-  local time = " " .. os.date("%I:%M%p")
-  local date = " " .. os.date("(%A) %v")
-  return date .. "   " .. time
-end
-
 return W
