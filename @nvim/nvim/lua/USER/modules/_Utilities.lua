@@ -11,10 +11,4 @@ return {
     lazy = false,
     priority = 1001,
   },
-  {
-    -- "jbyuki/quickmath.nvim",
-    dir = D.plugin .. "quickmath-nvim",
-    cmd = { "Quickmath", "QuickmathNow" },
-    config = true,
-  },
 }

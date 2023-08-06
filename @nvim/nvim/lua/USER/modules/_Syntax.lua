@@ -1,5 +1,3 @@
-local D = require("USER.utils.dir")
-
 return {
   {
     "nvim-treesitter/nvim-treesitter",
@@ -12,7 +10,7 @@ return {
         highlight = {
           enable = true, -- false will disable the whole extension
           disable = function(lang, bufnr) -- Disable in large C++ buffers
-            file = (lang == "markdown" and vim.api.nvim_buf_line_count(bufnr) > 500)
+            local file = (lang == "markdown" and vim.api.nvim_buf_line_count(bufnr) > 500)
             return file
           end,
         },
@@ -22,24 +20,25 @@ return {
           disable = { "python" }
         },
         -- enable autotagging (w/ nvim-ts-autotag plugin)
-        autotag = { enable = true },
+        autotag = {enable = true},
         -- ensure these language parsers are installed
         ensure_installed = {
-          "astro",
-          "bash",
-          "go",
           "html",
           "javascript",
-          "kotlin",
-          "lua",
+          "typescript",
           "markdown",
           "markdown_inline",
-          "php",
-          "python",
-          "rust",
-          "svelte",
-          "typescript",
-          "vue",
+          -- "bash",
+          -- "cpp",
+          -- "go",
+          -- "java",
+          -- "kotlin",
+          -- "lua",
+          -- "php",
+          -- "python",
+          -- "rust",
+          -- "sql",
+          -- "svelte",
         },
         -- auto install above language parsers
         auto_install = false,

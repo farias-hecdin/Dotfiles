@@ -181,7 +181,7 @@ function M.list_buffers()
     table.sort(buffers)
     local current_buffer = api.nvim_get_current_buf()
     for _, buffer in ipairs(buffers) do
-        --check if buffers are avtive
+        --check if buffers are active
         if api.nvim_buf_is_loaded(buffer) then
             local buffer_name = api.nvim_buf_get_name(buffer)
             -- check if buffer has changed

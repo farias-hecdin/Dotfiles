@@ -1,13 +1,9 @@
-local D = require("USER.utils.dir")
-
 return {
   {
-    -- "ibhagwan/fzf-lua",
-    dir = D.plugin .. "fzf-lua",
+    "ibhagwan/fzf-lua",
     keys = { "<leader>F" },
     cmd = "FzfLua",
     config = function()
-      local actions = require "fzf-lua.actions"
       require("fzf-lua").setup({
         winopts = {
           height = 0.95,

@@ -1,12 +1,46 @@
-local D = require("USER.utils.dir")
-
 return {
   {
-    -- "folke/which-key.nvim",
-    dir = D.plugin .. "which-key.nvim",
+    "folke/which-key.nvim",
     event = "VeryLazy",
-    keys = { "<leader>" },
     config = function()
+      -- Register -------------------------------------------------------------
+      local which_key = require("which-key")
+
+      which_key.register(
+        {
+          ["z"] = {name = "Fold"},
+          ["gz"] = {name = "Surround"},
+          ["gd"] = {name = "Surround"},
+          ["<leader>."] = {name = "Move"},
+          ["<leader>C"] = {name = "Cmp"},
+          ["<leader>F"] = {name = "Fuzzy Finder"},
+          ["<leader>G"] = {name = "Gitsigns"},
+          ["<leader>M"] = {name = "Markdown"},
+          ["<leader>T"] = {name = "Treesitter"},
+          ["<leader>b"] = {name = "Buffer"},
+          ["<leader>e"] = {name = "Explorer"},
+          ["<leader>f"] = {name = "File"},
+          ["<leader>l"] = {name = "Letter"},
+          ["<leader>m"] = {name = "Select"},
+          ["<leader>n"] = {name = "Number"},
+          ["<leader>p"] = {name = "Paste"},
+          ["<leader>s"] = {name = "Split/Window"},
+          ["<leader>t"] = {name = "Tabs"},
+          ["<leader>w"] = {name = "Wrap"},
+        },
+        {mode = "n"}
+      )
+
+      which_key.register(
+        {
+          ["<leader>."] = {name = "Tabs/move"},
+          ["<leader>l"] = {name = "Letter"},
+          ["<leader>m"] = {name = "Select"},
+        },
+        {mode = "v"}
+      )
+
+      -- Setup ----------------------------------------------------------------
       require("which-key").setup({
         plugins = {
           marks = true, -- shows a list of your marks on ' and `
@@ -29,7 +63,7 @@ return {
         },
         -- add operators that will trigger motion and text object completion
         -- to enable all native operators, set the preset / operators plugin above
-        operators = { gc = "Comments" },
+        operators = {gc = "Comments"},
         key_labels = {
           -- override the label used to display some keys. It doesn't effect WK in any other way.
           -- For example:
@@ -54,8 +88,8 @@ return {
           winblend = 0
         },
         layout = {
-          height = { min = 6, max = 24 }, -- min and max height of the columns
-          width = { min = 25, max = 50 }, -- min and max width of the columns
+          height = {min = 6, max = 24}, -- min and max height of the columns
+          width = {min = 25, max = 50}, -- min and max width of the columns
           spacing = 5, -- spacing between columns
           align = "left", -- align columns left, center or right
         },
