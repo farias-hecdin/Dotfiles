@@ -12,7 +12,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.runtimepath:prepend(lazypath)
 
-
 -- Plugin setup
 require("lazy").setup("USER.modules", {
   defaults = {
@@ -28,24 +27,23 @@ require("lazy").setup("USER.modules", {
   },
   ui = {
     -- a number <1 is a percentage., >1 is a fixed size
-    size = { width = 0.9, height = 0.9 },
+    size = {width = 0.9, height = 0.9},
     -- The border to use for the UI window. Accepts same border values as |nvim_open_win()|.
     border = "rounded",
     --border = { "┏", "━", "┓", "┃", "┛","━", "┗", "┃" },
     icons = {
-      lazy       = "󰒲 ",
-      loaded     = " ",
+      lazy = "󰒲 ",
+      loaded = " ",
       not_loaded = " ",
-      start      = " ",
-      ft         = " ",
-      cmd        = " ",
-      event      = " ",
-      keys       = " ",
+      start = " ",
+      ft = " ",
+      cmd = " ",
+      event = " ",
+      keys = " ",
     }
   },
   performance = {
     rtp = {
-      ---@type string[] list any plugins you want to disable here
       disabled_plugins = {
         "2html_plugin",
         "fzf",

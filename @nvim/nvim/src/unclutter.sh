@@ -18,6 +18,7 @@ list_folders=$(find $DIR -type d -name "test" \
   -o -name ".git" \
   -o -name ".github" \
   -o -name "_test" \
+  -o -name "test" \
   -o -name "tests" \
 )
 list_files=$(find $DIR -type f -name "*.jpeg" \
@@ -30,10 +31,15 @@ list_files=$(find $DIR -type f -name "*.jpeg" \
   -o -name ".editorconfig" \
   -o -name ".gitattributes" \
   -o -name ".luacheckrc" \
+  -o -name ".luarc.json" \
   -o -name ".npmrc" \
   -o -name ".themisrc" \
   -o -name ".vimrc" \
   -o -name "Makefile" \
+  -o -name "CHANGELOG.md" \
+  -o -name "TODO.md" \
+  -o -name "CONTRIBUTING.md" \
+  -o -name ".pre-commit-config.yaml" \
 )
 
 # Delete the elements.

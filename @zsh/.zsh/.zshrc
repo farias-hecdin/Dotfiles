@@ -5,6 +5,8 @@
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export ZSH=$HOME/.zsh
 
+export EDITOR=nvim # Specifies the editor code
+export KEYTIMEOUT=1
 
 # History config ==============================================================
 
@@ -22,7 +24,7 @@ setopt HIST_REDUCE_BLANKS # Remove unnecessary blanks.
 setopt INC_APPEND_HISTORY_TIME # Append command to history file immediately after execution.
 
 
-# Plugins & themes ============================================================
+# Plugins and themes ==========================================================
 
 # Themes
 source $ZSH/themes/zshmate/zshmate.zsh-theme
@@ -39,98 +41,20 @@ source $ZSH/plugins/zsh-vi-mode/zsh-vi-mode.zsh
 source $ZSH/plugins/git-status/git-status.plugin.zsh
 
 
-# Alias =======================================================================
+# Alias and Keybindings =======================================================
 
-# General comands
-alias q="exit"
-alias C="clear"
-alias R="exec zsh"
-alias cP="cp -iv"
-alias mV="mv -iv"
-alias rM="rm -iv"
-
-# App configuration
-alias zConfig="nvim ~/.zsh/"
-alias tConfig="nvim ~/.tmux.conf"
-alias gConfig="nvim ~/.gitconfig"
-alias nConfig="nvim ~/.config/nvim/"
-
-# App
-alias e="nnn"
-alias ed="nvim"
-alias fzE="fzf -e"
-
-# Du
-alias duC="ncdu"
-alias duG="gdu"
-
-# Git
-alias gt="lazygit"
-alias gtLast="git log -1 HEAD --stat"
-alias gtRemote="git remote -v"
-alias gtRemoteChange="git remote set-url origin"
-
-# Tmux
-alias tx="tmux"
-alias txList="tmux list-sessions"
-alias txNew="tmux new-session -s"
-alias txKill="tmux kill-server -t"
-alias txAttach="tmux attach -t"
-
-# Jump
-alias ju="jump"
-alias juAdd="mark"
-alias juList="marks"
-alias juDelete="unmarks"
-
-
-# Keybinding ==================================================================
-# Info (https://gist.github.com/VonHeikemen/8b3bbdfee976683212818b704b08f405)
-
-autoload -U up-line-or-beginning-search
-autoload -U down-line-or-beginning-search
-autoload -U edit-command-line
-
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-zle -N edit-command-line
-
-# Enable vi-mode
-bindkey -v
-
-# Keys
-bindkey "^[[A" up-line-or-beginning-search  # [Typing+Up] - Fuzzy find history forward
-bindkey "^[[B" down-line-or-beginning-search  # [Typing+Down] - Fuzzy find history backward
-# bindkey "^[[1~" beginning-of-line  # [Home] - Go to beginning of line
-# bindkey "^[[4~" end-of-line  # [End] - Go to end of line
-# bindkey "^[[1;5C" forward-word  # [Ctrl+Right] - Move forward one word
-# bindkey "^[[1;5D" backward-word  # [Ctrl+Left] - Move backward one word
-# bindkey "^e" edit-command-line  # [Ctrl+e] - Use $EDITOR to write a command
-# bindkey " " magic-space  # [Space] - Do history expansion
-# bindkey -M vicmd "/" fzf-history-widget  # [Slash] - Search history with fzf
-#
-# export KEYTIMEOUT=1 # Disable delay when changing modes
-#
-# # Change cursor shape
-# zle-keymap-select() {
-#   if [ $KEYMAP = vicmd ]; then
-#     echo -ne "\e[2 q" # the command mode for vi
-#   else
-#     echo -ne "\e[6 q" # the insert mode for vi
-#   fi
-# }
-# zle -N zle-keymap-select
-# echo -ne "\e[6 q"
+source $ZSH/config/alias.zsh
+source $ZSH/config/keybinding.zsh
 
 
 # Export ======================================================================
 
 # nnn
-export NNN_PLUG='f:fzcd;j:autojump;'
+export NNN_PLUG="f:fzcd;j:autojump;"
 # nnn end
 
 # fzf
-export FZF_DEFAULT_OPTS='--height 85% --layout=reverse --border'
+export FZF_DEFAULT_OPTS="--height 90% --layout=reverse --border"
 # fzf end
 
 # pnpm
@@ -138,3 +62,8 @@ export PNPM_HOME="/data/data/com.termux/files/home/.local/share/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 # pnpm end
 
+source ~/.commacd.sh
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

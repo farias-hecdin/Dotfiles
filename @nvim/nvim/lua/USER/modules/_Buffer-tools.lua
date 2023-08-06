@@ -17,8 +17,8 @@ return {
       require("flybuf").setup({
         hotkey = "1234567890qwertyuiopasdfghjklzxcvbnm", -- hotkye
         border = "single", -- border
-        quit = "q",   -- quit flybuf window
-        mark = "L",   -- mark as delet or cancel delete
+        quit = "q", -- quit flybuf window
+        mark = "L", -- mark as delet or cancel delete
         delete = "X", -- delete marked buffers or buffers which cursor in
       })
     end
@@ -47,11 +47,11 @@ return {
         -- been explicitly disabled (via :SosDisable for example). There are 3
         -- possible values:
         --
-        --     "all": set and manage 'autowriteall'
+        -- "all": set and manage 'autowriteall'
         --
-        --     true: set and manage 'autowrite'
+        -- true: set and manage 'autowrite'
         --
-        --     false: don't set, touch, or manage any of Vim's 'autowwrite' options
+        -- false: don't set, touch, or manage any of Vim's 'autowwrite' options
         autowrite = true,
 
         -- Automatically write all modified buffers before executing a command on
@@ -61,21 +61,21 @@ return {
         -- shell command which reads files (such as git or a code formatter).
         -- Autocmds will be executed as a result of the writing (i.e. `nested = true`).
         --
-        --     false: don't write changed buffers prior to executing a command
+        -- false: don't write changed buffers prior to executing a command
         --
-        --     "all": write on any `:` command that gets executed (but not `<Cmd>`
-        --            mappings)
+        -- "all": write on any `:` command that gets executed (but not `<Cmd>`
+        -- mappings)
         --
-        --     "some": write only if certain commands (source/luafile etc.) appear
-        --             in the cmdline (not perfect, but may lead to fewer unneeded
-        --             file writes; implementation still needs some work, see
-        --             lua/sos/impl.lua)
+        -- "some": write only if certain commands (source/luafile etc.) appear
+        -- in the cmdline (not perfect, but may lead to fewer unneeded
+        -- file writes; implementation still needs some work, see
+        -- lua/sos/impl.lua)
         --
-        --     table<string, true>: table that specifies which commands should trigger
-        --                          a write
-        --                          keys: the full/long names of commands that should
-        --                                trigger write
-        --                          values: true
+        -- table<string, true>: table that specifies which commands should trigger
+        -- a write
+        -- keys: the full/long names of commands that should
+        -- trigger write
+        -- values: true
         save_on_cmd = "some",
 
         -- Save/write a changed buffer before leaving it (i.e. on the `BufLeave`
