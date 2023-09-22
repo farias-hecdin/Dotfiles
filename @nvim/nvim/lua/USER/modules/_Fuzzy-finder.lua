@@ -1,6 +1,9 @@
+local D = require("USER.utils.dir")
+
 return {
   {
-    "ibhagwan/fzf-lua",
+    -- "ibhagwan/fzf-lua",
+    dir = D.plugin .. "fzf-lua",
     keys = { "<leader>F" },
     cmd = "FzfLua",
     config = function()

@@ -4,16 +4,10 @@ return {
   {
     -- "beauwilliams/focus.nvim",
     dir = D.plugin .. "focus.nvim",
-    event = "WinLeave",
+    event = "WinEnter",
     config = function()
       require("focus").setup()
     end
-  },
-  {
-    -- "nvim-zh/colorful-winsep.nvim",
-    dir = D.plugin .. "colorful-winsep.nvim",
-    event = "WinNew",
-    config = true,
   },
   {
     -- "famiu/bufdelete.nvim",

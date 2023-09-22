@@ -8,6 +8,8 @@ return {
       local lspconfig = require("lspconfig")
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities.textDocument.completion.completionItem.snippetSupport = true
+      capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
+      -- ( https://www.reddit.com/r/neovim/comments/161tv8l/lsp_has_gotten_very_slow )
 
       local on_attach = function(client, bufnr)
         if client.supports_method("textDocument/formatting") then
@@ -34,7 +36,7 @@ return {
           vim.keymap.set("n", "gdd", vim.lsp.buf.definition, {buffer = ev.buf, desc = "[LSP] Goto Definition"})
           vim.keymap.set("n", "gdi", vim.lsp.buf.implementation, {buffer = ev.buf, desc = "[LSP] Goto Implementation"})
           vim.keymap.set("n", "gdr", vim.lsp.buf.rename, {buffer = ev.buf, desc = "[LSP] Rename"})
-          vim.keymap.set("n", "gdb", function()
+          vim.keymap.set("n", "gdf", function()
             vim.lsp.buf.format({timeout = 5000})
           end, {buffer = ev.buf, desc = "[LSP] Format"})
         end,
@@ -42,13 +44,13 @@ return {
 
       -- list of lsp server enable --------------------------------------------
       local server = {
+        "bash",
         "css",
         "go",
         "html_emmet",
         "js",
         "js_svelte",
         "lua",
-        "py",
       }
 
       W.lspserver(lspconfig, capabilities, server)

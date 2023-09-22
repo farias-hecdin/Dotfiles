@@ -1,1 +1,1 @@
-require('cmp').register_source('buffer', require('cmp_buffer'))
+require('cmp').register_source('buffer',require('cmp_buffer'))

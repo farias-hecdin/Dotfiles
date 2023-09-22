@@ -1,17 +1,1 @@
-local api = vim.api
-local M = {}
-
-do
-    -- TODO
-    local msg_type = {}
-
-    ---Display an error message
-    ---@param msg string
-    ---@param how? "n" | "no"
-    ---@return nil
-    function M.errmsg(msg, how)
-        return (msg_type[how] or api.nvim_err_writeln)("[sos.nvim]: " .. msg)
-    end
-end
-
-return M
+local a=vim.api;local b={}do local c={}function b.errmsg(d,e)return(c[e]or a.nvim_err_writeln)("[sos.nvim]: "..d)end end;return b

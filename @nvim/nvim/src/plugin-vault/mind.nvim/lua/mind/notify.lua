@@ -1,9 +1,1 @@
--- A simple shortcut function used to notify users.
-
-local M = {}
-
-M.notify = function(msg, lvl)
-  vim.notify(msg, lvl, { title = 'Mind', icon = '' })
-end
-
-return M
+local a={}a.notify=function(b,c)vim.notify(b,c,{title='Mind',icon=''})end;return a

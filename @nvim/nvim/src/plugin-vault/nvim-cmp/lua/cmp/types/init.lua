@@ -1,7 +1,1 @@
-local types = {}
-
-types.cmp = require('cmp.types.cmp')
-types.lsp = require('cmp.types.lsp')
-types.vim = require('cmp.types.vim')
-
-return types
+local a={}a.cmp=require('cmp.types.cmp')a.lsp=require('cmp.types.lsp')a.vim=require('cmp.types.vim')return a

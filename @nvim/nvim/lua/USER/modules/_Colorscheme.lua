@@ -10,13 +10,31 @@ return {
       require("onedark").setup({
         style = "darker",
         code_style = {
-          -- functions = "italic"
+          -- functions = "bold"
         },
         colors = {
-          bg0 = "#000000",
-          bg1 = "#000000",
-          blue = "#CB9DEE",
-          purple = "#A454E2",
+          bg0         = "#000000",
+          bg1         = "#000000",
+          blue        = "#00a7cc",
+          purple      = "#0074D9",
+          cyan        = "#a3d7de",
+          black       = "#0e1013",
+          bg2         = "#30363f",
+          bg3         = "#323641",
+          bg_d        = "#181b20",
+          bg_blue     = "#61afef",
+          bg_yellow   = "#FFFF8F",
+          fg          = "#a0a8b7",
+          green       = "#8ebd6b",
+          orange      = "#cc9057",
+          yellow      = "#e2b86b",
+          red         = "#ff4400",
+          grey        = "#535965",
+          light_grey  = "#7a818e",
+          dark_cyan   = "#266269",
+          dark_red    = "#8b3434",
+          dark_yellow = "#835d1a",
+          dark_purple = "#7e3992",
         },
         highlights = {
           ["@comment"]                = {fg = "#007272"},
@@ -34,12 +52,15 @@ return {
           DiagnosticVirtualTextInfo   = {fg = "#2E7D32"},
           DiagnosticVirtualTextWarn   = {fg = "#F9A825"},
           DiagnosticWarn              = {fg = "#FFEE58"},
-          MatchParen                  = {fg = "#fff000", bg = "#000088"},
+          MatchParen                  = {fg = "#ffffff", bg = "#000088"},
           MiniHipatternsFixme         = {fg = "#ffffff", bg = "#e40001"}, -- FIX:
           MiniHipatternsHack          = {fg = "#000000", bg = "#FFDC00"}, -- HACK:
           MiniHipatternsNote          = {fg = "#ffffff", bg = "#497779"}, -- NOTE:
           MiniHipatternsPerf          = {fg = "#000000", bg = "#BBDEFB"}, -- PERF:
           MiniHipatternsTodo          = {fg = "#ffffff", bg = "#0074D9"}, -- TODO:
+          MiniHipatternsText1         = {fg = "#0074D9", fmt = "BOLD"},   -- THIS:
+          MiniHipatternsText2         = {fg = "#FFDC00", fmt = "BOLD"},   -- HERE:
+          MiniHipatternsText3         = {fg = "#2BBB4F", fmt = "BOLD"},   -- STEP 01:
           MiniIndentscopeSymbol       = {fg = "#666666"},
           MiniJump2dSpot              = {fg = "#FFF000", fmt = "NONE"},
           MiniTablineCurrent          = {fg = "#000000", bg = "#2BBB4F", fmt = "NONE"},
@@ -56,5 +77,5 @@ return {
       })
       vim.cmd([[colorscheme onedark]])
     end
-  }
+  },
 }

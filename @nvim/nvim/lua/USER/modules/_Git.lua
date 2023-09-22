@@ -4,7 +4,7 @@ return {
   {
     -- "lewis6991/gitsigns.nvim",
     dir = D.plugin .. "gitsigns.nvim",
-    event = { "TextChanged", "InsertEnter" },
+    event = { "InsertEnter" },
     config = function()
       require('gitsigns').setup {
         signs = {

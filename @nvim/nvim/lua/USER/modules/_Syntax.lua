@@ -1,9 +1,23 @@
 return {
   {
+    "wuelnerdotexe/vim-astro",
+    ft = "astro",
+    config = function()
+      vim.cmd([[let g:astro_typescript = "enable"]])
+    end,
+  },
+  {
     "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPost", "BufNewFile" },
+    lazy = false,
     config = function()
       require("nvim-treesitter.configs").setup({
+        -- For "nvim-ts-context-commentstring"
+        context_commentstring = {
+          enable = true,
+          enable_autocmd = false,
+        },
+
         -- list of parsers to ignore installing (for "all")
         ignore_install = { "css" },
         -- enable syntax highlighting
@@ -17,7 +31,7 @@ return {
         -- enable indentation
         indent = {
           enable = true,
-          disable = { "python" }
+          disable = { "python", "shell" }
         },
         -- enable autotagging (w/ nvim-ts-autotag plugin)
         autotag = {enable = true},
@@ -28,14 +42,15 @@ return {
           "typescript",
           "markdown",
           "markdown_inline",
-          -- "bash",
+          -- "astro",
+          "bash",
           -- "cpp",
-          -- "go",
+          "go",
           -- "java",
           -- "kotlin",
-          -- "lua",
+          "lua",
           -- "php",
-          -- "python",
+          "python",
           -- "rust",
           -- "sql",
           -- "svelte",

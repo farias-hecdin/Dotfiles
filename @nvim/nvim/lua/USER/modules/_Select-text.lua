@@ -4,7 +4,11 @@ return {
   {
     -- "echasnovski/mini.surround",
     dir = D.plugin .. "mini.surround",
-    keys = {{"gzr", mode = "n", desc = "Surround: replace"}, {"gza", mode = "v", desc = "Surround: add"}},
+    keys = {
+      {"gZ", mode = "n", desc = "Surround: replace"},
+      {"gz", mode = "n", desc = "Surround: add"},
+      {"gz", mode = "v", desc = "Surround: add"}
+    },
     config = function()
       require("mini.surround").setup(
         -- No need to copy this inside `setup()`. Will be used automatically.
@@ -16,13 +20,13 @@ return {
           highlight_duration = 5000,
           -- Module mappings. Use `""` (empty string) to disable one.
           mappings = {
-            add = "gza", -- Add surrounding in "Normal" and "Visual modes"
-            delete = "gzd", -- Delete surrounding
-            find = "gzl", -- Find surrounding (to the right)
-            find_left = "gzh", -- Find surrounding (to the left)
-            highlight = "gzH", -- Highlight surrounding
-            replace = "gzr", -- Replace surrounding
-            update_n_lines = "gzu", -- Update `n_lines`
+            add = "gz", -- Add surrounding in "Normal" and "Visual modes"
+            delete = "gZd", -- Delete surrounding
+            find = "gZl", -- Find surrounding (to the right)
+            find_left = "gZh", -- Find surrounding (to the left)
+            highlight = "gZH", -- Highlight surrounding
+            replace = "gZr", -- Replace surrounding
+            update_n_lines = "gZu", -- Update `n_lines`
             suffix_last = "l", -- Suffix to search with "prev" method
             suffix_next = "n", -- Suffix to search with "next" method
           },

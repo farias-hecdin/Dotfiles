@@ -10,18 +10,21 @@ set -o pipefail
 
 # Module config ---------------------------------------------------------------
 
+co_gray="\e[37m"
+co_bold="\e[1m"
+end="\e[0m"
+
 # Get the current directory.
 DIR=$(pwd)
+list=()
 
 # Find all folders and files in the current directory and its subdirectories.
-list_folders=$(find $DIR -type d -name "test" \
+list+=($(find "$DIR" -type f -name "*.jpeg" \
   -o -name ".git" \
   -o -name ".github" \
   -o -name "_test" \
   -o -name "test" \
   -o -name "tests" \
-)
-list_files=$(find $DIR -type f -name "*.jpeg" \
   -o -name "*.gif" \
   -o -name "*.jpg" \
   -o -name "*.mp4" \
@@ -40,15 +43,18 @@ list_files=$(find $DIR -type f -name "*.jpeg" \
   -o -name "TODO.md" \
   -o -name "CONTRIBUTING.md" \
   -o -name ".pre-commit-config.yaml" \
-)
+))
 
-# Delete the elements.
-for ELEM in ${list_folders[@]} ${list_files[@]}; do
-  echo "#  Deleting: ${ELEM}"
-  rm -rf ${ELEM}
-  wait
-done
+if [[ ${#list[@]} -gt 0 ]]; then
+  echo -e "  ${co_bold}Deleting: ${end}"
+  # Delete the elements.
+  for elem in "${list[@]}"; do
+    echo -e "  ${co_gray}$elem ${end}"
+    rm -rf "$elem"
+    wait
+  done
+  echo ""
+fi
 
 # Print a success message.
-echo ""
-echo "#  Successfully deleted unwanted folders and files."
+echo -e "  ${co_bold}Successfully deleted unwanted folders and files.${end}"

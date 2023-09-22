@@ -18,6 +18,12 @@ M.lspserver = function(A, B, C)
       lspconfig["lua_ls"].setup({})
     end
 
+    -- INFO: pnpm i -g bash-language-server
+    if (lsp_server[i] == "bash") then
+      lspconfig["bashls"].setup({
+      })
+    end
+
     -- INFO: pip install pyright
     if (lsp_server[i] == "py") then
       lspconfig["pyright"].setup({})
@@ -53,12 +59,13 @@ M.lspserver = function(A, B, C)
         -- on_attach = on_attach,
         capabilities = capabilities,
         filetypes = {
+          "astro",
           "html",
           "javascriptreact",
           "svelte",
+          "svg",
           "typescriptreact",
           "vue",
-          "svg",
         },
         init_options = {
           html = {
