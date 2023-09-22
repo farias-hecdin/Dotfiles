@@ -7,6 +7,17 @@ local load_current_buffer = function()
   vim.cmd("e " .. path)
 end
 
+-- MiniSessions
+-- source: ~/.local/share/nvim/session/
+function MiniSessions_write(var)
+  local session_name = var
+  vim.cmd("lua MiniSessions.write('".. session_name .. "')")
+end
+function MiniSessions_delete(var)
+  local session_name = var
+  vim.cmd("lua MiniSessions.delete('".. session_name .. "')")
+end
+
 -- Keymaps generales ----------------------------------------------------------
 --
 -- Modos
@@ -17,23 +28,26 @@ end
 -- * terminal mode = "t",
 -- * command mode = "c",
 
+-- Sessions
+map("n", "<leader>xa1", function() MiniSessions_write('session_1') end, {desc = "New - 1"})
+map("n", "<leader>xa2", function() MiniSessions_write('session_2') end, {desc = "New - 2"})
+map("n", "<leader>xa3", function() MiniSessions_write('session_3') end, {desc = "New - 3"})
+map("n", "<leader>xa4", function() MiniSessions_write('session_4') end, {desc = "New - 4"})
+map("n", "<leader>xa5", function() MiniSessions_write('session_5') end, {desc = "New - 5"})
+map("n", "<leader>xd1", function() MiniSessions_delete('session_1') end, {desc = "Delete - 1"})
+map("n", "<leader>xd2", function() MiniSessions_delete('session_2') end, {desc = "Delete - 2"})
+map("n", "<leader>xd3", function() MiniSessions_delete('session_3') end, {desc = "Delete - 3"})
+map("n", "<leader>xd4", function() MiniSessions_delete('session_4') end, {desc = "Delete - 4"})
+map("n", "<leader>xd5", function() MiniSessions_delete('session_5') end, {desc = "Delete - 5"})
+
 -- Other
 map("n", "<leader>@", function() load_current_buffer() end, {desc = "Load current buffer"})
 
--- LspSystem (more: ../modules/_Lsp-wizard-and-config.lua)
--- map("n", "<leader>Ll", ":Lspsystem show_line_diagnostics<cr>", {desc = "Lsp: diagn. line"})
--- map("n", "<leader>Ld", ":Lspsystem show_buf_diagnostics<cr>", {desc = "Lsp: diagn. buffer"})
--- map("n", "<leader>Lw", ":Lspsystem show_workspace_diagnostics<cr>", {desc = "Lsp: diagn. workspace"})
--- map("n", "<leader>Lg", ":Lspsystem goto_definition<cr>", {desc = "Lsp: goto definition"})
--- map("n", "<leader>Lp", ":Lspsystem peek_definition<cr>", {desc = "Lsp: peek definition"})
--- map("n", "<leader>Lh", ":Lspsystem hover_doc<cr>", {desc = "Lsp: hover doc"})
--- map("n", "<leader>La", ":Lspsystem code_action<cr>", {desc = "Lsp: actions"})
-
 -- Lsp diagnotic
-map("n", "gdo", ":DiagnoticShow<cr>", {desc = "[Lsp] Show"})
-map("n", "gdf", ":DiagnoticHide<cr>", {desc = "[Lsp] Hide"})
-map("n", "gdO", ":DiagnoticEnabled<cr>", {desc = "[Lsp] Enabled"})
-map("n", "gdF", ":DiagnoticDisabled<cr>", {desc = "[Lsp] Disabled"})
+map("n", "gdS", ":DiagnoticShow<cr>", {desc = "[Lsp] Show"})
+map("n", "gdH", ":DiagnoticHide<cr>", {desc = "[Lsp] Hide"})
+map("n", "gdE", ":DiagnosticEnable<cr>", {desc = "[Lsp] Enabled"})
+map("n", "gdD", ":DiagnosticDisable<cr>", {desc = "[Lsp] Disabled"})
 
 -- Search mode
 map("v", "<leader>s", "y/<C-r>\"", {desc = "Search: text selected"})
@@ -45,7 +59,7 @@ map("n", "<leader>Gp", ":Gitsigns preview_hunk<cr>", {desc = "Gitsigns: preview"
 -- Undo
 map("n", "<C-u>", "<ESC>u", {desc = "Undo"})
 
--- Open a line below/above the cursor
+-- Cursor
 map("i", "<C-j>", "<ESC>o", {desc = "Open a line below"})
 map("i", "<C-k>", "<ESC>O", {desc = "Open a line above"})
 
@@ -183,8 +197,10 @@ map("n", "<leader>sw", ":WindowNvim<cr>", {desc = "Split: check"})
 map("n", "<leader>\'", ":WindowNvim<cr>", {desc = "Split: check"})
 
 -- Easier pasting
+map("i", "<C-p>", '<ESC>gP', {desc = "Paste"})
 map("v", "p", '"_dP', {desc = "Paste"})
-map("n", "p", "gp", {desc = "Paste"})
+map("n", "P", "gP", {desc = "Paste: right"})
+map("n", "p", "gp", {desc = "Paste: left"})
 map("n", "<leader>pk", ":pu!<cr>", {desc = "Paste: up"})
 map("n", "<leader>pj", ":pu<cr>", {desc = "Paste: down"})
 

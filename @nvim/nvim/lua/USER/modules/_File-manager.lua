@@ -4,7 +4,7 @@ return {
   {
     -- "echasnovski/mini.files",
     dir = D.plugin .. "mini.files",
-    lazy = false,
+    event = "VeryLazy",
     config = function()
       require("mini.files").setup(
         -- No need to copy this inside `setup()`. Will be used automatically.

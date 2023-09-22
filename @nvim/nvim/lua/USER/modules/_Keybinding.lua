@@ -1,6 +1,9 @@
+local D = require("USER.utils.dir")
+
 return {
   {
-    "folke/which-key.nvim",
+    -- "folke/which-key.nvim",
+    dir = D.plugin .. "which-key.nvim",
     event = "VeryLazy",
     config = function()
       -- Register -------------------------------------------------------------
@@ -26,6 +29,9 @@ return {
           ["<leader>p"] = {name = "Paste"},
           ["<leader>s"] = {name = "Split/Window"},
           ["<leader>t"] = {name = "Tabs"},
+          ["<leader>x"] = {name = "Sessions"},
+          ["<leader>xa"] = {name = "Sessions: add"},
+          ["<leader>xd"] = {name = "Sessions: delete"},
           ["<leader>w"] = {name = "Wrap"},
         },
         {mode = "n"}

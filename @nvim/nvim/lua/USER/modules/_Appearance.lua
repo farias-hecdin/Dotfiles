@@ -1,6 +1,7 @@
 local W = require("USER.utils.widgets")
 local D = require("USER.utils.dir")
 
+
 return {
   {
     -- "echasnovski/mini.tabline",
@@ -19,7 +20,7 @@ return {
     cmd = "MiniStarter",
     config = function()
       local starter = require("mini.starter")
-      starter.setup({
+      require("mini.starter").setup({
         autoopen = false,
         items = {
           -- Custom actions
@@ -28,6 +29,7 @@ return {
           {action = "enew", name = "Create a new buffer", section = "Builtin (actions)"},
           {action = "NnnPicker %:p:h", name = "Open File manager", section = "Builtin (actions)"},
           {action = "FzfLua", name = "Open Fuzzy finder", section = "Builtin (actions)"},
+          starter.sections.sessions(6, true),
           starter.sections.recent_files(25, true),
           starter.sections.recent_files(25, false),
         },
@@ -36,7 +38,8 @@ return {
           starter.gen_hook.indexing("section"),
           starter.gen_hook.padding(8, 1),
         },
-        header = W.app_date() .. " " .. W.app_clock(),
+        header = W.app_date() .. " " .. W.app_clock() ..
+          "\n\nOPTIONS\n a: Builtin (actions)\n b: Sessions\n c: Recent files (current directory)\n d: Recent files",
         footer = "<C-c> Close this buffer",
       })
     end
@@ -48,9 +51,9 @@ return {
     config = function()
       require("staline").setup({
         slots = {
-          counter = function() return "" .. W.app_counter() .. " " end,
-          lazy = function() return " " .. W.app_lazy() .. " " end,
-          clock = function() return " " .. W.app_clock() .. " " end,
+          counter = W.app_counter,
+          lazy = W.app_lazy,
+          clock = W.app_clock,
         },
         defaults = {
           expand_null_ls = false, -- This expands out all the null-ls sources to be shown
@@ -94,9 +97,9 @@ return {
           ["ic"] = " IC ",
         },
         sections = {
-          left = { "-mode", "file_size", "counter", "%m", "branch" },
+          left = { "-mode", "file_size", "counter"," ", "%m", "branch" },
           mid = { "line_column" },
-          right = { "lsp_name", " ", "diagnostics", "lazy", "-clock", }
+          right = { "lsp_name", " ", "diagnostics", "lazy", " ", "- ", "-clock", "- " }
         },
         lsp_symbols = {
           Error = " ",

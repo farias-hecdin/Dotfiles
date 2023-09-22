@@ -27,21 +27,55 @@ return {
     end
   },
   {
-    -- "echasnovski/mini.comment",
-    dir = D.plugin .. "mini.comment",
+    -- 'numToStr/Comment.nvim',
+    dir = D.plugin .. "Comment.nvim",
     keys = {{mode = "n", "gc", desc = "Insert comment"}, {mode = "v", "gc", desc = "Insert comment"}},
+    dependencies = {
+      'JoosepAlviste/nvim-ts-context-commentstring',
+    },
     config = function()
-      require("mini.comment").setup({
-        -- Module mappings. Use `""` (empty string) to disable one.
-        mappings = {
-          -- Toggle comment (like `gcip` - comment inner paragraph) for both
-          -- Normal and Visual modes
-          comment = "gc",
-          -- Toggle comment on current line
-          comment_line = "gcc",
-          -- Define "comment" textobject (like `dgc` - delete whole comment block)
-          textobject = "gc",
+      require('Comment').setup({
+        ---Add a space b/w comment and the line
+        padding = true,
+        ---Whether the cursor should stay at its position
+        sticky = true,
+        ---Lines to be ignored while (un)comment
+        ignore = nil,
+        ---LHS of toggle mappings in NORMAL mode
+        toggler = {
+          ---Line-comment toggle keymap
+          line = 'gcc',
+          ---Block-comment toggle keymap
+          block = 'gcb',
         },
+        ---LHS of operator-pending mappings in NORMAL and VISUAL mode
+        opleader = {
+          ---Line-comment keymap
+          line = 'gc',
+          ---Block-comment keymap
+          block = 'gb',
+        },
+        ---LHS of extra mappings
+        extra = {
+          ---Add comment on the line above
+          above = 'gcO',
+          ---Add comment on the line below
+          below = 'gco',
+          ---Add comment at the end of line
+          eol = 'gcA',
+        },
+        ---Enable keybindings
+        ---NOTE: If given `false` then the plugin won't create any mappings
+        mappings = {
+          ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
+          basic = true,
+          ---Extra mapping; `gco`, `gcO`, `gcA`
+          extra = true,
+        },
+        ---Function to call after (un)comment
+        post_hook = nil,
+        ---Function to call before (un)comment
+        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
       })
     end
   },
@@ -51,9 +85,11 @@ return {
     event = "CursorMoved",
     config = function()
       local hipatterns = require("mini.hipatterns")
+      print("hola")
       hipatterns.setup({
         highlighters = {
-          -- Highlight standalone "FIXME:", " HACK:", "TODO:", "NOTE:", "PERF:"
+          -- Highlight standalone
+          -- "FIXME:", " HACK:", "TODO:", "NOTE:", "PERF:", "THIS:", "STEP 05:", "HERE:"
           bug = {pattern = "%f[%a]BUG:", group = "MiniHipatternsFixme"},
           fix = {pattern = "%f[%a]FIX:", group = "MiniHipatternsFixme"},
           fixme = {pattern = "%f[%a]FIXME:", group = "MiniHipatternsFixme"},
@@ -71,6 +107,10 @@ return {
 
           perf = {pattern = "%f[%a]PERF:", group = "MiniHipatternsPerf"},
           optimize = {pattern = "%f[%a]OPTIMIZE:", group = "MiniHipatternsPerf"},
+
+          text1 = {pattern = "%f[%a]THIS:", group = "MiniHipatternsText1"},
+          text2 = {pattern = "%f[%a]HERE:", group = "MiniHipatternsText2"},
+          text3 = {pattern = "%f[%a]STEP %d%d:", group = "MiniHipatternsText3"},
 
           -- Highlight hex color strings (`#FFFF00`) using that color
           hex_color = hipatterns.gen_highlighter.hex_color(),

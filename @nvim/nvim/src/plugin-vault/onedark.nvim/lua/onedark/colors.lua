@@ -1,10 +1,1 @@
-local colors = require("onedark.palette")
-
-local function select_colors()
-	local selected = { none = "none" }
-	selected = vim.tbl_extend("force", selected, colors[vim.g.onedark_config.style])
-	selected = vim.tbl_extend("force", selected, vim.g.onedark_config.colors)
-	return selected
-end
-
-return select_colors()
+local a=require("onedark.palette")local function b()local c={none="none"}c=vim.tbl_extend("force",c,a[vim.g.onedark_config.style])c=vim.tbl_extend("force",c,vim.g.onedark_config.colors)return c end;return b()

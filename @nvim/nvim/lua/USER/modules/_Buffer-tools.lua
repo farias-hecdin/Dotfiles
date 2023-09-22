@@ -24,6 +24,16 @@ return {
     end
   },
   {
+    -- "echasnovski/mini.sessions",
+    dir = D.plugin .. "mini.sessions",
+    event = "VeryLazy",
+    config = function()
+      require('mini.sessions').setup({
+        autowrite = false,
+      })
+    end
+  },
+  {
     -- "tmillr/sos.nvim",
     dir = D.plugin .. "sos.nvim",
     event = { "TextChanged", "TextChangedI" },

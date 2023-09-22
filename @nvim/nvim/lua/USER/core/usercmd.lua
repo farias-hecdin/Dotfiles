@@ -3,13 +3,13 @@ local usercmd = vim.api.nvim_create_user_command -- Create usercommand
 -- Plugin: WindowNvim
 usercmd("WindowNvim",
   function() vim.cmd("lua require('nvim-window').pick()") end,
-  {desc = "WindowNvim"}
+  {desc = "Window nvim"}
 )
 
 -- Plugin: MiniStarter
 usercmd("MiniStarter",
   function() vim.cmd("lua require('mini.starter').open()") end,
-  {desc = "MiniStarter", bang = true, nargs = 0, bar = true}
+  {desc = "Mini starter", bang = true, nargs = 0, bar = true}
 )
 
 -- Command: Treesitter enable/disable
@@ -34,7 +34,7 @@ usercmd("DiagnosticEnable",
   function(args)
     vim.diagnostic.enable(args.buf)
   end,
-  {desc = "Lsp diagnostic - enabled", bang = true}
+  {desc = "Lsp diagnostic: enabled", bang = true}
 )
 
 -- Command: Remove extra spaces
@@ -45,5 +45,5 @@ usercmd("RemoveExtraSpaces",
       vim.cmd("%s/\\s\\{2,}/ /ge")
     end
   end,
-  {desc = "RemoveExtraSpaces", bang = true}
+  {desc = "Remove extra spaces", bang = true}
 )
