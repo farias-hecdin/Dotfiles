@@ -46,7 +46,6 @@ source $ZSH/plugins/git-status/git-status.plugin.zsh
 source $ZSH/config/alias.zsh
 source $ZSH/config/keybinding.zsh
 
-
 # Export ======================================================================
 
 # nnn
@@ -62,8 +61,13 @@ export PNPM_HOME="/data/data/com.termux/files/home/.local/share/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 # pnpm end
 
-source ~/.commacd.sh
+# Luatiny
+export LUATINY_HOME="$HOME/.local/share/luatiny"
+export PATH="$LUATINY_HOME:$PATH"
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+# Lare
+export LARE_HOME="$HOME/.local/share/lare"
+export PATH="$LARE_HOME:$PATH"
+
+# Commacd
+source ~/.commacd.sh

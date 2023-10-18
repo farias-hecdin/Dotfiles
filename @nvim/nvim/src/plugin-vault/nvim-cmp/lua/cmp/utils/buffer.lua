@@ -1,1 +1,0 @@
-local a={}a.cache={}a.get=function(b)local c=a.cache[b]if c and vim.api.nvim_buf_is_valid(c)then return c else return nil end end;a.ensure=function(b)local d=false;local c=a.get(b)if not c then d=true;c=vim.api.nvim_create_buf(false,true)a.cache[b]=c end;return c,d end;return a

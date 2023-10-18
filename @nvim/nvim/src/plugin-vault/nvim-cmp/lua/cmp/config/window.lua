@@ -1,1 +1,0 @@
-local a={}a.bordered=function(b)b=b or{}return{border=b.border or'rounded',winhighlight=b.winhighlight or'Normal:Normal,FloatBorder:Normal,CursorLine:Visual,Search:None',zindex=b.zindex or 1001,scrolloff=b.scrolloff or 0,col_offset=b.col_offset or 0,side_padding=b.side_padding or 1,scrollbar=b.scrollbar==nil and true or b.scrollbar}end;return a

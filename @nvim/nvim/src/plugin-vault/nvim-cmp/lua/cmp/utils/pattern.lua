@@ -1,1 +1,0 @@
-local a={}a._regexes={}a.regex=function(b)if not a._regexes[b]then a._regexes[b]=vim.regex(b)end;return a._regexes[b]end;a.offset=function(b,c)local d,e=a.regex(b):match_str(c)if d then return d+1,e+1 end;return nil,nil end;a.matchstr=function(b,c)local d,e=a.offset(b,c)if d then return string.sub(c,d,e)end;return nil end;return a

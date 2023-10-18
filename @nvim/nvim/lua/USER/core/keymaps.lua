@@ -28,6 +28,10 @@ end
 -- * terminal mode = "t",
 -- * command mode = "c",
 
+-- Mini.Pick
+map("n", "<leader>Pg", ":lua MiniPick.builtin.grep_live()<cr>", {desc = "Pick: grep"})
+map("n", "<leader>Pf", ":lua MiniPick.builtin.files()<cr>", {desc = "Pick: files"})
+
 -- Sessions
 map("n", "<leader>xa1", function() MiniSessions_write('session_1') end, {desc = "New - 1"})
 map("n", "<leader>xa2", function() MiniSessions_write('session_2') end, {desc = "New - 2"})
@@ -44,10 +48,10 @@ map("n", "<leader>xd5", function() MiniSessions_delete('session_5') end, {desc =
 map("n", "<leader>@", function() load_current_buffer() end, {desc = "Load current buffer"})
 
 -- Lsp diagnotic
-map("n", "gdS", ":DiagnoticShow<cr>", {desc = "[Lsp] Show"})
-map("n", "gdH", ":DiagnoticHide<cr>", {desc = "[Lsp] Hide"})
-map("n", "gdE", ":DiagnosticEnable<cr>", {desc = "[Lsp] Enabled"})
-map("n", "gdD", ":DiagnosticDisable<cr>", {desc = "[Lsp] Disabled"})
+map("n", "gdS", ":DiagnoticShow<cr>", {desc = "[LSP] Show"})
+map("n", "gdH", ":DiagnoticHide<cr>", {desc = "[LSP] Hide"})
+map("n", "gdE", ":DiagnosticEnable<cr>", {desc = "[LSP] Enabled"})
+map("n", "gdD", ":DiagnosticDisable<cr>", {desc = "[LSP] Disabled"})
 
 -- Search mode
 map("v", "<leader>s", "y/<C-r>\"", {desc = "Search: text selected"})
@@ -59,9 +63,10 @@ map("n", "<leader>Gp", ":Gitsigns preview_hunk<cr>", {desc = "Gitsigns: preview"
 -- Undo
 map("n", "<C-u>", "<ESC>u", {desc = "Undo"})
 
--- Cursor
+-- Cursor (insert mode)
 map("i", "<C-j>", "<ESC>o", {desc = "Open a line below"})
 map("i", "<C-k>", "<ESC>O", {desc = "Open a line above"})
+map("i", "<C-c>", "<ESC>V", {desc = "Open visual mode"})
 
 -- Return normal mode
 map("i", "jk", "<ESC>", {desc = "Return normal mode"})
@@ -95,11 +100,6 @@ map("n", "<leader>Td", ":TSOff<cr>", {desc = "TS: disabled"})
 -- Wrap
 map("n", "<leader>we", ":set wrap<cr>", {desc = "Wrap: enabled"})
 map("n", "<leader>wd", ":set nowrap<cr>", {desc = "Wrap: disabled"})
-
--- Fzf-lua
-map("n", "<leader>Fo", ":FzfLua<cr>", {desc = "Fzf: open"})
-map("n", "<leader>Fg", ":FzfLua grep<cr>", {desc = "Fzf: grep"})
-map("n", "<leader>Ff", ":FzfLua files cwd=~/", {desc = "Fzf: search"})
 
 -- Markdown
 map("v", "<C-B>", ":lua require('markdowny').bold()<cr>", {desc = "Md: bold",})
