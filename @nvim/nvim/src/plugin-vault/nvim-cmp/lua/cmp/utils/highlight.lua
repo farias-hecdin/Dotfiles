@@ -1,1 +1,0 @@
-local a={}a.keys={'fg','bg','bold','italic','reverse','standout','underline','undercurl','strikethrough'}a.inherit=function(b,c,d)for e,f in ipairs(a.keys)do if not d[f]then local g=vim.fn.synIDattr(vim.fn.hlID(c),f)if f=='fg'or f=='bg'then local h=tonumber(g,10)g=type(h)=='number'and h or g else g=g==1 end;d[f]=g==''and'NONE'or g end end;vim.api.nvim_set_hl(0,b,d)end;return a

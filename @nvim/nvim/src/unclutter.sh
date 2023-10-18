@@ -22,6 +22,7 @@ list=()
 list+=($(find "$DIR" -type f -name "*.jpeg" \
   -o -name ".git" \
   -o -name ".github" \
+  -o -name ".gitignore" \
   -o -name "_test" \
   -o -name "test" \
   -o -name "tests" \

@@ -1,1 +1,0 @@
-local a={}a.win_set_option=function(b,c,d)local e=vim.opt.eventignore:get()vim.opt.eventignore:append('OptionSet')vim.api.nvim_win_set_option(b,c,d)vim.opt.eventignore=e end;a.buf_set_option=function(f,c,d)local e=vim.opt.eventignore:get()vim.opt.eventignore:append('OptionSet')vim.api.nvim_buf_set_option(f,c,d)vim.opt.eventignore=e end;return a

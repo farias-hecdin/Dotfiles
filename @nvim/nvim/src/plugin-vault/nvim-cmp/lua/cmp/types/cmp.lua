@@ -1,1 +1,0 @@
-local a={}a.ConfirmBehavior={Insert='insert',Replace='replace'}a.SelectBehavior={Insert='insert',Select='select'}a.ContextReason={Auto='auto',Manual='manual',TriggerOnly='triggerOnly',None='none'}a.TriggerEvent={InsertEnter='InsertEnter',TextChanged='TextChanged'}a.PreselectMode={Item='item',None='none'}a.ItemField={Abbr='abbr',Kind='kind',Menu='menu'}return a

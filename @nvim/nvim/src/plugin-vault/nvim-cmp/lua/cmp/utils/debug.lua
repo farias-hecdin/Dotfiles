@@ -1,1 +1,0 @@
-local a={}a.flag=false;a.log=function(...)if a.flag then local b={}for c,d in ipairs({...})do if not vim.tbl_contains({'string','number','boolean'},type(d))then d=vim.inspect(d)end;table.insert(b,d)end;print(table.concat(b,'\t'))end end;return a

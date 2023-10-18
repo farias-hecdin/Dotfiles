@@ -1,1 +1,0 @@
-local a={}a.insort=function(b,c,d)table.insert(b,a.search(b,c,d),c)end;a.search=function(b,c,d)local e=1;local f=#b;while e<=f do local g=math.floor((f+e)/2)local h=d(c,b[g])if h>0 then e=g+1 elseif h<0 then f=g-1 else return g+1 end end;return e end;return a

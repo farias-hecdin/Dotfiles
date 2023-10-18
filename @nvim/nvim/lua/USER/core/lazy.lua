@@ -27,7 +27,7 @@ require("lazy").setup("USER.modules", {
   },
   ui = {
     -- a number <1 is a percentage., >1 is a fixed size
-    size = {width = 0.9, height = 0.9},
+    size = { width = 0.9, height = 0.9 },
     -- The border to use for the UI window. Accepts same border values as |nvim_open_win()|.
     border = "rounded",
     --border = { "┏", "━", "┓", "┃", "┛","━", "┗", "┃" },
