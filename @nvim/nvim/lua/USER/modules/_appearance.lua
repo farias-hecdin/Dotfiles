@@ -5,7 +5,7 @@ return {
   {
     -- "echasnovski/mini.tabline",
     dir = D.plugin .. "mini.tabline",
-    lazy = false,
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("mini.tabline").setup({
         show_icons = true,

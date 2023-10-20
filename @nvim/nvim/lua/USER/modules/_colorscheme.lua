@@ -39,6 +39,8 @@ return {
         },
         highlights = {
           ["@comment"]               = { fg = "#007272" },
+          ["@comment.documentation"] = { fmt = "NONE" },
+          ["@label"]                 = { bg = "#222222", fg = "#888888", fmt = "italic" },
           ["@text.strong"]           = { fg = "#D0D0D0" },
           CmpItemAbbrMatch           = { fg = "#0074D9", fmt = "bold" },
           ColorColumn                = { bg = "#330000" },

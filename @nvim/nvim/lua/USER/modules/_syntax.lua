@@ -12,6 +12,7 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPost", "BufNewFile" },
+    pin = true,
     lazy = false,
     config = function()
       require("nvim-treesitter.configs").setup({
