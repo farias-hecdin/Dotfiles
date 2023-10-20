@@ -88,7 +88,7 @@ return {
         update_in_insert = false,
         virtual_lines = false,
         float = {
-          -- source = 'always',
+          source = 'always',
           -- style = 'minimal',
           focusable = false,
           border = "rounded",

@@ -28,7 +28,7 @@ return {
   {
     -- "gaoDean/autolist.nvim",
     dir = D.plugin .. "autolist.nvim",
-    ft = {"markdown", "text", "tex", "plaintex", "norg"},
+    ft = "markdown",
     config = function()
       require("autolist").setup()
 
