@@ -37,7 +37,8 @@ return {
       local lint = require("lint")
       -- Setup
       lint.linters_by_ft = {
-        java = {'checkstyle'}
+        java = {'checkstyle'},
+        -- javascript = {'eslint_d'},
       }
 
       -- A autocmd to trigger linting

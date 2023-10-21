@@ -17,13 +17,13 @@ return {
           ["<leader>."] = { name = "Move" },
           ["<leader>C"] = { name = "Cmp" },
           ["<leader>F"] = { name = "Fuzzy Finder" },
-          ["<leader>G"] = { name = "Gitsigns" },
+          ["<leader>g"] = { name = "Git" },
           ["<leader>M"] = { name = "Markdown" },
           ["<leader>T"] = { name = "Treesitter" },
           ["<leader>b"] = { name = "Buffer" },
           ["<leader>e"] = { name = "Explorer" },
           ["<leader>f"] = { name = "File" },
-          ["<leader>l"] = { name = "Letter" },
+          ["<leader>l"] = { name = "LSP" },
           ["<leader>m"] = { name = "Select" },
           ["<leader>n"] = { name = "Number" },
           ["<leader>p"] = { name = "Paste" },
@@ -53,7 +53,7 @@ return {
           registers = true,   -- shows your registers on " in NORMAL or <C-r> in INSERT mode
           spelling = {
             enabled = false,  -- enabling this will show WhichKey when pressing z= to select spelling suggestions
-            suggestions = 12, -- how many suggestions should be shown in the list?
+            suggestions = 20, -- how many suggestions should be shown in the list?
           },
           -- the presets plugin, adds help for a bunch of default keybindings in Neovim
           -- No actual key bindings are created
@@ -94,7 +94,7 @@ return {
           winblend = 0
         },
         layout = {
-          height = { min = 6, max = 24 },                                            -- min and max height of the columns
+          height = { min = 5, max = 25 },                                            -- min and max height of the columns
           width = { min = 25, max = 50 },                                            -- min and max width of the columns
           spacing = 5,                                                               -- spacing between columns
           align = "left",                                                            -- align columns left, center or right

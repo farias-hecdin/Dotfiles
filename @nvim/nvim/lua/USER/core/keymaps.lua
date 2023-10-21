@@ -29,36 +29,42 @@ end
 -- * command mode = "c",
 
 -- Mini.Pick
-map("n", "<leader>Pg", ":lua MiniPick.builtin.grep_live()<cr>", {desc = "Pick: grep"})
-map("n", "<leader>Pf", ":lua MiniPick.builtin.files()<cr>", {desc = "Pick: files"})
+map("n", "<leader>Fg", ":lua MiniPick.builtin.grep_live()<cr>", {desc = "Fuzzy finder: grep"})
+map("n", "<leader>Ff", ":lua MiniPick.builtin.files()<cr>", {desc = "Fuzzy finder: files"})
 
 -- Sessions
-map("n", "<leader>xa1", function() MiniSessions_write('session_1') end, {desc = "New - 1"})
-map("n", "<leader>xa2", function() MiniSessions_write('session_2') end, {desc = "New - 2"})
-map("n", "<leader>xa3", function() MiniSessions_write('session_3') end, {desc = "New - 3"})
-map("n", "<leader>xa4", function() MiniSessions_write('session_4') end, {desc = "New - 4"})
-map("n", "<leader>xa5", function() MiniSessions_write('session_5') end, {desc = "New - 5"})
-map("n", "<leader>xd1", function() MiniSessions_delete('session_1') end, {desc = "Delete - 1"})
-map("n", "<leader>xd2", function() MiniSessions_delete('session_2') end, {desc = "Delete - 2"})
-map("n", "<leader>xd3", function() MiniSessions_delete('session_3') end, {desc = "Delete - 3"})
-map("n", "<leader>xd4", function() MiniSessions_delete('session_4') end, {desc = "Delete - 4"})
-map("n", "<leader>xd5", function() MiniSessions_delete('session_5') end, {desc = "Delete - 5"})
+map("n", "<leader>xs1", function() MiniSessions_write('session_1') end, {desc = "save in slot 1"})
+map("n", "<leader>xs2", function() MiniSessions_write('session_2') end, {desc = "save in slot 2"})
+map("n", "<leader>xs3", function() MiniSessions_write('session_3') end, {desc = "save in slot 3"})
+map("n", "<leader>xs4", function() MiniSessions_write('session_4') end, {desc = "save in slot 4"})
+map("n", "<leader>xs5", function() MiniSessions_write('session_5') end, {desc = "save in slot 5"})
+map("n", "<leader>xd1", function() MiniSessions_delete('session_1') end, {desc = "delete slot 1"})
+map("n", "<leader>xd2", function() MiniSessions_delete('session_2') end, {desc = "delete slot 2"})
+map("n", "<leader>xd3", function() MiniSessions_delete('session_3') end, {desc = "delete slot 3"})
+map("n", "<leader>xd4", function() MiniSessions_delete('session_4') end, {desc = "delete slot 4"})
+map("n", "<leader>xd5", function() MiniSessions_delete('session_5') end, {desc = "delete slot 5"})
 
 -- Other
 map("n", "<leader>@", function() load_current_buffer() end, {desc = "Load current buffer"})
 
 -- Lsp diagnotic
-map("n", "gdS", ":DiagnoticShow<cr>", {desc = "[LSP] Show"})
-map("n", "gdH", ":DiagnoticHide<cr>", {desc = "[LSP] Hide"})
-map("n", "gdE", ":DiagnosticEnable<cr>", {desc = "[LSP] Enabled"})
-map("n", "gdD", ":DiagnosticDisable<cr>", {desc = "[LSP] Disabled"})
+map("n", "gdS", ":DiagnoticShow<cr>", {desc = "LSP: Show"})
+map("n", "gdH", ":DiagnoticHide<cr>", {desc = "LSP: Hide"})
+map("n", "gdE", ":DiagnosticEnable<cr>", {desc = "LSP: Enabled"})
+map("n", "gdD", ":DiagnosticDisable<cr>", {desc = "LSP: Disabled"})
+
+-- Lsp diagnotic: Alternative keymaps
+map("n", "<leader>lS", ":DiagnoticShow<cr>", {desc = "LSP: Show"})
+map("n", "<leader>lH", ":DiagnoticHide<cr>", {desc = "LSP: Hide"})
+map("n", "<leader>lE", ":DiagnosticEnable<cr>", {desc = "LSP: Enabled"})
+map("n", "<leader>lD", ":DiagnosticDisable<cr>", {desc = "LSP: Disabled"})
 
 -- Search mode
-map("v", "<leader>s", "y/<C-r>\"", {desc = "Search: text selected"})
+map("v", "<leader>s", "y/<C-r>\"", {desc = "Search for selected text"})
 
 -- Gitsigns
-map("n", "<leader>Gd", ":Gitsigns diffthis<cr>", {desc = "Gitsigns: diff"})
-map("n", "<leader>Gp", ":Gitsigns preview_hunk<cr>", {desc = "Gitsigns: preview"})
+map("n", "<leader>gd", ":Gitsigns diffthis<cr>", {desc = "Git: diff"})
+map("n", "<leader>gp", ":Gitsigns preview_hunk<cr>", {desc = "Git: preview"})
 
 -- Undo
 map("n", "<C-u>", "<ESC>u", {desc = "Undo"})
@@ -94,20 +100,20 @@ map("t", "<C-x>", "<C-\\><C-N>", {desc = "Terminal: exit mode"})
 map("n", "<C-t>", ":terminal<cr>", {desc = "Terminal: open"})
 
 -- Treesitter
-map("n", "<leader>Te", ":TSOn<cr>", {desc = "TS: enabled"})
-map("n", "<leader>Td", ":TSOff<cr>", {desc = "TS: disabled"})
+map("n", "<leader>Te", ":TSOn<cr>", {desc = "Treesitter: enabled"})
+map("n", "<leader>Td", ":TSOff<cr>", {desc = "Treesitter: disabled"})
 
 -- Wrap
 map("n", "<leader>we", ":set wrap<cr>", {desc = "Wrap: enabled"})
 map("n", "<leader>wd", ":set nowrap<cr>", {desc = "Wrap: disabled"})
 
 -- Markdown
-map("v", "<C-B>", ":lua require('markdowny').bold()<cr>", {desc = "Md: bold",})
-map("v", "<C-I>", ":lua require('markdowny').italic()<cr>", {desc = "Md: italic"})
-map("v", "<C-L>", ":lua require('markdowny').link()<cr>", {desc = "Md: link"})
-map("n", "<leader>Mt", ":MdTocToggle<cr>", {desc = "Md: open TOC"})
-map("n", "<leader>Mu", ":MdUpdateNumber<cr>", {desc = "Md: add/update number"})
-map("n", "<leader>Mx", ":MdCleanNumber<cr>", {desc = "Md: clean number"})
+map("v", "<C-B>", ":lua require('markdowny').bold()<cr>", {desc = "Markdown: bold",})
+map("v", "<C-I>", ":lua require('markdowny').italic()<cr>", {desc = "Markdown: italic"})
+map("v", "<C-L>", ":lua require('markdowny').link()<cr>", {desc = "Markdown: link"})
+map("n", "<leader>Mt", ":MdTocToggle<cr>", {desc = "Markdown: open TOC"})
+map("n", "<leader>Mu", ":MdUpdateNumber<cr>", {desc = "Markdown: add/update number"})
+map("n", "<leader>Mx", ":MdCleanNumber<cr>", {desc = "Markdown: clean number"})
 
 -- Cut, Copy and Paste
 map("v", "<C-x>", ":!termux-clipboard-set<cr>", {desc = "To cut"}) -- “Ctrl-x” to cut
@@ -164,16 +170,9 @@ map("n", "<leader>em", ":lua MiniFiles.open()<cr>", {desc = "Explorer: miller co
 -- Clear search with <esc>
 map("n", "<esc>", "<cmd>noh<cr><esc>", {desc = "Escape and clear hlsearch"})
 
--- Lowercase and uppercase
-map("v", "<leader>lu", "U<cr>", {desc = "Letter: uppercase"})
-map("v", "<leader>ll", "u<cr>", {desc = "Letter: lowercase"})
-map("n", "<leader>lu", "gU<cr>", {desc = "Letter: uppercase"})
-map("n", "<leader>ll", "gu<cr>", {desc = "Letter: lowercase"})
-map("n", "<leader>lr", "g~~<cr>", {desc = "Letter: reverse"})
-
 -- Tabulator
 map("v", "<leader>.h", "<gv", {desc = "Tab: left"})
-map("v", "<leader>.l", ">gv", {desc = "Tab: Right"})
+map("v", "<leader>.l", ">gv", {desc = "Tab: right"})
 
 -- Move Lines
 map("n", "<leader>.k", ":m .-2<cr>==", {desc = "Move line: up"})
@@ -194,7 +193,7 @@ map("n", "<leader>sV", "<C-w>s", {desc = "Split: vertical"})
 map("n", "<leader>sq", ":close<cr>", {desc = "Split: quit"})
 map("n", "<leader>sx", ":Bdelete<cr>", {desc = "Split: close"})
 map("n", "<leader>sw", ":WindowNvim<cr>", {desc = "Split: check"})
-map("n", "<leader>\'", ":WindowNvim<cr>", {desc = "Split: check"})
+map("n", "<leader>\'", ":WindowNvim<cr>", {desc = "Split check"})
 
 -- Easier pasting
 map("i", "<C-p>", '<ESC>gP', {desc = "Paste"})
@@ -205,8 +204,8 @@ map("n", "<leader>pk", ":pu!<cr>", {desc = "Paste: up"})
 map("n", "<leader>pj", ":pu<cr>", {desc = "Paste: down"})
 
 -- Duplicate lines
-map("x", "<leader>d", ":'<,'>y|put!<cr>", {desc = "Duplicate: all line"})
-map("n", "<leader>d", "yyP<cr>", {desc = "Duplicate: an line"})
+map("x", "<leader>d", ":'<,'>y|put!<cr>", {desc = "Duplicate all line"})
+map("n", "<leader>d", "yyP<cr>", {desc = "Duplicate an line"})
 
 -- Better up/down
 map("n", "j", "v:count == 0 ? 'gj' : 'j' ", {expr = true, silent = true})
