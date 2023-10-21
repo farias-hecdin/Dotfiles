@@ -4,7 +4,7 @@ return {
     branch = 'v3.x',
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      { 'mfussenegger/nvim-jdtls' }, -- to java
+      -- { 'mfussenegger/nvim-jdtls' }, -- to java
     },
     config = function()
       local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -30,7 +30,8 @@ return {
     end
   },
   {
-    "mfussenegger/nvim-lint",
+    "arnevm123/nvim-lint",
+    commit = "6ee074c",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       local lint = require("lint")
@@ -40,13 +41,13 @@ return {
       }
 
       -- A autocmd to trigger linting
-    local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+      local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
 
-    vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
-      group = lint_augroup,
-      callback = function()
-        lint.try_lint()
-      end,
+      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+        group = lint_augroup,
+        callback = function()
+          lint.try_lint()
+        end,
       })
 
       -- Keymap

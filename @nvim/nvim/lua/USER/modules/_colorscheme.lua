@@ -39,13 +39,13 @@ return {
         },
         highlights = {
           ["@comment"]               = { fg = "#007272" },
-          ["@comment.documentation"] = { fmt = "NONE" },
+          ["@comment.documentation"] = { fmt = "none" },
           ["@label"]                 = { bg = "#222222", fg = "#888888", fmt = "italic" },
           ["@text.strong"]           = { fg = "#D0D0D0" },
           CmpItemAbbrMatch           = { fg = "#0074D9", fmt = "bold" },
           ColorColumn                = { bg = "#330000" },
           Comment                    = { fg = "#007272" },
-          CursorLine                 = { bg = "#181C20" },
+          CursorLine                 = { bg = "#131619" },
           CursorLineNr               = { fg = "#2BBB4F" },
           DiagnosticError            = { fg = "#EF5350" },
           DiagnosticHint             = { fg = "#42A5F5" },
@@ -64,7 +64,7 @@ return {
           MiniHipatternsText1        = { fg = "#0074D9", fmt = "BOLD" },   -- THIS:
           MiniHipatternsText2        = { fg = "#FFDC00", fmt = "BOLD" },   -- HERE:
           MiniHipatternsText3        = { fg = "#2BBB4F", fmt = "BOLD" },   -- STEP 01:
-          MiniIndentscopeSymbol      = { fg = "#666666" },
+          MiniIndentscopeSymbol      = { bg = "#222222", fg = "#000000" },
           MiniJump2dSpot             = { fg = "#FFF000", fmt = "NONE" },
           MiniTablineCurrent         = { fg = "#000000", bg = "#2BBB4F", fmt = "NONE" },
           MiniTablineFill            = { fg = "#000000", bg = "#000000", fmt = "NONE" },

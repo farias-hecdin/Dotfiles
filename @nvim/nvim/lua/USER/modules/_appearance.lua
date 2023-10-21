@@ -52,6 +52,7 @@ return {
           counter = W.app_counter,
           lazy = W.app_lazy,
           clock = W.app_clock,
+          lsp_progress = W.lint_progress,
         },
         defaults = {
           expand_null_ls = false, -- This expands out all the null-ls sources to be shown
@@ -97,7 +98,7 @@ return {
         sections = {
           left = { "-mode", "file_size", "counter", " ", "%m", "branch" },
           mid = { "line_column" },
-          right = { "lsp_name", " ", "diagnostics", "lazy", " ", "- ", "-clock", "- " }
+          right = { "lsp_progress", "lsp_name", " ", "diagnostics", "lazy", " ", "- ", "-clock", "- " }
         },
         lsp_symbols = {
           Error = " ",

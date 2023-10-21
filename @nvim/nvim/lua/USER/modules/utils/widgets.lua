@@ -28,4 +28,20 @@ W.app_lazy = function()
   return " " .. tostring(ms) .. "ms"
 end
 
+-- 3rd party ------------------------------------------------------------------
+
+-- lint progress for statusline
+W.lint_progress = function()
+    local procs = require("lint").get_running_procs()
+    if #procs == 0 then
+        return " OK "
+    end
+    local string = ""
+    for _, proc in ipairs(procs) do
+        string = string .. proc .. " ,"
+    end
+    -- return "󱉶 " .. string.sub(string, 1, -2)
+    return " Loading... "
+end
+
 return W
