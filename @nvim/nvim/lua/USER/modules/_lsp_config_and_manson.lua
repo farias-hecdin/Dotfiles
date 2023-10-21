@@ -46,22 +46,40 @@ return {
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
         callback = function(ev)
-          local buf_value = ev.buf
           local map = vim.keymap
           local vimdiag = vim.diagnostic
           local vimlsp = vim.lsp.buf
 
-          map.set("n", "gde", vimlsp.declaration, { buffer = buf_value, desc = "[LSP] Goto Declaration" })
-          map.set("n", "gdd", vimlsp.definition, { buffer = buf_value, desc = "[LSP] Goto Definition" })
-          map.set("n", "gdh", vimlsp.hover, { buffer = buf_value, desc = "[LSP] Hover" })
-          map.set("n", "gdi", vimlsp.implementation, { buffer = buf_value, desc = "[LSP] Goto Implementation" })
-          map.set("n", "gds", vimlsp.signature_help, { buffer = buf_value, desc = "[LSP] Signature Help" })
-          map.set("n", "gdt", vimlsp.type_definition, { buffer = buf_value, desc = "[LSP] Show Type Definition" })
-          map.set("n", "gdr", vimlsp.rename, { buffer = buf_value, desc = "[LSP] Rename" })
-          map.set('n', 'gda', vimdiag.open_float, { buffer = buf_value, desc = "[LSP] Show Type Diagnostic" })
-          map.set("n", "gdf", function()
-            vimlsp.buf.format({ timeout = 5000 })
-          end, { buffer = buf_value, desc = "[LSP] Format" })
+          local opt_declaration = { buffer = ev.buf, desc = "LSP: Go to Declaration" }
+          local opt_definition = { buffer = ev.buf, desc = "LSP: Go to Definition" }
+          local opt_hover = { buffer = ev.buf, desc = "LSP: Hover" }
+          local opt_implementation = { buffer = ev.buf, desc = "LSP: Go to Implementation" }
+          local opt_signature_help = { buffer = ev.buf, desc = "LSP: Signature help" }
+          local opt_type_definition = { buffer = ev.buf, desc = "LSP: Show Type definition" }
+          local opt_rename = { buffer = ev.buf, desc = "LSP: Rename" }
+          local opt_open_float = { buffer = ev.buf, desc = "LSP: Show Type diagnostic" }
+          local opt_formatter = { buffer = ev.buf, desc = "LSP: Formatter" }
+
+          -- keymaps
+          map.set("n", "gde", vimlsp.declaration, opt_declaration)
+          map.set("n", "gdd", vimlsp.definition, opt_definition)
+          map.set("n", "gdh", vimlsp.hover, opt_hover)
+          map.set("n", "gdi", vimlsp.implementation, opt_implementation)
+          map.set("n", "gds", vimlsp.signature_help, opt_signature_help)
+          map.set("n", "gdt", vimlsp.type_definition, opt_type_definition)
+          map.set("n", "gdr", vimlsp.rename, opt_rename)
+          map.set('n', 'gda', vimdiag.open_float, opt_open_float)
+          map.set("n", "gdf", function() vimlsp.buf.format({ timeout = 5000 }) end, opt_formatter)
+          -- Alterntiva keymaps
+          map.set("n", "<leader>le", vimlsp.declaration, opt_declaration)
+          map.set("n", "<leader>ld", vimlsp.definition, opt_definition)
+          map.set("n", "<leader>lh", vimlsp.hover, opt_hover)
+          map.set("n", "<leader>li", vimlsp.implementation, opt_implementation)
+          map.set("n", "<leader>ls", vimlsp.signature_help, opt_signature_help)
+          map.set("n", "<leader>lt", vimlsp.type_definition, opt_type_definition)
+          map.set("n", "<leader>lr", vimlsp.rename, opt_rename)
+          map.set('n', '<leader>la', vimdiag.open_float, opt_open_float)
+          map.set("n", "<leader>lf", function() vimlsp.buf.format({ timeout = 5000 }) end, opt_formatter)
         end,
       })
 
