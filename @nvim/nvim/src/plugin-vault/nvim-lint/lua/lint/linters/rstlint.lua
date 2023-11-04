@@ -1,0 +1,1 @@
+local a='(.*) (.*):(%d+) (.*)'local b={'severity','file','lnum','message'}local c={INFO=vim.diagnostic.severity.INFO,WARNING=vim.diagnostic.severity.WARN,ERROR=vim.diagnostic.severity.ERROR,SEVERE=vim.diagnostic.severity.SEVERE}return{cmd='restructuredtext-lint',stdin=false,args={},ignore_exitcode=true,parser=require('lint.parser').from_pattern(a,b,c,{['source']='rstlint'})}

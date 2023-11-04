@@ -72,7 +72,9 @@ return {
   {
     -- "Vonr/align.nvim",
     dir = D.plugin .. "align.nvim",
-    keys = { { "aw", mode = "v" } },
+    keys = {
+      { "aw", mode = "v" }
+    },
     config = function()
       local NS = { noremap = true, silent = true }
       local map = vim.keymap.set

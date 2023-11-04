@@ -5,7 +5,7 @@ return {
   {
     -- "echasnovski/mini.tabline",
     dir = D.plugin .. "mini.tabline",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPre" },
     config = function()
       require("mini.tabline").setup({
         show_icons = true,
@@ -22,11 +22,10 @@ return {
       require("mini.starter").setup({
         autoopen = false,
         items = {
-          -- Custom actions
-          { action = "bdelete",         name = "Exit",                section = "Builtin (actions)" },
-          { action = "qall",            name = "Quit Neovim",         section = "Builtin (actions)" },
-          { action = "enew",            name = "Create a new buffer", section = "Builtin (actions)" },
-          { action = "NnnPicker %:p:h", name = "Open File manager",   section = "Builtin (actions)" },
+          { action = "bdelete",         name = "Back to the editor.",   section = "Builtin (actions)" },
+          { action = "qall",            name = "Quit Neovim",           section = "Builtin (actions)" },
+          { action = "enew",            name = "Create a new buffer",   section = "Builtin (actions)" },
+          { action = "NnnPicker %:p:h", name = "Open the file manager", section = "Builtin (actions)" },
           starter.sections.sessions(6, true),
           starter.sections.recent_files(25, true),
           starter.sections.recent_files(25, false),
@@ -36,8 +35,12 @@ return {
           starter.gen_hook.indexing("section"),
           starter.gen_hook.padding(8, 1),
         },
-        header = W.app_date() .. "  " .. W.app_clock() ..
-            "\n\nOPTIONS\n a: Builtin (actions)\n b: Sessions\n c: Recent files (current directory)\n d: Recent files",
+        header = W.date() .. "  " .. W.time() ..
+          "\n\nOPTIONS" ..
+          "\n a: Builtin (actions)" ..
+          "\n b: Sessions" ..
+          "\n c: Recent files (current directory)" ..
+          "\n d: Recent files (general)",
         footer = "<C-c> Close this buffer",
       })
     end
@@ -49,62 +52,62 @@ return {
     config = function()
       require("staline").setup({
         slots = {
-          counter = W.app_counter,
-          lazy = W.app_lazy,
-          clock = W.app_clock,
+          clock = W.time,
+          counter = W.word_and_character_counter,
+          lazy = W.startuptime_lazy,
           lsp_progress = W.lint_progress,
         },
         defaults = {
-          expand_null_ls = false, -- This expands out all the null-ls sources to be shown
+          expand_null_ls = false,
           full_path = false,
-          line_column = "[%l/%L]:%c  %p%%", -- `:h stl` to see all flags.
-          fg = "#000000", -- Foreground text color.
-          bg = "#000000", -- Default background is transparent.
+          line_column = "[%l/%L]:%c  %p%%",
+          fg = "#000000",
+          bg = "#000000",
           inactive_color = "#000000",
           inactive_bgcolor = "#000000",
-          true_colors = true,   -- true lsp colors.
-          font_active = "none", -- "bold", "italic", "bold,italic", etc
+          true_colors = true,
+          font_active = "none",
           mod_symbol = " ",
           lsp_client_symbol = " ",
           lsp_client_character_length = 12,
           branch_symbol = " ",
-          null_ls_symbol = "" -- A symbol to indicate that a source is coming from null-ls
+          null_ls_symbol = ""
         },
         mode_colors = {
-          ["c"] = "#FFFFFF",
-          ["n"] = "#2BBB4F",
-          ["i"] = "#FFFF00",
-          ["v"] = "#0091EA",
-          ["V"] = "#90CAF9",
+          ["c"]  = "#FFFFFF",
+          ["n"]  = "#2BBB4F",
+          ["i"]  = "#FFFF00",
+          ["v"]  = "#0091EA",
+          ["V"]  = "#90CAF9",
           [""] = "#BA68C8",
-          ["r"] = "#F06292",
-          ["R"] = "#CC5500",
-          ["t"] = "#FFA000",
+          ["r"]  = "#F06292",
+          ["R"]  = "#CC5500",
+          ["t"]  = "#FFA000",
         },
         mode_icons = {
-          ["c"] = " COM",
-          ["n"] = " NOR",
-          ["i"] = " INS",
-          ["v"] = " VIS",
-          ["V"] = " V-L",
+          ["c"]  = " COM",
+          ["n"]  = " NOR",
+          ["i"]  = " INS",
+          ["v"]  = " VIS",
+          ["V"]  = " V-L",
           [""] = " V-V",
-          ["r"] = " REP",
-          ["R"] = " R-L",
-          ["t"] = " TER",
-          ["s"] = " SEL",
-          ["S"] = " S-L",
+          ["r"]  = " REP",
+          ["R"]  = " R-L",
+          ["t"]  = " TER",
+          ["s"]  = " SEL",
+          ["S"]  = " S-L",
           ["ic"] = " IC ",
         },
         sections = {
-          left = { "-mode", "file_size", "counter", " ", "%m", "branch" },
-          mid = { "line_column" },
+          left  = { "-mode", "file_size", "counter", " ", "%m", "branch" },
+          mid   = { "line_column" },
           right = { "lsp_progress", "lsp_name", " ", "diagnostics", "lazy", " ", "- ", "-clock", "- " }
         },
         lsp_symbols = {
           Error = " ",
-          Info = " ",
-          Warn = " ",
-          Hint = " "
+          Info  = " ",
+          Warn  = " ",
+          Hint  = " "
         },
         special_table = {
           help = { "Help", " " },

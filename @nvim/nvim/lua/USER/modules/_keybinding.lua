@@ -4,16 +4,15 @@ return {
   {
     -- "folke/which-key.nvim",
     dir = D.plugin .. "which-key.nvim",
-    event = "VeryLazy",
+    keys = { { "<leader>" } },
     config = function()
       -- Register -------------------------------------------------------------
       local which_key = require("which-key")
-
       which_key.register(
         {
           ["z"] = { name = "Fold" },
           ["gz"] = { name = "Surround" },
-          ["gd"] = { name = "[LSP]" },
+          ["gd"] = { name = "LSP" },
           ["<leader>."] = { name = "Move" },
           ["<leader>C"] = { name = "Cmp" },
           ["<leader>F"] = { name = "Fuzzy Finder" },
@@ -30,7 +29,7 @@ return {
           ["<leader>s"] = { name = "Split/Window" },
           ["<leader>t"] = { name = "Tabs" },
           ["<leader>x"] = { name = "Sessions" },
-          ["<leader>xa"] = { name = "Sessions: add" },
+          ["<leader>xs"] = { name = "Sessions: save" },
           ["<leader>xd"] = { name = "Sessions: delete" },
           ["<leader>w"] = { name = "Wrap" },
         },

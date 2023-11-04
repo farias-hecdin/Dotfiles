@@ -1,0 +1,1 @@
+local a=[[(%S+):(%d+):%s(%a+):%s(.*)]]local b={'file','lnum','severity','message'}local c={['Error']=vim.diagnostic.severity.WARN}return{cmd='gdlint',stdin=false,append_fname=true,args={},stream='stderr',ignore_exitcode=true,parser=require('lint.parser').from_pattern(a,b,c,{['source']='gdlint'})}

@@ -1,0 +1,1 @@
+return{cmd='statix',stdin=true,args={'check','-o','errfmt','--stdin'},stream='stdout',ignore_exitcode=true,parser=require('lint.parser').from_errorformat('%f>%l:%c:%t:%n:%m',{source='statix'})}

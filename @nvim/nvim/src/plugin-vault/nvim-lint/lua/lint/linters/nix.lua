@@ -1,0 +1,1 @@
+local a='^(%w+): (.+) at .+:(%d+):(%d+)$'local b={'severity','message','lnum','col'}local c={error=vim.diagnostic.severity.ERROR}return{cmd='nix-instantiate',stdin=true,args={'--parse','-'},stream='stderr',ignore_exitcode=true,parser=require('lint.parser').from_pattern(a,b,c,{['source']='nix',['severity']=vim.diagnostic.severity.WARN})}

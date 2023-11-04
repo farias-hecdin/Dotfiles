@@ -1,0 +1,1 @@
+local a='([^:]+):(%d+):  (.+)  (.+)'local b={'file','lnum','message','code'}return{cmd='cpplint',stdin=false,args={},ignore_exitcode=true,stream='stderr',parser=require('lint.parser').from_pattern(a,b,nil,{['source']='cpplint',['severity']=vim.diagnostic.severity.WARN})}

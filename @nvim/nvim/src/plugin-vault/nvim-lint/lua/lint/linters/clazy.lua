@@ -1,0 +1,1 @@
+local a=[=[([^:]*):(%d+):(%d+): (%w+): ([^[]+) %[%-Wclazy%-(.*)%]]=]local b={'file','lnum','col','severity','message','code'}return{cmd='clazy-standalone',stdin=false,args={},stream='stderr',parser=require('lint.parser').from_pattern(a,b,nil,{['source']='clazy'})}
