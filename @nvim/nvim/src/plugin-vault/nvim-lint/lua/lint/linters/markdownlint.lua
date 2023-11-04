@@ -1,0 +1,1 @@
+local a='%f:%l:%c %m,%f:%l %m'local b=vim.loop.os_uname().version:match('Windows')return{cmd=b and'markdownlint.cmd'or'markdownlint',ignore_exitcode=true,stream='stderr',parser=require('lint.parser').from_errorformat(a,{source='markdownlint',severity=vim.diagnostic.severity.WARN})}

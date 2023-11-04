@@ -8,8 +8,8 @@ return {
     config = function()
       require('nvim-web-devicons').setup({
         override_by_filename = {
-          ["astro"] = {icon = "", color = "#F9A825", name = "Astro"},
-          ["prettierrc"] = {icon = "", color = "#aaaaaa", name = "prettierrc"}
+          ["astro"]      = {icon = "", color = "#F9A825", name = "Astro"},
+          ["prettierrc"] = {icon = "", color = "#AAAAAA", name = "prettierrc"}
         }
       })
     end

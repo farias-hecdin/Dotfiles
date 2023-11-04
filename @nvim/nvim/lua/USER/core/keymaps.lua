@@ -2,6 +2,7 @@ local map = vim.keymap.set
 
 -- Features -------------------------------------------------------------------
 
+-- Useful for miniFiles
 local load_current_buffer = function()
   local path = vim.cmd("echo bufname()")
   vim.cmd("e " .. path)
@@ -9,11 +10,11 @@ end
 
 -- MiniSessions
 -- source: ~/.local/share/nvim/session/
-function MiniSessions_write(var)
+local miniSessions_write = function(var)
   local session_name = var
   vim.cmd("lua MiniSessions.write('".. session_name .. "')")
 end
-function MiniSessions_delete(var)
+local miniSessions_delete = function(var)
   local session_name = var
   vim.cmd("lua MiniSessions.delete('".. session_name .. "')")
 end
@@ -21,28 +22,31 @@ end
 -- Keymaps generales ----------------------------------------------------------
 --
 -- Modos
--- * normal mode = "n",
--- * insert mode = "i",
--- * visual mode = "v",
+-- * normal mode   = "n",
+-- * insert mode   = "i",
+-- * visual mode   = "v",
 -- * vis_line mode = "x",
 -- * terminal mode = "t",
--- * command mode = "c",
+-- * command mode  = "c",
+
+-- Auto formatted
+map("n", "<Tab>", "==<cr>", {desc = "auto formatted"})
 
 -- Mini.Pick
 map("n", "<leader>Fg", ":lua MiniPick.builtin.grep_live()<cr>", {desc = "Fuzzy finder: grep"})
 map("n", "<leader>Ff", ":lua MiniPick.builtin.files()<cr>", {desc = "Fuzzy finder: files"})
 
 -- Sessions
-map("n", "<leader>xs1", function() MiniSessions_write('session_1') end, {desc = "save in slot 1"})
-map("n", "<leader>xs2", function() MiniSessions_write('session_2') end, {desc = "save in slot 2"})
-map("n", "<leader>xs3", function() MiniSessions_write('session_3') end, {desc = "save in slot 3"})
-map("n", "<leader>xs4", function() MiniSessions_write('session_4') end, {desc = "save in slot 4"})
-map("n", "<leader>xs5", function() MiniSessions_write('session_5') end, {desc = "save in slot 5"})
-map("n", "<leader>xd1", function() MiniSessions_delete('session_1') end, {desc = "delete slot 1"})
-map("n", "<leader>xd2", function() MiniSessions_delete('session_2') end, {desc = "delete slot 2"})
-map("n", "<leader>xd3", function() MiniSessions_delete('session_3') end, {desc = "delete slot 3"})
-map("n", "<leader>xd4", function() MiniSessions_delete('session_4') end, {desc = "delete slot 4"})
-map("n", "<leader>xd5", function() MiniSessions_delete('session_5') end, {desc = "delete slot 5"})
+map("n", "<leader>xs1", function() miniSessions_write('session_1') end, {desc = "save in slot 1"})
+map("n", "<leader>xs2", function() miniSessions_write('session_2') end, {desc = "save in slot 2"})
+map("n", "<leader>xs3", function() miniSessions_write('session_3') end, {desc = "save in slot 3"})
+map("n", "<leader>xs4", function() miniSessions_write('session_4') end, {desc = "save in slot 4"})
+map("n", "<leader>xs5", function() miniSessions_write('session_5') end, {desc = "save in slot 5"})
+map("n", "<leader>xd1", function() miniSessions_delete('session_1') end, {desc = "delete slot 1"})
+map("n", "<leader>xd2", function() miniSessions_delete('session_2') end, {desc = "delete slot 2"})
+map("n", "<leader>xd3", function() miniSessions_delete('session_3') end, {desc = "delete slot 3"})
+map("n", "<leader>xd4", function() miniSessions_delete('session_4') end, {desc = "delete slot 4"})
+map("n", "<leader>xd5", function() miniSessions_delete('session_5') end, {desc = "delete slot 5"})
 
 -- Other
 map("n", "<leader>@", function() load_current_buffer() end, {desc = "Load current buffer"})
@@ -147,7 +151,8 @@ map("n", "<leader>bp", ":bp<cr>", {desc = "Buffer: previous"})
 map("n", "<leader>ba", ":ls<cr>", {desc = "Buffer: all"})
 map("n", "<leader>bx", ":bd<cr>", {desc = "Buffer: close"})
 map("n", "<leader>bl", ":BSOpen<cr>", {desc = "Buffer: list"})
-map("n", "<leader>bo", ":FlyBuf<cr>", {desc = "Buffer: list alt"})
+-- map("n", "<leader>bo", ":FlyBuf<cr>", {desc = "Buffer: list alt ❌"})
+map("n", "<leader>bo", ":lua require('buffer_manager.ui').toggle_quick_menu()<cr>", {desc = "Buffer: list alt ❌"})
 
 -- Refresh
 map("n", "<leader>%", ":source %<cr>", {desc = "Refresh"})

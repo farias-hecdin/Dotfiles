@@ -1,0 +1,1 @@
+local a="%s*([^:]+):(%d+): (.+): (.+: .+)"local b={"file","lnum","severity","message"}return{cmd="glslc",stdin=false,args={"-o","-"},ignore_exitcode=true,stream="stderr",parser=require("lint.parser").from_pattern(a,b,{error=vim.diagnostic.severity.ERROR,warning=vim.diagnostic.severity.WARN},{["source"]="glslc",["severity"]=vim.diagnostic.severity.WARN})}

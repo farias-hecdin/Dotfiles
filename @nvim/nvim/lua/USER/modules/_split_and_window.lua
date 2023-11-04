@@ -4,7 +4,7 @@ return {
   {
     -- "beauwilliams/focus.nvim",
     dir = D.plugin .. "focus.nvim",
-    event = "WinEnter",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       require("focus").setup()
     end

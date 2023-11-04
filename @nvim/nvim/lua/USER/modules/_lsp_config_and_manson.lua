@@ -1,7 +1,45 @@
+local D = require("USER.modules.utils.dir")
+
 return {
   {
+    -- "seblj/nvim-lsp-extras",
+    dir = D.plugin .. "nvim-lsp-extras",
+    event = { "BufReadPre" },
+    config = function()
+      require("nvim-lsp-extras").setup({
+        signature = false,
+        mouse_hover = false,
+        lightbulb = false,
+        treesitter_hover = {
+          highlights = {
+            ["|%S-|"] = "@text.reference",
+            ["@%S+"] = "@parameter",
+            ["^%s*(Parameters:)"] = "@text.title",
+            ["^%s*(Return:)"] = "@text.title",
+            ["^%s*(See also:)"] = "@text.title",
+            ["{%S-}"] = "@parameter",
+          },
+        },
+      })
+    end
+  },
+  {
+    -- 'jsongerber/nvim-px-to-rem',
+    dir = D.plugin .. "nvim-px-to-rem",
+    ft = "css",
+    config = function()
+      require("nvim-px-to-rem").setup({
+        root_font_size = 16,
+        decimal_count = 4,
+        show_virtual_text = true,
+        add_cmp_source = true,
+        disable_keymaps = true,
+      })
+    end
+  },
+  {
     'williamboman/mason.nvim',
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPre" },
     dependencies = {
       { 'williamboman/mason-lspconfig.nvim', },
     },
@@ -15,7 +53,7 @@ return {
           icons = {
             package_pending = " ",
             package_installed = "󰄳 ",
-            package_uninstalled = " 󰚌",
+            package_uninstalled = "󰚌 ",
           },
         },
         max_concurrent_installers = 1,
@@ -30,7 +68,7 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPre" },
     config = function()
       local lspconfig = require("lspconfig")
       local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -119,15 +157,11 @@ return {
       }
 
       usercmd("DiagnoticShow",
-        function()
-          vim.diagnostic.cofig(format_default)
-        end,
+        function() vim.diagnostic.cofig(format_default) end,
         { desc = "Lsp diagnotic: show", bang = true }
       )
       usercmd("DiagnoticHide",
-        function()
-          vim.diagnostic.config({ virtual_text = false })
-        end,
+        function() vim.diagnostic.config({ virtual_text = false }) end,
         { desc = "Lsp diagnotic: hide", bang = true }
       )
 

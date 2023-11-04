@@ -1,0 +1,1 @@
+local a='[^:]+:[^:]+:(%d+):(%d+):(.+)'local b={'lnum','col','message'}return{cmd='janet',stdin=true,args={'-k'},stream='stderr',ignore_exitcode=true,parser=require('lint.parser').from_pattern(a,b,nil,{['source']='janet',['severity']=vim.diagnostic.severity.ERROR})}

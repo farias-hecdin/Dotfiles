@@ -38,7 +38,6 @@ return {
   },
   {
     "hrsh7th/nvim-cmp",
-    -- dir = D.plugin .. "_nvim-cmp",
     event = "InsertEnter",
     keys = { mode = "n", ":", desc = "Command mode" },
     config = function()
@@ -61,17 +60,17 @@ return {
           }
         },
         mapping = cmp.mapping.preset.insert({
-          ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),   -- previous suggestion
-          ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }), -- next suggestion
-          ["<C-p>"] = cmp.mapping.select_prev_item(),                             -- previous suggestions
-          ["<C-n>"] = cmp.mapping.select_next_item(),                             -- next suggestion
-          ["<C-k>"] = cmp.mapping.scroll_docs(-4),                                -- scrolling documentation
-          ["<C-j>"] = cmp.mapping.scroll_docs(4),                                 -- scrolling documentation
-          ["<C-e>"] = cmp.mapping.abort(),                                        -- abort completion window
-          ["<Esc>"] = cmp.mapping.close(),                                        -- close completion window
-          ["<C-Space>"] = cmp.mapping.complete(),                                 -- show completion suggestions
-          ["<C-y>"] = cmp.mapping.confirm({ select = true }),                     -- accept suggestions
-          ["<CR>"] = cmp.mapping.confirm({ select = false }),                     -- accept suggestions
+          ["<Up>"]      = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }), -- previous suggestion
+          ["<Down>"]    = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }), -- next suggestion
+          ["<C-p>"]     = cmp.mapping.select_prev_item(), -- previous suggestions
+          ["<C-n>"]     = cmp.mapping.select_next_item(), -- next suggestion
+          ["<C-k>"]     = cmp.mapping.scroll_docs(-4), -- scrolling documentation
+          ["<C-j>"]     = cmp.mapping.scroll_docs(4), -- scrolling documentation
+          ["<C-e>"]     = cmp.mapping.abort(), -- abort completion window
+          ["<Esc>"]     = cmp.mapping.close(), -- close completion window
+          ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
+          ["<C-y>"]     = cmp.mapping.confirm({ select = true }), -- accept suggestions
+          ["<CR>"]      = cmp.mapping.confirm({ select = false }), -- accept suggestions
           -- Active suggestions
           ["<Tab>"] = cmp.mapping(function(fallback)
             local col = vim.fn.col(".") - 1
@@ -111,7 +110,7 @@ return {
         sorting = {
           comparators = {
             cmp.config.compare.exact,
-            -- cmp.config.compare.score,
+            cmp.config.compare.score,
             cmp.config.compare.recently_used,
           }
         },
@@ -136,10 +135,11 @@ return {
       -- ":" cmdline setup.
       cmp.setup.cmdline(":", {
         mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources(
-          { { name = "path" } },
-          { { name = "cmdline", option = { ignore_cmds = { "Man", "!" } } } }
-        )
+        sources = cmp.config.sources({
+          { name = "path" },
+          { name = "nvim_px_to_rem" },
+          { name = "cmdline", option = { ignore_cmds = { "Man", "!" } } }
+        })
       })
       vim.opt.completeopt = { "menu", "menuone", "noselect" }
     end

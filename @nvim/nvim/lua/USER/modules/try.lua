@@ -1,6 +1,11 @@
+local D = require("USER.modules.utils.dir")
+
 return {
-  -- {
-  --   "nvim-treesitter/playground",
-  --   lazy = false,
-  -- }
+  {
+    "echasnovski/mini.extra",
+    event = "VeryLazy",
+    config = function()
+      require('mini.extra').setup()
+    end
+  },
 }

@@ -1,0 +1,1 @@
+local a=require("onedark.palette")local function b()local c={none="none"}c=vim.tbl_extend("force",c,a[vim.g.onedark_config.style])c=vim.tbl_extend("force",c,vim.g.onedark_config.colors)return c end;return b()

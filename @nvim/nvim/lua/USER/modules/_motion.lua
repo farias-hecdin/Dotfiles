@@ -4,7 +4,11 @@ return {
   {
     -- "utilyre/sentiment.nvim",
     dir = D.plugin .. "sentiment.nvim",
-    event = "InsertEnter",
+    version = "*",
+    event = "InsertEnter", -- keep for lazy loading
+    opts = {
+      -- config
+    },
     init = function()
       -- `matchparen.vim` needs to be disabled manually in case of lazy loading
       vim.g.loaded_matchparen = 1

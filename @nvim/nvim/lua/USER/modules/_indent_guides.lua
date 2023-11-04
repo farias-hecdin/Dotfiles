@@ -4,7 +4,8 @@ return {
   {
     -- "lucastavaresa/simpleIndentGuides.nvim",
     dir = D.plugin .. "simpleIndentGuides.nvim",
-    lazy = false,
+    event = { "BufReadPre" },
+    -- lazy = false,
     config = function()
       vim.opt.list = true -- enable in all buffers
       require("simpleIndentGuides").setup("┊", "ˉ")

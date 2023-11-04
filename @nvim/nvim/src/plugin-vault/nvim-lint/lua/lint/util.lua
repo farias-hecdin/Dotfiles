@@ -1,0 +1,1 @@
+local a={}local b=vim.fn;function a.find_nearest_directory(c)local d=b.fnameescape(b.fnamemodify(vim.api.nvim_buf_get_name(0),':p'))local e=b.finddir(c,d..';')if e==''then return''end;return b.fnamemodify(e,':p')end;function a.inject_cmd_exe(f)if vim.fn.has('win32')~=1 then return f end;return vim.tbl_extend("force",f,{cmd="cmd.exe",args={"/C",f.cmd,unpack(f.args)}})end;return a

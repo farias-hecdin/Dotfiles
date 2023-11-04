@@ -2,7 +2,7 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- "navarasu/onedark.nvim",
+    "navarasu/onedark.nvim",
     dir = D.plugin .. "onedark.nvim",
     lazy = false,
     priority = 1000,
@@ -39,7 +39,6 @@ return {
         },
         highlights = {
           ["@comment"]               = { fg = "#007272" },
-          ["@comment.documentation"] = { fmt = "none" },
           ["@label"]                 = { bg = "#222222", fg = "#888888", fmt = "italic" },
           ["@text.strong"]           = { fg = "#D0D0D0" },
           CmpItemAbbrMatch           = { fg = "#0074D9", fmt = "bold" },
@@ -56,14 +55,15 @@ return {
           DiagnosticVirtualTextWarn  = { fg = "#F9A825" },
           DiagnosticWarn             = { fg = "#FFEE58" },
           MatchParen                 = { fg = "#ffffff", bg = "#000088" },
-          MiniHipatternsFixme        = { fg = "#ffffff", bg = "#e40001" }, -- FIX:
-          MiniHipatternsHack         = { fg = "#000000", bg = "#FFDC00" }, -- HACK:
-          MiniHipatternsNote         = { fg = "#ffffff", bg = "#497779" }, -- NOTE:
-          MiniHipatternsPerf         = { fg = "#000000", bg = "#BBDEFB" }, -- PERF:
-          MiniHipatternsTodo         = { fg = "#ffffff", bg = "#0074D9" }, -- TODO:
-          MiniHipatternsText1        = { fg = "#0074D9", fmt = "BOLD" },   -- THIS:
-          MiniHipatternsText2        = { fg = "#FFDC00", fmt = "BOLD" },   -- HERE:
-          MiniHipatternsText3        = { fg = "#2BBB4F", fmt = "BOLD" },   -- STEP 01:
+          MiniHipatternsFixme        = { fg = "#ffffff", bg = "#e40001" },
+          MiniHipatternsHack         = { fg = "#000000", bg = "#FFDC00" },
+          MiniHipatternsNote         = { fg = "#ffffff", bg = "#FF0090" },
+          MiniHipatternsPerf         = { fg = "#000000", bg = "#BBDEFB" },
+          MiniHipatternsTodo         = { fg = "#ffffff", bg = "#0074D9" },
+          MiniHipatternsStyle1       = { fg = "#0074D9", fmt = "BOLD" },
+          MiniHipatternsStyle2       = { fg = "#FFDC00", fmt = "BOLD" },
+          MiniHipatternsStyle3       = { fg = "#2BBB4F", fmt = "BOLD" },
+          MiniHipatternsStyle4       = { bg = "#EC9F05", fg = "#000000" },
           MiniIndentscopeSymbol      = { bg = "#222222", fg = "#000000" },
           MiniJump2dSpot             = { fg = "#FFF000", fmt = "NONE" },
           MiniTablineCurrent         = { fg = "#000000", bg = "#2BBB4F", fmt = "NONE" },

@@ -1,0 +1,1 @@
+local a="([^:]+):(%d+):(%d+):(%d+):(%d+):(%w)(%d+):(.*)"local b={"file","lnum","col","end_lnum","end_col","severity","code","message"}local c={["W"]=vim.diagnostic.severity.WARN,["E"]=vim.diagnostic.severity.ERROR}return{cmd="cfn-lint",args={"--format","parseable"},stdin=false,parser=require("lint.parser").from_pattern(a,b,c,{["source"]="cfn-lint"})}

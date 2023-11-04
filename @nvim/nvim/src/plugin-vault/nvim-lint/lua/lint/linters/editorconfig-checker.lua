@@ -1,0 +1,1 @@
+local a="%s*(%d+): (.+)"local b={"lnum","message"}return{cmd="editorconfig-checker",stdin=false,ignore_exitcode=true,args={"-no-color"},parser=require("lint.parser").from_pattern(a,b,nil,{severity=vim.diagnostic.severity.INFO,source="editorconfig-checker"})}
