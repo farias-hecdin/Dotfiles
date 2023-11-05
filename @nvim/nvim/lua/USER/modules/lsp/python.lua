@@ -1,15 +1,13 @@
 local M = {}
 
-M.lsp = function(lsp_server)
+M.lsp = function(servers)
   local lspconfig = require("lspconfig")
-  local i = 0
 
-  while (i < #lsp_server) do
+  for _, server in ipairs(servers) do
     -- Install with: pip install pyright
-    if (lsp_server[i] == "pyright") then
+    if server == 'pyright' then
       lspconfig["pyright"].setup({})
     end
-    i = i + 1
   end
 end
 
