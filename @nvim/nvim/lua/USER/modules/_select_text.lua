@@ -15,15 +15,15 @@ return {
           custom_surroundings = nil,
           highlight_duration = 5000,
           mappings = {
-            add = "gz",             -- Add surrounding in "Normal" and "Visual modes"
-            delete = "gZd",         -- Delete surrounding
-            find = "gZl",           -- Find surrounding (to the right)
-            find_left = "gZh",      -- Find surrounding (to the left)
-            highlight = "gZH",      -- Highlight surrounding
-            replace = "gZr",        -- Replace surrounding
-            update_n_lines = "gZu", -- Update `n_lines`
-            suffix_last = "l",      -- Suffix to search with "prev" method
-            suffix_next = "n",      -- Suffix to search with "next" method
+            add = "gz",
+            delete = "gZd",
+            find = "gZl",
+            find_left = "gZh",
+            highlight = "gZH",
+            replace = "gZr",
+            update_n_lines = "gZu",
+            suffix_last = "l",
+            suffix_next = "n",
           },
           n_lines = 20,
           respect_selection_type = false,

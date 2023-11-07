@@ -11,7 +11,6 @@ return {
         style = "darker",
         code_style = {
           -- functions = "bold"
-          -- comments = "none",
         },
         colors = {
           bg0         = "#000000",
@@ -41,6 +40,8 @@ return {
           ["@comment"]               = { fg = "#007272" },
           ["@label"]                 = { bg = "#222222", fg = "#888888", fmt = "italic" },
           ["@text.strong"]           = { fg = "#D0D0D0" },
+          CurSearch                  = { bg = "#0074D9", fg = "#ffffff" },
+          IncSearch                  = { bg = "#0074D9", fg = "#ffffff" },
           CmpItemAbbrMatch           = { fg = "#0074D9", fmt = "bold" },
           ColorColumn                = { bg = "#330000" },
           Comment                    = { fg = "#007272" },

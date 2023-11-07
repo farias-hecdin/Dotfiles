@@ -88,15 +88,15 @@ return {
           local vimdiag = vim.diagnostic
           local vimlsp = vim.lsp.buf
 
-          local opt_declaration = { buffer = ev.buf, desc = "LSP: Go to Declaration" }
-          local opt_definition = { buffer = ev.buf, desc = "LSP: Go to Definition" }
-          local opt_hover = { buffer = ev.buf, desc = "LSP: Hover" }
-          local opt_implementation = { buffer = ev.buf, desc = "LSP: Go to Implementation" }
-          local opt_signature_help = { buffer = ev.buf, desc = "LSP: Signature help" }
-          local opt_type_definition = { buffer = ev.buf, desc = "LSP: Show Type definition" }
+          local opt_declaration = { buffer = ev.buf, desc = "LSP: go to Declaration" }
+          local opt_definition = { buffer = ev.buf, desc = "LSP: go to Definition" }
+          local opt_hover = { buffer = ev.buf, desc = "LSP: hover" }
+          local opt_implementation = { buffer = ev.buf, desc = "LSP: go to Implementation" }
+          local opt_signature_help = { buffer = ev.buf, desc = "LSP: signature help" }
+          local opt_type_definition = { buffer = ev.buf, desc = "LSP: show Type definition" }
           local opt_rename = { buffer = ev.buf, desc = "LSP: Rename" }
-          local opt_open_float = { buffer = ev.buf, desc = "LSP: Show Type diagnostic" }
-          local opt_formatter = { buffer = ev.buf, desc = "LSP: Formatter" }
+          local opt_open_float = { buffer = ev.buf, desc = "LSP: show Type diagnostic" }
+          local opt_formatter = { buffer = ev.buf, desc = "LSP: formatter" }
 
           -- keymaps
           map.set("n", "gde", vimlsp.declaration, opt_declaration)
@@ -145,7 +145,6 @@ return {
         virtual_lines = false,
         float = {
           source = 'always',
-          -- style = 'minimal',
           focusable = false,
           border = "rounded",
         },

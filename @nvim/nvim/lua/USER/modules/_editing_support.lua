@@ -88,12 +88,10 @@ return {
           note      = { pattern = "%f[%a]NOTE:", group = "MiniHipatternsNote" },
           optimize  = { pattern = "%f[%a]OPTIMIZE:", group = "MiniHipatternsPerf" },
           perf      = { pattern = "%f[%a]PERF:", group = "MiniHipatternsPerf" },
-          -- Extras (ex: * @param - THIS: HERE: - STEP 01: S 01: - CHANGED:)
+          -- Extras (ex: * @param - THIS: HERE: - STEP 01: S 01: - CHECK:)
           docs     = { pattern = "*%s@%a+%s", group = "MiniHipatternsStyle3" },
-          edition  = { pattern = "%f[%a]CHANGED:", group = "MiniHipatternsStyle4" },
-          edition2 = { pattern = "%f[%a]NEW:", group = "MiniHipatternsStyle4" },
+          edition  = { pattern = "%f[%a]CHECK:", group = "MiniHipatternsStyle4" },
           step     = { pattern = "%f[%a]STEP %d%d:", group = "MiniHipatternsStyle3" },
-          step2    = { pattern = "%f[%a]S %d%d:", group = "MiniHipatternsStyle3" },
           word     = { pattern = "%f[%a]THIS:", group = "MiniHipatternsStyle1" },
           word2    = { pattern = "%f[%a]HERE:", group = "MiniHipatternsStyle2" },
 
