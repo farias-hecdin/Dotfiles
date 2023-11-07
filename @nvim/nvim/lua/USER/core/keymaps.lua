@@ -33,8 +33,9 @@ end
 map("n", "<Tab>", "==<cr>", {desc = "auto formatted"})
 
 -- Mini.Pick
-map("n", "<leader>Fg", ":lua MiniPick.builtin.grep_live()<cr>", {desc = "Fuzzy finder: grep"})
-map("n", "<leader>Ff", ":lua MiniPick.builtin.files()<cr>", {desc = "Fuzzy finder: files"})
+map("n", "<leader>fg", ":lua MiniPick.builtin.grep_live()<cr>", {desc = "Fuzzy finder: grep"})
+map("n", "<leader>ff", ":lua MiniPick.builtin.files()<cr>", {desc = "Fuzzy finder: files"})
+map("n", "<leader>fe", ":Pick explorer<cr>", {desc = "Fuzzy finder: explorer"})
 
 -- Sessions
 map("n", "<leader>xs1", function() miniSessions_write('session_1') end, {desc = "save in slot 1"})
@@ -125,13 +126,13 @@ map("v", "<C-c>", ":w !termux-clipboard-set<cr>", {desc = "To copy"}) -- “Ctrl
 map("v", "<C-v>", ":read !termux-clipboard-get<cr>", {desc = "To paste"}) -- “Ctrl+p” to paste
 
 -- Save, quit and exit
-map("n", "<leader>fz", ":wq<cr>", {desc = "Save/quit"})
-map("n", "<leader>fw", ":w<cr>", {desc = "Save"})
-map("n", "<leader>f!w", ":w!<cr>", {desc = "Save: forced"})
-map("n", "<leader>fq", ":q<cr>", {desc = "Quit"})
-map("n", "<leader>f!q", ":q!<cr>", {desc = "Quit: forced"})
-map("n", "<leader>f@", ":qa<cr>", {desc = "Exit"})
-map("n", "<leader>f!@", ":qa!<cr>", {desc = "Exit: forced"})
+map("n", "<leader>Fz", ":wq<cr>", {desc = "Save/quit"})
+map("n", "<leader>Fw", ":w<cr>", {desc = "Save"})
+map("n", "<leader>F!w", ":w!<cr>", {desc = "Forced: save"})
+map("n", "<leader>Fq", ":q<cr>", {desc = "Quit"})
+map("n", "<leader>F!q", ":q!<cr>", {desc = "Forced: quit"})
+map("n", "<leader>F@", ":qa<cr>", {desc = "Exit"})
+map("n", "<leader>F!@", ":qa!<cr>", {desc = "Forced: exit"})
 map("n", "<C-q>", ":q<cr>", {desc = "Quit"})
 map("n", "<C-w>", ":wq<cr>", {desc = "Save/quit"})
 
@@ -180,10 +181,10 @@ map("v", "<leader>.h", "<gv", {desc = "Tab: left"})
 map("v", "<leader>.l", ">gv", {desc = "Tab: right"})
 
 -- Move Lines
-map("n", "<leader>.k", ":m .-2<cr>==", {desc = "Move line: up"})
-map("n", "<leader>.j", ":m .+1<cr>==", {desc = "Move line: down"})
-map("v", "<leader>.k", ":m '<-2<cr>gv=gv", {desc = "Move lines: up"})
-map("v", "<leader>.j", ":m '>+1<cr>gv=gv", {desc = "Move lines: down"})
+map("n", "<leader>.k", ":m .-2<cr>==", {desc = "Move: line up"})
+map("n", "<leader>.j", ":m .+1<cr>==", {desc = "Move: line down"})
+map("v", "<leader>.k", ":m '<-2<cr>gv=gv", {desc = "Move: lines up"})
+map("v", "<leader>.j", ":m '>+1<cr>gv=gv", {desc = "Move: lines down"})
 
 -- Resize window
 map("n", "<leader>sj", ":resize +10<cr>", {desc = "Window: down"})

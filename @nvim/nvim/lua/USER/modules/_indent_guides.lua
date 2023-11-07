@@ -7,7 +7,7 @@ return {
     event = { "BufReadPre" },
     -- lazy = false,
     config = function()
-      vim.opt.list = true -- enable in all buffers
+      vim.opt.list = true
       require("simpleIndentGuides").setup("┊", "ˉ")
     end
   },

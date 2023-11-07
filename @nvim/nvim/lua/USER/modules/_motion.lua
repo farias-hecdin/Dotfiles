@@ -5,7 +5,7 @@ return {
     -- "utilyre/sentiment.nvim",
     dir = D.plugin .. "sentiment.nvim",
     version = "*",
-    event = "InsertEnter", -- keep for lazy loading
+    event = "InsertEnter",
     opts = {
       -- config
     },
