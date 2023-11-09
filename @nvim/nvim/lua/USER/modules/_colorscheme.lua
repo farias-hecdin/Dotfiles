@@ -2,8 +2,8 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    "navarasu/onedark.nvim",
-    dir = D.plugin .. "onedark.nvim",
+    url = "https://github.com/navarasu/onedark.nvim.git",
+    -- dir = D.plugin .. "onedark.nvim",
     lazy = false,
     priority = 1000,
     config = function()
@@ -61,10 +61,9 @@ return {
           MiniHipatternsNote         = { fg = "#ffffff", bg = "#FF0090" },
           MiniHipatternsPerf         = { fg = "#000000", bg = "#BBDEFB" },
           MiniHipatternsTodo         = { fg = "#ffffff", bg = "#0074D9" },
-          MiniHipatternsStyle1       = { fg = "#0074D9", fmt = "BOLD" },
-          MiniHipatternsStyle2       = { fg = "#FFDC00", fmt = "BOLD" },
-          MiniHipatternsStyle3       = { fg = "#2BBB4F", fmt = "BOLD" },
-          MiniHipatternsStyle4       = { bg = "#EC9F05", fg = "#000000" },
+          MiniHipatternsStep         = { fg = "#0074D9", fmt = "BOLD" },
+          MiniHipatternsWord         = { fg = "#FFDC00", fmt = "BOLD" },
+          MiniHipatternsDocs         = { fg = "#2BBB4F", fmt = "BOLD" },
           MiniIndentscopeSymbol      = { bg = "#222222", fg = "#000000" },
           MiniJump2dSpot             = { fg = "#FFF000", fmt = "NONE" },
           MiniTablineCurrent         = { fg = "#000000", bg = "#2BBB4F", fmt = "NONE" },

@@ -2,16 +2,16 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    "Djancyp/outline",
-    dir = D.plugin .. "outline",
+    url = "https://github.com/Djancyp/outline.git",
+    -- dir = D.plugin .. "outline",
     cmd = "BSOpen",
     config = function()
       require('outline').setup()
     end
   },
   {
-    -- "echasnovski/mini.sessions",
-    dir = D.plugin .. "mini.sessions",
+    url = "https://github.com/echasnovski/mini.sessions.git",
+    -- dir = D.plugin .. "mini.sessions",
     event = "VeryLazy",
     config = function()
       require('mini.sessions').setup({
@@ -20,8 +20,8 @@ return {
     end
   },
   {
-    -- "tmillr/sos.nvim",
-    dir = D.plugin .. "sos.nvim",
+    url = "https://github.com/tmillr/sos.nvim.git",
+    -- dir = D.plugin .. "sos.nvim",
     event = { "InsertEnter" },
     config = function()
       require("sos").setup({

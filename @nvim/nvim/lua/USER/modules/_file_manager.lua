@@ -2,12 +2,11 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- "echasnovski/mini.files",
-    dir = D.plugin .. "mini.files",
+    url = "https://github.com/echasnovski/mini.files.git",
+    -- dir = D.plugin .. "mini.files",
     event = "VeryLazy",
     config = function()
       require("mini.files").setup(
-      -- No need to copy this inside `setup()`. Will be used automatically.
         {
           content = {
             filter = nil,
@@ -39,8 +38,8 @@ return {
     end,
   },
   {
-    -- "luukvbaal/nnn.nvim",
-    dir = D.plugin .. "nnn.nvim",
+    url = "https://github.com/luukvbaal/nnn.nvim.git",
+    -- dir = D.plugin .. "nnn.nvim",
     cmd = { "NnnExplorer", "NnnPicker" },
     keys = { "<leader>e" },
     config = function()

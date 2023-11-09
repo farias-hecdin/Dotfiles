@@ -2,8 +2,8 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    'echasnovski/mini.pick',
-    dir = D.plugin .. "mini.pick",
+    url = "https://github.com/echasnovski/mini.pick.git",
+    -- dir = D.plugin .. "mini.pick",
     event = "VeryLazy",
     config = function()
       -- Centered on screen

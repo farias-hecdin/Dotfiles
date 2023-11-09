@@ -2,8 +2,8 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- "utilyre/sentiment.nvim",
-    dir = D.plugin .. "sentiment.nvim",
+    url = "https://github.com/utilyre/sentiment.nvim.git",
+    -- dir = D.plugin .. "sentiment.nvim",
     version = "*",
     event = "InsertEnter",
     opts = {
@@ -15,8 +15,8 @@ return {
     end,
   },
   {
-    -- "echasnovski/mini.jump2d",
-    dir = D.plugin .. "mini.jump2d",
+    url = "https://github.com/echasnovski/mini.jump2d.git",
+    -- dir = D.plugin .. "mini.jump2d",
     keys = {
       { mode = "n", ",", desc = "Jump 2d" },
       { mode = "v", ",", desc = "Jump 2d" }

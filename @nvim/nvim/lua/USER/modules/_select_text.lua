@@ -2,8 +2,8 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- "echasnovski/mini.surround",
-    dir = D.plugin .. "mini.surround",
+    url = "https://github.com/echasnovski/mini.surround.git",
+    -- dir = D.plugin .. "mini.surround",
     keys = {
       { "gZ", mode = "n", desc = "Surround: replace" },
       { "gz", mode = "n", desc = "Surround: add" },
@@ -34,8 +34,8 @@ return {
     end
   },
   {
-    -- "roobert/search-replace.nvim",
-    dir = D.plugin .. "search-replace.nvim",
+    url = "https://github.com/roobert/search-replace.nvim.git",
+    -- dir = D.plugin .. "search-replace.nvim",
     keys = {
       { "<leader>r", mode = "v", desc = "Replace" },
       { "<leader>r", mode = "n", desc = "Replace" }
@@ -55,8 +55,8 @@ return {
     end
   },
   {
-    -- "Vonr/align.nvim",
-    dir = D.plugin .. "align.nvim",
+    url = "https://github.com/Vonr/align.nvim.git",
+    -- dir = D.plugin .. "align.nvim",
     keys = {
       { "aw", mode = "v" }
     },

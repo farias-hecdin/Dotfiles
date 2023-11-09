@@ -2,24 +2,24 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- "beauwilliams/focus.nvim",
-    dir = D.plugin .. "focus.nvim",
+    url = "https://github.com/beauwilliams/focus.nvim.git",
+    -- dir = D.plugin .. "focus.nvim",
     event = { "BufReadPost", "BufNewFile" },
     config = function()
       require("focus").setup()
     end
   },
   {
-    -- "famiu/bufdelete.nvim",
-    dir = D.plugin .. "bufdelete.nvim",
+    url = "https://github.com/famiu/bufdelete.nvim.git",
+    -- dir = D.plugin .. "bufdelete.nvim",
     event = "WinNew",
     config = function()
       require('bufdelete')
     end
   },
   {
-    -- "yorickpeterse/nvim-window",
-    dir = D.plugin .. "nvim-window",
+    url = "https://github.com/yorickpeterse/nvim-window.git",
+    -- dir = D.plugin .. "nvim-window",
     config = function()
       require("nvim-window").setup({
         chars = {

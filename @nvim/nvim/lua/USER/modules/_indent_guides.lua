@@ -2,8 +2,8 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- "lucastavaresa/simpleIndentGuides.nvim",
-    dir = D.plugin .. "simpleIndentGuides.nvim",
+    url = "https://github.com/lucastavaresa/simpleIndentGuides.nvim.git",
+    -- dir = D.plugin .. "simpleIndentGuides.nvim",
     event = { "BufReadPre" },
     -- lazy = false,
     config = function()
@@ -12,8 +12,8 @@ return {
     end
   },
   {
-    -- "echasnovski/mini.indentscope",
-    dir = D.plugin .. "mini.indentscope",
+    url = "https://github.com/echasnovski/mini.indentscope.git",
+    -- dir = D.plugin .. "mini.indentscope",
     event = "InsertEnter",
     config = function()
       require("mini.indentscope").setup {

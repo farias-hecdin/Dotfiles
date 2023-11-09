@@ -53,16 +53,17 @@ map("n", "<leader>xd5", function() miniSessions_delete('session_5') end, {desc =
 map("n", "<leader>@", function() load_current_buffer() end, {desc = "Load current buffer"})
 
 -- Lsp diagnotic
-map("n", "gdS", ":DiagnoticShow<cr>", {desc = "LSP: Show"})
-map("n", "gdH", ":DiagnoticHide<cr>", {desc = "LSP: Hide"})
-map("n", "gdE", ":DiagnosticEnable<cr>", {desc = "LSP: Enabled"})
-map("n", "gdD", ":DiagnosticDisable<cr>", {desc = "LSP: Disabled"})
+map("n", "gdS", ":DiagnoticShow<cr>", {desc = "LSP: show"})
+map("n", "gdH", ":DiagnoticHide<cr>", {desc = "LSP: hide"})
+map("n", "gdE", ":DiagnosticEnable<cr>", {desc = "LSP: enabled"})
+map("n", "gdD", ":DiagnosticDisable<cr>", {desc = "LSP: disabled"})
 
 -- Lsp diagnotic: Alternative keymaps
-map("n", "<leader>lS", ":DiagnoticShow<cr>", {desc = "LSP: Show"})
-map("n", "<leader>lH", ":DiagnoticHide<cr>", {desc = "LSP: Hide"})
-map("n", "<leader>lE", ":DiagnosticEnable<cr>", {desc = "LSP: Enabled"})
-map("n", "<leader>lD", ":DiagnosticDisable<cr>", {desc = "LSP: Disabled"})
+map("n", "<leader>lS", ":DiagnoticShow<cr>", {desc = "LSP: show"})
+map("n", "<leader>lH", ":DiagnoticHide<cr>", {desc = "LSP: hide"})
+map("n", "<leader>lE", ":DiagnosticEnable<cr>", {desc = "LSP: enabled"})
+map("n", "<leader>lD", ":DiagnosticDisable<cr>", {desc = "LSP: disabled"})
+map("n", "<leader>lv", ":lua require('pretty_hover').hover()<cr>", {desc = "LSP: details"})
 
 -- Search mode
 map("v", "<leader>s", "y/<C-r>\"", {desc = "Search for selected text"})

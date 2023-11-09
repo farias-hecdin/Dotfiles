@@ -33,9 +33,9 @@ return {
     end
   },
   {
-    -- "arnevm123/nvim-lint",
+    url = "https://github.com/arnevm123/nvim-lint.git",
     -- commit = "6ee074c",
-    dir = D.plugin .. "nvim-lint",
+    -- dir = D.plugin .. "nvim-lint",
      event = { "BufReadPre" },
      config = function()
        local lint = require("lint")
