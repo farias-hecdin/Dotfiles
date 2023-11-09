@@ -2,8 +2,8 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- "folke/which-key.nvim",
-    dir = D.plugin .. "which-key.nvim",
+    url = "https://github.com/folke/which-key.nvim.git",
+    -- dir = D.plugin .. "which-key.nvim",
     keys = { { "<leader>" } },
     config = function()
       -- Register -------------------------------------------------------------

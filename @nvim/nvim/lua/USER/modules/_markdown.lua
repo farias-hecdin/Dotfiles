@@ -2,8 +2,8 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- "antonk52/markdowny.nvim",
-    dir = D.plugin .. "markdowny.nvim",
+    url = "https://github.com/antonk52/markdowny.nvim.git",
+    -- dir = D.plugin .. "markdowny.nvim",
     keys = { "<C-i>", "<C-l>", "<C-b>" },
     ft = "markdown",
     config = function()
@@ -11,8 +11,8 @@ return {
     end
   },
   {
-    -- "farias-hecdin/md-section-number.nvim",
-    dir = D.plugin .. "md-section-number.nvim",
+    url = "https://github.com/whitestarrain/md-section-number.nvim.git",
+    -- dir = D.plugin .. "md-section-number.nvim",
     ft = "markdown",
     config = function()
       require("md_section_number").setup({
@@ -26,7 +26,6 @@ return {
     end
   },
   {
-    -- "gaoDean/autolist.nvim",
     dir = D.plugin .. "autolist.nvim",
     ft = "markdown",
     config = function()

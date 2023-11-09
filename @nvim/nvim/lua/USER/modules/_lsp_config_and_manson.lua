@@ -2,30 +2,8 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- "seblj/nvim-lsp-extras",
-    dir = D.plugin .. "nvim-lsp-extras",
-    event = { "BufReadPre" },
-    config = function()
-      require("nvim-lsp-extras").setup({
-        signature = false,
-        mouse_hover = false,
-        lightbulb = false,
-        treesitter_hover = {
-          highlights = {
-            ["|%S-|"] = "@text.reference",
-            ["@%S+"] = "@parameter",
-            ["^%s*(Parameters:)"] = "@text.title",
-            ["^%s*(Return:)"] = "@text.title",
-            ["^%s*(See also:)"] = "@text.title",
-            ["{%S-}"] = "@parameter",
-          },
-        },
-      })
-    end
-  },
-  {
-    -- 'jsongerber/nvim-px-to-rem',
-    dir = D.plugin .. "nvim-px-to-rem",
+    url = "https://github.com/jsongerber/nvim-px-to-rem.git",
+    -- dir = D.plugin .. "nvim-px-to-rem",
     ft = "css",
     config = function()
       require("nvim-px-to-rem").setup({
@@ -94,7 +72,7 @@ return {
           local opt_implementation = { buffer = ev.buf, desc = "LSP: go to Implementation" }
           local opt_signature_help = { buffer = ev.buf, desc = "LSP: signature help" }
           local opt_type_definition = { buffer = ev.buf, desc = "LSP: show Type definition" }
-          local opt_rename = { buffer = ev.buf, desc = "LSP: Rename" }
+          local opt_rename = { buffer = ev.buf, desc = "LSP: rename" }
           local opt_open_float = { buffer = ev.buf, desc = "LSP: show Type diagnostic" }
           local opt_formatter = { buffer = ev.buf, desc = "LSP: formatter" }
 

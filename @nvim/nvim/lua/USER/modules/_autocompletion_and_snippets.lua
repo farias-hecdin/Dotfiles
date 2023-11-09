@@ -3,33 +3,33 @@ local icons = require('USER.modules.utils.icons').lspkind
 
 return {
   {
-    -- "hrsh7th/cmp-cmdline",
-    dir = D.plugin .. "cmp-cmdline",
+    url = "https://github.com/hrsh7th/cmp-cmdline.git",
+    -- dir = D.plugin .. "cmp-cmdline",
     keys = { mode = "n", ":", desc = "Command mode" }
   },
   {
-    -- "hrsh7th/cmp-nvim-lsp",
-    dir = D.plugin .. "cmp-nvim-lsp",
+    url = "https://github.com/hrsh7th/cmp-nvim-lsp.git",
+    -- dir = D.plugin .. "cmp-nvim-lsp",
     event = "InsertEnter"
   },
   {
-    -- "hrsh7th/cmp-buffer",
-    dir = D.plugin .. "cmp-buffer",
+    url = "https://github.com/hrsh7th/cmp-buffer.git",
+    -- dir = D.plugin .. "cmp-buffer",
     event = "InsertEnter"
   },
   {
-    -- "hrsh7th/cmp-path",
-    dir = D.plugin .. "cmp-path",
+    url = "https://github.com/hrsh7th/cmp-path.git",
+    -- dir = D.plugin .. "cmp-path",
     event = "InsertEnter"
   },
   {
-    -- "hrsh7th/cmp-vsnip",
-    dir = D.plugin .. "cmp-vsnip",
+    url = "https://github.com/hrsh7th/cmp-vsnip.git",
+    -- dir = D.plugin .. "cmp-vsnip",
     event = "InsertEnter",
   },
   {
-    -- "hrsh7th/vim-vsnip",
-    dir = D.plugin .. "vim-vsnip",
+    url = "https://github.com/hrsh7th/vim-vsnip.git",
+    -- dir = D.plugin .. "vim-vsnip",
     event = "InsertEnter",
   },
   {

@@ -3,8 +3,8 @@ local D = require("USER.modules.utils.dir")
 return {
   { "nvim-lua/plenary.nvim" },
   {
-    -- "nvim-tree/nvim-web-devicons",
-    dir = D.plugin .. "nvim-web-devicons",
+    url = "https://github.com/nvim-tree/nvim-web-devicons.git",
+    -- dir = D.plugin .. "nvim-web-devicons",
     config = function()
       require('nvim-web-devicons').setup({
         override_by_filename = {

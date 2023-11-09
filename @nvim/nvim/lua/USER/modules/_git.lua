@@ -2,8 +2,8 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- "lewis6991/gitsigns.nvim",
-    dir = D.plugin .. "gitsigns.nvim",
+    url = "https://github.com/lewis6991/gitsigns.nvim.git",
+    -- dir = D.plugin .. "gitsigns.nvim",
     event = { "InsertEnter" },
     config = function()
       require('gitsigns').setup {
@@ -19,9 +19,6 @@ return {
         numhl = false,     -- Toggle with `:Gitsigns toggle_numhl`
         linehl = false,    -- Toggle with `:Gitsigns toggle_linehl`
         word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
-        watch_gitdir = {
-          follow_files = true
-        },
         attach_to_untracked = true,
         current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
         current_line_blame_opts = {

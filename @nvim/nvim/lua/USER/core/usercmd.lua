@@ -24,13 +24,13 @@ usercmd("TSDisableHighlight",
 
 -- Command: Lsp diagnostic enable/disable
 -- ( https://github.com/neovim/neovim/issues/13324#issuecomment-1592038788)
-usercmd("DiagnosticDisable",
+usercmd("LspDiagnosticDisable",
   function(args)
     vim.diagnostic.disable(args.buf)
   end,
   {desc = "Lsp diagnostic: disabled", bang = true}
 )
-usercmd("DiagnosticEnable",
+usercmd("LspDiagnosticEnable",
   function(args)
     vim.diagnostic.enable(args.buf)
   end,
@@ -47,3 +47,27 @@ usercmd("RemoveExtraSpaces",
   end,
   {desc = "Remove extra spaces", bang = true}
 )
+
+-- Command: Change `dir` prefix for `url` property
+usercmd("FlagLazyDirToUrl",
+  function()
+    local res = vim.api.nvim_eval("input('Are you sure? (y/n): ')")
+    if res == "y" then
+      vim.cmd("%s/dir =/-- dir =/gcI")
+      vim.cmd("%s/-- url =/url =/gcI")
+    end
+  end,
+  {desc = "Remove extra spaces", bang = true}
+)
+usercmd("FlagLazyUrlToDir",
+  function()
+    local res = vim.api.nvim_eval("input('Are you sure? (y/n): ')")
+    if res == "y" then
+      vim.cmd("%s/-- dir =/dir =/gcI")
+      vim.cmd("%s/url =/-- url =/gcI")
+    end
+  end,
+  {desc = "Remove extra spaces", bang = true}
+)
+
+

@@ -3,8 +3,8 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- "echasnovski/mini.tabline",
-    dir = D.plugin .. "mini.tabline",
+    url = "https://github.com/echasnovski/mini.tabline.git",
+    -- dir = D.plugin .. "mini.tabline",
     event = { "BufReadPre" },
     config = function()
       require("mini.tabline").setup({
@@ -14,8 +14,8 @@ return {
     end
   },
   {
-    -- "echasnovski/mini.starter",
-    dir = D.plugin .. "mini.starter",
+    url = "https://github.com/echasnovski/mini.starter.git",
+    -- dir = D.plugin .. "mini.starter",
     cmd = "MiniStarter",
     config = function()
       local starter = require("mini.starter")
@@ -46,8 +46,8 @@ return {
     end
   },
   {
-    -- "farias-hecdin/staline.nvim",
-    dir = D.plugin .. "__staline.nvim",
+    url = "https://github.com/farias-hecdin/staline.nvim.git",
+    -- dir = D.plugin .. "__staline.nvim",
     lazy = false,
     config = function()
       require("staline").setup({
