@@ -1,1 +1,0 @@
-local a=require('gitsigns.config').config;return function(b,c,d)local e=a.diff_opts;local f;if e.internal then f=require('gitsigns.diff_int').run_diff else f=require('gitsigns.diff_ext').run_diff end;local g;if d~=false then g=e.linematch end;return f(b,c,e.algorithm,e.indent_heuristic,g)end

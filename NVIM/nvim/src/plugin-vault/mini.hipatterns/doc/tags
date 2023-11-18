@@ -1,0 +1,14 @@
+MiniHipatterns	mini-hipatterns.txt	/*MiniHipatterns*
+MiniHipatterns-examples	mini-hipatterns.txt	/*MiniHipatterns-examples*
+MiniHipatterns.compute_hex_color_group()	mini-hipatterns.txt	/*MiniHipatterns.compute_hex_color_group()*
+MiniHipatterns.config	mini-hipatterns.txt	/*MiniHipatterns.config*
+MiniHipatterns.disable()	mini-hipatterns.txt	/*MiniHipatterns.disable()*
+MiniHipatterns.enable()	mini-hipatterns.txt	/*MiniHipatterns.enable()*
+MiniHipatterns.gen_highlighter	mini-hipatterns.txt	/*MiniHipatterns.gen_highlighter*
+MiniHipatterns.gen_highlighter.hex_color()	mini-hipatterns.txt	/*MiniHipatterns.gen_highlighter.hex_color()*
+MiniHipatterns.get_enabled_buffers()	mini-hipatterns.txt	/*MiniHipatterns.get_enabled_buffers()*
+MiniHipatterns.get_matches()	mini-hipatterns.txt	/*MiniHipatterns.get_matches()*
+MiniHipatterns.setup()	mini-hipatterns.txt	/*MiniHipatterns.setup()*
+MiniHipatterns.toggle()	mini-hipatterns.txt	/*MiniHipatterns.toggle()*
+MiniHipatterns.update()	mini-hipatterns.txt	/*MiniHipatterns.update()*
+mini.hipatterns	mini-hipatterns.txt	/*mini.hipatterns*

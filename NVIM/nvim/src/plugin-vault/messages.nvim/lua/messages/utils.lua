@@ -1,0 +1,1 @@
+local a={}a.clip_val=function(b,c,d)if c<b then c=b end;if c>d then c=d end;return c end;a.inspect=function(...)local e={}for f=1,select('#',...)do local g=select(f,...)table.insert(e,vim.inspect(g))end;return table.concat(e,', ')end;return a

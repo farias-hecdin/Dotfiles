@@ -1,0 +1,1 @@
+local a=vim.log.levels;local b={}b.warn=vim.schedule_wrap(function(c,...)vim.notify(c:format(...),a.WARN,{title='gitsigns'})end)b.error=vim.schedule_wrap(function(c,...)vim.notify(c:format(...),vim.log.levels.ERROR,{title='gitsigns'})end)b.error_once=vim.schedule_wrap(function(c,...)vim.notify_once(c:format(...),vim.log.levels.ERROR,{title='gitsigns'})end)return b
