@@ -1,6 +1,0 @@
-:MatchParenDisable	matchparen.nvim.txt	/*:MatchParenDisable*
-:MatchParenEnable	matchparen.nvim.txt	/*:MatchParenEnable*
-matchparen.nvim	matchparen.nvim.txt	/*matchparen.nvim*
-matchparen.nvim-configuration	matchparen.nvim.txt	/*matchparen.nvim-configuration*
-matchparen.nvim-introduction	matchparen.nvim.txt	/*matchparen.nvim-introduction*
-matchparen.nvim-usage	matchparen.nvim.txt	/*matchparen.nvim-usage*
