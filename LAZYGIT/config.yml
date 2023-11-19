@@ -1,0 +1,28 @@
+gui:
+  # stuff relating to the UI
+  windowSize: 'normal' # one of 'normal' | 'half' | 'full' default is 'normal'
+  nerdFontsVersion: "3" # nerd fonts version to use ("2" or "3"); empty means don't show nerd font icons
+  expandFocusedSidePanel: true
+  theme:
+      activeBorderColor:
+        - green
+        - bold
+      inactiveBorderColor:
+        - '#999999'
+      searchingActiveBorderColor:
+        - cyan
+        - bold
+      optionsTextColor:
+        - blue
+      selectedLineBgColor:
+        - blue # set to `default` to have no background colour
+      selectedRangeBgColor:
+        - blue
+      cherryPickedCommitBgColor:
+        - cyan
+      cherryPickedCommitFgColor:
+        - blue
+      unstagedChangesColor:
+        - red
+      defaultFgColor:
+        - default

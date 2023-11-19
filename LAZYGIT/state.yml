@@ -1,0 +1,13 @@
+lastupdatecheck: 0
+recentrepos:
+- /data/data/com.termux/files/home/GIT/Dotfiles
+- /data/data/com.termux/files/home/.local/share/nvim/lazy/nvim-treesitter
+- /data/data/com.termux/files/home/.local/share/nvim/lazy/nvim-cmp
+- /data/data/com.termux/files/home/.local/share/nvim/lazy/lsp-zero.nvim
+- /data/data/com.termux/files/home/.local/share/nvim/lazy/mason.nvim
+- /storage/emulated/0/@HECDIN/KBase.md
+- /data/data/com.termux/files/home/.local/share/nvim/lazy/lazy.nvim
+startuppopupversion: 5
+customcommandshistory: []
+hidecommandlog: false
+ignorewhitespaceindiffview: false
