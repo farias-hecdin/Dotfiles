@@ -6,7 +6,6 @@ return {
     dir = D.plugin .. "which-key.nvim",
     keys = { { "<leader>" } },
     config = function()
-      -- Register -------------------------------------------------------------
       local which_key = require("which-key")
       which_key.register(
         {

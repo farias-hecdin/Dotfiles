@@ -9,13 +9,10 @@ M.lsp = function(servers)
       lspconfig["emmet_ls"].setup({
         filetypes = {
           "astro",
-          "css",
           "html",
           "javascript",
           "javascriptreact",
-          "scss",
           "svelte",
-          "svg",
           "typescriptreact",
           "vue",
         },

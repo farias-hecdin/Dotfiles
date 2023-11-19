@@ -3,14 +3,12 @@ local D = require("USER.modules.utils.dir")
 return {
   {
     'williamboman/mason.nvim',
-    event = { "BufReadPre" },
+    cmd = "Mason",
+    build = ":MasonUpdate",
     dependencies = {
       { 'williamboman/mason-lspconfig.nvim', },
     },
     config = function()
-      local lsp_zero = require('lsp-zero')
-
-      -- Mason
       require('mason').setup({
         ui = {
           border = "rounded",
@@ -25,7 +23,7 @@ return {
       require('mason-lspconfig').setup({
         ensure_installed = {},
         handlers = {
-          lsp_zero.default_setup,
+          require('lsp-zero').default_setup,
         },
       })
     end
@@ -51,7 +49,6 @@ return {
           local map = vim.keymap
           local vimdiag = vim.diagnostic
           local vimlsp = vim.lsp.buf
-
           local opt_declaration = { buffer = ev.buf, desc = "LSP: go to Declaration" }
           local opt_definition = { buffer = ev.buf, desc = "LSP: go to Definition" }
           local opt_hover = { buffer = ev.buf, desc = "LSP: hover" }
@@ -84,7 +81,6 @@ return {
       for _, sign in ipairs(signs) do
         vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
       end
-
       vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
       vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 

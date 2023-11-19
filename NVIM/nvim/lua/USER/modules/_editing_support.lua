@@ -5,7 +5,7 @@ return {
     -- url = "https://github.com/echasnovski/mini.splitjoin.git",
     dir = D.plugin .. "mini.splitjoin",
     keys = {
-      {mode = "n", "gS", desc = "Split and join"}
+      { mode = "n", "gS", desc = "Split and join" }
     },
     config = function()
       require("mini.splitjoin").setup()
@@ -32,8 +32,8 @@ return {
     -- url = "https://github.com/numToStr/Comment.nvim.git",
     dir = D.plugin .. "Comment.nvim",
     keys = {
-      { mode = "n", "´c", desc = "Insert line-comment" },
-      { mode = "n", "´b", desc = "Insert block-comment" },
+      { mode = "n", ",c", desc = "Insert line-comment" },
+      { mode = "n", ",b", desc = "Insert block-comment" },
       { mode = "v", "gc", desc = "Insert line-comment" },
       { mode = "v", "gb", desc = "Insert block-comment" }
     },
@@ -46,8 +46,8 @@ return {
         sticky = true,
         ignore = nil,
         toggler = {
-          line = '´c',
-          block = '´b',
+          line = ',c',
+          block = ',b',
         },
         opleader = {
           line = 'gc',
@@ -75,7 +75,6 @@ return {
       local hipatterns = require("mini.hipatterns")
       hipatterns.setup({
         highlighters = {
-          -- Highlight standalone
           bug      = { pattern = {"()BUG:()", "()FIX:()", "()FIXME:()", "()ISSUE:()", "()DEPRECATED()", "()FAILED:()"}, group = "MiniHipatternsFixme" },
           hack     = { pattern = {"()HACK:()", "()WARN:()", "()WARNING:()"}, group = "MiniHipatternsHack" },
           test     = { pattern = {"()TEST:()", "()TESTING:()", "()PASSED:()", "()TODO:()"}, group = "MiniHipatternsTodo" },

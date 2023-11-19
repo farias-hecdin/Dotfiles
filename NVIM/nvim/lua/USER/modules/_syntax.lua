@@ -27,7 +27,7 @@ return {
         },
         ignore_install = { "css" },
         highlight = {
-          enable = true,                  -- false will disable the whole extension
+          enable = true, -- false will disable the whole extension
           disable = function(lang, bufnr) -- Disable in large C++ buffers
             local file = (lang == "markdown" and vim.api.nvim_buf_line_count(bufnr) > 500)
             return file

@@ -82,7 +82,6 @@ return {
             end
           end, { "i", "s" }),
         }),
-        -- sources for autocompletion -----------------------------------------
         sources = cmp.config.sources({
           {
             name = "nvim_lsp",
@@ -124,7 +123,6 @@ return {
               nvim_lua = 0,
               buffer = 0,
             })[entry.source.name] or 0
-
             return vim_item
           end
         },
