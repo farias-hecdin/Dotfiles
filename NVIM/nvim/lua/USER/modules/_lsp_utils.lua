@@ -24,7 +24,7 @@ return {
         auto_cmds = true,
         sort_method = 'severity',
         scope = 'line',
-        truncate_message = true,
+        truncate_message = 40,
         highlights = {
           error = "DiagnosticFloatingError",
           warn = "DiagnosticFloatingWarn",

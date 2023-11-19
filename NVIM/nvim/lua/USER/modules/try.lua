@@ -26,7 +26,6 @@ return {
         detect = { "[\\@]param", "[\\@]tparam", "[\\@]see", "[\\@]*param*" },
         styler = "`",
       },
-
       -- Tables used for cleaner identification of hover segments.
       code = {
         start = { "[\\@]code" },
@@ -36,7 +35,6 @@ return {
         "[\\@]return",
         "[\\@]*return*",
       },
-
       -- Highlight groups used in the hover method. Feel free to define your own highlight group.
       hl = {
         error = {
@@ -55,7 +53,6 @@ return {
         },
         -- Here you can setup your own highlight groups.
       },
-
       border = "rounded",
       max_width = nil,
       max_height = nil,

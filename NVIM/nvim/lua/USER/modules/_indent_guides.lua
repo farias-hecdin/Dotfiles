@@ -5,7 +5,6 @@ return {
     -- url = "https://github.com/lucastavaresa/simpleIndentGuides.nvim.git",
     dir = D.plugin .. "simpleIndentGuides.nvim",
     event = { "BufReadPre" },
-    -- lazy = false,
     config = function()
       vim.opt.list = true
       require("simpleIndentGuides").setup("┊", "ˉ")
