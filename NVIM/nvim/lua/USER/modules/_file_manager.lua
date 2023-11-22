@@ -1,5 +1,9 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- mini.files
+-- nnn.nvim
+
 return {
   {
     -- url = "https://github.com/echasnovski/mini.files.git",

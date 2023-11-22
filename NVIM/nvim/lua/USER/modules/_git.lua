@@ -1,5 +1,8 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- gitsigns.nvim
+
 return {
   {
     -- url = "https://github.com/lewis6991/gitsigns.nvim.git",

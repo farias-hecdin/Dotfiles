@@ -1,1 +1,0 @@
-local a={}a.title="Corn"function a.info(b)vim.schedule(function()vim.notify(b,vim.log.levels.INFO,{title=a.title})end)end;function a.warn(b)vim.schedule(function()vim.notify(b,vim.log.levels.WARN,{title=a.title})end)end;function a.error(b)vim.schedule(function()vim.notify(b,vim.log.levels.ERROR,{title=a.title})end)end;return a

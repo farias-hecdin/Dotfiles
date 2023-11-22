@@ -19,15 +19,19 @@ local miniSessions_delete = function(var)
   vim.cmd("lua MiniSessions.delete('".. session_name .. "')")
 end
 
--- Keymaps generales ----------------------------------------------------------
+-- Keymaps generals -----------------------------------------------------------
 --
--- Modos
+-- Mode
 -- * normal mode   = "n",
 -- * insert mode   = "i",
 -- * visual mode   = "v",
 -- * vis_line mode = "x",
 -- * terminal mode = "t",
 -- * command mode  = "c",
+--
+
+-- Code runner
+map("n", "<leader>R", ":RunCode<cr>", {desc = "Run Code"})
 
 -- Formatter
 map("n", "<Tab>", "==<cr>", {desc = "Auto formatted"})
@@ -132,6 +136,7 @@ map({"i", "v", "n", "s"}, "<C-s>", "<cmd>w<cr><esc>", {desc = "Save: now"})
 
 -- Select
 map("n", "<leader>ma", ":keepjumps normal! ggVG<cr>", {desc = "Select: all"})
+map("n", "<C-a>", ":keepjumps normal! ggVG<cr>", {desc = "Select: all"})
 map("v", "<leader>ma", "ggVG<cr>",                    {desc = "Select: all"})
 
 -- Buffers
@@ -218,5 +223,5 @@ map("n", "<leader>W", ":checkhealth which_key<cr>", {desc = "Which key"})
 map("n", "<leader>Cd", ":lua require('cmp').setup.buffer {enabled = false}<cr>", {desc = "Cmp: disable"})
 map("n", "<leader>Ce", ":lua require('cmp').setup.buffer {enabled = true}<cr>", {desc = "Cmp: enabled"})
 
--- URL handling ( https://sbulav.github.io/vim/neovim-opening-urls )
+-- URL handling (https://sbulav.github.io/vim/neovim-opening-urls)
 map("n", "gx", ':call jobstart(["xdg-open", expand("<cfile>")], {"detach": v:true})<cr>', {desc = "Open: link"})

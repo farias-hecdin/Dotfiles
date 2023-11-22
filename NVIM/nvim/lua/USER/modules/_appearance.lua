@@ -1,6 +1,11 @@
 local W = require("USER.modules.utils.widgets")
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- mini.tabline
+-- mini.starter
+-- staline.nvim
+
 return {
   {
     -- url = "https://github.com/echasnovski/mini.tabline.git",

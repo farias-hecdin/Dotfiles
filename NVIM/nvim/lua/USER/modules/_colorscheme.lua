@@ -1,5 +1,8 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- onedark.nvim
+
 return {
   {
     -- url = "https://github.com/navarasu/onedark.nvim.git",

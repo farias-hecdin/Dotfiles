@@ -1,5 +1,13 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- mini.splitjoin
+-- mini.cursorword
+-- mini.pairs
+-- Comment.nvim
+-- nvim-ts-context-commentstring
+-- mini.hipatterns
+
 return {
   {
     -- url = "https://github.com/echasnovski/mini.splitjoin.git",

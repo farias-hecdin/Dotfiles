@@ -16,7 +16,6 @@ vim.opt.runtimepath:prepend(lazypath)
 require("lazy").setup("USER.modules", {
   defaults = {
     lazy = true, -- should plugins be lazy-loaded?
-    -- version = "*",
   },
   checker = {
     enabled = false, -- automatically check for plugin updates

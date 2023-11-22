@@ -1,5 +1,10 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- outline
+-- mini.sessions
+-- sos.nvim
+
 return {
   {
     "nvimdev/flybuf.nvim",
@@ -35,7 +40,7 @@ return {
   {
     -- url = "https://github.com/tmillr/sos.nvim.git",
     dir = D.plugin .. "sos.nvim",
-    event = { "InsertEnter" },
+    event = { "BufReadPre" },
     config = function()
       require("sos").setup({
         enabled = true,
