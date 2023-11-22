@@ -1,5 +1,8 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- mini.pick
+
 return {
   {
     -- url = "https://github.com/echasnovski/mini.pick.git",

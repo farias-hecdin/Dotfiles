@@ -34,7 +34,7 @@ end
 W.lint_progress = function()
   local _lint, lint = pcall(require, "lint")
   if not _lint then
-    return
+    return ""
   else
     local procs = require("lint").get_running_procs()
     if #procs == 0 then

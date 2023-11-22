@@ -1,5 +1,10 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- mason.nvim
+-- mason-lspconfig.nvim
+-- nvim-lspconfig
+
 return {
   {
     'williamboman/mason.nvim',
@@ -34,11 +39,9 @@ return {
     config = function()
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       require("lspconfig")
-
       -- Add a border to `:LspInfo` window
       require('lspconfig.ui.windows').default_options.border = 'rounded'
-
-      -- ( https://www.reddit.com/r/neovim/comments/161tv8l/lsp_has_gotten_very_slow )
+      -- (https://www.reddit.com/r/neovim/comments/161tv8l/lsp_has_gotten_very_slow)
       capabilities.textDocument.completion.completionItem.snippetSupport = true
       capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
 

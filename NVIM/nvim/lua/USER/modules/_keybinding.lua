@@ -1,5 +1,8 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- which-key.nvim
+
 return {
   {
     -- url = "https://github.com/folke/which-key.nvim.git",
@@ -9,29 +12,29 @@ return {
       local which_key = require("which-key")
       which_key.register(
         {
-          ["z"] = { name = "Fold" },
-          ["gz"] = { name = "Surround" },
-          ["gd"] = { name = "LSP" },
-          ["<leader>."] = { name = "Move" },
-          ["<leader>C"] = { name = "Cmp" },
-          ["<leader>f"] = { name = "Fuzzy Finder" },
-          ["<leader>g"] = { name = "Git" },
-          ["<leader>M"] = { name = "Markdown" },
-          ["<leader>T"] = { name = "Treesitter" },
-          ["<leader>b"] = { name = "Buffer" },
-          ["<leader>e"] = { name = "Explorer" },
-          ["<leader>F"] = { name = "File" },
+          ["z"]          = { name = "Fold" },
+          ["gz"]         = { name = "Surround" },
+          ["gd"]         = { name = "LSP" },
+          ["<leader>."]  = { name = "Move" },
+          ["<leader>C"]  = { name = "Cmp" },
+          ["<leader>f"]  = { name = "Fuzzy Finder" },
+          ["<leader>g"]  = { name = "Git" },
+          ["<leader>M"]  = { name = "Markdown" },
+          ["<leader>T"]  = { name = "Treesitter" },
+          ["<leader>b"]  = { name = "Buffer" },
+          ["<leader>e"]  = { name = "Explorer" },
+          ["<leader>F"]  = { name = "File" },
           ["<leader>F!"] = { name = "Forced" },
-          ["<leader>l"] = { name = "LSP" },
-          ["<leader>m"] = { name = "Select/Marks" },
-          ["<leader>n"] = { name = "Number" },
-          ["<leader>p"] = { name = "Paste" },
-          ["<leader>s"] = { name = "Split/Window" },
-          ["<leader>t"] = { name = "Tabs" },
-          ["<leader>x"] = { name = "Sessions" },
+          ["<leader>l"]  = { name = "LSP" },
+          ["<leader>m"]  = { name = "Select/Marks" },
+          ["<leader>n"]  = { name = "Number" },
+          ["<leader>p"]  = { name = "Paste" },
+          ["<leader>s"]  = { name = "Split/Window" },
+          ["<leader>t"]  = { name = "Tabs" },
+          ["<leader>x"]  = { name = "Sessions" },
           ["<leader>xs"] = { name = "Sessions: save" },
           ["<leader>xd"] = { name = "Sessions: delete" },
-          ["<leader>w"] = { name = "Wrap" },
+          ["<leader>w"]  = { name = "Wrap" },
         },
         { mode = "n" }
       )

@@ -1,6 +1,15 @@
 local D = require("USER.modules.utils.dir")
 local icons = require('USER.modules.utils.icons').lspkind
 
+-- SUMMARY
+-- cmp-buffer
+-- cmp-cmdline
+-- cmp-nvim-lsp
+-- cmp-vsnip
+-- friendly-snippets
+-- nvim-cmp
+-- vim-vsnip
+
 return {
   {
     -- url = "https://github.com/hrsh7th/cmp-cmdline.git",
@@ -127,6 +136,7 @@ return {
           end
         },
       })
+
       -- ":" cmdline setup ----------------------------------------------------
       cmp.setup.cmdline(":", {
         mapping = cmp.mapping.preset.cmdline(),

@@ -12,7 +12,7 @@ usercmd("MiniStarter",
   {desc = "Mini starter", bang = true, nargs = 0, bar = true}
 )
 
--- Command: Treesitter enable/disable
+-- Command: Treesitter enable/disable -----------------------------------------
 usercmd("TSEnableHighlight",
   function() vim.cmd("TSBufEnable highlight") end,
   {desc = "Treesitter: enabled", bang = true}
@@ -22,8 +22,8 @@ usercmd("TSDisableHighlight",
   {desc = "Treesitter: disabled", bang = true}
 )
 
--- Command: Lsp diagnostic enable/disable
--- ( https://github.com/neovim/neovim/issues/13324#issuecomment-1592038788)
+-- Command: Lsp diagnostic enable/disable -------------------------------------
+-- (https://github.com/neovim/neovim/issues/13324#issuecomment-1592038788)
 usercmd("LspDiagnosticDisable",
   function(args)
     vim.diagnostic.disable(args.buf)
@@ -37,7 +37,7 @@ usercmd("LspDiagnosticEnable",
   {desc = "Lsp diagnostic: enabled", bang = true}
 )
 
--- Command: Remove extra spaces
+-- Command: Remove extra spaces -----------------------------------------------
 usercmd("RemoveExtraSpaces",
   function()
     local res = vim.api.nvim_eval("input('Are you sure? (y/n): ')")
@@ -48,7 +48,7 @@ usercmd("RemoveExtraSpaces",
   {desc = "Remove extra spaces", bang = true}
 )
 
--- Command: Change `dir` prefix for `url` property
+-- Command: Change `dir` prefix for `url` property ----------------------------
 usercmd("FlagLazyDirToUrl",
   function()
     vim.cmd("%s/dir =/-- dir =/gcI")
@@ -63,5 +63,3 @@ usercmd("FlagLazyUrlToDir",
   end,
   {desc = "Remove extra spaces", bang = true}
 )
-
-

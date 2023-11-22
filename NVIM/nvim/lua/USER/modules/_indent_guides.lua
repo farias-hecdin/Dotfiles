@@ -1,5 +1,9 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- simpleIndentGuides.nvim
+-- mini.indentscope
+
 return {
   {
     -- url = "https://github.com/lucastavaresa/simpleIndentGuides.nvim.git",

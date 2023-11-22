@@ -21,7 +21,7 @@ return {
       require(A .. "css").lsp({"cssls"})
       require(A .. "go").lsp({"gopls"})
       require(A .. "html").lsp({"emmet_ls"})
-      require(A .. "java").lsp({"jdtls"})
+      -- require(A .. "java").lsp({"jdtls"})
       require(A .. "javascript").lsp({"astro", "jsonls", "svelte", "tsserver"})
       require(A .. "lua").lsp({"lua_ls"})
       require(A .. "php").lsp({"phpactor"})
@@ -32,22 +32,23 @@ return {
   {
     -- url = "https://github.com/arnevm123/nvim-lint.git",
     dir = D.plugin .. "nvim-lint",
-     event = { "BufReadPre" },
-     config = function()
-       local lint = require("lint")
-       lint.linters_by_ft = {
-         -- java = {'checkstyle'},
-         -- javascript = {'eslint_d'},
-         -- javascriptreact = {'eslint_d'},
-       }
-       -- A autocmd to trigger linting
-       local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
-       vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
-         group = lint_augroup,
-         callback = function()
-           lint.try_lint()
-         end,
-       })
-     end
+    enabled = false,
+    event = { "BufReadPre" },
+    config = function()
+      local lint = require("lint")
+      lint.linters_by_ft = {
+        -- java = {'checkstyle'},
+        -- javascript = {'eslint_d'},
+        -- javascriptreact = {'eslint_d'},
+      }
+      -- A autocmd to trigger linting
+      local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+        group = lint_augroup,
+        callback = function()
+          lint.try_lint()
+        end,
+      })
+    end
   },
 }
