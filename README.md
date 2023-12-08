@@ -1,117 +1,112 @@
+> 📌 Use Google Translate to read this file in your native language.
+
 # Dotfiles
-En este repositorio encontrarás mis archivos de configuración (dotfiles) para varias herramientas de línea de comandos (cli). Siéntete libre de usarlo para mejorar tu equipo. Pero, procede con precaución al copiar los archivos.
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**
+¡Bienvenido a mi repositorio de dotfiles!
 
-- [Dotfiles](#dotfiles)
-  - [Instalación](#instalaci%C3%B3n)
-    - [Neovim](#neovim)
-    - [Tmux](#tmux)
-    - [Nnn](#nnn)
-    - [Zsh](#zsh)
-  - [Licencia](#licencia)
+Aquí encontrarás una amplia variedad de archivos de configuración que he personalizado para diferentes herramientas de línea de comandos (CLI) como: Neovim, Zsh y otras más. Siéntete libre de explorar este repositorio y encontrar aquella configuración que sea útil para ti.
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+_Procede con precaución al copiar y pegar estos archivos, revisarlos antes para asegurarte de que sean compatibles con tu configuración actual._
 
-## Instalación
+## Tabla de contenido
+
+- [Instalación](#instalacion)
+  - [Neovim](#neovim)
+  - [Tmux](#tmux)
+  - [Nnn](#nnn)
+  - [Zsh](#zsh)
+  - [Lazygit](#lazygit)
+- [Licencia](#licencia)
+
+### Instalacion
+
 Para usar estos dotfiles sigue los siguientes paso:
 
-   1. Clona este repositorio.
-
-   ```bash
+   * Clona este repositorio.
+   ```sh
    git clone https://github.com/farias-hecdin/dotfiles.git
    ```
 
-   2. Copia todos los archivos o solo aquellos que necesites y muévelos a sus respetivos directorio ¡Y disfruta de la configuración!
+   * Copia todos los archivos o solo aquellos que necesites ¡Y disfruta de la configuración!
 
-### Neovim
-El [directorio](./@nvim/) @nvim contiene mi configuración de Neovim. Agrega algunos atajos de teclado útiles, temas, plugins y opciones de configuración personalizadas.
+### `Neovim`
 
-<details>
-  <summary>Pre-requisitos</summary>
-  <ul>
-    <li>
-      <b>clang</b> - Para compilar e instalar correctamente los parsers de lenguaje con treesitter.<code>pkg install clang</code>
-    </li>
-    <li>
-      <b>termux-api</b> - Para copiar texto al portapapeles.<code>pkg install termux-api</code>
-    </li>
-    <li>
-      <b>fzf</b> - Para utilizar la herramienta el buscador fuzzy finder en neovim<code>pkg install fzf</code>
-    </li>
-    <li>
-      <b>nnn</b> - Para utilizar el gestor de archivos Nnn en neovim.<code>pkg install nnn</code>
-    </li>
-  </ul>
-</details>
+El [directorio NVIM](./NVIM) contiene mi configuración de Neovim. Agrega algunos atajos de teclado útiles, temas, plugins y opciones de configuración personalizadas.
 
-Para instalar la configuración sigue los siguientes pasos:
+**Prerrequisitos**:
+
+Antes de instalar esta configuración, asegúrate de tener instalados los siguientes paquetes:
+
+1. `clang`: Para compilar e instalar correctamente los parsers de lenguaje con treesitter.
+2. `termux-api`: Para copiar texto al portapapeles (solo si utilizas Termux).
+3. `fzf`: Para utilizar la herramienta el buscador fuzzy finder en neovim.
+4. `nnn`: Para utilizar el gestor de archivos Nnn en neovim.
+
+Para instalar estos paquetes, puedes usar los siguientes comandos:
+
+```sh
+pkg install clang && pkg install termux-api && pkg install fzf && pkg install nnn
+```
+
+Para instalar la configuración de Neovim, sigue los siguientes pasos:
 
    * Para evitar conflictos, borra tu antigua configuración o crea un respaldo.
-
-   ```bash
-   rm -rf ~/.config/nvim/
-   ````
-
    * Procede a copiar la nueva configuración.
 
-   ```bash
-   cp -r ./@nvim/nvim/ ~/.config/
+   ```sh
+   rm -rf ~/.config/nvim/ && cp -r ./NVIM/nvim/ ~/.config/
    ```
 
+### `Tmux`
 
-### Tmux
-En el [directorio](./@tmux/) @tmux se encuentra el archivo tmux.conf de contiene mi configuración de Tmux, que mejora la interfaz de usuario y agrega algunos atajos de teclado.
+En el [directorio TMUX](./TMUX) se encuentra el archivo `tmux.conf` de contiene mi configuración de Tmux, que mejora la interfaz de usuario y agrega algunos atajos de teclado utiles.
 
-Para instalarlo sigue los siguientes pasos:
+Para instalar la configuración de Tmux, sigue los siguientes pasos:
 
    * Para evitar conflictos, borra tu antigua configuracion o crea un resplado.
-
-   ```bash
-   rm -rf ~/.tmux.conf
-   ````
-
    * Procede a copiar la nueva configuración.
 
-   ```bash
-   cp -r ./@tmux/.tmux.conf ~/
+   ```sh
+   rm -rf ~/.tmux.conf && cp -r ./TMUX/.tmux.conf ~/
    ```
 
-### Nnn
-El [directorio](./@nnn/) @nnn contiene mi configuración para el gestor de archivos Nnn. Agrega algunos plugins útiles para moverse más rápidamente entre los directorios como `autojump` y `fzcd`.
+### `Nnn`
+
+El [directorio NNN](./NNN) contiene mi configuración para el gestor de archivos Nnn. Agrega algunos plugins útiles para moverse más rápidamente entre los directorios como `autojump` y `fzcd`.
 
 Para instalarlo sigue los siguientes pasos:
 
    * Para evitar conflictos, borra tu antigua configuración o crea un respaldo.
-
-   ```bash
-   rm -rf ~/.config/nnn/plugins/
-   ````
-
    * Procede a copiar la nueva configuración.
 
-   ```bash
-   cp -r ./@nnn/plugins/ ~/.config/nnn/
+   ```sh
+   rm -rf ~/.config/nnn/plugins/ && cp -r ./@nnn/plugins/ ~/.config/nnn/
    ```
 
-### Zsh
-El [directorio](./@zsh/) @zsh contiene mi configuración de Zsh. Incluye opciones de configuración personalizadas, alias y plugins como `zsh-z`, `fast-zsh-syntax-highlighting` y `zsh-vi-mode`.
+### `Zsh`
+
+En el [directorio ZSH](./ZSH) contiene mi configuración de Zsh. Incluye opciones de configuración personalizadas, alias y plugins como `zsh-z`, `fast-zsh-syntax-highlighting` y `zsh-vi-mode`.
 
 Para instalarlo sigue los siguientes pasos:
 
    * Para evitar conflictos, borra tu antigua configuracion o crea un resplado.
-
-   ```bash
-   rm -rf ~/.zsh/
-   ````
-
    * Procede a copiar la nueva configuración.
 
-   ```bash
-   cp -r ./@zsh/.zsh/ ~/
+   ```sh
+   rm -rf ~/.zsh/ && cp -r ./ZSH/.zsh/ ~/
+   ```
+
+### Otras configuraciones
+
+#### `Lazygit`
+
+Para instalarlo sigue los siguientes pasos:
+
+   ```sh
+   rm -rf ~/.config/lazygit/ && cp -r ./LAZYGIT/lazygit/ ~/.config/lazygit/
    ```
 
 ## Licencia
-dotfiles se distribuye bajo la licencia MIT. Consulte el archivo LICENSE para obtener más información.
+
+Dotfiles se distribuye bajo la licencia MIT. Consulte el archivo `LICENSE` para obtener más información.
+
