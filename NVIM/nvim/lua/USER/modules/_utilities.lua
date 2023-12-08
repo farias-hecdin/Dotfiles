@@ -1,5 +1,5 @@
 local D = require("USER.modules.utils.dir")
-local LAZY = true
+local disable_dev_mode = true
 
 return {
   {
@@ -12,7 +12,7 @@ return {
   {
     -- url = "https://github.com/folke/neodev.nvim.git",
     dir = D.plugin .. "neodev.nvim",
-    lazy = LAZY,
+    lazy = disable_dev_mode,
     config = function()
       require('neodev').setup({
         library = {
@@ -33,13 +33,7 @@ return {
   {
     -- url = "https://github.com/AckslD/messages.nvim.git",
     dir = D.plugin .. "messages.nvim",
-    lazy = LAZY,
-    config = true,
-  },
-  {
-    -- url = "https://github.com/smartpde/debuglog.git",
-    dir = D.plugin .. "debuglog",
-    lazy = LAZY,
+    lazy = disable_dev_mode,
     config = true,
   },
 }

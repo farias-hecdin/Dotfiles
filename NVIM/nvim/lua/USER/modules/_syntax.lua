@@ -2,14 +2,6 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- url = "https://github.com/wuelnerdotexe/vim-astro.git",
-    dir = D.plugin .. "vim-astro",
-    ft = "astro",
-    config = function()
-      vim.cmd([[let g:astro_typescript = "enable"]])
-    end,
-  },
-  {
     "nvim-treesitter/nvim-treesitter",
     event = { "VeryLazy" },
     build = ":TSUpdate",
