@@ -6,9 +6,6 @@ return {
    'VonHeikemen/lsp-zero.nvim',
    branch = 'v3.x',
    event = { "BufReadPre" },
-   dependencies = {
-     { 'mfussenegger/nvim-jdtls' }, -- to java
-   },
    config = function()
      local lsp_zero = require('lsp-zero')
      lsp_zero.extend_lspconfig()
@@ -33,7 +30,7 @@ return {
     -- url = "https://github.com/arnevm123/nvim-lint.git",
     dir = D.plugin .. "nvim-lint",
     enabled = false,
-    event = { "BufReadPre" },
+    -- event = { "BufReadPre" },
     config = function()
       local lint = require("lint")
       lint.linters_by_ft = {

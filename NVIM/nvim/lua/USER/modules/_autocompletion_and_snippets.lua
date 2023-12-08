@@ -22,11 +22,6 @@ return {
     event = "InsertEnter"
   },
   {
-    -- url = "https://github.com/hrsh7th/cmp-buffer.git",
-    dir = D.plugin .. "cmp-buffer",
-    event = "InsertEnter"
-  },
-  {
     -- url = "https://github.com/hrsh7th/cmp-path.git",
     dir = D.plugin .. "cmp-path",
     event = "InsertEnter"

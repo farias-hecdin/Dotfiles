@@ -2,12 +2,29 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
+    url = "https://github.com/brenton-leighton/multiple-cursors.nvim.git",
+    cmd = {"MultipleCursorsMouseAddDelete"},
+    keys = {
+      {"<C-Down>", ":MultipleCursorsAddDown<CR>", mode = {"n", "i"}},
+      {"<C-j>", ":MultipleCursorsAddDown<CR>"},
+      {"<C-Up>", ":MultipleCursorsAddUp<CR>", mode = {"n", "i"}},
+      {"<C-k>", ":MultipleCursorsAddUp<CR>"},
+      {"<C-h>", ":MultipleCursorsMouseAddDelete<CR>", mode = {"n", "i"}},
+    },
+    opts = {
+      keys = {
+        {"<C-h>", ":MultipleCursorsMouseAddDelete<CR>", mode = {"n", "i"}},
+      },
+    },
+  },
+  {
     -- url = "https://github.com/echasnovski/mini.surround.git",
     dir = D.plugin .. "mini.surround",
     keys = {
       { "gZ", mode = "n", desc = "Surround: replace" },
       { "gz", mode = "n", desc = "Surround: add" },
-      { "gz", mode = "v", desc = "Surround: add" }
+      { "gz", mode = "v", desc = "Surround: add" },
+      { "gz", mode = "v", desc = "Surround: add" },
     },
     config = function()
       require("mini.surround").setup(

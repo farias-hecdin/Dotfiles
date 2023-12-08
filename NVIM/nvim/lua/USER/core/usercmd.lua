@@ -12,7 +12,7 @@ usercmd("MiniStarter",
   {desc = "Mini starter", bang = true, nargs = 0, bar = true}
 )
 
--- Command: Treesitter enable/disable -----------------------------------------
+-- Plugin: Treesitter enable/disable
 usercmd("TSEnableHighlight",
   function() vim.cmd("TSBufEnable highlight") end,
   {desc = "Treesitter: enabled", bang = true}
@@ -22,8 +22,8 @@ usercmd("TSDisableHighlight",
   {desc = "Treesitter: disabled", bang = true}
 )
 
--- Command: Lsp diagnostic enable/disable -------------------------------------
--- (https://github.com/neovim/neovim/issues/13324#issuecomment-1592038788)
+-- Command: Lsp diagnostic enable/disable
+-- Thanks to: https://github.com/neovim/neovim/issues/13324#issuecomment-1592038788
 usercmd("LspDiagnosticDisable",
   function(args)
     vim.diagnostic.disable(args.buf)

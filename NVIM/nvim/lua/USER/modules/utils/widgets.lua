@@ -37,10 +37,10 @@ W.lint_progress = function()
     return ""
   else
     local procs = require("lint").get_running_procs()
+    local string = ""
     if #procs == 0 then
         return " OK "
     end
-    local string = ""
     for _, proc in ipairs(procs) do
         string = string .. proc .. " ,"
     end

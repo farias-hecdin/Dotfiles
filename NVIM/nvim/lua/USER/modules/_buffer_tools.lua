@@ -21,9 +21,15 @@ return {
   },
   {
     -- url = "https://github.com/Djancyp/outline.git",
-    dir = D.plugin .. "outline",
+    dir = D.plugin .. "outline.nvim.fork",
     cmd = "BSOpen",
     config = function()
+      --[[
+      !feat:
+      ¡01: Añadir iconos
+      #02: Resaltar el nombre del archivo
+      #03: Añadir color a los iconos
+      ]]
       require('outline').setup()
     end
   },

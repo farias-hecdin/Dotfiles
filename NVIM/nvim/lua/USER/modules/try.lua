@@ -3,7 +3,8 @@ local D = require("USER.modules.utils.dir")
 return {
   {
     url = "https://github.com/Fildo7525/pretty_hover.git",
-    event = "LspAttach",
+    enabled = false,
+    -- event = "LspAttach",
     opts = {
       -- Tables grouping the detected strings and using the markdown highlighters.
       header = {

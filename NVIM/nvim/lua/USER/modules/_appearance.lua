@@ -33,7 +33,7 @@ return {
           { action = "NnnPicker %:p:h", name = "Open the file manager", section = "Builtin (actions)" },
           starter.sections.sessions(6, true),
           starter.sections.recent_files(20, true),
-          starter.sections.recent_files(20, false),
+          starter.sections.recent_files(30, false),
         },
         content_hooks = {
           starter.gen_hook.adding_bullet(),
@@ -41,11 +41,11 @@ return {
           starter.gen_hook.padding(8, 1),
         },
         header = W.date() .. "  " .. W.time() ..
-          "\n\nOPTIONS" ..
-          "\n a: Builtin (actions)" ..
-          "\n b: Sessions" ..
-          "\n c: Recent files (current directory)" ..
-          "\n d: Recent files (general)",
+          "\n\nOptions" ..
+          "\n [a] Builtin: actions" ..
+          "\n [b] Sessions" ..
+          "\n [c] Recent files: current directory" ..
+          "\n [d] Recent files: general",
         footer = "<C-c> Close this buffer",
       })
     end
@@ -53,7 +53,7 @@ return {
   {
     -- url = "https://github.com/farias-hecdin/staline.nvim.git",
     dir = D.plugin .. "staline.nvim",
-    lazy = false,
+    event = { "BufReadPre" },
     config = function()
       require("staline").setup({
         slots = {
@@ -68,8 +68,8 @@ return {
           line_column = "[%l/%L]:%c  %p%%",
           fg = "#000000",
           bg = "#000000",
-          inactive_color = "#000000",
-          inactive_bgcolor = "#000000",
+          inactive_color = "#ffffff",
+          inactive_bgcolor = "#333333",
           true_colors = true,
           font_active = "none",
           mod_symbol = " ",
@@ -107,6 +107,11 @@ return {
           left  = { "-mode", "file_size", "counter", " ", "%m", "branch" },
           mid   = { "line_column" },
           right = { "lsp_progress", "lsp_name", " ", "diagnostics", "lazy", " ", "- ", "-clock", "- " }
+        },
+        inactive_sections = {
+            left = { '' },
+            mid = { 'file_name' },
+            right = { '' },
         },
         lsp_symbols = {
           Error = " ",

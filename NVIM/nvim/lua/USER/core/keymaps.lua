@@ -30,6 +30,8 @@ end
 -- * command mode  = "c",
 --
 
+map("n", "C", "gcc", {desc = "Comment-line"})
+
 -- Code runner
 map("n", "<leader>R", ":RunCode<cr>", {desc = "Run Code"})
 
@@ -38,9 +40,11 @@ map("n", "<Tab>", "==<cr>", {desc = "Auto formatted"})
 map("n", ",b", "ggVG=",     {desc = "Formatter all"})
 
 -- Mini.Pick
-map("n", "<leader>fg", ":lua MiniPick.builtin.grep_live()<cr>", {desc = "Fuzzy finder: grep"})
-map("n", "<leader>ff", ":lua MiniPick.builtin.files()<cr>",     {desc = "Fuzzy finder: files"})
-map("n", "<leader>fe", ":Pick explorer<cr>",                    {desc = "Fuzzy finder: explorer"})
+map("n", "<leader>fg", ":lua MiniPick.builtin.grep_live()<cr>",  {desc = "Fuzzy finder: grep"})
+map("n", "<leader>ff", ":lua MiniPick.builtin.files()<cr>",      {desc = "Fuzzy finder: files"})
+map("n", "<leader>fo", ":lua MiniPick.registry.registry()<cr>",  {desc = "Fuzzy finder: options"})
+map("n", "<leader>fp", ":lua MiniPick.registry.registers()<cr>", {desc = "Fuzzy finder: paste"})
+map("n", "<leader>fe", ":Pick explorer<cr>",                     {desc = "Fuzzy finder: explorer"})
 
 -- Sessions
 map("n", "<leader>xs1", function() miniSessions_write('session_1') end,  {desc = "Save: slot 1"})
@@ -100,8 +104,8 @@ map("t", "<C-x>", "<C-\\><C-N>",   {desc = "Terminal: exit mode"})
 map("n", "<C-t>", ":terminal<cr>", {desc = "Terminal: open"})
 
 -- Treesitter
-map("n", "<leader>Te", ":TSOn<cr>",  {desc = "Treesitter: enabled"})
-map("n", "<leader>Td", ":TSOff<cr>", {desc = "Treesitter: disabled"})
+map("n", "<leader>Te", ":TSEnableHighlight<cr>",  {desc = "Treesitter: enabled"})
+map("n", "<leader>Td", ":TSDisableHighlight<cr>", {desc = "Treesitter: disabled"})
 
 -- Wrap
 map("n", "<leader>we", ":set wrap<cr>",   {desc = "Wrap: enabled"})
@@ -128,7 +132,7 @@ map("n", "<leader>Fq", ":q<cr>",    {desc = "File: quit"})
 map("n", "<leader>F!q", ":q!<cr>",  {desc = "Forced: quit"})
 map("n", "<leader>F@", ":qa<cr>",   {desc = "File: exit"})
 map("n", "<leader>F!@", ":qa!<cr>", {desc = "Forced: exit"})
-map("n", "<C-q>", ":q<cr>",         {desc = "File: quit"})
+map("n", "<C-q>", ":qa<cr>",         {desc = "File: quit"})
 map("n", "<C-w>", ":wq<cr>",        {desc = "File: save/quit"})
 
 -- Save in all mode
@@ -198,8 +202,8 @@ map("n", "<leader>\'", ":WindowNvim<cr>", {desc = "Split: check"})
 -- Easier pasting
 map("i", "<C-p>", '<ESC>gP',       {desc = "Paste"})
 map("v", "p", '"_dP',              {desc = "Paste"})
-map("n", "P", "gP",                {desc = "Paste: right"})
-map("n", "p", "gp",                {desc = "Paste: left"})
+map("n", "P", "gP",                {desc = "Paste: left"})
+map("n", "p", "gp",                {desc = "Paste: right"})
 map("n", "<leader>pk", ":pu!<cr>", {desc = "Paste: up"})
 map("n", "<leader>pj", ":pu<cr>",  {desc = "Paste: down"})
 
