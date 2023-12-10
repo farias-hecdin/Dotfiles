@@ -42,37 +42,37 @@ return {
       })
     end,
   },
-  {
-    url = "https://github.com/farias-hecdin/corn.nvim.fork.git",
-    -- dir = D.plugin .. "corn.nvim.fork",
-    event = { "InsertEnter" },
-    config = function()
-      require('corn').setup({
-        auto_cmds = true,
-        sort_method = 'severity',
-        scope = 'line',
-        truncate_message = 20,
-        highlights = {
-          error = "DiagnosticFloatingError",
-          warn = "DiagnosticFloatingWarn",
-          info = "DiagnosticFloatingInfo",
-          hint = "DiagnosticFloatingHint",
-        },
-        icons = {
-          error = " ",
-          warn = " ",
-          hint = " ",
-          info = " ",
-        },
-      })
-      -- toggle virtual_text diags when corn is toggled
-      require('corn').setup({
-        on_toggle = function(is_hidden)
-          vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text })
-        end
-      })
-    end
-  },
+  -- {
+  --   url = "https://github.com/farias-hecdin/corn.nvim.fork.git",
+  --   -- dir = D.plugin .. "corn.nvim.fork",
+  --   event = { "InsertEnter" },
+  --   config = function()
+  --     require('corn').setup({
+  --       auto_cmds = true,
+  --       sort_method = 'severity',
+  --       scope = 'line',
+  --       truncate_message = 20,
+  --       highlights = {
+  --         error = "DiagnosticFloatingError",
+  --         warn = "DiagnosticFloatingWarn",
+  --         info = "DiagnosticFloatingInfo",
+  --         hint = "DiagnosticFloatingHint",
+  --       },
+  --       icons = {
+  --         error = "  ",
+  --         warn = "  ",
+  --         hint = "  ",
+  --         info = "  ",
+  --       },
+  --     })
+  --     -- toggle virtual_text diags when corn is toggled
+  --     require('corn').setup({
+  --       on_toggle = function(is_hidden)
+  --         vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text })
+  --       end
+  --     })
+  --   end
+  -- },
   {
     url = "https://github.com/CRAG666/code_runner.nvim.git",
     cmd = { "RunCode", "RunFile", "RunFile", "RunProject", "RunClose", "CRFiletype", "CRProjects" },
@@ -82,17 +82,13 @@ return {
           size = 5,
         },
         filetype = {
-          java = {
-            "cd $dir &&",
-            "javac $fileName &&",
-            "java $fileNameWithoutExt &&",
-            "rm -rf *.class"
-          },
-          python = "python3 -u",
-          typescript = "deno run",
-          sh = "bash",
-          php = "php",
+          go = "go run",
+          java = { "cd $dir &&", "javac $fileName &&", "java $fileNameWithoutExt &&", "rm -rf *.class" },
           lua = "lua",
+          php = "php",
+          python = "python3 -u",
+          sh = "bash",
+          typescript = "deno run",
         },
       })
     end
