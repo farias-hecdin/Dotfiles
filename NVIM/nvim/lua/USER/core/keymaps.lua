@@ -30,7 +30,9 @@ end
 -- * command mode  = "c",
 --
 
-map("n", "C", "gcc", {desc = "Comment-line"})
+-- Automatically Pair brackets, parethesis, and quotes
+map("i", "/*", "/**/<left><left>")
+map("i", "--+", "--------------------------------------------------<left><left>")
 
 -- Code runner
 map("n", "<leader>R", ":RunCode<cr>", {desc = "Run Code"})
@@ -179,10 +181,10 @@ map("v", "<leader>.h", "<gv", {desc = "Tab: left"})
 map("v", "<leader>.l", ">gv", {desc = "Tab: right"})
 
 -- Move Lines
-map("n", "<leader>.k", ":m .-2<cr>==",     {desc = "Move: line up"})
-map("n", "<leader>.j", ":m .+1<cr>==",     {desc = "Move: line down"})
-map("v", "<leader>.k", ":m '<-2<cr>gv=gv", {desc = "Move: lines up"})
-map("v", "<leader>.j", ":m '>+1<cr>gv=gv", {desc = "Move: lines down"})
+map("n", "K", ":m .-2<cr>==",     {desc = "Move: line up"})
+map("n", "J", ":m .+1<cr>==",     {desc = "Move: line down"})
+map("v", "K", ":m '<-2<cr>gv=gv", {desc = "Move: lines up"})
+map("v", "J", ":m '>+1<cr>gv=gv", {desc = "Move: lines down"})
 
 -- Resize window
 map("n", "<leader>sj", ":resize +10<cr>",          {desc = "Window: down"})
@@ -202,6 +204,7 @@ map("n", "<leader>\'", ":WindowNvim<cr>", {desc = "Split: check"})
 -- Easier pasting
 map("i", "<C-p>", '<ESC>gP',       {desc = "Paste"})
 map("v", "p", '"_dP',              {desc = "Paste"})
+map("v", "P", '"_dp',              {desc = "Paste"})
 map("n", "P", "gP",                {desc = "Paste: left"})
 map("n", "p", "gp",                {desc = "Paste: right"})
 map("n", "<leader>pk", ":pu!<cr>", {desc = "Paste: up"})

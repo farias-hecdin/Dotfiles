@@ -7,11 +7,9 @@ alias R="exec zsh"
 # Commands
 alias ..="cd .."
 alias ...="cd ~/"
-alias cp="cp -iv"
-alias mv="mv -iv"
-alias rm="rm -iv"
-alias tgpt="tgpt -i"
-alias bard="bard -i"
+alias @cp="cp -iv"
+alias @mv="mv -iv"
+alias @rm="rm -iv"
 
 # App configuration
 alias zconfig="nvim ~/.zshrc"
@@ -56,6 +54,11 @@ alias jpd="unmarks"
 alias @distro="proot-distro login"
 alias @js-server="five-server"
 alias @nanoid="nanoid --size"
-alias @pnpm-clean="pnpm store prune"
 alias @postcss-opts="postcss --no-map --replace src/**/*.css --config ./opts/postcss.config.cjs"
 alias @prettier="prettier --write '**/*.{html,css,scss,js,ts,jsx,vue,svelte,json}'"
+
+# Clean
+alias @clean-pnpm="pnpm store prune"
+alias @clean-npm="npm cache clean --force"
+alias @clean-go="go clean -modcache"
+alias @clean-apt="apt autoremove"
