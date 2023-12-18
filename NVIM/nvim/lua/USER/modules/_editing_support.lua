@@ -30,7 +30,6 @@ return {
   {
     -- url = "https://github.com/echasnovski/mini.pairs.git",
     dir = D.plugin .. "mini.pairs",
-    -- event = "InsertEnter",
     enabled = false,
     config = function()
       require("mini.pairs").setup()
@@ -73,7 +72,6 @@ return {
   {
     -- url = "https://github.com/echasnovski/mini.hipatterns.git",
     dir = D.plugin .. "mini.hipatterns",
-    event = "InsertEnter",
     event = "BufReadPre",
     config = function()
       local hipatterns = require("mini.hipatterns")
@@ -87,19 +85,19 @@ return {
           --[[
           -- Extra highlights
           -- @param, @returns and more
+          -- STEP 01: or #1.2.3:
           -- !THIS: or !this:
           -- ¡THIS: or ¡this:
-          -- STEP 01: or #1.2.3.4:
           -- !-----!: or !=======!:
           ]]
-          docs     = { pattern = {"%s()@%l+%p*%l*()"}, group = "MiniHipatternsDocs" },
-          step     = { pattern = {"STEP %d+%p?%d+:", "#%d+%p?%d*%p?%d*%p?%d*:"}, group = "MiniHipatternsStep" },
-          word     = { pattern = {"!%a*%d*:"}, group = "MiniHipatternsWord" },
-          word2    = { pattern = {"¡%a*%d*:"}, group = "MiniHipatternsWord2" },
-          split    = { pattern = {"!%p+!:"}, group = "MiniHipatternsSplit" },
+          docs     = { pattern = {"%s()@[%l-]+()"}, group = "MiniHipatternsDocs" },
+          step     = { pattern = {"[STEPstep]+ [%d_-\\.]+:", "#[%d_-\\.]+:"}, group = "MiniHipatternsStep" },
+          word     = { pattern = {"![%a%s%d_-]+:"}, group = "MiniHipatternsWord" },
+          word2    = { pattern = {"¡[%a%s%d_-]+:"}, group = "MiniHipatternsWord2" },
+          split    = { pattern = {"![-_=]+!:"}, group = "MiniHipatternsSplit" },
           --[[
           -- Highlight color systems using that color
-          -- #4095BF
+        -- #4095BF
           -- hsl(200, 50%, 50%)
           -- lch(57.81% 34.32 241.72)
           -- rgb(64, 149, 191)

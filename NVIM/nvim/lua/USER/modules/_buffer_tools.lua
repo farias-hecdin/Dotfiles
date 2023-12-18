@@ -7,30 +7,16 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    "nvimdev/flybuf.nvim",
-    cmd = "FlyBuf",
-    config = function()
-      require('flybuf').setup({
-        hotkey = 'asdfghwertyuiopzcvbnm',
-        border = 'single',
-        quit = 'q',
-        mark = 'l',
-        delete = 'x',
-      })
-    end
-  },
-  {
-    -- url = "https://github.com/Djancyp/outline.git",
-    dir = D.plugin .. "outline.nvim.fork",
+    -- url = "https://github.com/farias-hecdin/outline.nvim.fork.git",
+    dir = D.plugin .. "outline.fork",
     cmd = "BSOpen",
     config = function()
-      --[[
-      !feat:
-      ¡01: Añadir iconos
-      #02: Resaltar el nombre del archivo
-      #03: Añadir color a los iconos
-      ]]
-      require('outline').setup()
+      require('outline').setup({
+        active_icon = "🔴",
+        space_between = " ",
+        window_width = 80,
+        window_maxheight = 20,
+      })
     end
   },
   {

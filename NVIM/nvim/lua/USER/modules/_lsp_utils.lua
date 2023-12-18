@@ -1,7 +1,6 @@
 local D = require("USER.modules.utils.dir")
 
 -- SUMMARY
--- nvim-px-to-rem
 -- corn.nvim.fork
 -- code_runner.nvim
 
@@ -30,49 +29,25 @@ return {
     end
   },
   {
+    --[[
+    -- Demostration
+    -- #4095BF
+    -- hsl(200, 50%, 50%)
+    -- lch(57.81% 34.32 241.72)
+    -- rgb(64, 149, 191)
+    ]]
     -- url = "https://github.com/farias-hecdin/ColorCommander.nvim",
     dir = D.plugin .. "ColorCommander.nvim",
     ft = { "css", "scss", "lua" },
     config = function()
       require('colorcommander').setup({
         show_virtual_text = true,
-        show_virtual_text_to_hex = "lch",
+        show_virtual_text_to_hex = "rgb",
         disable_keymaps = false,
         filetypes = { "css", "lua" },
       })
     end,
   },
-  -- {
-  --   url = "https://github.com/farias-hecdin/corn.nvim.fork.git",
-  --   -- dir = D.plugin .. "corn.nvim.fork",
-  --   event = { "InsertEnter" },
-  --   config = function()
-  --     require('corn').setup({
-  --       auto_cmds = true,
-  --       sort_method = 'severity',
-  --       scope = 'line',
-  --       truncate_message = 20,
-  --       highlights = {
-  --         error = "DiagnosticFloatingError",
-  --         warn = "DiagnosticFloatingWarn",
-  --         info = "DiagnosticFloatingInfo",
-  --         hint = "DiagnosticFloatingHint",
-  --       },
-  --       icons = {
-  --         error = "  ",
-  --         warn = "  ",
-  --         hint = "  ",
-  --         info = "  ",
-  --       },
-  --     })
-  --     -- toggle virtual_text diags when corn is toggled
-  --     require('corn').setup({
-  --       on_toggle = function(is_hidden)
-  --         vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text })
-  --       end
-  --     })
-  --   end
-  -- },
   {
     url = "https://github.com/CRAG666/code_runner.nvim.git",
     cmd = { "RunCode", "RunFile", "RunFile", "RunProject", "RunClose", "CRFiletype", "CRProjects" },

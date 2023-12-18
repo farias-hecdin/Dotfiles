@@ -1,5 +1,10 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- focus.nvim
+-- bufdelete.nvim
+-- nvim-window
+
 return {
   {
     -- url = "https://github.com/beauwilliams/focus.nvim.git",

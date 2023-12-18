@@ -5,8 +5,8 @@ vim.opt_local.shiftwidth = 2
 vim.opt_local.softtabstop = 2
 vim.opt_local.tabstop = 2
 
--- LSP utils
-
+-- LSP utils ------------------------------------------------------------------
+--
 -- local _jdtls, jdtls = pcall(require, "jdtls")
 -- if not _jdtls then
 --     return

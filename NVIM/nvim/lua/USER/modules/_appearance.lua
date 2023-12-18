@@ -73,10 +73,9 @@ return {
           true_colors = true,
           font_active = "none",
           mod_symbol = " ",
-          lsp_client_symbol = " ",
+          lsp_client_symbol = " ",
           lsp_client_character_length = 12,
           branch_symbol = " ",
-          null_ls_symbol = ""
         },
         mode_colors = {
           ["c"]  = "#FFFFFF",

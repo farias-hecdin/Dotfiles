@@ -1,5 +1,9 @@
 local D = require("USER.modules.utils.dir")
-local disable_dev_mode = true
+
+-- SUMMARY
+-- flatten.nvim
+-- neodev.nvim
+-- messages.nvim
 
 return {
   {
@@ -12,7 +16,7 @@ return {
   {
     -- url = "https://github.com/folke/neodev.nvim.git",
     dir = D.plugin .. "neodev.nvim",
-    lazy = disable_dev_mode,
+    ft = { "lua" },
     config = function()
       require('neodev').setup({
         library = {
@@ -33,7 +37,7 @@ return {
   {
     -- url = "https://github.com/AckslD/messages.nvim.git",
     dir = D.plugin .. "messages.nvim",
-    lazy = disable_dev_mode,
+    ft = { "lua" },
     config = true,
   },
 }
