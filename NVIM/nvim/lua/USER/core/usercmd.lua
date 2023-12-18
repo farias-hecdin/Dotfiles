@@ -1,3 +1,4 @@
+local vim = vim
 local usercmd = vim.api.nvim_create_user_command -- Create usercommand
 
 -- Plugin: WindowNvim
@@ -37,7 +38,7 @@ usercmd("LspDiagnosticEnable",
   {desc = "Lsp diagnostic: enabled", bang = true}
 )
 
--- Command: Remove extra spaces -----------------------------------------------
+-- Command: Remove extra spaces
 usercmd("RemoveExtraSpaces",
   function()
     local res = vim.api.nvim_eval("input('Are you sure? (y/n): ')")
@@ -48,7 +49,7 @@ usercmd("RemoveExtraSpaces",
   {desc = "Remove extra spaces", bang = true}
 )
 
--- Command: Change `dir` prefix for `url` property ----------------------------
+-- Command: Change `dir` prefix for `url` property
 usercmd("FlagLazyDirToUrl",
   function()
     vim.cmd("%s/dir =/-- dir =/gcI")

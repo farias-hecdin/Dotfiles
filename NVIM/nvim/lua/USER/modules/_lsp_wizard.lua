@@ -1,6 +1,10 @@
 local D = require("USER.modules.utils.dir")
 local A = "USER.modules.lsp."
 
+-- SUMMARY
+-- lsp-zero.nvim
+-- nvim-lint
+
 return {
  {
    'VonHeikemen/lsp-zero.nvim',
@@ -16,13 +20,13 @@ return {
       -- LSP enabled ------------------------------------------------
       require(A .. "bash").lsp({"bashls"})
       require(A .. "css").lsp({"cssls"})
-      require(A .. "go").lsp({"gopls"})
       require(A .. "html").lsp({"emmet_ls"})
-      -- require(A .. "java").lsp({"jdtls"})
       require(A .. "javascript").lsp({"astro", "jsonls", "svelte", "tsserver"})
+      -- require(A .. "java").lsp({"jdtls"})
       require(A .. "lua").lsp({"lua_ls"})
+      require(A .. "go").lsp({"gopls"})
       require(A .. "php").lsp({"phpactor"})
-      -- require(A .. "python").lsp({"pyright"})
+      require(A .. "python").lsp({"pyright"})
 
     end
   },

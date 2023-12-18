@@ -1,5 +1,8 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- nvim-treesitter
+
 return {
   {
     "nvim-treesitter/nvim-treesitter",

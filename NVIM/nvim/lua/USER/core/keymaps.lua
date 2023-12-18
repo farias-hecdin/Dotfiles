@@ -1,3 +1,4 @@
+local vim = vim
 local map = vim.keymap.set
 
 -- Features -------------------------------------------------------------------
@@ -28,11 +29,21 @@ end
 -- * vis_line mode = "x",
 -- * terminal mode = "t",
 -- * command mode  = "c",
---
 
--- Automatically Pair brackets, parethesis, and quotes
-map("i", "/*", "/**/<left><left>")
-map("i", "--+", "--------------------------------------------------<left><left>")
+-- Automatically Pair brackets, parethesis, quotes and more
+map("i", "^1", "var(_)<left>", {desc = "var(_)"})
+map("i", "^2", "$(_)<left>", {desc = "$(_)"})
+map("i", "^s1", "---------------------------------------------------------------------------", {desc = "--…"})
+map("i", "^s2", "===========================================================================", {desc = "==…"})
+map("i", "^s3", "###########################################################################", {desc = "##…"})
+map("i", "^mc", "```_```<left><left><left>", {desc = "``…"})
+map("i", "^vp", "vim.print(_)<left>", {desc = "vim.print(_)"})
+map("i", "^vl", "log.info(_)<left>", {desc = "log.info(_)"})
+map("i", "^ht", "</>", {desc = "</>"})
+map("i", "^jc", "console.log(_)<left>", {desc = "Console log"})
+map("i", "^jc", "alert(_)<left><left>", {desc = "Alert"})
+map("i", "^ja", "const name = () => {_}<left>", {desc = "Arrow function"})
+map("i", "^co", "* {outline: 1px dashed blue;}", {desc = "* {outline: … }"})
 
 -- Code runner
 map("n", "<leader>R", ":RunCode<cr>", {desc = "Run Code"})

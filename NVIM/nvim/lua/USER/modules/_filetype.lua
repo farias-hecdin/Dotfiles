@@ -1,23 +1,28 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- nvim-jdtls
+-- nvim-px-to-rem
+-- vim-astro
+
 return {
-  {
-    'mfussenegger/nvim-jdtls', -- to java
-    ft = { 'java' },
-    config = true
-  },
+  -- {
+  --   'mfussenegger/nvim-jdtls',
+  --   ft = { 'java' },
+  --   config = true
+  -- },
   {
     -- url = "https://github.com/jsongerber/nvim-px-to-rem.git",
     dir = D.plugin .. "nvim-px-to-rem",
-    ft = { "css" },
+    ckd = { "PxToRemCursor", "PxToRemLine" },
     config = function()
       require("nvim-px-to-rem").setup({
         root_font_size = 16,
         decimal_count = 4,
-        show_virtual_text = true,
-        add_cmp_source = true,
+        show_virtual_text = false,
+        add_cmp_source = false,
         disable_keymaps = true,
-      })
+     })
     end
   },
   {

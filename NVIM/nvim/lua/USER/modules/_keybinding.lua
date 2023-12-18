@@ -7,6 +7,7 @@ return {
   {
     -- url = "https://github.com/folke/which-key.nvim.git",
     dir = D.plugin .. "which-key.nvim",
+    event = "InsertEnter",
     keys = { { "<leader>" } },
     config = function()
       local which_key = require("which-key")

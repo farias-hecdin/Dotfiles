@@ -1,5 +1,10 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- plenary.nvim
+-- nvim-web-devicons
+-- mini.extra
+
 return {
   {
     url = "https://github.com/nvim-lua/plenary.nvim.git"
@@ -17,7 +22,7 @@ return {
           },
           ["test.md"] = {
             icon = "",
-            color = "#cbcb41",
+            color = "#CBCB41",
             name = "test"
           },
           ["prettierrc"] = {

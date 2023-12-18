@@ -1,5 +1,11 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- multiple-cursors.nvim
+-- mini.surround
+-- search-replace.nvim
+-- align.nvim
+
 return {
   {
     url = "https://github.com/brenton-leighton/multiple-cursors.nvim.git",

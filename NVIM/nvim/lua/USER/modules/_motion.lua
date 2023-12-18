@@ -1,5 +1,10 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- mini.ai
+-- mini.jump2d
+-- marks.nvim
+
 return {
   {
     url = "https://github.com/echasnovski/mini.ai.git",

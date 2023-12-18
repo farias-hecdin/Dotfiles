@@ -27,7 +27,7 @@ end
 W.startuptime_lazy = function()
   local stats = require("lazy").stats()
   local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-  return " " .. tostring(ms) .. "ms"
+  return "󰓅 " .. tostring(ms) .. "ms"
 end
 
 -- lint progress for statusline

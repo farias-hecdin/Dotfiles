@@ -1,5 +1,9 @@
 local D = require("USER.modules.utils.dir")
 
+-- SUMMARY
+-- markdowny.nvim
+-- md-section-number.nvim
+
 return {
   {
     -- url = "https://github.com/antonk52/markdowny.nvim.git",
