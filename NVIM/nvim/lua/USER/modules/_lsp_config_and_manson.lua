@@ -37,6 +37,7 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre" },
     config = function()
+      local vim = vim
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       require("lspconfig")
       -- Add a border to `:LspInfo` window
@@ -88,7 +89,6 @@ return {
       vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 
       -- Commands -------------------------------------------------------------
-      local usercmd = vim.api.nvim_create_user_command
       local format_default = {
         severity_sort = true,
         signs = true,

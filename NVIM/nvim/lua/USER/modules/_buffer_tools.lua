@@ -12,7 +12,7 @@ return {
     cmd = "BSOpen",
     config = function()
       require('outline').setup({
-        active_icon = "🔴",
+        active_icon = "",
         space_between = " ",
         window_width = 80,
         window_maxheight = 20,

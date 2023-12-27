@@ -1,4 +1,4 @@
-local D = require("USER.modules.utils.dir")
+local vim = vim
 
 -- SUMMARY
 -- nvim-treesitter
@@ -15,17 +15,14 @@ return {
     end,
     config = function()
       require("nvim-treesitter.configs").setup({
-        -- For "nvim-ts-context-commentstring"
-        context_commentstring = {
-          enable = true,
-          enable_autocmd = false,
-        },
         ignore_install = { "css" },
         highlight = {
           enable = true, -- false will disable the whole extension
-          disable = function(lang, bufnr) -- Disable in large C++ buffers
-            local file = (lang == "markdown" and vim.api.nvim_buf_line_count(bufnr) > 500)
-            return file
+          disable = function(lang, bufnr) -- Disable in large buffers
+            if (lang and vim.api.nvim_buf_line_count(bufnr) > 500) then
+              vim.print('[nvim-treesitter] Disable in large buffers')
+              return true
+            end
           end,
         },
         indent = {

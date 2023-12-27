@@ -10,8 +10,8 @@ set -o pipefail
 
 # Module config ---------------------------------------------------------------
 
-co_gray="\e[37m"
-co_bold="\e[1m"
+gray="\e[37m"
+bold="\e[1m"
 end="\e[0m"
 
 # Get the current directory.
@@ -47,10 +47,10 @@ list+=($(find "$DIR" -type f -name "*.jpeg" \
 ))
 
 if [[ ${#list[@]} -gt 0 ]]; then
-  echo -e "  ${co_bold}Deleting: ${end}"
+  echo -e "  ${bold}Deleting: ${end}"
   # Delete the elements.
   for elem in "${list[@]}"; do
-    echo -e "  ${co_gray}$elem ${end}"
+    echo -e "  ${gray}$elem ${end}"
     rm -rf "$elem"
     wait
   done
@@ -58,4 +58,4 @@ if [[ ${#list[@]} -gt 0 ]]; then
 fi
 
 # Print a success message.
-echo -e "  ${co_bold}Successfully deleted unwanted folders and files.${end}"
+echo -e "  ${bold}Successfully deleted unwanted folders and files.${end}"

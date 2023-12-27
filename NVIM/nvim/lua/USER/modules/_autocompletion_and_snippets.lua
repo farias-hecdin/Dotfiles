@@ -1,5 +1,6 @@
 local D = require("USER.modules.utils.dir")
 local icons = require('USER.modules.utils.icons').lspkind
+local vim = vim
 
 -- SUMMARY
 -- cmp-buffer

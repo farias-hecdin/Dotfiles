@@ -11,6 +11,7 @@ return {
     config = function()
       -- Centered on screen
       local win_config = function()
+        local vim = vim
         local height = math.floor(0.618 * vim.o.lines)
         local width = math.floor(0.618 * vim.o.columns)
         return {

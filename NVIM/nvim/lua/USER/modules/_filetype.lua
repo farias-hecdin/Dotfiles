@@ -14,7 +14,7 @@ return {
   {
     -- url = "https://github.com/jsongerber/nvim-px-to-rem.git",
     dir = D.plugin .. "nvim-px-to-rem",
-    ckd = { "PxToRemCursor", "PxToRemLine" },
+    cmd = { "PxToRemCursor", "PxToRemLine" },
     config = function()
       require("nvim-px-to-rem").setup({
         root_font_size = 16,

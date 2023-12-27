@@ -38,11 +38,11 @@ return {
     ]]
     -- url = "https://github.com/farias-hecdin/ColorCommander.nvim",
     dir = D.plugin .. "ColorCommander.nvim",
-    ft = { "css", "scss", "lua" },
+    cmd = { "ColorToName", "ColorNameInstall", "ColorPaste", "ColorToHsl", "ColorToLch", "ColorToRgb" },
     config = function()
       require('colorcommander').setup({
-        show_virtual_text = true,
-        show_virtual_text_to_hex = "rgb",
+        show_virtual_text = false,
+        show_virtual_text_to_hex = "lch",
         disable_keymaps = false,
         filetypes = { "css", "lua" },
       })

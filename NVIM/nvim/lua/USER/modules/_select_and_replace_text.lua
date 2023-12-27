@@ -9,17 +9,17 @@ local D = require("USER.modules.utils.dir")
 return {
   {
     url = "https://github.com/brenton-leighton/multiple-cursors.nvim.git",
-    cmd = {"MultipleCursorsMouseAddDelete"},
+    cmd = { "MultipleCursorsMouseAddDelete" },
     keys = {
-      {"<C-Down>", ":MultipleCursorsAddDown<CR>", mode = {"n", "i"}},
-      {"<C-j>", ":MultipleCursorsAddDown<CR>"},
-      {"<C-Up>", ":MultipleCursorsAddUp<CR>", mode = {"n", "i"}},
-      {"<C-k>", ":MultipleCursorsAddUp<CR>"},
-      {"<C-h>", ":MultipleCursorsMouseAddDelete<CR>", mode = {"n", "i"}},
+      { "<C-Down>", ":MultipleCursorsAddDown<CR>", mode = {"n", "i"} },
+      { "<C-j>", ":MultipleCursorsAddDown<CR>" },
+      { "<C-Up>", ":MultipleCursorsAddUp<CR>", mode = {"n", "i"} },
+      { "<C-k>", ":MultipleCursorsAddUp<CR>" },
+      { "<C-h>", ":MultipleCursorsMouseAddDelete<CR>", mode = {"n", "i"} },
     },
     opts = {
       keys = {
-        {"<C-h>", ":MultipleCursorsMouseAddDelete<CR>", mode = {"n", "i"}},
+        { "<C-h>", ":MultipleCursorsMouseAddDelete<CR>", mode = {"n", "i"} },
       },
     },
   },
