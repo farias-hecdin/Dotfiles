@@ -1,5 +1,3 @@
-local D = require("USER.modules.utils.dir")
-
 return {
   {
     url = "https://github.com/Fildo7525/pretty_hover.git",

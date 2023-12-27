@@ -1,0 +1,35 @@
+local vim = vim
+local map = vim.keymap.set
+
+-- Automatically Pair brackets, parethesis, quotes and more
+
+-- General
+map("i", "^1", "var(_)<left>", {desc = "var(_)"})
+map("i", "^2", "$(_)<left>", {desc = "$(_)"})
+
+-- Separator
+map("i", "^s1", "---------------------------------------------------------------------------", {desc = "--…"})
+map("i", "^s2", "===========================================================================", {desc = "==…"})
+map("i", "^s3", "###########################################################################", {desc = "##…"})
+
+-- Markdown
+map("i", "^mc", "```_```<left><left><left>", {desc = "``…"})
+
+-- Lua and vim
+map("i", "^vp", "vim.print(_)<left>", {desc = "vim.print(_)"})
+map("i", "^vl", "log.info(_)<left>", {desc = "log.info(_)"})
+
+-- Html
+map("i", "^ht", "</>", {desc = "</>"})
+
+-- Javascript
+map("i", "^jc", "console.log(_)<left>", {desc = "Console log"})
+map("i", "^ja", "alert(_)<left>", {desc = "Alert"})
+map("i", "^jaf", "const name = () => {_}<left>", {desc = "Arrow function"})
+
+-- React
+map("i", "^rc", "className={_}<left>", {desc = "ClassName"})
+map("i", "^re", "useEffect(() => {_}, [])<left><left><left><left><left><left>", {desc = "useEffect"})
+
+-- CSS
+map("i", "^co", "* {outline: 1px dashed blue;}", {desc = "* {outline: … }"})

@@ -30,21 +30,6 @@ end
 -- * terminal mode = "t",
 -- * command mode  = "c",
 
--- Automatically Pair brackets, parethesis, quotes and more
-map("i", "^1", "var(_)<left>", {desc = "var(_)"})
-map("i", "^2", "$(_)<left>", {desc = "$(_)"})
-map("i", "^s1", "---------------------------------------------------------------------------", {desc = "--…"})
-map("i", "^s2", "===========================================================================", {desc = "==…"})
-map("i", "^s3", "###########################################################################", {desc = "##…"})
-map("i", "^mc", "```_```<left><left><left>", {desc = "``…"})
-map("i", "^vp", "vim.print(_)<left>", {desc = "vim.print(_)"})
-map("i", "^vl", "log.info(_)<left>", {desc = "log.info(_)"})
-map("i", "^ht", "</>", {desc = "</>"})
-map("i", "^jc", "console.log(_)<left>", {desc = "Console log"})
-map("i", "^jc", "alert(_)<left><left>", {desc = "Alert"})
-map("i", "^ja", "const name = () => {_}<left>", {desc = "Arrow function"})
-map("i", "^co", "* {outline: 1px dashed blue;}", {desc = "* {outline: … }"})
-
 -- Code runner
 map("n", "<leader>R", ":RunCode<cr>", {desc = "Run Code"})
 
@@ -53,11 +38,12 @@ map("n", "<Tab>", "==<cr>", {desc = "Auto formatted"})
 map("n", ",b", "ggVG=",     {desc = "Formatter all"})
 
 -- Mini.Pick
-map("n", "<leader>fg", ":lua MiniPick.builtin.grep_live()<cr>",  {desc = "Fuzzy finder: grep"})
-map("n", "<leader>ff", ":lua MiniPick.builtin.files()<cr>",      {desc = "Fuzzy finder: files"})
-map("n", "<leader>fo", ":lua MiniPick.registry.registry()<cr>",  {desc = "Fuzzy finder: options"})
-map("n", "<leader>fp", ":lua MiniPick.registry.registers()<cr>", {desc = "Fuzzy finder: paste"})
-map("n", "<leader>fe", ":Pick explorer<cr>",                     {desc = "Fuzzy finder: explorer"})
+map("n", "<leader>fg", ":lua MiniPick.builtin.grep_live()<cr>",         {desc = "Fuzzy finder: grep"})
+map("n", "<leader>fG", ":lua MiniPick.builtin.grep_live()<cr><C-r>\"",  {desc = "Fuzzy finder: Grep"})
+map("n", "<leader>ff", ":lua MiniPick.builtin.files()<cr>",             {desc = "Fuzzy finder: files"})
+map("n", "<leader>fo", ":lua MiniPick.registry.registry()<cr>",         {desc = "Fuzzy finder: options"})
+map("n", "<leader>fp", ":lua MiniPick.registry.registers()<cr>",        {desc = "Fuzzy finder: paste"})
+map("n", "<leader>fe", ":Pick explorer<cr>",                            {desc = "Fuzzy finder: explorer"})
 
 -- Sessions
 map("n", "<leader>xs1", function() miniSessions_write('session_1') end,  {desc = "Save: slot 1"})

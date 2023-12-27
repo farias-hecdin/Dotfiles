@@ -44,9 +44,6 @@ return {
       { mode = "v", "gc", desc = "Insert line-comment" },
       { mode = "v", "gC", desc = "Insert block-comment" }
     },
-    dependencies = {
-      'JoosepAlviste/nvim-ts-context-commentstring',
-    },
     config = function()
       require('Comment').setup({
         padding = true,
@@ -70,6 +67,14 @@ return {
     end
   },
   {
+    'JoosepAlviste/nvim-ts-context-commentstring',
+    config = function ()
+      require('ts_context_commentstring').setup({
+        enable_autocmd = false,
+      })
+    end
+  },
+  {
     -- url = "https://github.com/echasnovski/mini.hipatterns.git",
     dir = D.plugin .. "mini.hipatterns",
     event = "BufReadPre",
@@ -85,19 +90,17 @@ return {
           --[[
           -- Extra highlights
           -- @param, @returns and more
-          -- STEP 01: or #1.2.3:
-          -- !THIS: or !this:
-          -- ¡THIS: or ¡this:
+          -- #THIS: or !THIS: or ¡THIS:
           -- !-----!: or !=======!:
           ]]
           docs     = { pattern = {"%s()@[%l-]+()"}, group = "MiniHipatternsDocs" },
-          step     = { pattern = {"[STEPstep]+ [%d_-\\.]+:", "#[%d_-\\.]+:"}, group = "MiniHipatternsStep" },
-          word     = { pattern = {"![%a%s%d_-]+:"}, group = "MiniHipatternsWord" },
-          word2    = { pattern = {"¡[%a%s%d_-]+:"}, group = "MiniHipatternsWord2" },
+          word     = { pattern = {"![%a%s%d_-\\.]+:"}, group = "MiniHipatternsWord" },
+          word2    = { pattern = {"¡[%a%s%d_-\\.]+:"}, group = "MiniHipatternsWord2" },
+          word3    = { pattern = {"#[%a%s%d_-\\.]+:"}, group = "MiniHipatternsWord3" },
           split    = { pattern = {"![-_=]+!:"}, group = "MiniHipatternsSplit" },
           --[[
           -- Highlight color systems using that color
-        -- #4095BF
+          -- #4095BF
           -- hsl(200, 50%, 50%)
           -- lch(57.81% 34.32 241.72)
           -- rgb(64, 149, 191)

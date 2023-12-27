@@ -55,12 +55,12 @@ usercmd("FlagLazyDirToUrl",
     vim.cmd("%s/dir =/-- dir =/gcI")
     vim.cmd("%s/-- url =/url =/gcI")
   end,
-  {desc = "Remove extra spaces", bang = true}
+  {desc = "Change `dir` prefix for `url`", bang = true}
 )
 usercmd("FlagLazyUrlToDir",
   function()
     vim.cmd("%s/-- dir =/dir =/gcI")
     vim.cmd("%s/url =/-- url =/gcI")
   end,
-  {desc = "Remove extra spaces", bang = true}
+  {desc = "Change `url` prefix for `dir`", bang = true}
 )

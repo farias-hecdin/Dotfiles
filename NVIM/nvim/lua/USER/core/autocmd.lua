@@ -1,9 +1,12 @@
+local vim = vim
+
 -- Define autocommands with Lua APIs (See: h:api-autocmd, h:augroup)
 local augroup = vim.api.nvim_create_augroup -- Create/get autocommand group
 local autocmd = vim.api.nvim_create_autocmd -- Create autocommand
 
 -- Use relative numbers in normal mode only for an active buffer --------------
 local number_toggle = augroup("numbertoggle", {clear = true})
+
 autocmd({ "BufEnter","FocusGained","InsertLeave" }, {
   pattern = "*",
   command = "set relativenumber nofoldenable",
@@ -46,6 +49,7 @@ autocmd({ "BufEnter","BufAdd","BufNew","BufNewFile","BufWinEnter" }, {
 
 -- See `:help vim.highlight.on_yank()` ----------------------------------------
 local highlight_group = augroup("YankHighlight", {clear = true})
+
 autocmd("TextYankPost", {
   callback = function()
     vim.highlight.on_yank()
@@ -115,6 +119,7 @@ autocmd("TermEnter", {
 
 -- Active or desactive colorcolumn --------------------------------------------
 local color_column = augroup("colorcolumn", {clear = true})
+
 autocmd({ "InsertEnter" }, {
   pattern = "*",
   command = "set colorcolumn=80",
@@ -127,9 +132,21 @@ autocmd({ "InsertLeave" }, {
 })
 
 -- Disable the concealing in some file formats --------------------------------
-vim.api.nvim_create_autocmd("FileType", {
+autocmd("FileType", {
   pattern = { "json", "jsonc", "markdown" },
   callback = function()
     vim.opt.conceallevel = 0
   end,
+})
+
+-- Disable semantic highlights ------------------------------------------------
+local function hide_semantic_highlights()
+  for _, group in ipairs(vim.fn.getcompletion('@lsp', 'highlight')) do
+    vim.api.nvim_set_hl(0, group, {})
+  end
+end
+
+autocmd('ColorScheme', {
+  desc = 'Clear LSP highlight groups',
+  callback = hide_semantic_highlights,
 })
