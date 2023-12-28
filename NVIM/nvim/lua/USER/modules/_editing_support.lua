@@ -7,6 +7,7 @@ local D = require("USER.modules.utils.dir")
 -- Comment.nvim
 -- nvim-ts-context-commentstring
 -- mini.hipatterns
+-- ColorCommander
 
 return {
   {
@@ -139,5 +140,18 @@ return {
         },
       })
     end
+  },
+  {
+    -- url = "https://github.com/farias-hecdin/ColorCommander.nvim",
+    dir = D.plugin .. "ColorCommander.nvim",
+    cmd = { "ColorToName", "ColorNameInstall", "ColorPaste", "ColorToHsl", "ColorToLch", "ColorToRgb" },
+    config = function()
+      require('colorcommander').setup({
+        show_virtual_text = false,
+        show_virtual_text_to_hex = "lch",
+        disable_keymaps = false,
+        filetypes = { "css", "lua" },
+      })
+    end,
   },
 }

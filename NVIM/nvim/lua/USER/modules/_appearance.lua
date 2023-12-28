@@ -31,7 +31,6 @@ return {
           { action = "qall",            name = "Quit Neovim",           section = "Builtin (actions)" },
           { action = "enew",            name = "Create a new buffer",   section = "Builtin (actions)" },
           { action = "NnnPicker %:p:h", name = "Open the file manager", section = "Builtin (actions)" },
-          starter.sections.sessions(6, true),
           starter.sections.recent_files(20, true),
           starter.sections.recent_files(30, false),
         },
@@ -43,9 +42,10 @@ return {
         header = W.date() .. "  " .. W.time() ..
           "\n\nOptions" ..
           "\n [a] Builtin: actions" ..
-          "\n [b] Sessions" ..
-          "\n [c] Recent files: current directory" ..
-          "\n [d] Recent files: general",
+          "\n [b] Recent files: current directory" ..
+          "\n [c] Recent files: general" ..
+          "\n" ..
+          "\n<C-c> Close this buffer",
         footer = "<C-c> Close this buffer",
       })
     end

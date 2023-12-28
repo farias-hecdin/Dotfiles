@@ -34,12 +34,4 @@ return {
       })
     end
   },
-  {
-    -- url = "https://github.com/echasnovski/mini.extra.git",
-    dir = D.plugin .. "mini.extra",
-    event = "VeryLazy",
-    config = function()
-      require('mini.extra').setup()
-    end
-  },
 }

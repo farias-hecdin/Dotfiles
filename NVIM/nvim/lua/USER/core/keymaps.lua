@@ -9,17 +9,6 @@ local load_current_buffer = function()
   vim.cmd("e " .. path)
 end
 
--- MiniSessions
--- source: ~/.local/share/nvim/session/
-local miniSessions_write = function(var)
-  local session_name = var
-  vim.cmd("lua MiniSessions.write('".. session_name .. "')")
-end
-local miniSessions_delete = function(var)
-  local session_name = var
-  vim.cmd("lua MiniSessions.delete('".. session_name .. "')")
-end
-
 -- Keymaps generals -----------------------------------------------------------
 --
 -- Mode
@@ -38,20 +27,9 @@ map("n", "<Tab>", "==<cr>", {desc = "Auto formatted"})
 map("n", ",b", "ggVG=",     {desc = "Formatter all"})
 
 -- Mini.Pick
-map("n", "<leader>fg", ":lua MiniPick.builtin.grep_live()<cr>",         {desc = "Fuzzy finder: grep"})
-map("n", "<leader>fG", ":lua MiniPick.builtin.grep_live()<cr><C-r>\"",  {desc = "Fuzzy finder: Grep"})
-map("n", "<leader>ff", ":lua MiniPick.builtin.files()<cr>",             {desc = "Fuzzy finder: files"})
-map("n", "<leader>fo", ":lua MiniPick.registry.registry()<cr>",         {desc = "Fuzzy finder: options"})
-map("n", "<leader>fp", ":lua MiniPick.registry.registers()<cr>",        {desc = "Fuzzy finder: paste"})
-map("n", "<leader>fe", ":Pick explorer<cr>",                            {desc = "Fuzzy finder: explorer"})
-
--- Sessions
-map("n", "<leader>xs1", function() miniSessions_write('session_1') end,  {desc = "Save: slot 1"})
-map("n", "<leader>xs2", function() miniSessions_write('session_2') end,  {desc = "Save: slot 2"})
-map("n", "<leader>xs3", function() miniSessions_write('session_3') end,  {desc = "Save: slot 3"})
-map("n", "<leader>xd1", function() miniSessions_delete('session_1') end, {desc = "Delete: slot 1"})
-map("n", "<leader>xd2", function() miniSessions_delete('session_2') end, {desc = "Delete: slot 2"})
-map("n", "<leader>xd3", function() miniSessions_delete('session_3') end, {desc = "Delete: slot 3"})
+map("n", "<leader>fg", ":MiniPickGrep<cr>",        {desc = "Fuzzy finder: grep"})
+map("n", "<leader>fG", ":MiniPickGrep<cr><C-r>\"", {desc = "Fuzzy finder: Grep"})
+map("n", "<leader>ff", ":MiniPickFiles<cr>",       {desc = "Fuzzy finder: files"})
 
 -- Other
 map("n", "<leader>@", function() load_current_buffer() end, {desc = "Load current buffer"})
@@ -60,7 +38,6 @@ map("n", "<leader>#", ":Messages messages<cr>",             {desc = "Show messag
 -- Lsp diagnotic
 map("n", ",E", ":DiagnosticEnable<cr>",                    {desc = "LSP: enabled"})
 map("n", ",D", ":DiagnosticDisable<cr>",                   {desc = "LSP: disabled"})
-map("n", ",v", ":lua require('pretty_hover').hover()<cr>", {desc = "LSP: details"})
 
 -- Search mode
 map("v", "<leader>s", "y/<C-r>\"", {desc = "Search for selected text"})
@@ -93,7 +70,7 @@ map("i", "=", "=<c-g>u", {desc = "Undo break-points"})
 map({"n", "x"}, "x", '"_x', {desc = "Delete safely"})
 
 -- MiniStarter
-map("n", "<leader>S", ":lua require('mini.starter').open()<cr>", {desc = "Starter"})
+map("n", "<leader>S", ":MiniStarter<cr>", {desc = "Starter"})
 
 -- Oldfiles
 map("n", "<leader>o", ":browse oldfiles<cr>", {desc = "Old files"})
@@ -166,9 +143,9 @@ map("n", "<leader>tp", ":tabp<cr>",     {desc = "Tabs: previous"})
 map("n", "<leader>tx", ":tabclose<cr>", {desc = "Tabs: close"})
 
 -- File explorer
-map("n", "<leader>eo", ":NnnExplorer<cr>",          {desc = "Explorer: sidebar"})
-map("n", "<leader>ef", ":NnnPicker %:p:h<cr>",      {desc = "Explorer: float (active buffer)"})
-map("n", "<leader>em", ":lua MiniFiles.open()<cr>", {desc = "Explorer: miller columns"})
+map("n", "<leader>eo", ":NnnExplorer<cr>",     {desc = "Explorer: sidebar"})
+map("n", "<leader>ef", ":NnnPicker %:p:h<cr>", {desc = "Explorer: float (active buffer)"})
+map("n", "<leader>em", ":MiniFiles<cr>",       {desc = "Explorer: miller columns"})
 
 -- Clear search with <esc>
 map("n", "<esc>", "<cmd>noh<cr><esc>", {desc = "Escape and clear hlsearch"})

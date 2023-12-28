@@ -7,10 +7,24 @@ usercmd("WindowNvim",
   {desc = "Window nvim"}
 )
 
--- Plugin: MiniStarter
+-- Plugin: Mini
 usercmd("MiniStarter",
   function() vim.cmd("lua require('mini.starter').open()") end,
-  {desc = "Mini starter", bang = true, nargs = 0, bar = true}
+  {desc = "MiniStarter", bang = true, nargs = 0, bar = true}
+)
+
+usercmd("MiniPickGrep",
+  function() vim.cmd("lua MiniPick.builtin.grep_live()") end,
+  {desc = "MiniPickGrep", bang = false, nargs = 0, bar = false}
+)
+usercmd("MiniPickFiles",
+  function() vim.cmd("lua MiniPick.builtin.files()") end,
+  {desc = "MiniPickFiles", bang = true, nargs = 0, bar = true}
+)
+
+usercmd("MiniFiles",
+  function() vim.cmd("lua MiniFiles.open()") end,
+  {desc = "MiniFiles", bang = true, nargs = 0, bar = true}
 )
 
 -- Plugin: Treesitter enable/disable
