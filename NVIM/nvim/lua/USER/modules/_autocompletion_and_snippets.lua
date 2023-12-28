@@ -3,13 +3,12 @@ local icons = require('USER.modules.utils.icons').lspkind
 local vim = vim
 
 -- SUMMARY
--- cmp-buffer
 -- cmp-cmdline
 -- cmp-nvim-lsp
--- cmp-vsnip
--- friendly-snippets
+-- cmp-vsnip @@
+-- friendly-snippets @@
 -- nvim-cmp
--- vim-vsnip
+-- vim-vsnip @@
 
 return {
   {
@@ -28,19 +27,19 @@ return {
     event = "InsertEnter"
   },
   {
-    -- url = "https://github.com/hrsh7th/cmp-vsnip.git",
-    dir = D.plugin .. "cmp-vsnip",
+    url = "https://github.com/hrsh7th/cmp-vsnip.git",
+    -- dir = D.plugin .. "cmp-vsnip",
     event = "InsertEnter",
   },
   {
-    -- url = "https://github.com/hrsh7th/vim-vsnip.git",
-    dir = D.plugin .. "vim-vsnip",
+    url = "https://github.com/hrsh7th/vim-vsnip.git",
+    -- dir = D.plugin .. "vim-vsnip",
     event = "InsertEnter",
   },
-  {
-    "rafamadriz/friendly-snippets",
-    event = "InsertEnter",
-  },
+  -- {
+  --   "rafamadriz/friendly-snippets",
+  --   event = "InsertEnter",
+  -- },
   {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
@@ -90,22 +89,26 @@ return {
         sources = cmp.config.sources({
           {
             name = "nvim_lsp",
-            max_item_count = 20,
+            max_item_count = 10,
+            keyword_length = 2,
             priority = 100
           },
           {
             name = "vsnip",
-            max_item_count = 20,
+            max_item_count = 10,
+            keyword_length = 2,
             priority = 75
           },
           {
             name = "buffer",
-            max_item_count = 20,
+            max_item_count = 10,
+            keyword_length = 2,
             priority = 50
           },
           {
             name = "path",
-            max_item_count = 20,
+            max_item_count = 10,
+            keyword_length = 2,
             priority = 25
           },
         }),
@@ -126,7 +129,6 @@ return {
               vsnip = 0,
               nvim_lsp = 0,
               nvim_lua = 0,
-              buffer = 0,
             })[entry.source.name] or 0
             return vim_item
           end
@@ -138,7 +140,6 @@ return {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
           { name = "path" },
-          { name = "nvim_px_to_rem" },
           { name = "cmdline", option = { ignore_cmds = { "Man", "!" } } }
         })
       })

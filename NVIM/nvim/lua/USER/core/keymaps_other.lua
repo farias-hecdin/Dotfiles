@@ -4,8 +4,8 @@ local map = vim.keymap.set
 -- Automatically Pair brackets, parethesis, quotes and more
 
 -- General
-map("i", "^1", "var(_)<left>", {desc = "var(_)"})
-map("i", "^2", "$(_)<left>", {desc = "$(_)"})
+map("i", "^v", "var(_)<left>", {desc = "var(_)"})
+map("i", "^$", "${_}<left>", {desc = "${_}"})
 
 -- Separator
 map("i", "^s1", "---------------------------------------------------------------------------", {desc = "--…"})
@@ -16,6 +16,7 @@ map("i", "^s3", "###############################################################
 map("i", "^mc", "```_```<left><left><left>", {desc = "``…"})
 
 -- Lua and vim
+map("i", "^lp", "print(_)<left>", {desc = "print(_)"})
 map("i", "^vp", "vim.print(_)<left>", {desc = "vim.print(_)"})
 map("i", "^vl", "log.info(_)<left>", {desc = "log.info(_)"})
 
@@ -24,8 +25,8 @@ map("i", "^ht", "</>", {desc = "</>"})
 
 -- Javascript
 map("i", "^jc", "console.log(_)<left>", {desc = "Console log"})
-map("i", "^ja", "alert(_)<left>", {desc = "Alert"})
-map("i", "^jaf", "const name = () => {_}<left>", {desc = "Arrow function"})
+map("i", "^jA", "alert(_)<left>", {desc = "Alert"})
+map("i", "^ja", "const name = () => {_}<left>", {desc = "Arrow function"})
 
 -- React
 map("i", "^rc", "className={_}<left>", {desc = "ClassName"})

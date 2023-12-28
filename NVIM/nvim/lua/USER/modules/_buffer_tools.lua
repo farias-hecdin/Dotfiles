@@ -20,16 +20,6 @@ return {
     end
   },
   {
-    -- url = "https://github.com/echasnovski/mini.sessions.git",
-    dir = D.plugin .. "mini.sessions",
-    event = "VeryLazy",
-    config = function()
-      require('mini.sessions').setup({
-        autowrite = false,
-      })
-    end
-  },
-  {
     -- url = "https://github.com/tmillr/sos.nvim.git",
     dir = D.plugin .. "sos.nvim",
     event = { "BufReadPre" },
