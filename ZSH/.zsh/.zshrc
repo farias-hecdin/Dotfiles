@@ -71,10 +71,6 @@ export PATH="$LUATINY:$PATH"
 export LARE="$LOCAL_SHARE/lare"
 export PATH="$LARE:$PATH"
 
-# tgpt
-export TGPT="$LOCAL_SHARE/tgpt"
+# importTracker
+export TGPT="$LOCAL_SHARE/importTracker"
 export PATH="$TGPT:$PATH"
-
-# bard
-export BARD="$LOCAL_SHARE/bard"
-export PATH="$BARD:$PATH"
