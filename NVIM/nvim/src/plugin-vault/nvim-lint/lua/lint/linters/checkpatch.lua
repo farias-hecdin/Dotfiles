@@ -1,1 +1,0 @@
-local a='([^:]+):(%d+): (%a+): (.+)'local b={'file','lnum','severity','message'}local c={['ERROR']=vim.diagnostic.severity.ERROR,['WARNING']=vim.diagnostic.severity.WARN,['CHECK']=vim.diagnostic.severity.INFO}return{cmd='checkpatch.pl',stdin=false,args={'--strict','--terse','--file'},ignore_exitcode=true,parser=require('lint.parser').from_pattern(a,b,c,{['source']='checkpatch'})}

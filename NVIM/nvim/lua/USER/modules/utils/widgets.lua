@@ -1,8 +1,9 @@
 local W = {}
+local vim = vim
 
 -- Print the current time
 W.time = function()
-  return " " .. os.date("%I:%M%p")
+  return "  " .. os.date("%I:%M%p") .. " "
 end
 
 -- Print current date
@@ -27,26 +28,25 @@ end
 W.startuptime_lazy = function()
   local stats = require("lazy").stats()
   local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-  return "󰓅 " .. tostring(ms) .. "ms"
+  return "󰓅 " .. tostring(ms) .. "ms "
 end
 
 -- lint progress for statusline
 W.lint_progress = function()
-  local _lint, lint = pcall(require, "lint")
-  if not _lint then
+  local ok, lint = pcall(require, "lint")
+  if not ok then
     return ""
-  else
-    local procs = require("lint").get_running_procs()
-    local string = ""
-    if #procs == 0 then
-        return " OK "
-    end
-    for _, proc in ipairs(procs) do
-        string = string .. proc .. " ,"
-    end
-    -- return "󱉶 " .. string.sub(string, 1, -2)
-    return " Loading... "
   end
+
+  local procs = lint.get_running_procs()
+  local string = ""
+  if #procs == 0 then
+    return " OK "
+  end
+  for _, proc in ipairs(procs) do
+    string = string .. proc .. " ,"
+  end
+  return " Loading... "
 end
 
 return W

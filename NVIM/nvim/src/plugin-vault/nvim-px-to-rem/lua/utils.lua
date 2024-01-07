@@ -1,8 +1,1 @@
-local M = {}
-
-M.round = function(number, decimals)
-	local power = 10 ^ decimals
-	return math.floor(number * power + 0.5) / power
-end
-
-return M
+local a={}a.round=function(b,c)local d=10^c;return math.floor(b*d+0.5)/d end;return a

@@ -7,7 +7,8 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    url = "https://github.com/nvim-lua/plenary.nvim.git"
+    -- url = "https://github.com/nvim-lua/plenary.nvim.git",
+    dir = D.plugin .. "plenary.nvim",
   },
   {
     -- url = "https://github.com/nvim-tree/nvim-web-devicons.git",

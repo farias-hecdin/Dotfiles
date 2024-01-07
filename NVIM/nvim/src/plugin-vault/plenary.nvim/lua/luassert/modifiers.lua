@@ -1,0 +1,1 @@
+local a=require('luassert.assert')local function b(c)return c end;local function d(c)c.mod=not c.mod;return c end;a:register("modifier","is",b)a:register("modifier","are",b)a:register("modifier","was",b)a:register("modifier","has",b)a:register("modifier","does",b)a:register("modifier","not",d)a:register("modifier","no",d)

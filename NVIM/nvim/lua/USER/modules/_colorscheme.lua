@@ -49,6 +49,8 @@ return {
           CurSearch                     = { bg = "#0074D9", fg = "#ffffff" },
           CursorLine                    = { bg = "#131619" },
           CursorLineNr                  = { fg = "#2BBB4F" },
+          MiniNotifyNormal              = { fg = "#2BBB4F" },
+          MiniNotifyAlert               = { fg = "#FFEE58" },
           DiagnosticError               = { fg = "#EF5350" },
           DiagnosticHint                = { fg = "#42A5F5" },
           DiagnosticInfo                = { fg = "#66BB6A" },

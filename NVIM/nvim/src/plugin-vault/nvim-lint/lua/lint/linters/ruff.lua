@@ -1,1 +1,0 @@
-local a='[^:]+:(%d+):(%d+): (%w+) (.+)'local b={'lnum','col','code','message'}local function c()return vim.api.nvim_buf_get_name(0)end;return{cmd='ruff',stdin=true,args={'--force-exclude','--quiet','--stdin-filename',c,'--no-fix','-'},ignore_exitcode=true,parser=require('lint.parser').from_pattern(a,b,nil,{['source']='ruff',['severity']=vim.diagnostic.severity.WARN})}

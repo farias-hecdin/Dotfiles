@@ -1,1 +1,0 @@
-return{cmd='phpstan',args={'analyze','--error-format=json','--no-progress'},ignore_exitcode=true,parser=function(a,b)if a==nil then return{}end;local c=vim.json.decode(a).files[vim.api.nvim_buf_get_name(b)]if c==nil then return{}end;local d={}for e,f in ipairs(c.messages or{})do table.insert(d,{lnum=f.line-1,col=0,message=f.message,source='phpstan'})end;return d end}

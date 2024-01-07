@@ -172,6 +172,8 @@ local a={Config={DiffOpts={},SignConfig={},watch_gitdir={},current_line_blame_fo
     ]]},preview_config={type='table',deep_extend=true,default={border='single',style='minimal',relative='cursor',row=0,col=1},description=[[
       Option overrides for the Gitsigns preview window. Table is passed directly
       to `nvim_open_win`.
+    ]]},auto_attach={type='boolean',default=true,description=[[
+      Automatically attach to files.
     ]]},attach_to_untracked={type='boolean',default=true,description=[[
       Attach to untracked files.
     ]]},update_debounce={type='number',default=100,description=[[
@@ -317,7 +319,7 @@ local a={Config={DiffOpts={},SignConfig={},watch_gitdir={},current_line_blame_fo
       detected.
     ]]},_threaded_diff={type='boolean',default=true,description=[[
       Run diffs on a separate thread
-    ]]},_inline2={type='boolean',default=false,description=[[
+    ]]},_inline2={type='boolean',default=true,description=[[
       Enable enhanced version of preview_hunk_inline()
     ]]},_extmark_signs={type='boolean',default=true,description=[[
       Use extmarks for placing signs.

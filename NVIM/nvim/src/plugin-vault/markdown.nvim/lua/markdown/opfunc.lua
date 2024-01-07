@@ -1,0 +1,1 @@
+local a=vim.api;local b=setmetatable({},{__call=function(self,...)return self.call(...)end})function b.call(c,d)a.nvim_set_option("operatorfunc",("v:lua.require'%s'.%s"):format(c,d))return"g@"end;return b

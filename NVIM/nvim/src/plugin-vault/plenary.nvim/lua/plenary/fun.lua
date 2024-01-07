@@ -1,0 +1,1 @@
+local a={}a.bind=require("plenary.functional").partial;function a.arify(b,c)return function(...)if select("#",...)~=c then error(("Expected %s number of arguments"):format(c))end;b(...)end end;function a.create_wrapper(d)return function(e)return function(...)return d(e(...))end end end;return a

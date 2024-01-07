@@ -52,11 +52,11 @@ return {
         ignore = nil,
         toggler = {
           line = ',c',
-          block = ',C',
+          block = ',b',
         },
         opleader = {
           line = 'gc',
-          block = 'gC',
+          block = 'gb',
         },
         mappings = {
           basic = true,
@@ -68,7 +68,8 @@ return {
     end
   },
   {
-    'JoosepAlviste/nvim-ts-context-commentstring',
+    -- 'JoosepAlviste/nvim-ts-context-commentstring',
+    dir = D.plugin .. "nvim-ts-context-commentstring",
     config = function ()
       require('ts_context_commentstring').setup({
         enable_autocmd = false,
@@ -95,9 +96,9 @@ return {
           -- !-----!: or !=======!:
           ]]
           docs     = { pattern = {"%s()@[%l-]+()"}, group = "MiniHipatternsDocs" },
-          word     = { pattern = {"![%a%s%d_-\\.]+:"}, group = "MiniHipatternsWord" },
-          word2    = { pattern = {"¡[%a%s%d_-\\.]+:"}, group = "MiniHipatternsWord2" },
-          word3    = { pattern = {"#[%a%s%d_-\\.]+:"}, group = "MiniHipatternsWord3" },
+          word     = { pattern = {"![%a%d_-\\.]+:"}, group = "MiniHipatternsWord" },
+          word2    = { pattern = {"¡[%a%d_-\\.]+:"}, group = "MiniHipatternsWord2" },
+          word3    = { pattern = {"#[%a%d_-\\.]+:"}, group = "MiniHipatternsWord3" },
           split    = { pattern = {"![-_=]+!:"}, group = "MiniHipatternsSplit" },
           --[[
           -- Highlight color systems using that color
@@ -110,7 +111,7 @@ return {
           hsl_color = {
             pattern = "hsl%(%d+, %d+%p?, %d+%p?%)",
             group = function(_, match)
-              local utils = require("USER.modules.utils.color_hsl")
+              local utils = require("USER.modules.utils.colors.hsl")
               local h, s, l = match:match("hsl%((%d+), (%d+)%p?, (%d+)%p?%)")
               h, s, l = tonumber(h), tonumber(s), tonumber(l)
               local color = utils.hslToHex(h, s, l)
@@ -120,7 +121,7 @@ return {
           lch_color = {
             pattern = "lch%(%d*%.?%d+%p? %d*%.?%d+ %d*%.?%d+%)",
             group = function(_, match)
-              local utils = require("USER.modules.utils.color_lch")
+              local utils = require("USER.modules.utils.colors.lch")
               local l, c, h = match:match("lch%((%d*%.?%d+)%p? (%d*%.?%d+) (%d*%.?%d+)%)")
               l, c, h = tonumber(l), tonumber(c), tonumber(h)
               local color = utils.lchToHex(l, c, h)
@@ -130,7 +131,7 @@ return {
           rgb_color = {
             pattern = "rgb%(%d+, %d+, %d+%)",
             group = function(_, match)
-              local utils = require("USER.modules.utils.color_rgb")
+              local utils = require("USER.modules.utils.colors.rgb")
               local r, g, b = match:match("rgb%((%d+), (%d+), (%d+)%)")
               r, g, b = tonumber(r), tonumber(g), tonumber(b)
               local color = utils.rgbToHex(r, g, b)
@@ -140,18 +141,5 @@ return {
         },
       })
     end
-  },
-  {
-    -- url = "https://github.com/farias-hecdin/ColorCommander.nvim",
-    dir = D.plugin .. "ColorCommander.nvim",
-    cmd = { "ColorToName", "ColorNameInstall", "ColorPaste", "ColorToHsl", "ColorToLch", "ColorToRgb" },
-    config = function()
-      require('colorcommander').setup({
-        show_virtual_text = false,
-        show_virtual_text_to_hex = "lch",
-        disable_keymaps = false,
-        filetypes = { "css", "lua" },
-      })
-    end,
   },
 }

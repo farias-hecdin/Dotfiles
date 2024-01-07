@@ -1,0 +1,1 @@
+local vim=vim;local a={}a._original_functions={}function a.override(b,c)if a._original_functions[b]==nil then a._original_functions[b]=vim.lsp.callbacks[b]end;vim.lsp.callbacks[b]=c end;function a.get_original_function(b)if a._original_functions[b]==nil then a._original_functions[b]=vim.lsp.callbacks[b]end;return a._original_functions[b]end;return a

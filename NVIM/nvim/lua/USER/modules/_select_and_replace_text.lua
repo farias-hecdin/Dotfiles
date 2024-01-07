@@ -1,4 +1,5 @@
 local D = require("USER.modules.utils.dir")
+local vim = vim
 
 -- SUMMARY
 -- multiple-cursors.nvim
@@ -8,12 +9,16 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    url = "https://github.com/brenton-leighton/multiple-cursors.nvim.git",
-    cmd = { "MultipleCursorsMouseAddDelete" },
+    -- url = "https://github.com/brenton-leighton/multiple-cursors.nvim.git",
+    dir = D.plugin .. "multiple-cursors.nvim",
+    cmd = {
+      "MultipleCursorsAddDown",
+      "MultipleCursorsAddUp",
+    },
     keys = {
       { "<C-Down>", ":MultipleCursorsAddDown<CR>", mode = {"n", "i"} },
-      { "<C-j>", ":MultipleCursorsAddDown<CR>" },
       { "<C-Up>", ":MultipleCursorsAddUp<CR>", mode = {"n", "i"} },
+      { "<C-j>", ":MultipleCursorsAddDown<CR>" },
       { "<C-k>", ":MultipleCursorsAddUp<CR>" },
       { "<C-h>", ":MultipleCursorsMouseAddDelete<CR>", mode = {"n", "i"} },
     },
@@ -81,16 +86,34 @@ return {
     -- url = "https://github.com/Vonr/align.nvim.git",
     dir = D.plugin .. "align.nvim",
     keys = {
-      { "aw", mode = "v" }
+      { "aa", mode = "v" },
+      { "as", mode = "v" },
+      { "aw", mode = "v" },
+      { "ar", mode = "v" },
     },
     config = function()
       local NS = { noremap = true, silent = true }
       local map = vim.keymap.set
 
-      map("x", "aa", function() require("align").align_to_char(1, true) end, NS)             -- Aligns to 1 character, looking left
-      map("x", "as", function() require("align").align_to_char(2, true, true) end, NS)       -- Aligns to 2 characters, looking left and with previews
-      map("x", "aw", function() require("align").align_to_string(false, true, true) end, NS) -- Aligns to a string, looking left and with previews
-      map("x", "ar", function() require("align").align_to_string(true, true, true) end, NS)  -- Aligns to a Lua pattern, looking left and with previews
+      -- Aligns to 1 character, looking left
+      map("x", "aa", function() require("align").align_to_char({
+        length = 1,
+      }) end, NS)
+      -- Aligns to 2 characters, looking left and with previews
+      map("x", "as", function() require("align").align_to_char({
+        preview = true,
+        length = 2,
+      }) end, NS)
+      -- Aligns to a string, looking left and with previews
+      map("x", "aw", function() require("align").align_to_string({
+        preview = true,
+        regex = false,
+      }) end, NS)
+      -- Aligns to a Lua pattern, looking left and with previews
+      map("x", "ar", function() require("align").align_to_string({
+        preview = true,
+        regex = true,
+      }) end, NS)
     end
   },
 }
