@@ -2,12 +2,11 @@ local D = require("USER.modules.utils.dir")
 
 -- SUMMARY
 -- outline
--- mini.sessions
 -- sos.nvim
 
 return {
   {
-    -- url = "https://github.com/farias-hecdin/outline.nvim.fork.git",
+    -- url = "https://github.com/farias-hecdin/outline.fork.git",
     dir = D.plugin .. "outline.fork",
     cmd = "BSOpen",
     config = function()

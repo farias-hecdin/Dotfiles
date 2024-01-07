@@ -1,0 +1,1 @@
+local a=require"plenary.window.float"local b={}b.with_displayed_output=function(c,d,e)local f=a.centered_with_top_win(c)local g=vim.fn.termopen(d)local h=0;while not vim.wait(1000,function()return vim.fn.jobwait({g},0)[1]==-1 end)do vim.cmd[[normal! G]]h=h+1;if h==10 then break end end;vim.fn.win_gotoid(f.win_id)vim.cmd[[startinsert]]return f.bufnr,f.win_id end;return b

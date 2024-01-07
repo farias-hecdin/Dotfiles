@@ -4,17 +4,22 @@ local vim = vim
 
 -- SUMMARY
 -- cmp-cmdline
+-- cmp-buffer
 -- cmp-nvim-lsp
--- cmp-vsnip @@
--- friendly-snippets @@
+-- cmp-vsnip
 -- nvim-cmp
--- vim-vsnip @@
+-- vim-vsnip
 
 return {
   {
     -- url = "https://github.com/hrsh7th/cmp-cmdline.git",
     dir = D.plugin .. "cmp-cmdline",
     keys = { mode = "n", ":", desc = "Command mode" }
+  },
+  {
+    -- url = "https://github.com/hrsh7th/cmp-buffer.git",
+    dir = D.plugin .. "cmp-buffer",
+    event = "InsertEnter"
   },
   {
     -- url = "https://github.com/hrsh7th/cmp-nvim-lsp.git",
@@ -27,19 +32,15 @@ return {
     event = "InsertEnter"
   },
   {
-    url = "https://github.com/hrsh7th/cmp-vsnip.git",
-    -- dir = D.plugin .. "cmp-vsnip",
+    -- url = "https://github.com/hrsh7th/cmp-vsnip.git",
+    dir = D.plugin .. "cmp-vsnip",
     event = "InsertEnter",
   },
   {
-    url = "https://github.com/hrsh7th/vim-vsnip.git",
-    -- dir = D.plugin .. "vim-vsnip",
+    -- url = "https://github.com/hrsh7th/vim-vsnip.git",
+    dir = D.plugin .. "vim-vsnip",
     event = "InsertEnter",
   },
-  -- {
-  --   "rafamadriz/friendly-snippets",
-  --   event = "InsertEnter",
-  -- },
   {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
@@ -140,6 +141,7 @@ return {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
           { name = "path" },
+          { name = "buffer" },
           { name = "cmdline", option = { ignore_cmds = { "Man", "!" } } }
         })
       })

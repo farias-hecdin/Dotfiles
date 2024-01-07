@@ -11,7 +11,7 @@ return {
     -- url = "https://github.com/echasnovski/mini.tabline.git",
     dir = D.plugin .. "mini.tabline",
     event = { "BufReadPre" },
-    config = function()
+     config = function()
       require("mini.tabline").setup({
         show_icons = true,
         tabpage_section = "right",
@@ -60,7 +60,7 @@ return {
           clock = W.time,
           counter = W.word_and_character_counter,
           lazy = W.startuptime_lazy,
-          lsp_progress = W.lint_progress,
+          linter = W.lint_progress,
         },
         defaults = {
           expand_null_ls = false,
@@ -105,7 +105,7 @@ return {
         sections = {
           left  = { "-mode", "file_size", "counter", " ", "%m", "branch" },
           mid   = { "line_column" },
-          right = { "lsp_progress", "lsp_name", " ", "diagnostics", "lazy", " ", "- ", "-clock", "- " }
+          right = { "linter", "lsp_name", " ", "diagnostics", "lazy", "-clock" }
         },
         inactive_sections = {
             left = { '' },

@@ -1,6 +1,0 @@
-debuglog	debuglog.txt	/*debuglog*
-debuglog-commands	debuglog.txt	/*debuglog-commands*
-debuglog-contents	debuglog.txt	/*debuglog-contents*
-debuglog-lua	debuglog.txt	/*debuglog-lua*
-debuglog-shim	debuglog.txt	/*debuglog-shim*
-debuglog-write	debuglog.txt	/*debuglog-write*

@@ -1,0 +1,1 @@
+local a={}a.reload_module=function(b,c)if c==nil then c=true end;local d;if not c then d=function(e)return string.find(e,b,1,true)end else local f=vim.pesc(b)d=function(e)return string.find(e,"^"..f)end end;local g=(_G.__luacache or{}).cache;for e,h in pairs(package.loaded)do if d(e)then package.loaded[e]=nil;if g then g[e]=nil end end end end;return a

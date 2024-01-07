@@ -1,0 +1,1 @@
+local a=require"plenary.async.util"local b={}b.describe=function(c,d)describe(c,d)end;b.it=function(c,d)it(c,a.will_block(d,tonumber(vim.env.PLENARY_TEST_TIMEOUT)))end;b.pending=function(d)pending(d)end;b.before_each=function(d)before_each(a.will_block(d))end;b.after_each=function(d)after_each(a.will_block(d))end;return b

@@ -7,10 +7,16 @@ local map = vim.keymap.set
 map("i", "^v", "var(_)<left>", {desc = "var(_)"})
 map("i", "^$", "${_}<left>", {desc = "${_}"})
 
--- Separator
+-- Symbols
 map("i", "^s1", "---------------------------------------------------------------------------", {desc = "--…"})
 map("i", "^s2", "===========================================================================", {desc = "==…"})
 map("i", "^s3", "###########################################################################", {desc = "##…"})
+map("i", "^sa", "=>",  {desc = "=>"})
+map("i", "^sb", "{}",  {desc = "{}"})
+map("i", "^sd", "!==", {desc = "!=="})
+map("i", "^se", "===", {desc = "==="})
+map("i", "^sk", "[]",  {desc = "[]"})
+map("i", "^sp", "()",  {desc = "()"})
 
 -- Markdown
 map("i", "^mc", "```_```<left><left><left>", {desc = "``…"})
@@ -18,7 +24,7 @@ map("i", "^mc", "```_```<left><left><left>", {desc = "``…"})
 -- Lua and vim
 map("i", "^lp", "print(_)<left>", {desc = "print(_)"})
 map("i", "^vp", "vim.print(_)<left>", {desc = "vim.print(_)"})
-map("i", "^vl", "log.info(_)<left>", {desc = "log.info(_)"})
+map("i", "^vl", "log.info(_)<left>",  {desc = "log.info(_)"})
 
 -- Html
 map("i", "^ht", "</>", {desc = "</>"})
@@ -27,6 +33,7 @@ map("i", "^ht", "</>", {desc = "</>"})
 map("i", "^jc", "console.log(_)<left>", {desc = "Console log"})
 map("i", "^jA", "alert(_)<left>", {desc = "Alert"})
 map("i", "^ja", "const name = () => {_}<left>", {desc = "Arrow function"})
+map("i", "^ji", "import {_} from '_'<left>", {desc = "Import"})
 
 -- React
 map("i", "^rc", "className={_}<left>", {desc = "ClassName"})

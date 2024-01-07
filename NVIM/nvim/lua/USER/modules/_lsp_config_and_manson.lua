@@ -71,7 +71,7 @@ return {
           map.set("n", ",t", vimlsp.type_definition, opt_type_definition)
           map.set("n", ",r", vimlsp.rename, opt_rename)
           map.set('n', ',a', vimdiag.open_float, opt_open_float)
-          map.set("n", ",f", function() vimlsp.buf.format({ timeout = 5000 }) end, opt_formatter)
+          -- map.set("n", ",f", function() vimlsp.buf.format({ timeout = 5000 }) end, opt_formatter)
         end,
       })
 

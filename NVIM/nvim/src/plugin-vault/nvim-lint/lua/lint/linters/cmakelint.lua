@@ -1,1 +1,0 @@
-local a='([^:]+):(%d+): (.+) %[(.+)%]'local b={'file','lnum','message','code'}return{cmd='cmakelint',stdin=false,args={'--quiet'},ignore_exitcode=true,parser=require('lint.parser').from_pattern(a,b,nil,{['source']='cmakelint',['severity']=vim.diagnostic.severity.WARN})}

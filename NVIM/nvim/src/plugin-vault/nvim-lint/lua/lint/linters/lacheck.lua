@@ -1,1 +1,0 @@
-local a='[^:]+, line (%d+):(.+)'local b={'lnum','message'}return{cmd='lacheck',stdin=false,args={},stream='stdout',ignore_exitcode=false,parser=require('lint.parser').from_pattern(a,b,nil,{["source"]="lacheck",['severity']=vim.diagnostic.severity.WARN})}

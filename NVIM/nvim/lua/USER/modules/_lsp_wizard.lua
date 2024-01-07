@@ -22,7 +22,7 @@ return {
       require(A .. "css").lsp({"cssls"})
       require(A .. "html").lsp({"emmet_ls"})
       require(A .. "javascript").lsp({"astro", "jsonls", "svelte", "tsserver"})
-      -- require(A .. "java").lsp({"jdtls"})
+      require(A .. "java").lsp({"jdtls"})
       require(A .. "lua").lsp({"lua_ls"})
       require(A .. "go").lsp({"gopls"})
       require(A .. "php").lsp({"phpactor"})

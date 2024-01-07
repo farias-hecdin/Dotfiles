@@ -1,0 +1,1 @@
+local a=require"plenary.async_lib.async"local b,c=a.async,a.await;return setmetatable({},{__index=function(d,e)return b(function(...)if vim.in_fast_event()then c(a.scheduler())end;vim.api[e](...)end)end})

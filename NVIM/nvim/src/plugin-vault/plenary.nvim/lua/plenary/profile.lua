@@ -1,0 +1,1 @@
+local a={}local b=require'plenary.profile.p'function a.start(c,d)c=c or"profile.log"d=d or{}local e="10,i1,s,m0"if d.flame then e=e..",G"end;b.start(e,c)end;a.stop=b.stop;function a.benchmark(f,g,...)local h=vim.loop.hrtime()for i=1,f do g(...)end;return(vim.loop.hrtime()-h)/1E9 end;return a

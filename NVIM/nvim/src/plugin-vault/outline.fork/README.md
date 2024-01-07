@@ -1,61 +1,65 @@
-# Outline ( Another Nvim Buffer Management with Winbar )
+> [!TIP]
+> Use `Google Translate` to read this file in your native language.
 
-Outline is a simple(not so simple) Nvim buffer management plugin written in Lua.
- ![](https://github.com/Djancyp/outline/blob/main/images/outline.gif)
-# What you will get with this plugin.
+# Outline.fork
 
-- Uses Nvim winbar to show buffer name and file change indicator.
-// image
-- Buffer management ui.
-  - Buffer switch.
-  - Buffer status.
-  - Buffer close.
-  - Buffer Preview.
-  - Buffer bind shortcut key.
+Este plugin es un pequeño gestor de buffer para Neovim. Es una bifurcación de [Djancyp/outline](https://github.com/Djancyp/outline). Se eliminaron varias funciones del plugin original, se refactorizo el codigo y se agregaron nuevas caracteristicas.
 
-- ![Buffer main](/images/outline-main.png)
-- ![Status line](/images/winbar.png)
-- ![Previw](/images/preview.png)
-- ![Key binding](/images/bind.png)
+## Requerimientos
 
-## requirements
-- Neovim Nightly ≥ v0.8 - Winbar support
-- A patched [nerd font](https://www.nerdfonts.com/) for the buffer icons
-- [nvim-web-devicons](https://github.com/kyazdani42/nvim-web-devicons) for filetype icons (recommended)
-## Install
+* [`neovim`](https://github.com/neovim/neovim) >= 0.8
+* [`nerd font`](https://www.nerdfonts.com/) para los iconos de los buffers
+* [`plenary.nvim`](https://github.com/nvim-lua/plenary.nvim)
+* [`nvim-web-devicons`](https://github.com/nvim-tree/nvim-web-devicons)
+
+### Instalación
+
+Usando [`folke/lazy.nvim`](https://github.com/folke/lazy.nvim):
 
 ```lua
-use {"Djancyp/outline"}
-
-require('outline').setup()
+{
+    "farias-hecdin/outline.fork",
+    cmd = "BSOpen",
+    dependencies = {
+        "nvim-tree/nvim-web-devicons"
+    },
+    config = true,
+    -- Si quieres configurar algunas opciones, sustituye la línea anterior con:
+    -- config = function()
+    -- end,
+}
 ```
 
-## Usage
+## Configuración
+
+Estas son las opciones de configuración predeterminadas:
 
 ```lua
-// Toggle  Buffer tab
-:BSOpen
-// Recommended key binding shift+c
-<S-c>
-```
-## Keys
-```
-| Key            | Action                          |
-| -------------- | ------------------------------- |
-| q,ESC,Ctrl-c   | exit outline window             |
-| j or <Tab>     | navigate down                   |
-| k or <S-Tab>   | navigate up                     |
-| D              | close buffer                    |
-| `<CR>`         | jump to buffer                  |
-| s              | open buffer in horizontal split |
-| v              | open buffer in vertical split   |
-| <S-P>          | open preview for buffer         |
-| <S-B>          | bind buffer to a key            |
+require('outline').setup({
+    active_icon = "",
+    window_width = 80,
+    window_maxheight = 20,
+})
 ```
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+### Comandos y atajos de teclado
 
-Please make sure to update tests as appropriate.
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+| Comandos       | Descripción                         |
+| -------------  | ----------------------------------- |
+| `BSOpen`       | Abrir el gestor de buffer |
+
+Estos son los atajos de teclado predeterminados:
+
+| Atajos de teclado | Descripcion  |
+| ----------------- | ------------------------------- |
+| `q` `ESC`         | Salir del gestor buffers |
+| `d`               | Cerrar un buffer |
+| `<CR>`            | Ir a un buffer |
+
+## Agradecimientos a
+
+* [Djancyp/outline](https://github.com/Djancyp/outline): Ha sido la base de este plugin.
+
+## Licencia
+
+Outline.fork está bajo la licencia MIT. Consulta el archivo `LICENSE` para obtener más información.

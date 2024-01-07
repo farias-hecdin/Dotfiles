@@ -1,0 +1,12 @@
+vim-vsnip	vsnip.txt	/*vim-vsnip*
+vsnip	vsnip.txt	/*vsnip*
+vsnip-built-in-variable	vsnip.txt	/*vsnip-built-in-variable*
+vsnip-changelog	vsnip.txt	/*vsnip-changelog*
+vsnip-command	vsnip.txt	/*vsnip-command*
+vsnip-contents	vsnip.txt	/*vsnip-contents*
+vsnip-function	vsnip.txt	/*vsnip-function*
+vsnip-install	vsnip.txt	/*vsnip-install*
+vsnip-limitation	vsnip.txt	/*vsnip-limitation*
+vsnip-mapping	vsnip.txt	/*vsnip-mapping*
+vsnip-snipmate-support	vsnip.txt	/*vsnip-snipmate-support*
+vsnip-variable	vsnip.txt	/*vsnip-variable*

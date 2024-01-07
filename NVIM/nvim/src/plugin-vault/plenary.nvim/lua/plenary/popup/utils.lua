@@ -1,0 +1,1 @@
+local a={}a.bounded=function(b,c,d)c=c or 0;d=d or math.huge;if c then b=math.max(b,c)end;if d then b=math.min(b,d)end;return b end;a.apply_defaults=function(e,f)if e==nil then e={}end;e=vim.deepcopy(e)for g,h in pairs(f)do if e[g]==nil then e[g]=h end end;return e end;return a

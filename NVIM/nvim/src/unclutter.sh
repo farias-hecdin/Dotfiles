@@ -3,12 +3,9 @@
 #
 # This script removes unwanted files and folders from the Vault folder.
 
-# Module setup ----------------------------------------------------------------
 set -o errexit
 set -o nounset
 set -o pipefail
-
-# Module config ---------------------------------------------------------------
 
 gray="\e[37m"
 bold="\e[1m"

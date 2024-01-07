@@ -1,0 +1,1 @@
+local a={}function a.setup(b)require('ts_context_commentstring.config').update(b)end;function a.calculate_commentstring(c)return require('ts_context_commentstring.internal').calculate_commentstring(c)end;function a.update_commentstring(c)return require('ts_context_commentstring.internal').update_commentstring(c)end;return a

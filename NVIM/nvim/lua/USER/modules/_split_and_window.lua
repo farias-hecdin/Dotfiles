@@ -16,6 +16,7 @@ return {
     -- url = "https://github.com/famiu/bufdelete.nvim.git",
     dir = D.plugin .. "bufdelete.nvim",
     event = "WinNew",
+    keys = "<leader>sx",
     config = function()
       require('bufdelete')
     end

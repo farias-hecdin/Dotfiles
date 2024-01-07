@@ -1,0 +1,16 @@
+MiniNotify	mini-notify.txt	/*MiniNotify*
+MiniNotify-specification	mini-notify.txt	/*MiniNotify-specification*
+MiniNotify.add()	mini-notify.txt	/*MiniNotify.add()*
+MiniNotify.clear()	mini-notify.txt	/*MiniNotify.clear()*
+MiniNotify.config	mini-notify.txt	/*MiniNotify.config*
+MiniNotify.default_format()	mini-notify.txt	/*MiniNotify.default_format()*
+MiniNotify.default_sort()	mini-notify.txt	/*MiniNotify.default_sort()*
+MiniNotify.get()	mini-notify.txt	/*MiniNotify.get()*
+MiniNotify.get_all()	mini-notify.txt	/*MiniNotify.get_all()*
+MiniNotify.make_notify()	mini-notify.txt	/*MiniNotify.make_notify()*
+MiniNotify.refresh()	mini-notify.txt	/*MiniNotify.refresh()*
+MiniNotify.remove()	mini-notify.txt	/*MiniNotify.remove()*
+MiniNotify.setup()	mini-notify.txt	/*MiniNotify.setup()*
+MiniNotify.show_history()	mini-notify.txt	/*MiniNotify.show_history()*
+MiniNotify.update()	mini-notify.txt	/*MiniNotify.update()*
+mini.notify	mini-notify.txt	/*mini.notify*

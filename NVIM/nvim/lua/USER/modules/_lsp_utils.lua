@@ -1,12 +1,12 @@
 local D = require("USER.modules.utils.dir")
 
 -- SUMMARY
--- corn.nvim.fork
 -- code_runner.nvim
 
 return {
   {
-    url = "https://github.com/CRAG666/code_runner.nvim.git",
+    -- url = "https://github.com/CRAG666/code_runner.nvim.git",
+    dir = D.plugin .. "code_runner.nvim",
     cmd = { "RunCode", "RunFile", "RunFile", "RunProject", "RunClose", "CRFiletype", "CRProjects" },
     config = function ()
       require('code_runner').setup({

@@ -1,17 +1,10 @@
 {
-  "cmp-vsnip": { "branch": "main", "commit": "989a8a73c44e926199bfd05fa7a516d51f2d2752" },
-  "code_runner.nvim": { "branch": "main", "commit": "701807c4f181cd00d4fad0280bbc821324cbe3c1" },
   "lazy.nvim": { "branch": "main", "commit": "96584866b9c5e998cbae300594d0ccfd0c464627" },
-  "lsp-zero.nvim": { "branch": "v3.x", "commit": "b9044716e675354357ab8269ccf7bd0fcdc0991e" },
-  "markdown.nvim": { "branch": "master", "commit": "251c54023cf8832a1d3c39315f8114e205a6edbe" },
-  "mason-lspconfig.nvim": { "branch": "main", "commit": "9453e3d6cd2ca45d96e20f343e8f1b927364b630" },
-  "mason.nvim": { "branch": "main", "commit": "41e75af1f578e55ba050c863587cffde3556ffa6" },
-  "mini.ai": { "branch": "main", "commit": "f7787cff9cc42004f722ca1e64e6af4e64e34177" },
-  "multiple-cursors.nvim": { "branch": "main", "commit": "a718ca429bf1ec269b2d938704216da4bceb27e8" },
+  "lsp-zero.nvim": { "branch": "v3.x", "commit": "68e2e00387a2d93fc54dfa646e2847c4fa4773d3" },
+  "mason-lspconfig.nvim": { "branch": "main", "commit": "0989bdf4fdf7b5aa4c74131d7ffccc3f399ac788" },
+  "mason.nvim": { "branch": "main", "commit": "e110bc3be1a7309617cecd77bfe4bf86ba1b8134" },
   "nvim-cmp": { "branch": "main", "commit": "538e37ba87284942c1d76ed38dd497e54e65b891" },
-  "nvim-lspconfig": { "branch": "master", "commit": "eb81c7ea08d6f01d5fa4cf09e58c708efadf9b2f" },
-  "nvim-treesitter": { "branch": "master", "commit": "25ddfde8d7167d7d81403d6809242439037d2b68" },
-  "nvim-ts-context-commentstring": { "branch": "main", "commit": "1277b4a1f451b0f18c0790e1a7f12e1e5fdebfee" },
-  "plenary.nvim": { "branch": "master", "commit": "55d9fe89e33efd26f532ef20223e5f9430c8b0c0" },
-  "vim-vsnip": { "branch": "master", "commit": "8eebdf6ab4a880d845893f210fd20516d2e2384f" }
+  "nvim-lspconfig": { "branch": "master", "commit": "796394fd19fb878e8dbc4fd1e9c9c186ed07a5f4" },
+  "nvim-treesitter": { "branch": "master", "commit": "5032f9952ad2a3a7f7792ac438c4f9e2bd53e0b9" },
+  "plenary.nvim": { "branch": "master", "commit": "55d9fe89e33efd26f532ef20223e5f9430c8b0c0" }
 }
