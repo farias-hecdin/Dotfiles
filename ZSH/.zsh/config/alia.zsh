@@ -18,6 +18,7 @@ alias gconfig="nvim ~/.gitconfig"
 alias nconfig="nvim ~/.config/nvim/"
 
 # App
+alias pn="pnpm"
 alias tr="tree -C"
 alias fz="fzf -e"
 alias ed="nvim"
@@ -53,7 +54,7 @@ alias jpd="unmarks"
 
 alias @distro="proot-distro login"
 alias @js-server="five-server"
-alias @nanoid="nanoid --size"
+alias @nanoid="nanoid --alphabet abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ --size"
 alias @postcss-opts="postcss --no-map --replace src/**/*.css --config ./opts/postcss.config.cjs"
 alias @prettier="prettier --write '**/*.{html,css,scss,js,ts,jsx,vue,svelte,json}'"
 
@@ -62,3 +63,5 @@ alias @clean-pnpm="pnpm store prune"
 alias @clean-npm="npm cache clean --force"
 alias @clean-go="go clean -modcache"
 alias @clean-apt="apt autoremove"
+
+alias @pnpm-pkgbase="pnpm i -D modern-normalize eruda postcss autoprefixer postcss-cli postcss-nested postcss-sorting unplugin-auto-import unplugin-icons @iconify-json/material-symbols"
