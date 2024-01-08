@@ -14,7 +14,7 @@ return {
     -- url = "https://github.com/echasnovski/mini.splitjoin.git",
     dir = D.plugin .. "mini.splitjoin",
     keys = {
-      { mode = "n", "gS", desc = "Split and join" }
+      { mode = "n", "gS", desc = "Split and join symbols" }
     },
     config = function()
       require("mini.splitjoin").setup()
@@ -41,9 +41,9 @@ return {
     dir = D.plugin .. "Comment.nvim",
     keys = {
       { mode = "n", ",c", desc = "Comment: Insert line" },
-      { mode = "n", ",C", desc = "Comment: Insert block" },
-      { mode = "v", "gc", desc = "Insert line-comment" },
-      { mode = "v", "gC", desc = "Insert block-comment" }
+      { mode = "n", ",b", desc = "Comment: Insert block" },
+      { mode = "v", "gc", desc = "Comment: Insert line" },
+      { mode = "v", "gb", desc = "Comment: Insert block" }
     },
     config = function()
       require('Comment').setup({

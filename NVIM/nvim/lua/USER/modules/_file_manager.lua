@@ -45,7 +45,7 @@ return {
     -- url = "https://github.com/luukvbaal/nnn.nvim.git",
     dir = D.plugin .. "nnn.nvim",
     cmd = { "NnnExplorer", "NnnPicker" },
-    keys = { "<leader>e" },
+    keys = { "<leader>e", mode = "n", desc = "Enable Nnn" },
     config = function()
       require("nnn").setup({
         explorer = {

@@ -7,14 +7,6 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- 'echasnovski/mini.notify',
-    dir = D.plugin .. "mini.notify",
-    event = "VeryLazy",
-    config = function ()
-      require('mini.notify').setup()
-    end
-  },
-  {
     -- url = "https://github.com/willothy/flatten.nvim.git",
     dir = D.plugin .. "flatten.nvim",
     config = true,

@@ -2,11 +2,20 @@ local W = require("USER.modules.utils.widgets")
 local D = require("USER.modules.utils.dir")
 
 -- SUMMARY
+-- mini.notify
 -- mini.tabline
 -- mini.starter
 -- staline.nvim
 
 return {
+  {
+    -- url = "https://github.com/echasnovsk/mini.notify.git',
+    dir = D.plugin .. "mini.notify",
+    event = "VeryLazy",
+    config = function ()
+      require('mini.notify').setup()
+    end
+  },
   {
     -- url = "https://github.com/echasnovski/mini.tabline.git",
     dir = D.plugin .. "mini.tabline",

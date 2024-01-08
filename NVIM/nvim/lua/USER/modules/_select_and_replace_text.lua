@@ -16,11 +16,11 @@ return {
       "MultipleCursorsAddUp",
     },
     keys = {
-      { "<C-Down>", ":MultipleCursorsAddDown<CR>", mode = {"n", "i"} },
-      { "<C-Up>", ":MultipleCursorsAddUp<CR>", mode = {"n", "i"} },
-      { "<C-j>", ":MultipleCursorsAddDown<CR>" },
-      { "<C-k>", ":MultipleCursorsAddUp<CR>" },
-      { "<C-h>", ":MultipleCursorsMouseAddDelete<CR>", mode = {"n", "i"} },
+      { "<C-Down>", ":MultipleCursorsAddDown<CR>", mode = {"n", "i"}, desc = "MultipleCursors: add down" },
+      { "<C-Up>", ":MultipleCursorsAddUp<CR>", mode = {"n", "i"} , desc = "MultipleCursors: add up"},
+      { "<C-j>", ":MultipleCursorsAddDown<CR>" , desc = "MultipleCursors: add down"},
+      { "<C-k>", ":MultipleCursorsAddUp<CR>" , desc = "MultipleCursors: add up"},
+      { "<C-h>", ":MultipleCursorsMouseAddDelete<CR>", mode = {"n", "i"} , desc = "MultipleCursors: add with mouse"},
     },
     opts = {
       keys = {
