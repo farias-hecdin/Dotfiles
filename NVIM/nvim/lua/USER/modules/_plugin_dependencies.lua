@@ -16,11 +16,6 @@ return {
     config = function()
       require('nvim-web-devicons').setup({
         override_by_filename = {
-          ["astro"] = {
-            icon = "",
-            color = "#F9A825",
-            name = "astro"
-          },
           ["test.md"] = {
             icon = "",
             color = "#CBCB41",

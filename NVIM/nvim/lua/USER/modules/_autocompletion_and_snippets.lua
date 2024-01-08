@@ -90,27 +90,27 @@ return {
         sources = cmp.config.sources({
           {
             name = "nvim_lsp",
-            max_item_count = 10,
+            max_item_count = 6,
             keyword_length = 2,
             priority = 100
           },
           {
             name = "vsnip",
-            max_item_count = 10,
-            keyword_length = 2,
-            priority = 75
-          },
-          {
-            name = "buffer",
-            max_item_count = 10,
+            max_item_count = 6,
             keyword_length = 2,
             priority = 50
           },
           {
-            name = "path",
-            max_item_count = 10,
+            name = "buffer",
+            max_item_count = 6,
             keyword_length = 2,
-            priority = 25
+            priority = 10
+          },
+          {
+            name = "path",
+            max_item_count = 6,
+            keyword_length = 2,
+            priority = 50
           },
         }),
         sorting = {

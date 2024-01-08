@@ -7,24 +7,28 @@ usercmd("WindowNvim", function()
 end, {desc = "Window nvim"})
 
 -- Plugin: Mini
-vim.api.nvim_create_user_command("MiniStarter", function()
+usercmd("MiniStarter", function()
   require('mini.starter').open()
-end, {desc = "MiniStarter", nargs = 0, bang = true,  bar = true}
+end, {desc = "Mini_Starter", nargs = 0, bang = true,  bar = true}
 )
 
 usercmd("MiniPickGrep", function()
   require('mini.pick').builtin.grep_live()
-end, {desc = "MiniPickGrep", bang = false, nargs = 0, bar = false}
+end, {desc = "Mini_PickGrep", bang = false, nargs = 0, bar = false}
 )
 usercmd("MiniPickFiles", function()
   require('mini.pick').builtin.files()
-end, {desc = "MiniPickFiles", bang = true, nargs = 0, bar = true}
+end, {desc = "Mini_PickFiles", bang = true, nargs = 0, bar = true}
 )
 
 usercmd("MiniFiles", function()
-  -- NOTE: Activar "numberwidth = 4"
   require('mini.files').open()
-end, {desc = "MiniFiles", bang = true, nargs = 0, bar = true}
+end, {desc = "Mini_Files", bang = true, nargs = 0, bar = true}
+)
+
+usercmd("MiniNotifyHistory", function()
+  require('mini.notify').show_history()
+end, {desc = "Mini_NotifyHistory", bang = true, nargs = 0, bar = true}
 )
 
 -- Treesitter enable/disable
@@ -62,16 +66,32 @@ usercmd("FlagLazyUrlToDir", function()
   vim.cmd("%s/url =/-- url =/gcI")
 end, {desc = "Change `url` prefix for `dir`", bang = true})
 
--- Make a pomodoro
-vim.api.nvim_create_user_command('Pomodoro', function(args)
-  local argTime = tonumber(args.fargs[1])
-  local time = argTime * 60
+-- Enable a pomodoro
+vim.api.nvim_create_user_command('PomodoroStart', function(args)
+  local argTime = args.fargs[1]
+  local argMsg = args.fargs[2] or 'Default'
+  local time = tonumber(argTime) * 60
   -- Show a notification
-  local miniNotify = require('mini.notify')
-  vim.defer_fn(function()
-    local id = miniNotify.add('󰄉 Timer ' .. argTime .. 'm (done)', 'WARN', 'MiniNotifyAlert')
+  local add_and_remove_notify = function(status, exit, hl)
+    local MiniNotify = require('mini.notify')
+    local token = MiniNotify.add(string.format('󰄉 Pomodoro "%s" %sm (%s)', argMsg, argTime, status), 'INFO', hl)
     vim.defer_fn(function()
-      miniNotify.remove(id)
-    end, 9000)
+      MiniNotify.remove(token)
+    end, exit * 1000)
+  end
+  -- Startup pomodoro
+  add_and_remove_notify('start', 3, "MiniNotifyAlert")
+  -- Run pomodoro
+  vim.defer_fn(function()
+    add_and_remove_notify('done', 60, "MiniNotifyError")
   end, time * 1000)
-end, { nargs = 1 })
+end, { nargs = "*" })
+
+-- Reload Colorscheme
+vim.api.nvim_create_user_command('ReloadColorscheme', function()
+  vim.cmd.TSDisable('highlight')
+  vim.cmd.TSEnable('highlight')
+  local current_colorscheme = vim.g.colors_name
+  require("plenary.reload").reload_module(current_colorscheme, true)
+  vim.cmd('colorscheme ' .. current_colorscheme)
+end, {})

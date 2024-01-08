@@ -24,7 +24,7 @@ map("n", "<leader>R", ":RunCode<cr>", {desc = "Run Code"})
 
 -- Formatter
 map("n", "<Tab>", "==<cr>", {desc = "Auto formatted"})
-map("n", ",b", "ggVG=",     {desc = "Formatter all"})
+map("n", ",f", "ggVG=",     {desc = "Formatter all"})
 
 -- Mini.Pick
 map("n", "<leader>fg", ":MiniPickGrep<cr>",        {desc = "Fuzzy finder: grep"})

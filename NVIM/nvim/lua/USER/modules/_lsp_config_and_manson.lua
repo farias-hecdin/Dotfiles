@@ -1,4 +1,4 @@
-local D = require("USER.modules.utils.dir")
+local vim = vim
 
 -- SUMMARY
 -- mason.nvim
@@ -37,7 +37,6 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre" },
     config = function()
-      local vim = vim
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       require("lspconfig")
       -- Add a border to `:LspInfo` window

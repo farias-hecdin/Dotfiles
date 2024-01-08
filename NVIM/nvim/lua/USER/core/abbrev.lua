@@ -13,5 +13,5 @@ cmd("cnoreabbrev Wq wq")
 cmd("cnoreabbrev WQ wq")
 
 -- Group 2
-cmd("cnoreabbrev m mark")
-cmd("cnoreabbrev s sort")
+cmd("cnoreabbrev mk mark")
+cmd("cnoreabbrev st sort")
