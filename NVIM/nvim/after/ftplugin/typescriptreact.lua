@@ -1,1 +1,1 @@
-/data/data/com.termux/files/home/.config/nvim/ftplugin/javascriptreact.lua
+/data/data/com.termux/files/home/.config/nvim/after/ftplugin/javascriptreact.lua

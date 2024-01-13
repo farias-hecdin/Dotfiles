@@ -7,11 +7,11 @@ local D = require("USER.modules.utils.dir")
 -- vim-astro
 
 return {
-  -- {
-  --   'mfussenegger/nvim-jdtls',
-  --   ft = { 'java' },
-  --   config = true
-  -- },
+  {
+    'mfussenegger/nvim-jdtls',
+    ft = { 'java' },
+    config = true
+  },
   {
     -- url = "https://github.com/jsongerber/nvim-px-to-rem.git",
     dir = D.plugin .. "nvim-px-to-rem",
