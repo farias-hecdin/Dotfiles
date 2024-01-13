@@ -3,7 +3,6 @@ local D = require("USER.modules.utils.dir")
 -- SUMMARY
 -- plenary.nvim
 -- nvim-web-devicons
--- mini.extra
 
 return {
   {
@@ -16,6 +15,11 @@ return {
     config = function()
       require('nvim-web-devicons').setup({
         override_by_filename = {
+          ["astro"] = {
+            icon = "",
+            color = "#F9A825",
+            name = "astro"
+          },
           ["test.md"] = {
             icon = "",
             color = "#CBCB41",

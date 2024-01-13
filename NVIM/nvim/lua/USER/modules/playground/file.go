@@ -1,20 +1,38 @@
 package main
-import "fmt"
 
-/* Suma tres numeros
- * @param {int} a, b, c - Ingresa un numero
- */
-func sumarTresNumeros(a, b, c int) int {
-    return a + b + c
-}
+import (
+    "fmt"
+    "strconv"
+)
 
 func main() {
-    num1 = 5
-    num2 = 10
-    num3 := 15
+    var num1, num2 float64
+    var operacion string
 
-    resultado := sumarTresNumeros(num1, num2, num3)
+    fmt.Print("Ingrese el primer número: ")
+    fmt.Scan(&num1)
 
-    fmt.Printf("La suma de %d, %d y %d es: %d\n", num1, num2, num3, resultado)
+    fmt.Print("Ingrese el segundo número: ")
+    fmt.Scan(&num2)
+
+    fmt.Print("Ingrese la operación (+, -, *, /): ")
+    fmt.Scan(&operacion)
+
+    switch operacion {
+    case "+":
+        fmt.Printf("%.2f + %.2f = %.2f\n", num1, num2, num1+num2)
+    case "-":
+        fmt.Printf("%.2f - %.2f = %.2f\n", num1, num2, num1-num2)
+    case "*":
+        fmt.Printf("%.2f * %.2f = %.2f\n", num1, num2, num1*num2)
+    case "/":
+        if num2 == 0 {
+            fmt.Println("Error: Division por cero")
+        } else {
+            fmt.Printf("%.2f / %.2f = %.2f\n", num1, num2, num1/num2)
+        }
+    default:
+        fmt.Println("Error: Operación inválida")
+    }
 }
 

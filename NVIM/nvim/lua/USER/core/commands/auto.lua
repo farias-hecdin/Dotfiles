@@ -150,3 +150,4 @@ autocmd("FileType", {
 --   desc = 'Clear LSP highlight groups',
 --   callback = hide_semantic_highlights,
 -- })
+

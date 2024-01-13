@@ -1,5 +1,5 @@
 local D = require("USER.modules.utils.dir")
-local A = "USER.modules.lsp."
+local vim = vim
 
 -- SUMMARY
 -- lsp-zero.nvim
@@ -17,17 +17,20 @@ return {
         lsp_zero.default_keymaps({ buffer = bufnr })
       end)
 
-      -- LSP enabled ------------------------------------------------
-      require(A .. "bash").lsp({"bashls"})
-      require(A .. "css").lsp({"cssls"})
-      require(A .. "html").lsp({"emmet_ls"})
-      require(A .. "javascript").lsp({"astro", "jsonls", "svelte", "tsserver"})
-      require(A .. "java").lsp({"jdtls"})
-      require(A .. "lua").lsp({"lua_ls"})
-      require(A .. "go").lsp({"gopls"})
-      require(A .. "php").lsp({"phpactor"})
-      require(A .. "python").lsp({"pyright"})
+      local function enable_lsp(lang, servers)
+        local path = "USER.modules.lsp."
+        require(path .. lang).lsp(servers)
+      end
 
+      enable_lsp("bash", { "bashls" })
+      enable_lsp("css", { "cssls" })
+      enable_lsp("go", { "gopls" })
+      enable_lsp("html", { "emmet_ls" })
+      enable_lsp("java", { "jdtls" })
+      enable_lsp("javascript", { "astro", "jsonls", "svelte", "tsserver" })
+      enable_lsp("lua", { "lua_ls" })
+      enable_lsp("php", { "phpactor" })
+      enable_lsp("python", { "pyright" })
     end
   },
   {
@@ -43,7 +46,6 @@ return {
         -- javascriptreact = {'eslint_d'},
       }
       -- A autocmd to trigger linting
-      local vim = vim
       local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
       vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
         group = lint_augroup,

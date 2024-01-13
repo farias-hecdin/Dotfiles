@@ -15,21 +15,6 @@ return {
     end
   },
   {
-    -- url = "https://github.com/whitestarrain/md-section-number.nvim.git",
-    dir = D.plugin .. "md-section-number.nvim",
-    ft = "markdown",
-    config = function()
-      require("md_section_number").setup({
-        toc = {
-          width = 40,
-          position = "right",
-          indent_space_number = 2,
-          header_prefix = "• ",
-        },
-      })
-    end
-  },
-  {
     -- "tadmccorkle/markdown.nvim",
     dir = D.plugin .. "markdown.nvim",
     ft = "markdown",
