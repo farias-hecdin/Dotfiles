@@ -23,6 +23,7 @@ alias tr="tree -C"
 alias fz="fzf -e"
 alias ed="nvim"
 alias zi="z -I ."
+alias @fd="fd -H"
 
 # Disk usage
 alias ds="gdu"
@@ -54,7 +55,9 @@ alias jpd="unmarks"
 
 alias @distro="proot-distro login"
 alias @js-server="five-server"
-alias @nanoid="nanoid --alphabet abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ --size"
+alias @id="nanoid --alphabet abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 --size"
+alias @idn="nanoid --alphabet 1234567890 --size"
+alias @ids="nanoid --alphabet abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ --size"
 alias @postcss-opts="postcss --no-map --replace src/**/*.css --config ./opts/postcss.config.cjs"
 alias @prettier="prettier --write '**/*.{html,css,scss,js,ts,jsx,vue,svelte,json}'"
 
