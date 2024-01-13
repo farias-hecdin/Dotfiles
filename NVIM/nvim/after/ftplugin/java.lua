@@ -6,9 +6,23 @@ vim.opt_local.shiftwidth = 2
 vim.opt_local.softtabstop = 2
 vim.opt_local.tabstop = 2
 
--- Setup jdtls ----------------------------------------------------------------
-local status_ok, jdtls = pcall(require, "jdtls")
-if not status_ok then
+-- Setup plugins --------------------------------------------------------------
+
+-- MiniNotify
+local miniNotify_ok, miniNotify = pcall(require, "mini.notify")
+if not miniNotify_ok then
+  return
+end
+
+miniNotify.setup({
+  lsp_progress = {
+    enable = false,
+  }
+})
+
+-- Jstls
+local jdtls_ok, jdtls = pcall(require, "jdtls")
+if not jdtls_ok then
   return
 end
 
