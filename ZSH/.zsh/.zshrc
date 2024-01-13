@@ -63,14 +63,14 @@ export PATH="$PNPM_HOME:$PATH"
 # nnn
 export NNN_PLUG="j:autojump;"
 
-# Luatiny
+# luatiny
 export LUATINY="$LOCAL_SHARE/luatiny"
 export PATH="$LUATINY:$PATH"
 
-# Lare
+# lare
 export LARE="$LOCAL_SHARE/lare"
 export PATH="$LARE:$PATH"
 
-# importTracker
-export TGPT="$LOCAL_SHARE/importTracker"
-export PATH="$TGPT:$PATH"
+# impzy
+export IMPZY="$LOCAL_SHARE/impzy"
+export PATH="$IMPZY:$PATH"
