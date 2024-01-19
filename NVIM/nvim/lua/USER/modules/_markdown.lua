@@ -1,10 +1,19 @@
 local D = require("USER.modules.utils.dir")
+local vim = vim
 
 -- SUMMARY
+-- follow-md-links.nvim
 -- markdowny.nvim
 -- md-section-number.nvim
 
 return {
+  {
+    url = "https://github.com/jghauser/follow-md-links.nvim.git",
+    ft = "markdown",
+    config = function()
+      vim.keymap.set('n', '<bs>', ':edit #<cr>', { silent = true })
+    end
+  },
   {
     -- url = "https://github.com/antonk52/markdowny.nvim.git",
     dir = D.plugin .. "markdowny.nvim",

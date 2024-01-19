@@ -69,6 +69,7 @@ return {
           MiniHipatternsWord            = { fg = "#FFDC00", fmt = "BOLD" },
           MiniHipatternsWord2           = { fg = "#FFFFFF", fmt = "BOLD" },
           MiniHipatternsWord3           = { fg = "#0074D9", fmt = "BOLD" },
+          MiniHipatternsHighlight       = { bg = "#1c1c1c", fg = "#00ffff"},
           MiniIndentscopeSymbol         = { bg = "#222222", fg = "#000000" },
           MiniJump2dSpot                = { fg = "#FFF000", fmt = "NONE" },
           MiniNotifyAlert               = { fg = "#FFEE58" },

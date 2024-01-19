@@ -3,15 +3,13 @@ local cmd = vim.cmd
 -- Thanks to: https://github.com/NormTurtle/Windots/blob/main/vi/init.lua
 
 -- Group 1
-cmd("cnoreabbrev Q  q")
 cmd("cnoreabbrev q1  q!")
-cmd("cnoreabbrev Q1  q!")
-cmd("cnoreabbrev Qa1 qa!")
-cmd("cnoreabbrev Qa qa")
-cmd("cnoreabbrev W  w")
-cmd("cnoreabbrev Wq wq")
-cmd("cnoreabbrev WQ wq")
+cmd("cnoreabbrev qa1 qa!")
 
 -- Group 2
 cmd("cnoreabbrev mk mark")
 cmd("cnoreabbrev st sort")
+
+-- Group 3
+cmd("cnoreabbrev Mn MiniNotifyHistory")
+cmd("cnoreabbrev Ps PomodoroStart")

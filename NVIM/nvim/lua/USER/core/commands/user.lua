@@ -1,52 +1,53 @@
 local vim = vim
 local usercmd = vim.api.nvim_create_user_command -- Create usercommand
 
--- Enable WindowNvim
+-- WindowNvim
 usercmd("WindowNvim", function()
   require('nvim-window').pick()
-end, {desc = "Window nvim"})
+end, { desc = "Window nvim" })
 
--- Plugin: Mini
+-- MiniStarter
 usercmd("MiniStarter", function()
   require('mini.starter').open()
-end, {desc = "Mini_Starter", nargs = 0, bang = true,  bar = true}
-)
+end, { desc = "Mini_Starter", nargs = 0, bang = true,  bar = true })
 
+-- MiniPick
 usercmd("MiniPickGrep", function()
   require('mini.pick').builtin.grep_live()
-end, {desc = "Mini_PickGrep", bang = false, nargs = 0, bar = false}
-)
+end, { desc = "Mini_PickGrep", bang = false, nargs = 0, bar = false })
+
 usercmd("MiniPickFiles", function()
   require('mini.pick').builtin.files()
-end, {desc = "Mini_PickFiles", bang = true, nargs = 0, bar = true}
-)
+end, { desc = "Mini_PickFiles", bang = true, nargs = 0, bar = true })
 
+-- MiniFiles
 usercmd("MiniFiles", function()
   require('mini.files').open()
-end, {desc = "Mini_Files", bang = true, nargs = 0, bar = true}
-)
+end, { desc = "Mini_Files", bang = true, nargs = 0, bar = true })
 
+-- MiniNotify
 usercmd("MiniNotifyHistory", function()
   require('mini.notify').show_history()
-end, {desc = "Mini_NotifyHistory", bang = true, nargs = 0, bar = true}
-)
+end, { desc = "Mini_NotifyHistory", bang = true, nargs = 0, bar = true })
 
--- Treesitter enable/disable
+-- Treesitter
 usercmd("TSEnableHighlight", function()
   vim.cmd("TSBufEnable highlight")
-end, {desc = "Treesitter: enabled", bang = true})
+end, { desc = "Treesitter: enabled", bang = true })
+
 usercmd("TSDisableHighlight", function()
   vim.cmd("TSBufDisable highlight")
-end, {desc = "Treesitter: disabled", bang = true})
+end, { desc = "Treesitter: disabled", bang = true })
 
--- Lsp diagnostic enable/disable
+-- Lsp diagnostic
 -- Thanks to: https://github.com/neovim/neovim/issues/13324#issuecomment-1592038788
 usercmd("LspDiagnosticDisable", function(args)
   vim.diagnostic.disable(args.buf)
-end, {desc = "Lsp diagnostic: disabled", bang = true})
+end, { desc = "Lsp diagnostic: disabled", bang = true })
+
 usercmd("LspDiagnosticEnable", function(args)
   vim.diagnostic.enable(args.buf)
-end, {desc = "Lsp diagnostic: enabled", bang = true})
+end, { desc = "Lsp diagnostic: enabled", bang = true })
 
 -- Remove extra spaces
 usercmd("RemoveExtraSpaces", function()
@@ -54,17 +55,18 @@ usercmd("RemoveExtraSpaces", function()
   if res == "y" then
     vim.cmd("%s/\\s\\{2,}/ /ge")
   end
-end, {desc = "Remove extra spaces", bang = true})
+end, { desc = "Remove extra spaces", bang = true })
 
 -- Change `dir` prefix for `url` property
 usercmd("FlagLazyDirToUrl", function()
     vim.cmd("%s/dir =/-- dir =/gcI")
     vim.cmd("%s/-- url =/url =/gcI")
-end, {desc = "Change `dir` prefix for `url`", bang = true})
+end, { desc = "Change `dir` prefix for `url`", bang = true })
+
 usercmd("FlagLazyUrlToDir", function()
   vim.cmd("%s/-- dir =/dir =/gcI")
   vim.cmd("%s/url =/-- url =/gcI")
-end, {desc = "Change `url` prefix for `dir`", bang = true})
+end, { desc = "Change `url` prefix for `dir`", bang = true })
 
 -- Enable a pomodoro
 vim.api.nvim_create_user_command('PomodoroStart', function(args)

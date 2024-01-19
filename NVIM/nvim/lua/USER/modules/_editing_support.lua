@@ -7,7 +7,6 @@ local D = require("USER.modules.utils.dir")
 -- Comment.nvim
 -- nvim-ts-context-commentstring
 -- mini.hipatterns
--- ColorCommander
 
 return {
   {
@@ -96,10 +95,11 @@ return {
           -- !-----!: or !=======!:
           ]]
           docs     = { pattern = {"%s()@[%l-]+()"}, group = "MiniHipatternsDocs" },
+          show     = { pattern = {"^+%s().+()"}, group = "minihipatternshighlight" },
+          split    = { pattern = {"![-_=]+!:"}, group = "MiniHipatternsSplit" },
           word     = { pattern = {"![%a%d_-\\.]+:"}, group = "MiniHipatternsWord" },
           word2    = { pattern = {"¡[%a%d_-\\.]+:"}, group = "MiniHipatternsWord2" },
           word3    = { pattern = {"#[%a%d_-\\.]+:"}, group = "MiniHipatternsWord3" },
-          split    = { pattern = {"![-_=]+!:"}, group = "MiniHipatternsSplit" },
           --[[
           -- Highlight color systems using that color
           -- #4095BF

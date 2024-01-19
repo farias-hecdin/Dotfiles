@@ -6,9 +6,10 @@ local vim = vim
 -- cmp-cmdline
 -- cmp-buffer
 -- cmp-nvim-lsp
+-- cmp-path
 -- cmp-vsnip
--- nvim-cmp
 -- vim-vsnip
+-- nvim-cmp
 
 return {
   {

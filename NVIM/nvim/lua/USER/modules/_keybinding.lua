@@ -11,22 +11,19 @@ return {
     keys = { { "<leader>", mode = { 'n', 'v'} } },
     config = function()
       local which_key = require("which-key")
-      which_key.register(
-        {
-          ["z"]          = { name = "Fold" },
-          ["gz"]         = { name = "Surround" },
-          ["gd"]         = { name = "LSP" },
+
+      -- Register -------------------------------------------------------------
+      which_key.register({
           ["<leader>."]  = { name = "Move" },
           ["<leader>C"]  = { name = "Cmp" },
-          ["<leader>c"]  = { name = "ColorCommander" },
-          ["<leader>f"]  = { name = "Fuzzy Finder" },
-          ["<leader>g"]  = { name = "Git" },
+          ["<leader>F!"] = { name = "Forced" },
           ["<leader>M"]  = { name = "Markdown" },
           ["<leader>T"]  = { name = "Treesitter" },
           ["<leader>b"]  = { name = "Buffer" },
+          ["<leader>c"]  = { name = "ColorCommander" },
           ["<leader>e"]  = { name = "Explorer" },
-          ["<leaer>F"]  = { name = "File" },
-          ["<leader>F!"] = { name = "Forced" },
+          ["<leader>f"]  = { name = "Fuzzy Finder" },
+          ["<leader>g"]  = { name = "Git" },
           ["<leader>l"]  = { name = "LSP" },
           ["<leader>m"]  = { name = "Select/Marks" },
           ["<leader>n"]  = { name = "Number" },
@@ -34,18 +31,19 @@ return {
           ["<leader>s"]  = { name = "Split/Window" },
           ["<leader>t"]  = { name = "Tabs" },
           ["<leader>w"]  = { name = "Wrap" },
+          ["<leaer>F"]   = { name = "File" },
+          ["gd"]         = { name = "LSP" },
+          ["gz"]         = { name = "Surround" },
+          ["z"]          = { name = "Fold" },
         },
-        { mode = "n" }
-      )
+        { mode = "n" })
 
-      which_key.register(
-        {
+      which_key.register({
           ["<leader>."] = { name = "Tabs/move" },
           ["<leader>l"] = { name = "Letter" },
           ["<leader>m"] = { name = "Select" },
         },
-        { mode = "v" }
-      )
+        { mode = "v" })
 
       -- Setup ----------------------------------------------------------------
       require("which-key").setup({

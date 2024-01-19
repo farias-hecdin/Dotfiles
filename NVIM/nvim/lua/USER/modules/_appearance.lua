@@ -30,7 +30,7 @@ return {
   {
     -- url = "https://github.com/echasnovski/mini.starter.git",
     dir = D.plugin .. "mini.starter",
-    cmd = "MiniStarter",
+    event = "VeryLazy",
     config = function()
       local starter = require("mini.starter")
       require("mini.starter").setup({

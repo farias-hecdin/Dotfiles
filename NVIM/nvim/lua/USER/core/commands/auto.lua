@@ -131,12 +131,22 @@ autocmd({ "InsertLeave" }, {
   group = color_column,
 })
 
--- Disable the concealing in some file formats --------------------------------
-autocmd("FileType", {
-  pattern = { "json", "jsonc", "markdown" },
+-- Disable the concealing in insertMode ---------------------------------------
+local conceal_level = augroup("conceallevel", {clear = true})
+
+autocmd({ "InsertEnter" }, {
+  pattern = "*",
+  group = conceal_level,
   callback = function()
-    vim.opt.conceallevel = 0
-  end,
+    vim.cmd([[set conceallevel=0]])
+  end
+})
+autocmd({ "InsertLeave" }, {
+  pattern = "*",
+  group = conceal_level,
+  callback = function()
+    vim.cmd([[set conceallevel=3]])
+  end
 })
 
 -- Disable semantic highlights ------------------------------------------------
@@ -150,4 +160,3 @@ autocmd("FileType", {
 --   desc = 'Clear LSP highlight groups',
 --   callback = hide_semantic_highlights,
 -- })
-
