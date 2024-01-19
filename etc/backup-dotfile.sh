@@ -5,7 +5,7 @@ bold="\e[1m"
 end="\e[0m"
 
 ### Objetivos
-folder="GIT/"
+folder="HECDIN/Git/"
 # nvim
 nvim_target="${HOME}/${folder}Dotfiles/NVIM/nvim/"
 nvim_data="${HOME}/.config/nvim/"

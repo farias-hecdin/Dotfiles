@@ -1,4 +1,5 @@
 {
+  "follow-md-links.nvim": { "branch": "main", "commit": "349c22ad5dea0d1bda0eb812efb35fabcd1a1c6c" },
   "lazy.nvim": { "branch": "main", "commit": "96584866b9c5e998cbae300594d0ccfd0c464627" },
   "lsp-zero.nvim": { "branch": "v3.x", "commit": "68e2e00387a2d93fc54dfa646e2847c4fa4773d3" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "0989bdf4fdf7b5aa4c74131d7ffccc3f399ac788" },

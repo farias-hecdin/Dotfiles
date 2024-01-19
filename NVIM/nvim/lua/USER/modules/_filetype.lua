@@ -1,4 +1,5 @@
 local D = require("USER.modules.utils.dir")
+local vim = vim
 
 -- SUMMARY
 -- nvim-jdtls

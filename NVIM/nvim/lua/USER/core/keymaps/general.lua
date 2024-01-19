@@ -19,6 +19,8 @@ end
 -- * terminal mode = "t",
 -- * command mode  = "c",
 
+map("n", "<leader>#", ":set relativenumber nofoldenable<cr>", {desc = "Enable number column"})
+
 -- Code runner
 map("n", "<leader>R", ":RunCode<cr>", {desc = "Run Code"})
 
@@ -33,7 +35,7 @@ map("n", "<leader>ff", ":MiniPickFiles<cr>",       {desc = "Fuzzy finder: files"
 
 -- Other
 map("n", "<leader>@", function() load_current_buffer() end, {desc = "Load current buffer"})
-map("n", "<leader>#", ":Messages messages<cr>",             {desc = "Show message log"})
+map("n", "<leader>$", ":Messages messages<cr>",             {desc = "Show message log"})
 
 -- Lsp diagnotic
 map("n", ",E", ":DiagnosticEnable<cr>",                    {desc = "LSP: enabled"})
@@ -155,8 +157,8 @@ map("v", "<leader>.h", "<gv", {desc = "Tab: left"})
 map("v", "<leader>.l", ">gv", {desc = "Tab: right"})
 
 -- Move Lines
-map("n", "K", ":m .-2<cr>==",     {desc = "Move: line up"})
-map("n", "J", ":m .+1<cr>==",     {desc = "Move: line down"})
+map("n", ",k", ":m .-2<cr>==",     {desc = "Move: line up"})
+map("n", ",j", ":m .+1<cr>==",     {desc = "Move: line down"})
 map("v", "K", ":m '<-2<cr>gv=gv", {desc = "Move: lines up"})
 map("v", "J", ":m '>+1<cr>gv=gv", {desc = "Move: lines down"})
 

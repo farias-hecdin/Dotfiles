@@ -15,7 +15,6 @@ return {
     end,
     config = function()
       require("nvim-treesitter.configs").setup({
-        ignore_install = { "css" },
         highlight = {
           enable = true, -- false will disable the whole extension
           disable = function(lang, bufnr) -- Disable in large buffers
@@ -25,11 +24,15 @@ return {
             end
           end,
         },
+        autotag = { enable = true },
         indent = {
           enable = true,
-          disable = { "python", "shell" }
+          disable = {"python", "shell"}
         },
-        autotag = { enable = true },
+        ignore_install = {
+          "css",
+          "json",
+        },
         ensure_installed = {
           "astro",
           "bash",
