@@ -10,11 +10,12 @@ return {
     'williamboman/mason.nvim',
     cmd = "Mason",
     build = ":MasonUpdate",
-    dependencies = {
-      { 'williamboman/mason-lspconfig.nvim', },
-    },
+    dependencies = { 'williamboman/mason-lspconfig.nvim' },
     config = function()
+      local lsp_zero = require('lsp-zero')
+
       require('mason').setup({
+        max_concurrent_installers = 1,
         ui = {
           border = "rounded",
           icons = {
@@ -23,25 +24,49 @@ return {
             package_uninstalled = "󰚌 ",
           },
         },
-        max_concurrent_installers = 1,
       })
       require('mason-lspconfig').setup({
         ensure_installed = {},
         handlers = {
-          require('lsp-zero').default_setup,
+          lsp_zero.default_setup,
+          jdtls = lsp_zero.noop,
         },
       })
     end
   },
   {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre" },
+    cmd = 'LspInfo',
+    event = {'BufReadPre', 'BufNewFile'},
     config = function()
+      -- Lsp-zero -------------------------------------------------------------
+      local lsp_zero = require('lsp-zero')
+      lsp_zero.extend_lspconfig()
+      lsp_zero.on_attach(function(client, bufnr)
+        lsp_zero.default_keymaps({ buffer = bufnr })
+      end)
+
+      local function enable_lsp(lang, servers)
+        local path = "USER.modules.lsp."
+        require(path .. lang).lsp(servers)
+      end
+
+      enable_lsp("bash", { "bashls" })
+      enable_lsp("css", { "cssls" })
+      enable_lsp("go", { "gopls" })
+      enable_lsp("html", { "emmet_ls" })
+      enable_lsp("java", { "jdtls" })
+      enable_lsp("javascript", { "astro", "jsonls", "svelte", "tsserver" })
+      enable_lsp("lua", { "lua_ls" })
+      enable_lsp("php", { "phpactor" })
+      enable_lsp("python", { "pyright" })
+
+      -- Lsp-config -----------------------------------------------------------
+      local lspconfig = require("lspconfig")
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      require("lspconfig")
-      -- Add a border to `:LspInfo` window
+      -- add a border to `:LspInfo` window
       require('lspconfig.ui.windows').default_options.border = 'rounded'
-      -- (https://www.reddit.com/r/neovim/comments/161tv8l/lsp_has_gotten_very_slow)
+      -- thanks to: https://www.reddit.com/r/neovim/comments/161tv8l/lsp_has_gotten_very_slow
       capabilities.textDocument.completion.completionItem.snippetSupport = true
       capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
 
@@ -60,7 +85,7 @@ return {
           local opt_type_definition = { buffer = ev.buf, desc = "LSP: show Type definition" }
           local opt_rename = { buffer = ev.buf, desc = "LSP: rename" }
           local opt_open_float = { buffer = ev.buf, desc = "LSP: show Type diagnostic" }
-          local opt_formatter = { buffer = ev.buf, desc = "LSP: formatter" }
+          -- local opt_formatter = { buffer = ev.buf, desc = "LSP: formatter" }
 
           map.set("n", ",e", vimlsp.declaration, opt_declaration)
           map.set("n", ",d", vimlsp.definition, opt_definition)

@@ -16,7 +16,10 @@ return {
   {
     -- url = "https://github.com/jsongerber/nvim-px-to-rem.git",
     dir = D.plugin .. "nvim-px-to-rem",
-    cmd = { "PxToRemCursor", "PxToRemLine" },
+    cmd = {
+      "PxToRemCursor",
+      "PxToRemLine"
+    },
     ft = { 'css' },
     config = function()
       require("nvim-px-to-rem").setup({

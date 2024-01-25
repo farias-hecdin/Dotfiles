@@ -4,8 +4,8 @@ local vim = vim
 -- SUMMARY
 -- multiple-cursors.nvim
 -- mini.surround
+-- mini.align
 -- search-replace.nvim
--- align.nvim
 
 return {
   {
@@ -16,7 +16,7 @@ return {
       "MultipleCursorsAddUp",
     },
     keys = {
-      { "<C-Down>", ":MultipleCursorsAddDown<CR>", mode = {"n", "i"}, desc = "MultipleCursors: add down" },
+      { "<C-Down>", ":MultipleCursorsAddDown<CR>", mode = {"n", "i"}, desc = "MultipleCursors: add down"},
       { "<C-Up>", ":MultipleCursorsAddUp<CR>", mode = {"n", "i"} , desc = "MultipleCursors: add up"},
       { "<C-j>", ":MultipleCursorsAddDown<CR>" , desc = "MultipleCursors: add down"},
       { "<C-k>", ":MultipleCursorsAddUp<CR>" , desc = "MultipleCursors: add up"},
@@ -62,6 +62,15 @@ return {
     end
   },
   {
+    -- url = "https://github.com/echasnovski/mini.align.git",
+    dir = D.plugin .. "mini.align",
+    keys = {
+      { "ga", mode = "v", desc = "align" },
+      { "gA", mode = "v", desc = "align with preview" }
+    },
+    config = true,
+  },
+  {
     -- url = "https://github.com/roobert/search-replace.nvim.git",
     dir = D.plugin .. "search-replace.nvim",
     keys = {
@@ -82,38 +91,5 @@ return {
       vim.o.inccommand = "split"
     end
   },
-  {
-    -- url = "https://github.com/Vonr/align.nvim.git",
-    dir = D.plugin .. "align.nvim",
-    keys = {
-      { "aa", mode = "v" },
-      { "as", mode = "v" },
-      { "aw", mode = "v" },
-      { "ar", mode = "v" },
-    },
-    config = function()
-      local NS = { noremap = true, silent = true }
-      local map = vim.keymap.set
-
-      -- Aligns to 1 character, looking left
-      map("x", "aa", function() require("align").align_to_char({
-        length = 1,
-      }) end, NS)
-      -- Aligns to 2 characters, looking left and with previews
-      map("x", "as", function() require("align").align_to_char({
-        preview = true,
-        length = 2,
-      }) end, NS)
-      -- Aligns to a string, looking left and with previews
-      map("x", "aw", function() require("align").align_to_string({
-        preview = true,
-        regex = false,
-      }) end, NS)
-      -- Aligns to a Lua pattern, looking left and with previews
-      map("x", "ar", function() require("align").align_to_string({
-        preview = true,
-        regex = true,
-      }) end, NS)
-    end
-  },
+  -- FIX: url = "https://github.com/Vonr/align.nvim.git",
 }

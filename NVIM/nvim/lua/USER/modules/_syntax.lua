@@ -6,7 +6,9 @@ local vim = vim
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    commit = "65ef62092ef997d2ecf68ede01a0afbda17808c3",
     event = { "VeryLazy" },
+    pin = true,
     build = ":TSUpdate",
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     init = function(plugin)
@@ -34,19 +36,15 @@ return {
           "json",
         },
         ensure_installed = {
-          "astro",
           "bash",
           "go",
           "html",
           "java",
-          "javascript",
+          "javascript", "astro", "typescript",
           "lua",
-          "markdown",
-          "markdown_inline",
+          "markdown", "markdown_inline",
           "php",
-          "python",
           "sql",
-          "typescript",
         },
         auto_install = false,
       })

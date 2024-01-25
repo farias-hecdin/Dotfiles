@@ -46,7 +46,7 @@ return {
         { mode = "v" })
 
       -- Setup ----------------------------------------------------------------
-      require("which-key").setup({
+      which_key.setup({
         plugins = {
           marks = true,
           registers = true,

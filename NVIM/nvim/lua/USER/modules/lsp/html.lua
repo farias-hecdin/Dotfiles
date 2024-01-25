@@ -12,6 +12,7 @@ M.lsp = function(servers)
           "html",
           "javascript",
           "javascriptreact",
+          "php",
           "svelte",
           "typescriptreact",
           "vue",

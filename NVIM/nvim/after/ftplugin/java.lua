@@ -107,13 +107,27 @@ local config = {
   -- },
   settings = {
     java = {
+      completion = {
+        favoriteStaticMembers = {
+          'org.hamcrest.MatcherAssert.assertThat',
+          'org.hamcrest.Matchers.*',
+          'org.hamcrest.CoreMatchers.*',
+          'org.junit.jupiter.api.Assertions.*',
+          'java.util.Objects.requireNonNull',
+          'java.util.Objects.requireNonNullElse',
+          'org.mockito.Mockito.*',
+        },
+      },
+      contentProvider = {
+        preferred = 'fernflower',
+      },
       eclipse = { downloadSources = true },
-      maven = { downloadSources = true },
-      implementationsCodeLens = { enabled = true },
-      referencesCodeLens = { enabled = true },
-      references = { includeDecompiledSources = true },
-      signatureHelp = { enabled = true },
       extendedClientCapabilities = require("jdtls").extendedClientCapabilities,
+      implementationsCodeLens = { enabled = true },
+      maven = { downloadSources = true },
+      references = { includeDecompiledSources = true },
+      referencesCodeLens = { enabled = true },
+      signatureHelp = { enabled = true },
       sources = {
         organizeImports = {
           starThreshold = 9999,

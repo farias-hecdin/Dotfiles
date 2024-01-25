@@ -90,7 +90,7 @@ map("n", "<leader>we", ":set wrap<cr>",   {desc = "Wrap: enabled"})
 map("n", "<leader>wd", ":set nowrap<cr>", {desc = "Wrap: disabled"})
 
 -- Markdown
-map("v", "<C-B>", ":lua require('markdowny').bold()<cr>",   {desc = "Markdown: bold",})
+map("v", "<C-N>", ":lua require('markdowny').bold()<cr>",   {desc = "Markdown: bold",})
 map("v", "<C-I>", ":lua require('markdowny').italic()<cr>", {desc = "Markdown: italic"})
 map("v", "<C-L>", ":lua require('markdowny').link()<cr>",   {desc = "Markdown: link"})
 map("n", "<leader>Mt", ":MdTocToggle<cr>",                  {desc = "Markdown: open TOC"})

@@ -8,7 +8,8 @@ local vim = vim
 
 return {
   {
-    url = "https://github.com/jghauser/follow-md-links.nvim.git",
+    -- url = "https://github.com/jghauser/follow-md-links.nvim.git",
+    dir = D.plugin .. "follow-md-links.nvim",
     ft = "markdown",
     config = function()
       vim.keymap.set('n', '<bs>', ':edit #<cr>', { silent = true })
@@ -17,7 +18,7 @@ return {
   {
     -- url = "https://github.com/antonk52/markdowny.nvim.git",
     dir = D.plugin .. "markdowny.nvim",
-    keys = { "<C-i>", "<C-l>", "<C-b>" },
+    keys = { "<C-i>", "<C-l>", "<C-n>" },
     ft = "markdown",
     config = function()
       require("markdowny").setup()
