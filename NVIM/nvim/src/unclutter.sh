@@ -11,11 +11,11 @@ gray="\e[37m"
 bold="\e[1m"
 end="\e[0m"
 
-# Get the current directory.
+### Get the current directory.
 DIR=$(pwd)
 list=()
 
-# Find all folders and files in the current directory and its subdirectories.
+### Find all folders and files in the current directory and its subdirectories.
 list+=($(find "$DIR" -type f -name "*.jpeg" \
   -o -name ".git" \
   -o -name ".github" \
@@ -54,5 +54,5 @@ if [[ ${#list[@]} -gt 0 ]]; then
   echo ""
 fi
 
-# Print a success message.
+### Print a success message.
 echo -e "  ${bold}Successfully deleted unwanted folders and files.${end}"

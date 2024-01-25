@@ -37,9 +37,13 @@ map("i", "^jA", "alert(_)<left>", {desc = "Alert"})
 map("i", "^ja", "const name = () => {_}<left>", {desc = "Arrow function"})
 map("i", "^ji", "import {_} from '_'<left>", {desc = "Import"})
 
--- React
+-- Javascript, React
 map("i", "^rc", "className={_}<left>", {desc = "ClassName"})
 map("i", "^re", "useEffect(() => {_}, [])<left><left><left><left><left><left>", {desc = "useEffect"})
 
 -- CSS
 map("i", "^co", "* {outline: 1px dashed blue;}", {desc = "* {outline: … }"})
+
+
+-- Php
+map("i", "^pi", "<?php_?><left><left>", {desc = ""})

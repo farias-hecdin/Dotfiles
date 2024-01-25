@@ -9,7 +9,6 @@ return {
   {
     -- url = "https://github.com/utilyre/sentiment.nvim.git",
     dir = D.plugin .. "sentiment.nvim",
-    version = "*",
     event = "InsertEnter",
     opts = {},
     init = function()
