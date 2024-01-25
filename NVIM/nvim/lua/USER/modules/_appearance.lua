@@ -20,7 +20,7 @@ return {
     -- url = "https://github.com/echasnovski/mini.tabline.git",
     dir = D.plugin .. "mini.tabline",
     event = { "BufReadPre" },
-     config = function()
+    config = function()
       require("mini.tabline").setup({
         show_icons = true,
         tabpage_section = "right",
@@ -117,9 +117,9 @@ return {
           right = { "linter", "lsp_name", " ", "diagnostics", "lazy", "-clock" }
         },
         inactive_sections = {
-            left = { '' },
-            mid = { 'file_name' },
-            right = { '' },
+          left = { '' },
+          mid = { 'file_name' },
+          right = { '' },
         },
         lsp_symbols = {
           Error = " ",

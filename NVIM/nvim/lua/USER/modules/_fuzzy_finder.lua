@@ -25,5 +25,10 @@ return {
         window = { config = win_config }
       })
     end
-  }
+  },
+  {
+    -- url = "https://github.com/echasnovski/mini.extra.git",
+    dir = D.plugin .. "mini.extra",
+    config = false
+  },
 }

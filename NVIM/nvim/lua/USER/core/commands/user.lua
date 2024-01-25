@@ -31,11 +31,11 @@ usercmd("MiniNotifyHistory", function()
 end, { desc = "Mini_NotifyHistory", bang = true, nargs = 0, bar = true })
 
 -- Treesitter
-usercmd("TSEnableHighlight", function()
+usercmd("TSHighlightEnable", function()
   vim.cmd("TSBufEnable highlight")
 end, { desc = "Treesitter: enabled", bang = true })
 
-usercmd("TSDisableHighlight", function()
+usercmd("TSHighlightDisable", function()
   vim.cmd("TSBufDisable highlight")
 end, { desc = "Treesitter: disabled", bang = true })
 
@@ -57,19 +57,24 @@ usercmd("RemoveExtraSpaces", function()
   end
 end, { desc = "Remove extra spaces", bang = true })
 
--- Change `dir` prefix for `url` property
-usercmd("FlagLazyDirToUrl", function()
+-- Change prefix to `url` or `dir` property
+usercmd("FlagLazyPluginLocalOrhosted", function(args)
+  local opts = args.fargs[1]
+  -- Change "dir" to "url"
+  if (opts == 'l') then
     vim.cmd("%s/dir =/-- dir =/gcI")
     vim.cmd("%s/-- url =/url =/gcI")
-end, { desc = "Change `dir` prefix for `url`", bang = true })
-
-usercmd("FlagLazyUrlToDir", function()
-  vim.cmd("%s/-- dir =/dir =/gcI")
-  vim.cmd("%s/url =/-- url =/gcI")
-end, { desc = "Change `url` prefix for `dir`", bang = true })
+  -- Change "url" to "dir"
+  elseif (opts == 'h') then
+    vim.cmd("%s/-- dir =/dir =/gcI")
+    vim.cmd("%s/url =/-- url =/gcI")
+  else
+    vim.print('Available options: [l]ocal or [h]osted')
+  end
+end, { desc = "Change prefix to `url` or `dir`", nargs = "*" })
 
 -- Enable a pomodoro
-vim.api.nvim_create_user_command('PomodoroStart', function(args)
+usercmd('PomodoroStart', function(args)
   local argTime = args.fargs[1]
   local argMsg = args.fargs[2] or 'Default'
   local time = tonumber(argTime) * 60
@@ -90,7 +95,7 @@ vim.api.nvim_create_user_command('PomodoroStart', function(args)
 end, { nargs = "*" })
 
 -- Reload Colorscheme
-vim.api.nvim_create_user_command('ReloadColorscheme', function()
+usercmd('ReloadColorscheme', function()
   vim.cmd.TSDisable('highlight')
   vim.cmd.TSEnable('highlight')
   local current_colorscheme = vim.g.colors_name
