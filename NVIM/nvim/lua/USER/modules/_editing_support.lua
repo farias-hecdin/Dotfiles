@@ -92,14 +92,12 @@ return {
           -- Extra highlights
           -- @param, @returns and more
           -- #THIS: or !THIS: or ¡THIS:
-          -- !-----!: or !=======!:
           ]]
           docs     = { pattern = {"%s()@[%l-]+()"}, group = "MiniHipatternsDocs" },
           show     = { pattern = {"^+%s().+()"}, group = "minihipatternshighlight" },
-          split    = { pattern = {"![-_=]+!:"}, group = "MiniHipatternsSplit" },
-          word     = { pattern = {"![%a%d_-\\.]+:"}, group = "MiniHipatternsWord" },
-          word2    = { pattern = {"¡[%a%d_-\\.]+:"}, group = "MiniHipatternsWord2" },
-          word3    = { pattern = {"#[%a%d_-\\.]+:"}, group = "MiniHipatternsWord3" },
+          color    = { pattern = {"![%a%d-_=\\.]+:"}, group = "MiniHipatternsColor" },
+          color2   = { pattern = {"¡[%a%d-_=\\.]+:"}, group = "MiniHipatternsColor2" },
+          color3   = { pattern = {"#[%a%d-_=\\.]+:"}, group = "MiniHipatternsColor3" },
           --[[
           -- Highlight color systems using that color
           -- #4095BF

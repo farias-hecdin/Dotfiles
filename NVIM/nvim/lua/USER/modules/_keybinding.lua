@@ -1,4 +1,5 @@
 local D = require("USER.modules.utils.dir")
+local vim = vim
 
 -- SUMMARY
 -- which-key.nvim
@@ -10,42 +11,12 @@ return {
     event = "InsertEnter",
     keys = { { "<leader>", mode = { 'n', 'v'} } },
     config = function()
+      -- Enable Mini.plugins with <leader> key --------------------------------
+      require('mini.extra').setup()
+
+      -- Which-key ------------------------------------------------------------
       local which_key = require("which-key")
 
-      -- Register -------------------------------------------------------------
-      which_key.register({
-          ["<leader>."]  = { name = "Move" },
-          ["<leader>C"]  = { name = "Cmp" },
-          ["<leader>F!"] = { name = "Forced" },
-          ["<leader>M"]  = { name = "Markdown" },
-          ["<leader>T"]  = { name = "Treesitter" },
-          ["<leader>b"]  = { name = "Buffer" },
-          ["<leader>c"]  = { name = "ColorCommander" },
-          ["<leader>e"]  = { name = "Explorer" },
-          ["<leader>f"]  = { name = "Fuzzy Finder" },
-          ["<leader>g"]  = { name = "Git" },
-          ["<leader>l"]  = { name = "LSP" },
-          ["<leader>m"]  = { name = "Select/Marks" },
-          ["<leader>n"]  = { name = "Number" },
-          ["<leader>p"]  = { name = "Paste" },
-          ["<leader>s"]  = { name = "Split/Window" },
-          ["<leader>t"]  = { name = "Tabs" },
-          ["<leader>w"]  = { name = "Wrap" },
-          ["<leaer>F"]   = { name = "File" },
-          ["gd"]         = { name = "LSP" },
-          ["gz"]         = { name = "Surround" },
-          ["z"]          = { name = "Fold" },
-        },
-        { mode = "n" })
-
-      which_key.register({
-          ["<leader>."] = { name = "Tabs/move" },
-          ["<leader>l"] = { name = "Letter" },
-          ["<leader>m"] = { name = "Select" },
-        },
-        { mode = "v" })
-
-      -- Setup ----------------------------------------------------------------
       which_key.setup({
         plugins = {
           marks = true,
@@ -79,6 +50,38 @@ return {
           align = "left",
         },
       })
+      -- Register
+      which_key.register({
+        ["<leader>."]  = { name = "Move" },
+        ["<leader>C"]  = { name = "Cmp" },
+        ["<leader>F!"] = { name = "Forced" },
+        ["<leader>M"]  = { name = "Markdown" },
+        ["<leader>T"]  = { name = "Treesitter" },
+        ["<leader>b"]  = { name = "Buffer" },
+        ["<leader>c"]  = { name = "ColorCommander" },
+        ["<leader>e"]  = { name = "Explorer" },
+        ["<leader>f"]  = { name = "Fuzzy Finder" },
+        ["<leader>g"]  = { name = "Git" },
+        ["<leader>l"]  = { name = "LSP" },
+        ["<leader>m"]  = { name = "Select/Marks" },
+        ["<leader>n"]  = { name = "Number" },
+        ["<leader>p"]  = { name = "Paste" },
+        ["<leader>s"]  = { name = "Split/Window" },
+        ["<leader>t"]  = { name = "Tabs" },
+        ["<leader>w"]  = { name = "Wrap" },
+        ["<leaer>F"]   = { name = "File" },
+        ["gd"]         = { name = "LSP" },
+        ["gz"]         = { name = "Surround" },
+        ["z"]          = { name = "Fold" },
+      },
+        { mode = "n" })
+
+      which_key.register({
+        ["<leader>."] = { name = "Tabs/move" },
+        ["<leader>l"] = { name = "Letter" },
+        ["<leader>m"] = { name = "Select" },
+      },
+        { mode = "v" })
     end
   }
 }
