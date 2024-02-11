@@ -23,7 +23,9 @@ list+=($(find "$DIR" -type f -name "*.jpeg" \
   -o -name "_test" \
   -o -name "test" \
   -o -name "tests" \
+  -o -name "*.css" \
   -o -name "*.gif" \
+  -o -name "*.html" \
   -o -name "*.jpg" \
   -o -name "*.mp4" \
   -o -name "*.png" \
@@ -34,13 +36,13 @@ list+=($(find "$DIR" -type f -name "*.jpeg" \
   -o -name ".luacheckrc" \
   -o -name ".luarc.json" \
   -o -name ".npmrc" \
+  -o -name ".pre-commit-config.yaml" \
   -o -name ".themisrc" \
   -o -name ".vimrc" \
-  -o -name "Makefile" \
   -o -name "CHANGELOG.md" \
   -o -name "TODO.md" \
   -o -name "CONTRIBUTING.md" \
-  -o -name ".pre-commit-config.yaml" \
+  -o -name "Makefile" \
 ))
 
 if [[ ${#list[@]} -gt 0 ]]; then

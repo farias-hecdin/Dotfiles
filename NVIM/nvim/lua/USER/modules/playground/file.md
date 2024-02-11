@@ -6,4 +6,3 @@ A text
 ```javascript
 console.log("Hello World")
 ```
-
