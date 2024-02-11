@@ -14,11 +14,13 @@ if not miniNotify_ok then
   return
 end
 
-miniNotify.setup({
-  lsp_progress = {
-    enable = false,
+miniNotify.setup(
+  {
+    lsp_progress = {
+      enable = false
+    }
   }
-})
+)
 
 -- Jstls
 local jdtls_ok, jdtls = pcall(require, "jdtls")
@@ -48,7 +50,7 @@ elseif vim.fn.has "unix" == 1 then
 elseif vim.fn.has "win32" == 1 then
   OS_name = "win"
 else
-  vim.notify("Unsupported OS", vim.log.levels.WARN, { title = "Jdtls" })
+  vim.notify("Unsupported OS", vim.log.levels.WARN, {title = "Jdtls"})
 end
 
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
@@ -62,7 +64,7 @@ local root_markers = {
   "pom.xml",
   "build.gradle",
   "settings.gradle",
-  "build.xml",
+  "build.xml"
 }
 
 -- See `:help vim.lsp.start_client` for an overview of the supported `config` options.
@@ -91,9 +93,8 @@ local config = {
     -- INFO: This are OS specific settings, check the documentation
     "-configuration",
     jdtls_path .. "config_" .. OS_name,
-
     "-data",
-    workspace_dir,
+    workspace_dir
   },
   -- This is the default if not provided, you can remove it. Or adjust as needed.
   -- One dedicated LSP server & client will be started per unique root_dir
@@ -109,34 +110,34 @@ local config = {
     java = {
       completion = {
         favoriteStaticMembers = {
-          'org.hamcrest.MatcherAssert.assertThat',
-          'org.hamcrest.Matchers.*',
-          'org.hamcrest.CoreMatchers.*',
-          'org.junit.jupiter.api.Assertions.*',
-          'java.util.Objects.requireNonNull',
-          'java.util.Objects.requireNonNullElse',
-          'org.mockito.Mockito.*',
-        },
+          "org.hamcrest.MatcherAssert.assertThat",
+          "org.hamcrest.Matchers.*",
+          "org.hamcrest.CoreMatchers.*",
+          "org.junit.jupiter.api.Assertions.*",
+          "java.util.Objects.requireNonNull",
+          "java.util.Objects.requireNonNullElse",
+          "org.mockito.Mockito.*"
+        }
       },
       contentProvider = {
-        preferred = 'fernflower',
+        preferred = "fernflower"
       },
-      eclipse = { downloadSources = true },
+      eclipse = {downloadSources = true},
       extendedClientCapabilities = require("jdtls").extendedClientCapabilities,
-      implementationsCodeLens = { enabled = true },
-      maven = { downloadSources = true },
-      references = { includeDecompiledSources = true },
-      referencesCodeLens = { enabled = true },
-      signatureHelp = { enabled = true },
+      implementationsCodeLens = {enabled = true},
+      maven = {downloadSources = true},
+      references = {includeDecompiledSources = true},
+      referencesCodeLens = {enabled = true},
+      signatureHelp = {enabled = true},
       sources = {
         organizeImports = {
           starThreshold = 9999,
-          staticStarThreshold = 9999,
-        },
+          staticStarThreshold = 9999
+        }
       },
-      flags = { allow_incremental_sync = true },
+      flags = {allow_incremental_sync = true}
     }
-  },
+  }
 }
 
 -- vim.cmd [[
@@ -151,3 +152,4 @@ local config = {
 -- This starts a new client & server,
 -- or attaches to an existing client & server depending on the `root_dir`.
 jdtls.start_or_attach(config)
+

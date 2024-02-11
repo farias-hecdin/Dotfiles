@@ -9,8 +9,9 @@ local vim = vim
 
 return {
   {
-    'mfussenegger/nvim-jdtls',
-    ft = { 'java' },
+    url = "https://github.com/mfussenegger/nvim-jdtls",
+    -- dir = D.plugin .. "nvim-jdtls",
+    ft = {"java"},
     config = true
   },
   {
@@ -20,15 +21,17 @@ return {
       "PxToRemCursor",
       "PxToRemLine"
     },
-    ft = { 'css' },
+    ft = {"css"},
     config = function()
-      require("nvim-px-to-rem").setup({
-        root_font_size = 16,
-        decimal_count = 4,
-        show_virtual_text = true,
-        add_cmp_source = false,
-        disable_keymaps = true,
-     })
+      require("nvim-px-to-rem").setup(
+        {
+          root_font_size = 16,
+          decimal_count = 4,
+          show_virtual_text = true,
+          add_cmp_source = false,
+          disable_keymaps = true
+        }
+      )
     end
   },
   {
@@ -43,22 +46,25 @@ return {
       "ColorToLch",
       "ColorToRgb"
     },
-    ft = { 'lua', 'css' },
+    ft = {"lua", "css"},
     config = function()
-      require('colorcommander').setup({
-        show_virtual_text = true,
-        show_virtual_text_to_hex = "lch",
-        disable_keymaps = false,
-        filetypes = { "css", "lua" },
-      })
-    end,
+      require("colorcommander").setup(
+        {
+          show_virtual_text = true,
+          show_virtual_text_to_hex = "lch",
+          disable_keymaps = false,
+          filetypes = {"css", "lua"}
+        }
+      )
+    end
   },
   {
     -- url = "https://github.com/wuelnerdotexe/vim-astro.git",
     dir = D.plugin .. "vim-astro",
-    ft = { "astro" },
+    ft = {"astro"},
     config = function()
       vim.cmd([[let g:astro_typescript = "enable"]])
-    end,
-  },
+    end
+  }
 }
+

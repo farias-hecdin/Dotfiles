@@ -1,0 +1,1 @@
+local a={}local b=vim.log.levels;local c=vim.notify;local d=vim.schedule;a.info=function(e,f)d(function()c(e,b.INFO,f or{title="url-open"})end)end;a.warn=function(e,f)d(function()c(e,b.WARN,f or{title="url-open"})end)end;a.error=function(e,f)d(function()c(e,b.ERROR,f or{title="url-open"})end)end;return a

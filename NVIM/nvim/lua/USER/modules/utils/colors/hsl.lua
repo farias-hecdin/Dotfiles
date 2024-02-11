@@ -34,10 +34,16 @@ function M.rgbToHsl(r, g, b)
     h, s = 0, 0
   else
     local d = max - min
-    if l > 0.5 then s = d / (2 - max - min) else s = d / (max + min) end
+    if l > 0.5 then
+      s = d / (2 - max - min)
+    else
+      s = d / (max + min)
+    end
     if max == r then
       h = (g - b) / d
-      if g < b then h = h + 6 end
+      if g < b then
+        h = h + 6
+      end
     elseif max == g then
       h = (b - r) / d + 2
     elseif max == b then
@@ -66,21 +72,35 @@ function M.hslToRgb(h, s, l)
     r, g, b = l, l, l
   else
     local function hue2rgb(p, q, t)
-      if t < 0 then t = t + 1 end
-      if t > 1 then t = t - 1 end
-      if t < 1/6 then return p + (q - p) * 6 * t end
-      if t < 1/2 then return q end
-      if t < 2/3 then return p + (q - p) * (2/3 - t) * 6 end
+      if t < 0 then
+        t = t + 1
+      end
+      if t > 1 then
+        t = t - 1
+      end
+      if t < 1 / 6 then
+        return p + (q - p) * 6 * t
+      end
+      if t < 1 / 2 then
+        return q
+      end
+      if t < 2 / 3 then
+        return p + (q - p) * (2 / 3 - t) * 6
+      end
       return p
     end
 
     local q
-    if l < 0.5 then q = l * (1 + s) else q = l + s - l * s end
+    if l < 0.5 then
+      q = l * (1 + s)
+    else
+      q = l + s - l * s
+    end
     local p = 2 * l - q
 
-    r = hue2rgb(p, q, h + 1/3)
+    r = hue2rgb(p, q, h + 1 / 3)
     g = hue2rgb(p, q, h)
-    b = hue2rgb(p, q, h - 1/3)
+    b = hue2rgb(p, q, h - 1 / 3)
   end
 
   return r * 255, g * 255, b * 255
@@ -94,7 +114,7 @@ end
  * @return  String      The hex representation
 ]]
 function M.hslToHex(h, s, l)
-  local r, g, b = M.hslToRgb(h/360, s/100, l/100)
+  local r, g, b = M.hslToRgb(h / 360, s / 100, l / 100)
   return string.format("#%02x%02x%02x", r, g, b)
 end
 
@@ -111,3 +131,4 @@ end
 -- end
 
 return M
+

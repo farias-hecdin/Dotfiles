@@ -13,22 +13,25 @@ return {
     opts = {},
     init = function()
       vim.g.loaded_matchparen = 1
-    end,
+    end
   },
   {
     -- url = "https://github.com/echasnovski/mini.jump2d.git",
     dir = D.plugin .. "mini.jump2d",
     keys = {
-      { mode = "n", ",,", desc = "Jump 2d" },
-      { mode = "v", ",,", desc = "Jump 2d" }
+      {mode = "n", ",,", desc = "Jump 2d"},
+      {mode = "v", ",,", desc = "Jump 2d"}
     },
     config = function()
-      require("mini.jump2d").setup({
-        labels = "abcdefghijklmnopqrstuvwxyz1234567890",
-        mappings = {
-          start_jumping = ",,",
-        },
-      })
+      require("mini.jump2d").setup(
+        {
+          labels = "abcdefghijklmnopqrstuvwxyz1234567890",
+          mappings = {
+            start_jumping = ",,"
+          }
+        }
+      )
     end
   }
 }
+

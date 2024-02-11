@@ -50,3 +50,4 @@ W.lint_progress = function()
 end
 
 return W
+
