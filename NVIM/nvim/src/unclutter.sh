@@ -23,6 +23,7 @@ list+=($(find "$DIR" -type f -name "*.jpeg" \
   -o -name "_test" \
   -o -name "test" \
   -o -name "tests" \
+  -o -name "*.log" \
   -o -name "*.css" \
   -o -name "*.gif" \
   -o -name "*.html" \

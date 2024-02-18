@@ -22,17 +22,10 @@ return {
       "PxToRemLine"
     },
     ft = {"css"},
-    config = function()
-      require("nvim-px-to-rem").setup(
-        {
-          root_font_size = 16,
-          decimal_count = 4,
-          show_virtual_text = true,
-          add_cmp_source = false,
-          disable_keymaps = true
-        }
-      )
-    end
+    opts = {
+      add_cmp_source = false,
+      disable_keymaps = true
+    }
   },
   {
     -- url = "https://github.com/farias-hecdin/ColorCommander.nvim",
@@ -47,16 +40,12 @@ return {
       "ColorToRgb"
     },
     ft = {"lua", "css"},
-    config = function()
-      require("colorcommander").setup(
-        {
-          show_virtual_text = true,
-          show_virtual_text_to_hex = "lch",
-          disable_keymaps = false,
-          filetypes = {"css", "lua"}
-        }
-      )
-    end
+    opts = {
+      show_virtual_text = true,
+      show_virtual_text_to_hex = "lch",
+      disable_keymaps = false,
+      filetypes = {"css", "lua"}
+    }
   },
   {
     -- url = "https://github.com/wuelnerdotexe/vim-astro.git",

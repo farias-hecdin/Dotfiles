@@ -1,13 +1,12 @@
 local vim = vim
 local map = vim.keymap.set
 
--- Automatically Pair brackets, parethesis, quotes and more
+-- Automatically Pair brackets, parethesis, quotes and more -------------------
 
--- General
 map("i", "^v", "var(_)<left>", {desc = "var(_)"})
 map("i", "^$", "${_}<left>", {desc = "${_}"})
 
--- Vocals ---------------------------------------------------------------------------
+-- Vocals -----------------------------
 local accented_vocals = {
   ["A"] = "Á",
   ["a"] = "á",
@@ -25,7 +24,7 @@ for vocal, accented in pairs(accented_vocals) do
   map("i", "^´" .. vocal, accented, {desc = ("Change '%s' to '%s'"):format(vocal, accented)})
 end
 
--- Compound -------------------------------------------------------------------
+-- Compound ---------------------------
 map("i", "^s1", "---------------------------------------------------------------------------", {desc = "--…"})
 map("i", "^s2", "===========================================================================", {desc = "==…"})
 map("i", "^s3", "###########################################################################", {desc = "##…"})
@@ -38,18 +37,18 @@ map("i", "^=", "===", {desc = "==="})
 map("i", "^#", "###", {desc = "###"})
 map("i", "^`", "```", {desc = "```"})
 
--- Markdown -------------------------------------------------------------------
+-- Markdown ---------------------------
 map("i", "^mc", "```_```<left><left><left>", {desc = "```_```"})
 
--- Lua and Nvim ---------------------------------------------------------------
+-- Lua and Nvim -----------------------
 map("i", "^lp", "print(_)<left>", {desc = "print(_)"})
 map("i", "^vp", "vim.print(_)<left>", {desc = "vim.print(_)"})
 map("i", "^vl", "log.info(_)<left>", {desc = "log.info(_)"})
 
--- Html -----------------------------------------------------------------------
+-- Html -------------------------------
 map("i", "^ht", "</>", {desc = "</>"})
 
--- Javascript -----------------------------------------------------------------
+-- Javascript -------------------------
 map("i", "^jc", "console.log(_)<left>", {desc = "Console log"})
 map("i", "^jA", "alert(_)<left>", {desc = "Alert"})
 map("i", "^ja", "const name = () => {_}<left>", {desc = "Arrow function"})
@@ -59,10 +58,10 @@ map("i", "^ji", "import {_} from '_'<left>", {desc = "Import"})
 map("i", "^rc", "className={_}<left>", {desc = "ClassName"})
 map("i", "^re", "useEffect(() =><CR>{_}, [])<left><left><left><left><left><left>", {desc = "useEffect"})
 
--- CSS ------------------------------------------------------------------------
+-- CSS --------------------------------
 map("i", "^co", "* {outline: 1px dashed blue;}", {desc = "* {outline: … }"})
 
--- Php ------------------------------------------------------------------------
+-- Php --------------------------------
 map("i", "^pb", "<?php<CR>?><left><left>", {desc = "<?php _?>"})
 map("i", "^pi", "<?_?><left><left>", {desc = "<?_?>"})
 

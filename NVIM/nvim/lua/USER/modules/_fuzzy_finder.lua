@@ -3,6 +3,7 @@ local vim = vim
 
 -- SUMMARY
 -- mini.pick
+-- mini.extra
 
 return {
   {
@@ -25,17 +26,16 @@ return {
         }
       end
       -- Setup
-      MiniPick.setup(
-        {
-          window = {config = win_config}
-        }
-      )
+      MiniPick.setup( {
+        window = {config = win_config}
+      })
     end
   },
   {
     -- url = "https://github.com/echasnovski/mini.extra.git",
     dir = D.plugin .. "mini.extra",
-    config = false
+    event = "VeryLazy",
+    config = true
   }
 }
 

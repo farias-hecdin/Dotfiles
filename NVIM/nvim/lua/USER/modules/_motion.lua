@@ -22,16 +22,12 @@ return {
       {mode = "n", ",,", desc = "Jump 2d"},
       {mode = "v", ",,", desc = "Jump 2d"}
     },
-    config = function()
-      require("mini.jump2d").setup(
-        {
-          labels = "abcdefghijklmnopqrstuvwxyz1234567890",
-          mappings = {
-            start_jumping = ",,"
-          }
-        }
-      )
-    end
+    opts = {
+      labels = "abcdefghijklmnopqrstuvwxyz1234567890",
+      mappings = {
+        start_jumping = ",,"
+      }
+    }
   }
 }
 

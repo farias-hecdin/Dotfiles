@@ -14,3 +14,4 @@ cmd("cnoreabbrev st sort")
 cmd("cnoreabbrev Mn MiniNotifyHistory")
 cmd("cnoreabbrev Toc MDToc")
 cmd("cnoreabbrev Ps PomodoroStart")
+
