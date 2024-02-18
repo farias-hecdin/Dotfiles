@@ -3,10 +3,10 @@ local map = vim.keymap.set
 
 -- Features -------------------------------------------------------------------
 
--- Useful for miniFiles
+-- Reload path
 local load_current_buffer = function()
-    local path = vim.cmd("echo bufname()")
-    vim.cmd("e " .. path)
+  local path = vim.cmd("echo bufname()")
+  vim.cmd("e " .. path)
 end
 
 -- Keymaps generals -----------------------------------------------------------
@@ -20,6 +20,8 @@ end
 -- * command mode  = "c",
 
 map("n", "<leader>#", ":set relativenumber nofoldenable<cr>", {desc = "Enable number column"})
+map("n", "<leader>!C", ":set colorcolumn=80<cr>", {desc = "Enable: ColorColumn 80"})
+map("n", "<leader>!c", ":set colorcolumn=40<cr>", {desc = "Enable: ColorColumn 40"})
 
 -- Code runner
 map("n", "<leader>R", ":RunCode<cr>", {desc = "Run Code"})
@@ -34,14 +36,7 @@ map("n", "<leader>fG", ':MiniPickGrep<cr><C-r>"', {desc = "Fuzzy finder: Grep"})
 map("n", "<leader>ff", ":MiniPickFiles<cr>", {desc = "Fuzzy finder: files"})
 
 -- Other
-map(
-    "n",
-    "<leader>@",
-    function()
-        load_current_buffer()
-    end,
-    {desc = "Load current buffer"}
-)
+map("n", "<leader>@", function() load_current_buffer() end, {desc = "Load current buffer"})
 map("n", "<leader>$", ":Messages messages<cr>", {desc = "Show message log"})
 map("n", "<bs>", ":URLOpenUnderCursor<cr>", {desc = "Open URL under cursor"})
 
@@ -156,6 +151,7 @@ map("n", "<leader>tx", ":tabclose<cr>", {desc = "Tabs: close"})
 map("n", "<leader>eo", ":NnnExplorer<cr>", {desc = "Explorer: sidebar"})
 map("n", "<leader>ef", ":NnnPicker %:p:h<cr>", {desc = "Explorer: float (active buffer)"})
 map("n", "<leader>em", ":MiniFiles<cr>", {desc = "Explorer: miller columns"})
+map("n", "<leader>eM", ":lua MiniFiles.open(vim.api.nvim_buf_get_name(0), false)<cr>", {desc = "Explorer: miller columns (aactive buffer)"})
 
 -- Clear search with <esc>
 map("n", "<esc>", "<cmd>noh<cr><esc>", {desc = "Escape and clear hlsearch"})
@@ -214,5 +210,5 @@ map("n", "<leader>W", ":checkhealth which_key<cr>", {desc = "Which key"})
 map("n", "<leader>Cd", ":lua require('cmp').setup.buffer {enabled = false}<cr>", {desc = "Cmp: disable"})
 map("n", "<leader>Ce", ":lua require('cmp').setup.buffer {enabled = true}<cr>", {desc = "Cmp: enabled"})
 
--- URL handling (https://sbulav.github.io/vim/neovim-opening-urls)
+-- URL handling, thanks to: https://sbulav.github.io/vim/neovim-opening-urls
 map("n", "gx", ':call jobstart(["xdg-open", expand("<cfile>")], {"detach": v:true})<cr>', {desc = "Open: link"})

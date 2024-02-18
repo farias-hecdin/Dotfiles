@@ -1,5 +1,6 @@
 local D = require("USER.modules.utils.dir")
 local vim = vim
+local modeNI = {"n", "i"}
 
 -- SUMMARY
 -- multiple-cursors.nvim
@@ -16,15 +17,15 @@ return {
       "MultipleCursorsAddUp"
     },
     keys = {
-      {"<C-Down>", ":MultipleCursorsAddDown<CR>", mode = {"n", "i"}, desc = "MultipleCursors: add down"},
-      {"<C-Up>", ":MultipleCursorsAddUp<CR>", mode = {"n", "i"}, desc = "MultipleCursors: add up"},
+      {"<C-Down>", ":MultipleCursorsAddDown<CR>", mode = modeNI , desc = "MultipleCursors: add down"},
+      {"<C-Up>", ":MultipleCursorsAddUp<CR>", mode = modeNI, desc = "MultipleCursors: add up"},
       {"<C-j>", ":MultipleCursorsAddDown<CR>", desc = "MultipleCursors: add down"},
       {"<C-k>", ":MultipleCursorsAddUp<CR>", desc = "MultipleCursors: add up"},
-      {"<C-h>", ":MultipleCursorsMouseAddDelete<CR>", mode = {"n", "i"}, desc = "MultipleCursors: add with mouse"}
+      {"<C-h>", ":MultipleCursorsMouseAddDelete<CR>", mode = modeNI, desc = "MultipleCursors: add with mouse"}
     },
     opts = {
       keys = {
-        {"<C-h>", ":MultipleCursorsMouseAddDelete<CR>", mode = {"n", "i"}}
+        {"<C-h>", ":MultipleCursorsMouseAddDelete<CR>", mode = modeNI}
       }
     }
   },
@@ -37,29 +38,25 @@ return {
       {"gz", mode = "v", desc = "Surround: add"},
       {"gz", mode = "v", desc = "Surround: add"}
     },
-    config = function()
-      require("mini.surround").setup(
-        {
-          custom_surroundings = nil,
-          highlight_duration = 5000,
-          mappings = {
-            add = "gz",
-            delete = "gZd",
-            find = "gZl",
-            find_left = "gZh",
-            highlight = "gZH",
-            replace = "gZr",
-            update_n_lines = "gZu",
-            suffix_last = "l",
-            suffix_next = "n"
-          },
-          n_lines = 20,
-          respect_selection_type = false,
-          search_method = "cover",
-          silent = false
-        }
-      )
-    end
+    opts = {
+      custom_surroundings = nil,
+      highlight_duration = 5000,
+      mappings = {
+        add = "gz",
+        delete = "gZd",
+        find = "gZl",
+        find_left = "gZh",
+        highlight = "gZH",
+        replace = "gZr",
+        update_n_lines = "gZu",
+        suffix_last = "l",
+        suffix_next = "n"
+      },
+      n_lines = 20,
+      respect_selection_type = false,
+      search_method = "cover",
+      silent = false
+    }
   },
   {
     -- url = "https://github.com/echasnovski/mini.align.git",
@@ -78,12 +75,10 @@ return {
       {"<leader>r", mode = "n", desc = "Replace"}
     },
     config = function()
-      require("search-replace").setup(
-        {
-          default_replace_single_buffer_options = "gcI",
-          default_replace_multi_buffer_options = "egcI"
-        }
-      )
+      require("search-replace").setup( {
+        default_replace_single_buffer_options = "gcI",
+        default_replace_multi_buffer_options = "egcI"
+      })
       -- Keybinding
       local map = vim.api.nvim_set_keymap
       map("v", "<leader>r", "<CMD>SearchReplaceSingleBufferVisualSelection<CR>", {desc = "Replace: Visual"})
