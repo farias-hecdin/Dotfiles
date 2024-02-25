@@ -15,14 +15,13 @@ export HISTSIZE=999 # How many commands zsh will load to memory.
 export SAVEHIST=999 # How many commands history will save on file.
 
 setopt EXTENDED_HISTORY # Record command start time.
-setopt HIST_EXPIRE_DUPS_FIRST # delete duplicates first when HISTFILE size exceeds HISTSIZE
+setopt HIST_EXPIRE_DUPS_FIRST # Delete duplicates first when HISTFILE size exceeds HISTSIZE
 setopt HIST_FIND_NO_DUPS # History won't show duplicates on search.
 setopt HIST_SAVE_NO_DUPS # Do not save duplicated command.
 setopt HIST_IGNORE_ALL_DUPS # Do not put duplicated command into history list.
 setopt HIST_IGNORE_SPACE # Ignore commands that start with space
 setopt HIST_REDUCE_BLANKS # Remove unnecessary blanks.
 setopt INC_APPEND_HISTORY_TIME # Append command to history file immediately after execution.
-
 
 # Plugins and themes ==========================================================
 
@@ -63,14 +62,9 @@ export PATH="$PNPM_HOME:$PATH"
 # nnn
 export NNN_PLUG="j:autojump;"
 
-# luatiny
-export LUATINY="$LOCAL_SHARE/luatiny"
-export PATH="$LUATINY:$PATH"
-
-# lare
-export LARE="$LOCAL_SHARE/lare"
-export PATH="$LARE:$PATH"
-
-# impzy
-export IMPZY="$LOCAL_SHARE/impzy"
-export PATH="$IMPZY:$PATH"
+# other
+export PATH="$LOCAL_SHARE/luatiny:$PATH"
+export PATH="$LOCAL_SHARE/lare:$PATH"
+export PATH="$LOCAL_SHARE/impzy:$PATH"
+export PATH="$LOCAL_SHARE/phpactor:$PATH"
+export PATH="$LOCAL_SHARE/tgpt:$PATH"

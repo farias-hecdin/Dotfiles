@@ -2,6 +2,8 @@
 
 setopt prompt_subst
 
+DIR_LENGTH=28
+
 function f_main() {
   local PR_USER
   local PR_USER_OP
@@ -11,11 +13,11 @@ function f_main() {
   if [[ $UID -ne 0 ]]; then # Normal user
     PR_USER="%F{green}(%n%f"
     PR_USER_OP="%F{green}%#%f"
-    PR_PROMPT="%F{green}➤%f"
+    PR_PROMPT="%F{green}▶%f"
   else # Root user
     PR_USER="%F{red}(%n%f"
     PR_USER_OP="%F{red}%#%f"
-    PR_PROMPT="%F{red}➤%f"
+    PR_PROMPT="%F{red}▶%f"
   fi
 
   # Check if we are on SSH or not
@@ -28,8 +30,8 @@ function f_main() {
   # Prompt style
   local return_code="%(?..%F{red}%? %f)"
   local user_host="${PR_USER}%F{cyan}@${PR_HOST}"
-  local dir='%F{blue}(%28<...<%~%<<)%f'
-  local hour="%F{cyan}%D{%I:%M%p}%f"
+  local dir='%F{blue}(%$DIR_LENGTH<...<%~%<<)%f'
+  local hour="%F{cyan}%D{%I:%M:%S%p}%f"
   local git_status='%F{white}$(git_prompt_status)%f'
   local git_branch='$(git_prompt_info)'
 
