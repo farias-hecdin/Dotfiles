@@ -48,8 +48,7 @@ return {
         -- plugins = { "nvim-treesitter", "plenary.nvim", "telescope.nvim" },
       },
       setup_jsonls = true, -- configures jsonls to provide completion for project specific .luarc.json files
-      override = function(root_dir, options)
-      end,
+      override = function(root_dir, options) end,
       lspconfig = true,
       pathStrict = true
     }

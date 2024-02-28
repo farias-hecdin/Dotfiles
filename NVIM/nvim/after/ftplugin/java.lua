@@ -14,13 +14,11 @@ if not miniNotify_ok then
   return
 end
 
-miniNotify.setup(
-  {
-    lsp_progress = {
-      enable = false
-    }
+miniNotify.setup({
+  lsp_progress = {
+    enable = false
   }
-)
+})
 
 -- Jstls
 local jdtls_ok, jdtls = pcall(require, "jdtls")

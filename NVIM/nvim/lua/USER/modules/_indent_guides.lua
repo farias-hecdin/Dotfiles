@@ -24,8 +24,7 @@ return {
         draw = {
           animation = require("mini.indentscope").gen_animation.none()
         },
-        symbol = " "
-        --"│"
+        symbol = " " --"│"
       })
     end
   }

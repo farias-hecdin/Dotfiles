@@ -47,8 +47,7 @@ return {
       end)
 
       local function enable_lsp(lang, servers)
-        local path = "USER.modules.lsp."
-        require(path .. lang).lsp(servers)
+        require("USER.modules.lsp." .. lang).lsp(servers)
       end
 
       enable_lsp("bash", {"bashls"})
@@ -56,7 +55,7 @@ return {
       enable_lsp("go", {"gopls"})
       enable_lsp("html", {"emmet_ls"})
       enable_lsp("java", {"jdtls"})
-      enable_lsp("javascript", {"astro", "jsonls", "svelte", "tsserver"})
+      enable_lsp("javascript", {"astro", "tsserver"})
       enable_lsp("lua", {"lua_ls"})
       enable_lsp("php", {"phpactor"})
       enable_lsp("python", {"pyright"})

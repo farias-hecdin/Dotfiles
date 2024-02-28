@@ -65,7 +65,7 @@ return {
   {
     -- url = "https://github.com/echasnovski/mini.hipatterns.git",
     dir = D.plugin .. "mini.hipatterns",
-    event = "BufReadPre",
+    event = "CursorMoved",
     config = function()
       local hipatterns = require("mini.hipatterns")
       hipatterns.setup({

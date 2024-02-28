@@ -8,7 +8,12 @@ return {
   {
     -- url = "https://github.com/echasnovski/mini.files.git",
     dir = D.plugin .. "mini.files",
-    event = "VeryLazy",
+    cond = function()
+      local request, _ = pcall(require, 'which-key')
+      if request then
+        return true
+      end
+    end,
     opts = {
       mappings = {
         close = "q",

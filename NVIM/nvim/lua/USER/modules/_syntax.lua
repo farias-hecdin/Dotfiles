@@ -51,6 +51,7 @@ return {
           "php",
           "sql",
           "typescript",
+          "tsx",
         },
         auto_install = false
       })

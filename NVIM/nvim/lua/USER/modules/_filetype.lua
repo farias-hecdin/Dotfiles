@@ -47,13 +47,5 @@ return {
       filetypes = {"css", "lua"}
     }
   },
-  {
-    -- url = "https://github.com/wuelnerdotexe/vim-astro.git",
-    dir = D.plugin .. "vim-astro",
-    ft = {"astro"},
-    config = function()
-      vim.cmd([[let g:astro_typescript = "enable"]])
-    end
-  }
 }
 
