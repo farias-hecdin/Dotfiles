@@ -62,9 +62,11 @@ alias @ids="nanoid --alphabet abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 # javascript
 alias @js-server="five-server"
 alias @postcss-opts="postcss --no-map --replace src/**/*.css --config ./opts/postcss.config.cjs"
-alias @prettier="prettier --write '**/*.{html,css,scss,js,ts,jsx,vue,svelte,json}'"
 alias @pnpm-pkgBase="pnpm i -D modern-normalize eruda postcss autoprefixer postcss-cli postcss-nested postcss-sorting unplugin-auto-import unplugin-icons @iconify-json/material-symbols"
 alias @pnpm-pkgBaseReact="pnpm i -D modern-normalize eruda postcss autoprefixer postcss-cli postcss-nested postcss-sorting unplugin-auto-import unplugin-icons @iconify-json/material-symbols @svgr/core @svgr/plugin-jsx"
+
+alias @prettier="prettier --write '**/*.{html,css,js,ts,jsx,json}'"
+alias @prettier2="prettier --write '**/*.{html,css,scss,js,ts,jsx,vue,json,astro}'"
 
 ### Clean
 alias @clean-apt="apt autoremove"
