@@ -2,10 +2,35 @@ local D = require("USER.modules.utils.dir")
 local vim = vim
 
 -- SUMMARY
+-- nvim-lsp-extras
 -- lsp-zero.nvim
 -- nvim-lint
 
 return {
+  {
+    url = "https://github.com/seblj/nvim-lsp-extras",
+    event = {
+      "BufReadPre",
+      "BufNewFile"
+    },
+    config = function()
+      require("nvim-lsp-extras").setup({
+        signature = false,
+        mouse_hover = false,
+        lightbulb = false,
+        treesitter_hover = {
+          highlights = {
+            ["|%S-|"] = "@text.reference",
+            ["@%S+"] = "@parameter",
+            ["^%s*(Parameters:)"] = "@text.title",
+            ["^%s*(Return:)"] = "@text.title",
+            ["^%s*(See also:)"] = "@text.title",
+            ["{%S-}"] = "@parameter",
+          },
+        },
+      })
+    end
+  },
   {
     "VonHeikemen/lsp-zero.nvim",
     branch = "v3.x",

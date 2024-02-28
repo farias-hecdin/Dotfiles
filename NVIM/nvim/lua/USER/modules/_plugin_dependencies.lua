@@ -14,7 +14,7 @@ return {
     dir = D.plugin .. "nvim-web-devicons",
     opts = {
       override_by_filename = {
-        ["astro"] = {icon = "", color = "#F9A825", name = "astro"},
+        ["astro"] = {icon = "", color = "#EF8547", name = "astro"},
         ["test.md"] = {icon = "", color = "#CBCB41", name = "test"},
         ["prettierrc"] = {icon = "", color = "#AAAAAA", name = "prettierrc"}
       }

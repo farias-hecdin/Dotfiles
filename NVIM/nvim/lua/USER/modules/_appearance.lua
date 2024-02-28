@@ -26,7 +26,12 @@ return {
   {
     -- url = "https://github.com/echasnovski/mini.starter.git",
     dir = D.plugin .. "mini.starter",
-    event = "VeryLazy",
+    cond = function()
+      local request, _ = pcall(require, 'which-key')
+      if request then
+        return true
+      end
+    end,
     config = function()
       local starter = require("mini.starter")
       require("mini.starter").setup({

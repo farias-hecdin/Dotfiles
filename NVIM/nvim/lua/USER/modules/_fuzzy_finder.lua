@@ -9,7 +9,12 @@ return {
   {
     -- url = "https://github.com/echasnovski/mini.pick.git",
     dir = D.plugin .. "mini.pick",
-    event = "VeryLazy",
+    cond = function()
+      local request, _ = pcall(require, 'which-key')
+      if request then
+        return true
+      end
+    end,
     config = function()
       local MiniPick = require("mini.pick")
 
@@ -31,11 +36,5 @@ return {
       })
     end
   },
-  {
-    -- url = "https://github.com/echasnovski/mini.extra.git",
-    dir = D.plugin .. "mini.extra",
-    event = "VeryLazy",
-    config = true
-  }
 }
 
