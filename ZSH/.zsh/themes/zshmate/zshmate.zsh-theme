@@ -31,7 +31,7 @@ function f_main() {
   local return_code="%(?..%F{red}%? %f)"
   local user_host="${PR_USER}%F{cyan}@${PR_HOST}"
   local dir='%F{blue}(%$DIR_LENGTH<...<%~%<<)%f'
-  local hour="%F{cyan}%D{%I:%M:%S%p}%f"
+  local hour="%F{cyan}%D{%I:%M%p}%f"
   local git_status='%F{white}$(git_prompt_status)%f'
   local git_branch='$(git_prompt_info)'
 
