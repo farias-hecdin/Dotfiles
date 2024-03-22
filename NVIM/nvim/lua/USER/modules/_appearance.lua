@@ -74,7 +74,7 @@ return {
       defaults = {
         expand_null_ls = false,
         full_path = false,
-        line_column = "[%l/%L]:%c  %p%%",
+        line_column = " L:%l/%L C:%c",
         fg = "#000000",
         bg = "#000000",
         inactive_color = "#ffffff",
@@ -82,7 +82,7 @@ return {
         true_colors = true,
         font_active = "none",
         mod_symbol = " ",
-        lsp_client_symbol = " ",
+        lsp_client_symbol = " ",
         lsp_client_character_length = 12,
         branch_symbol = " "
       },

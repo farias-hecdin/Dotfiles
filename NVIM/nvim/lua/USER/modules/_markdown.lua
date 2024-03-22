@@ -8,13 +8,6 @@ local vim = vim
 
 return {
   {
-    -- url = "https://github.com/sontungexpt/url-open",
-    dir = D.plugin .. "url-open",
-    ft = "markdown",
-    cmd = "URLOpenUnderCursor",
-    config = true
-  },
-  {
     -- url = "https://github.com/antonk52/markdowny.nvim.git",
     dir = D.plugin .. "markdowny.nvim",
     keys = {"<C-i>", "<C-l>", "<C-n>"},

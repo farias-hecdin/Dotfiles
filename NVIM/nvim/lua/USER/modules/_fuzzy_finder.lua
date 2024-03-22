@@ -7,8 +7,8 @@ local vim = vim
 
 return {
   {
-    -- url = "https://github.com/echasnovski/mini.pick.git",
-    dir = D.plugin .. "mini.pick",
+    url = "https://github.com/echasnovski/mini.pick.git",
+    -- dir = D.plugin .. "mini.pick",
     cond = function()
       local request, _ = pcall(require, 'which-key')
       if request then

@@ -11,6 +11,9 @@ return {
       "BufReadPre",
       "BufNewFile"
     },
+    dependencies = {
+      "virchau13/tree-sitter-astro"
+    },
     pin = true,
     build = ":TSUpdate",
     cmd = {"TSUpdateSync", "TSUpdate", "TSInstall"},
