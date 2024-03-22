@@ -76,7 +76,6 @@ alias @clean-npm="npm cache clean --force"
 alias @clean-pnpm="pnpm store prune"
 
 ### tgpt
-alias tgpt="tgpt -m --provider opengpts"
 alias tgpt-phind="tgpt -m --provider phind"
 alias tgpt-llama="tgpt -m --provider llama2"
 

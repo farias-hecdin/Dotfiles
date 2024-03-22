@@ -65,7 +65,7 @@ return {
   {
     -- url = "https://github.com/echasnovski/mini.hipatterns.git",
     dir = D.plugin .. "mini.hipatterns",
-    event = "CursorMoved",
+    event = "BufReadPre",
     config = function()
       local hipatterns = require("mini.hipatterns")
       hipatterns.setup({
@@ -106,7 +106,7 @@ return {
             ]]
           hex_color = hipatterns.gen_highlighter.hex_color(),
           hsl_color = {
-            pattern = "hsl%(%d+, %d+%p?, %d+%p?%)",
+            pattern = "%s()hsl%(%d+, %d+%p?, %d+%p?%)()",
             group = function(_, match)
               local utils = require("USER.modules.utils.colors.hsl")
               local h, s, l = match:match("hsl%((%d+), (%d+)%p?, (%d+)%p?%)")
@@ -116,7 +116,7 @@ return {
             end
           },
           lch_color = {
-            pattern = "lch%(%d*%.?%d+%p? %d*%.?%d+ %d*%.?%d+%)",
+            pattern = "%s()lch%(%d*%.?%d+%p? %d*%.?%d+ %d*%.?%d+%)()",
             group = function(_, match)
               local utils = require("USER.modules.utils.colors.lch")
               local l, c, h = match:match("lch%((%d*%.?%d+)%p? (%d*%.?%d+) (%d*%.?%d+)%)")
@@ -126,7 +126,7 @@ return {
             end
           },
           rgb_color = {
-            pattern = "rgb%(%d+, %d+, %d+%)",
+            pattern = "%s()rgb%(%d+, %d+, %d+%)()",
             group = function(_, match)
               local utils = require("USER.modules.utils.colors.rgb")
               local r, g, b = match:match("rgb%((%d+), (%d+), (%d+)%)")

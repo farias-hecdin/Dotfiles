@@ -9,7 +9,7 @@ return {
   {
     -- url = "https://github.com/utilyre/sentiment.nvim.git",
     dir = D.plugin .. "sentiment.nvim",
-    event = "InsertEnter",
+    event = "CursorMoved",
     opts = {},
     init = function()
       vim.g.loaded_matchparen = 1

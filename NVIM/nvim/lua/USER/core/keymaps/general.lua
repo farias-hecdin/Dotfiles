@@ -212,3 +212,75 @@ map("n", "<leader>Ce", ":lua require('cmp').setup.buffer {enabled = true}<cr>", 
 
 -- URL handling, thanks to: https://sbulav.github.io/vim/neovim-opening-urls
 map("n", "gx", ':call jobstart(["xdg-open", expand("<cfile>")], {"detach": v:true})<cr>', {desc = "Open: link"})
+
+-- Markdown (thanks to: https://www.reddit.com/r/neovim/comments/1b3gnk0/jump_through_markdown_headings_with_gj_and_gk/)
+
+-- Search UP for a markdown header
+map("n", "gk", function()
+  local foundHeader = false
+  -- Function to check if the given line number is blank
+  local function isBlankLine(lineNum)
+    return vim.fn.getline(lineNum):match("^%s*$") ~= nil
+  end
+  -- Function to search up for a markdown header
+  local function searchBackwardForHeader()
+    vim.cmd("silent! ?^\\s*#\\+\\s.*$")
+    local currentLineNum = vim.fn.line(".")
+    local aboveIsBlank = isBlankLine(currentLineNum - 1)
+    local belowIsBlank = isBlankLine(currentLineNum + 1)
+    -- Check if both above and below lines are blank, indicating a markdown header
+    if aboveIsBlank and belowIsBlank then
+      foundHeader = true
+    end
+    return currentLineNum
+  end
+  -- Initial search
+  local lastLineNum = searchBackwardForHeader()
+  -- Continue searching if the initial search did not find a header
+  while not foundHeader and vim.fn.line(".") > 1 do
+    local currentLineNum = searchBackwardForHeader()
+    -- Break the loop if the search doesn't change line number to prevent infinite loop
+    if currentLineNum == lastLineNum then
+      break
+    else
+      lastLineNum = currentLineNum
+    end
+  end
+  -- Clear search highlighting after operation
+  vim.cmd("nohlsearch")
+end, { desc = "Go to previous markdown header" })
+
+-- Search DOWN for a markdown header
+map("n", "gj", function()
+  local foundHeader = false
+  -- Function to check if the given line number is blank
+  local function isBlankLine(lineNum)
+    return vim.fn.getline(lineNum):match("^%s*$") ~= nil
+  end
+  -- Function to search down for a markdown header
+  local function searchForwardForHeader()
+    vim.cmd("silent! /^\\s*#\\+\\s.*$")
+    local currentLineNum = vim.fn.line(".")
+    local aboveIsBlank = isBlankLine(currentLineNum - 1)
+    local belowIsBlank = isBlankLine(currentLineNum + 1)
+    -- Check if both above and below lines are blank, indicating a markdown header
+    if aboveIsBlank and belowIsBlank then
+      foundHeader = true
+    end
+    return currentLineNum
+  end
+  -- Initial search
+  local lastLineNum = searchForwardForHeader()
+  -- Continue searching if the initial search did not find a header
+  while not foundHeader and vim.fn.line(".") < vim.fn.line("$") do
+    local currentLineNum = searchForwardForHeader()
+    -- Break the loop if the search doesn't change line number to prevent infinite loop
+    if currentLineNum == lastLineNum then
+      break
+    else
+      lastLineNum = currentLineNum
+    end
+  end
+  -- Clear search highlighting after operation
+  vim.cmd("nohlsearch")
+end, { desc = "Go to next markdown header" })

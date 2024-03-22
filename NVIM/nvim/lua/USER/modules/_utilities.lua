@@ -8,6 +8,21 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
+    -- url = "https://github.com/sontungexpt/url-open",
+    dir = D.plugin .. "url-open",
+    cmd = "URLOpenUnderCursor",
+    config = function()
+      require("url-open").setup({
+        extra_patterns = {
+          {
+            pattern = '"(github%.com/[^"]+)"',
+            prefix = "https://pkg.go.dev/",
+          },
+        },
+      })
+    end
+  },
+  {
     -- url = "https://github.com/CRAG666/code_runner.nvim.git",
     dir = D.plugin .. "code_runner.nvim",
     cmd = {"RunCode", "RunFile", "RunFile", "RunProject", "RunClose", "CRFiletype", "CRProjects"},
