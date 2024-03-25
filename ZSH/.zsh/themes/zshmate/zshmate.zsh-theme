@@ -4,7 +4,7 @@ setopt prompt_subst
 
 DIR_LENGTH=28
 
-function f_main() {
+function run() {
   local PR_USER
   local PR_USER_OP
   local PR_PROMPT PR_HOST
@@ -39,8 +39,8 @@ function f_main() {
   RPROMPT="${return_code}"
   ZSH_THEME_GIT_PROMPT_PREFIX="%F{yellow} "
   ZSH_THEME_GIT_PROMPT_SUFFIX="%f"
-PROMPT="╭─ ${hour} ${user_host} ${dir} ${git_branch} ${git_status}
+  PROMPT="╭─ ${hour} ${user_host} ${dir} ${git_branch} ${git_status}
 ╰─$PR_PROMPT "
 }
 
-f_main
+run

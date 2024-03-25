@@ -1,13 +1,13 @@
 # cat ~/.oh-my-zsh/lib/git.zsh
+
 # Get the name of the branch we are on
 function git_prompt_info() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
   echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
-
 # Checks if working tree is dirty
-parse_git_dirty() {
+function parse_git_dirty() {
   local SUBMODULE_SYNTAX=''
   if [[ $POST_1_7_2_GIT -gt 0 ]]; then
     SUBMODULE_SYNTAX="--ignore-submodules=dirty"
@@ -19,10 +19,9 @@ parse_git_dirty() {
   fi
 }
 
-
 # Checks if there are commits ahead from remote
 function git_prompt_ahead() {
-  if $(echo "$(git log origin/$(current_branch)..HEAD 2> /dev/null)" | grep '^commit' &> /dev/null); then
+  if [[ -n "$(git log origin/$(current_branch)..HEAD 2> /dev/null)" ]]; then
     echo "$ZSH_THEME_GIT_PROMPT_AHEAD"
   fi
 }
@@ -38,7 +37,7 @@ function git_prompt_long_sha() {
 }
 
 # Get the status of the working tree
-git_prompt_status() {
+function git_prompt_status() {
   INDEX=$(git status --porcelain 2> /dev/null)
 
   ZSH_THEME_GIT_PROMPT_UNTRACKED=" "
@@ -47,38 +46,30 @@ git_prompt_status() {
   ZSH_THEME_GIT_PROMPT_UNMERGED=" "
 
   STATUS=""
-  if $(echo "$INDEX" | grep '^?? ' &> /dev/null); then
+  if [[ $INDEX == *'?? '* ]]; then
     STATUS="$ZSH_THEME_GIT_PROMPT_UNTRACKED$STATUS"
   fi
-  if $(echo "$INDEX" | grep '^A  ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_ADDED$STATUS"
-  elif $(echo "$INDEX" | grep '^M  ' &> /dev/null); then
+  if [[ $INDEX == *'A  '* || $INDEX == *'M  '* ]]; then
     STATUS="$ZSH_THEME_GIT_PROMPT_ADDED$STATUS"
   fi
-  if $(echo "$INDEX" | grep '^ M ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
-  elif $(echo "$INDEX" | grep '^AM ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
-  elif $(echo "$INDEX" | grep '^ T ' &> /dev/null); then
+  if [[ $INDEX == *' M '* || $INDEX == *'AM '* || $INDEX == *' T '* ]]; then
     STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
   fi
-  if $(echo "$INDEX" | grep '^R  ' &> /dev/null); then
+  if [[ $INDEX == *'R  '* ]]; then
     STATUS="$ZSH_THEME_GIT_PROMPT_RENAMED$STATUS"
   fi
-  if $(echo "$INDEX" | grep '^ D ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_DELETED$STATUS"
-  elif $(echo "$INDEX" | grep '^AD ' &> /dev/null); then
+  if [[ $INDEX == *' D '* || $INDEX == *'AD '* ]]; then
     STATUS="$ZSH_THEME_GIT_PROMPT_DELETED$STATUS"
   fi
-  if $(echo "$INDEX" | grep '^UU ' &> /dev/null); then
+  if [[ $INDEX == *'UU '* ]]; then
     STATUS="$ZSH_THEME_GIT_PROMPT_UNMERGED$STATUS"
   fi
   echo $STATUS
 }
 
-#compare the provided version of git to the version installed and on path
-#prints 1 if input version <= installed version
-#prints -1 otherwise
+# Compare the provided version of git to the version installed and on path
+# prints 1 if input version <= installed version
+# prints -1 otherwise
 function git_compare_version() {
   local INPUT_GIT_VERSION=$1;
   local INSTALLED_GIT_VERSION
@@ -95,7 +86,7 @@ function git_compare_version() {
   echo 1
 }
 
-#this is unlikely to change so make it all statically assigned
+# This is unlikely to change so make it all statically assigned
 POST_1_7_2_GIT=$(git_compare_version "1.7.2")
-#clean up the namespace slightly by removing the checker function
+# Clean up the namespace slightly by removing the checker function
 unset -f git_compare_version
