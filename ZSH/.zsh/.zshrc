@@ -4,7 +4,6 @@
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export ZSH=$HOME/.zsh
-
 export EDITOR=nvim # Specifies the editor code
 export KEYTIMEOUT=1
 
@@ -13,7 +12,6 @@ export KEYTIMEOUT=1
 export HISTFILE=$ZSH/.zsh_history
 export HISTSIZE=999 # How many commands zsh will load to memory.
 export SAVEHIST=999 # How many commands history will save on file.
-
 setopt EXTENDED_HISTORY # Record command start time.
 setopt HIST_EXPIRE_DUPS_FIRST # Delete duplicates first when HISTFILE size exceeds HISTSIZE
 setopt HIST_FIND_NO_DUPS # History won't show duplicates on search.
@@ -32,14 +30,9 @@ source $ZSH/themes/zshmate/zshmate.zsh-theme
 export NNN_ZLUA="$ZSH/plugins/z.lua/z.lua"
 eval "$(lua ~/.zsh/plugins/z.lua/z.lua --init zsh)"
 
-# Editing support
+# Editing support and git
 source $ZSH/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-
-# Git
 source $ZSH/plugins/git-status/git-status.plugin.zsh
-
-# Commacd
-source ~/.commacd.sh
 
 # Alias and Keybindings =======================================================
 
