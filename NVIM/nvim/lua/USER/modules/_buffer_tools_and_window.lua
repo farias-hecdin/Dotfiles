@@ -1,9 +1,10 @@
 local D = require("USER.modules.utils.dir")
 
 -- SUMMARY
--- focus.nvim
--- bufdelete.nvim
--- nvim-window
+-- * bufdelete.nvim
+-- * focus.nvim
+-- * nvim-window
+-- * sos.nvim
 
 return {
   {
@@ -16,6 +17,19 @@ return {
     -- url = "https://github.com/famiu/bufdelete.nvim.git",
     dir = D.plugin .. "bufdelete.nvim",
     event = "WinNew"
+  },
+  {
+    -- url = "https://github.com/tmillr/sos.nvim.git",
+    dir = D.plugin .. "sos.nvim",
+    event = {"BufReadPre"},
+    opts = {
+      enabled = true,
+      timeout = 5000,
+      autowrite = true,
+      save_on_cmd = "some",
+      save_on_bufleave = true,
+      save_on_focuslost = true
+    }
   },
   {
     -- url = "https://github.com/yorickpeterse/nvim-window.git",

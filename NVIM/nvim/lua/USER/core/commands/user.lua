@@ -112,3 +112,4 @@ usercmd("GlobalNoteOpen", function ()
   local global_note = require("global-note")
   global_note.toggle_note()
 end, {desc = "Toggle global note"})
+

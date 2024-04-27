@@ -1,9 +1,9 @@
 local vim = vim
 
 -- SUMMARY
--- mason.nvim
--- mason-lspconfig.nvim
--- nvim-lspconfig
+-- * mason.nvim
+-- * mason-lspconfig.nvim
+-- * nvim-lspconfig
 
 return {
   {
@@ -58,7 +58,6 @@ return {
       enable_lsp("javascript", {"astro", "tsserver"})
       enable_lsp("lua", {"lua_ls"})
       enable_lsp("php", {"phpactor"})
-      enable_lsp("python", {"pyright"})
 
       -- Lsp-config -----------------------------------------------------------
       local lspconfig = require("lspconfig")

@@ -1,12 +1,27 @@
 local D = require("USER.modules.utils.dir")
+local vim = vim
 
 -- SUMMARY
 -- code_runner
 -- flatten.nvim
--- neodev.nvim
 -- messages.nvim
 
 return {
+  {
+    -- url = "https://github.com/nvim-lua/plenary.nvim.git",
+    dir = D.plugin .. "plenary.nvim"
+  },
+  {
+    -- url = "https://github.com/nvim-tree/nvim-web-devicons.git",
+    dir = D.plugin .. "nvim-web-devicons",
+    opts = {
+      override_by_filename = {
+        ["astro"] = {icon = "", color = "#EF8547", name = "astro"},
+        ["test.md"] = {icon = "", color = "#CBCB41", name = "test"},
+        ["prettierrc"] = {icon = "", color = "#AAAAAA", name = "prettierrc"}
+      }
+    }
+  },
   {
     -- url = "https://github.com/sontungexpt/url-open",
     dir = D.plugin .. "url-open",
@@ -32,12 +47,12 @@ return {
       },
       filetype = {
         go = "go run",
-        python = "python3 -u",
         java = {"cd $dir &&", "javac $fileName &&", "java $fileNameWithoutExt &&", "rm -rf *.class"},
         lua = "luajit",
         php = "php",
+        python = "python3 -u",
         sh = "bash",
-        typescript = "deno run"
+        typescript = "deno run",
       }
     }
   },
@@ -48,31 +63,43 @@ return {
     lazy = false,
     priority = 1001
   },
-  -- For Neovim devs ----------------------------------------------------------
-  {
-    -- url = "https://github.com/folke/neodev.nvim.git",
-    dir = D.plugin .. "neodev.nvim",
-    ft = {"lua"},
-    opts = {
-      library = {
-        enabled = true, -- when not enabled, neodev will not change any settings to the LSP server
-        runtime = true, -- runtime path
-        types = true, -- full signature, docs and completion of vim.api, vim.treesitter, vim.lsp and others
-        plugins = true -- installed opt or start plugins in packpath
-        -- you can also specify the list of plugins to make available as a workspace library
-        -- plugins = { "nvim-treesitter", "plenary.nvim", "telescope.nvim" },
-      },
-      setup_jsonls = true, -- configures jsonls to provide completion for project specific .luarc.json files
-      override = function(root_dir, options) end,
-      lspconfig = true,
-      pathStrict = true
-    }
-  },
   {
     -- url = "https://github.com/AckslD/messages.nvim.git",
     dir = D.plugin .. "messages.nvim",
-    ft = {"lua"},
-    config = true
-  }
+    lazy = false,
+    config = function()
+      require('messages').setup({
+        command_name = 'Messages',
+        -- should prepare a new buffer and return the winid
+        -- by default opens a floating window
+        -- provide a different callback to change this behaviour
+        -- @param opts: the return value from float_opts
+        prepare_buffer = function(opts)
+          local buf = vim.api.nvim_create_buf(false, true)
+          return vim.api.nvim_open_win(buf, true, opts)
+        end,
+        -- should return options passed to prepare_buffer
+        -- @param lines: a list of the lines of text
+        buffer_opts = function(lines)
+          local gheight = vim.api.nvim_list_uis()[1].height
+          local gwidth = vim.api.nvim_list_uis()[1].width
+          return {
+            relative = 'editor',
+            width = gwidth - 2,
+            height = gheight * 0.5,
+            anchor = 'SW',
+            row = gheight - 1,
+            col = 0,
+            style = 'minimal',
+            border = 'rounded',
+            zindex = 1,
+          }
+        end,
+        -- what to do after opening the float
+        post_open_float = function(winnr)
+        end
+      })
+    end
+  },
 }
 

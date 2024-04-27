@@ -19,37 +19,36 @@ end
 -- * terminal mode = "t",
 -- * command mode  = "c",
 
-map("n", "<leader>#", ":set relativenumber nofoldenable<cr>", {desc = "Enable number column"})
-map("n", "<leader>!C", ":set colorcolumn=80<cr>", {desc = "Enable: ColorColumn 80"})
-map("n", "<leader>!c", ":set colorcolumn=40<cr>", {desc = "Enable: ColorColumn 40"})
+-- Other
+map("n", "<leader>@", function() load_current_buffer() end, {desc = "Load current buffer"})
+map("n", "<leader>$", ":Messages messages<cr>", {desc = "Show message log"})
+map("n", "<bs>", ":URLOpenUnderCursor<cr>", {desc = "Open URL under cursor"})
+map("n", "<leader>#", ":set relativenumber nofoldenable<cr>", {desc = "Activate the NumberColumn"})
+
+map("n", "<leader>!C", ":set colorcolumn=80<cr>", {desc = "ColorColumn: adjust to 80"})
+map("n", "<leader>!c", ":set colorcolumn=40<cr>", {desc = "ColorColumn: adjust to 40"})
 
 -- Code runner
 map("n", "<leader>R", ":RunCode<cr>", {desc = "Run Code"})
 
 -- Formatter
-map("n", "<Tab>", "==<cr>", {desc = "Auto formatted"})
-map("n", ",f", "ggVG=", {desc = "Formatter all"})
+map("n", "<Tab>", "==<cr>", {desc = "Formatter: inline"})
+map("n", ",f", "ggVG=", {desc = "Formatter: all"})
 
 -- Mini.Pick
 map("n", "<leader>fg", ":MiniPickGrep<cr>", {desc = "Fuzzy finder: grep"})
-map("n", "<leader>fG", ':MiniPickGrep<cr><C-r>"', {desc = "Fuzzy finder: Grep"})
+map("n", "<leader>fG", ':MiniPickGrep<cr><C-r>"', {desc = "Fuzzy finder: grep with clipboard text"})
 map("n", "<leader>ff", ":MiniPickFiles<cr>", {desc = "Fuzzy finder: files"})
-
--- Other
-map("n", "<leader>@", function() load_current_buffer() end, {desc = "Load current buffer"})
-map("n", "<leader>$", ":Messages messages<cr>", {desc = "Show message log"})
-map("n", "<bs>", ":URLOpenUnderCursor<cr>", {desc = "Open URL under cursor"})
 
 -- Lsp diagnotic
 map("n", ",E", ":DiagnosticEnable<cr>", {desc = "LSP: enabled"})
 map("n", ",D", ":DiagnosticDisable<cr>", {desc = "LSP: disabled"})
 
 -- Search mode
-map("v", "<leader>s", 'y/<C-r>"', {desc = "Search for selected text"})
+map("v", "<leader>s", 'y/<C-r>"', {desc = "Search the selected text"})
 
--- Gitsigns
-map("n", "<leader>gd", ":Gitsigns diffthis<cr>", {desc = "Git: diff"})
-map("n", "<leader>gp", ":Gitsigns preview_hunk<cr>", {desc = "Git: preview"})
+-- Git
+map("n", "<leader>gd", ":lua MiniDiff.toggle_overlay()<cr>", {desc = "Git: diff"})
 
 -- Undo
 map("n", "<C-u>", "<ESC>u", {desc = "Undo"})
@@ -149,9 +148,9 @@ map("n", "<leader>tx", ":tabclose<cr>", {desc = "Tabs: close"})
 
 -- File explorer
 map("n", "<leader>eo", ":NnnExplorer<cr>", {desc = "Explorer: sidebar"})
-map("n", "<leader>ef", ":NnnPicker %:p:h<cr>", {desc = "Explorer: float (active buffer)"})
+map("n", "<leader>ef", ":NnnPicker %:p:h<cr>", {desc = "Explorer: float (current buffer)"})
 map("n", "<leader>em", ":MiniFiles<cr>", {desc = "Explorer: miller columns"})
-map("n", "<leader>eM", ":lua MiniFiles.open(vim.api.nvim_buf_get_name(0), false)<cr>", {desc = "Explorer: miller columns (aactive buffer)"})
+map("n", "<leader>eM", ":lua MiniFiles.open(vim.api.nvim_buf_get_name(0), false)<cr>", {desc = "Explorer: miller columns (current buffer)"})
 
 -- Clear search with <esc>
 map("n", "<esc>", "<cmd>noh<cr><esc>", {desc = "Escape and clear hlsearch"})
@@ -212,75 +211,3 @@ map("n", "<leader>Ce", ":lua require('cmp').setup.buffer {enabled = true}<cr>", 
 
 -- URL handling, thanks to: https://sbulav.github.io/vim/neovim-opening-urls
 map("n", "gx", ':call jobstart(["xdg-open", expand("<cfile>")], {"detach": v:true})<cr>', {desc = "Open: link"})
-
--- Markdown (thanks to: https://www.reddit.com/r/neovim/comments/1b3gnk0/jump_through_markdown_headings_with_gj_and_gk/)
-
--- Search UP for a markdown header
-map("n", "gk", function()
-  local foundHeader = false
-  -- Function to check if the given line number is blank
-  local function isBlankLine(lineNum)
-    return vim.fn.getline(lineNum):match("^%s*$") ~= nil
-  end
-  -- Function to search up for a markdown header
-  local function searchBackwardForHeader()
-    vim.cmd("silent! ?^\\s*#\\+\\s.*$")
-    local currentLineNum = vim.fn.line(".")
-    local aboveIsBlank = isBlankLine(currentLineNum - 1)
-    local belowIsBlank = isBlankLine(currentLineNum + 1)
-    -- Check if both above and below lines are blank, indicating a markdown header
-    if aboveIsBlank and belowIsBlank then
-      foundHeader = true
-    end
-    return currentLineNum
-  end
-  -- Initial search
-  local lastLineNum = searchBackwardForHeader()
-  -- Continue searching if the initial search did not find a header
-  while not foundHeader and vim.fn.line(".") > 1 do
-    local currentLineNum = searchBackwardForHeader()
-    -- Break the loop if the search doesn't change line number to prevent infinite loop
-    if currentLineNum == lastLineNum then
-      break
-    else
-      lastLineNum = currentLineNum
-    end
-  end
-  -- Clear search highlighting after operation
-  vim.cmd("nohlsearch")
-end, { desc = "Go to previous markdown header" })
-
--- Search DOWN for a markdown header
-map("n", "gj", function()
-  local foundHeader = false
-  -- Function to check if the given line number is blank
-  local function isBlankLine(lineNum)
-    return vim.fn.getline(lineNum):match("^%s*$") ~= nil
-  end
-  -- Function to search down for a markdown header
-  local function searchForwardForHeader()
-    vim.cmd("silent! /^\\s*#\\+\\s.*$")
-    local currentLineNum = vim.fn.line(".")
-    local aboveIsBlank = isBlankLine(currentLineNum - 1)
-    local belowIsBlank = isBlankLine(currentLineNum + 1)
-    -- Check if both above and below lines are blank, indicating a markdown header
-    if aboveIsBlank and belowIsBlank then
-      foundHeader = true
-    end
-    return currentLineNum
-  end
-  -- Initial search
-  local lastLineNum = searchForwardForHeader()
-  -- Continue searching if the initial search did not find a header
-  while not foundHeader and vim.fn.line(".") < vim.fn.line("$") do
-    local currentLineNum = searchForwardForHeader()
-    -- Break the loop if the search doesn't change line number to prevent infinite loop
-    if currentLineNum == lastLineNum then
-      break
-    else
-      lastLineNum = currentLineNum
-    end
-  end
-  -- Clear search highlighting after operation
-  vim.cmd("nohlsearch")
-end, { desc = "Go to next markdown header" })

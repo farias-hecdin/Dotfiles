@@ -62,4 +62,3 @@ opt.updatetime = 300 -- Save swap file and trigger CursorHold.
 opt.wildmode = "longest:full,full" -- Set the wildmode to longest match and full match
 opt.wrap = false -- Disable line wrapping.
 opt.writebackup = false -- If a file is being edited by another program (or was written to file while editing with another program) it is not allowed to be edited.
-

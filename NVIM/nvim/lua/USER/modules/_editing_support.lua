@@ -1,12 +1,12 @@
 local D = require("USER.modules.utils.dir")
 
 -- SUMMARY
--- mini.splitjoin
--- mini.cursorword
--- mini.pairs
--- Comment.nvim
--- nvim-ts-context-commentstring
--- mini.hipatterns
+-- * Comment.nvim
+-- * mini.cursorword
+-- * mini.hipatterns
+-- * mini.pairs
+-- * mini.splitjoin
+-- * nvim-ts-context-commentstring
 
 return {
   {
@@ -68,76 +68,89 @@ return {
     event = "BufReadPre",
     config = function()
       local hipatterns = require("mini.hipatterns")
+      local colorker = require("colorker")
+
       hipatterns.setup({
         highlighters = {
           bug = {
-            pattern = {"()BUG:()", "()FIX:()", "()FIXME:()", "()ISSUE:()", "()DEPRECATED()", "()FAILED:()"},
+            pattern = {"BUG:", "FIX:", "FIXME:", "ISSUE:", "DEPRECATED", "FAILED:"},
             group = "MiniHipatternsFixme"
           },
           hack = {
-            pattern = {"()HACK:()", "()WARN:()", "()WARNING:()"},
+            pattern = {"HACK:", "WARN:", "WARNING:"},
             group = "MiniHipatternsHack"
           },
           test = {
-            pattern = {"()TEST:()", "()TESTING:()", "()PASSED:()", "()TODO:()"},
+            pattern = {"TEST:", "TESTING:", "PASSED:", "TODO:"},
             group = "MiniHipatternsTodo"
           },
-          info = {pattern = {"()INFO:()", "()NOTE:()"}, group = "MiniHipatternsNote"},
+          info = {
+            pattern = {"INFO:", "NOTE:"},
+            group = "MiniHipatternsNote"
+          },
           optimize = {
-            pattern = {"()OPTIMIZE:()", "()OPTIM:()", "()PERFORMANCE:()", "()PERF:()"},
+            pattern = {"OPTIMIZE:", "OPTIM:", "PERFORMANCE:", "PERF:"},
             group = "MiniHipatternsPerf"
           },
           --[[
             -- Extra highlights
             -- @param , @returns and more
             -- #THIS: or !THIS: or ¡THIS:
+            -- clog()
             ]]
           docs = {pattern = {"%s()@[%l-]+()%s"}, group = "MiniHipatternsDocs"},
           show = {pattern = {"^+%s().+()"}, group = "minihipatternshighlight"},
           color = {pattern = {"![%a%d-_=\\.]+:"}, group = "MiniHipatternsColor"},
-          color2 = {pattern = {"¡[%a%d-_=\\.]+:"}, group = "MiniHipatternsColor2"},
+          color2 = {pattern = {"¡[%a%d-_=\\.]+:", "clog%(.*%)"}, group = "MiniHipatternsColor2"},
           color3 = {pattern = {"#[%a%d-_=\\.]+:"}, group = "MiniHipatternsColor3"},
           --[[
             -- Highlight color systems using that color
-            -- #4095BF
-            -- hsl(200, 50%, 50%)
-            -- lch(57.81% 34.32 241.72)
+            -- hsl(200deg, 50%, 50%) or hsl(200, 50%, 50%) or hsl(200, 50, 50)
+            -- lch(58.36% 31.79 271.95)
             -- rgb(64, 149, 191)
+            -- #4095BF
+            -- colour38
             ]]
-          hex_color = hipatterns.gen_highlighter.hex_color(),
-          hsl_color = {
-            pattern = "%s()hsl%(%d+, %d+%p?, %d+%p?%)()",
+          hex = hipatterns.gen_highlighter.hex_color(),
+          hsl = {
+            pattern = "hsl%(%d+%a*, %d+%p?, %d+%p?%)",
             group = function(_, match)
               local utils = require("USER.modules.utils.colors.hsl")
-              local h, s, l = match:match("hsl%((%d+), (%d+)%p?, (%d+)%p?%)")
-              h, s, l = tonumber(h), tonumber(s), tonumber(l)
-              local color = utils.hslToHex(h, s, l)
+              local h, s, l = match:match("hsl%((%d+)%a*, (%d+)%p?, (%d+)%p?%)")
+              local color = utils.hslToHex(tonumber(h), tonumber(s), tonumber(l))
               return MiniHipatterns.compute_hex_color_group(color, "bg")
             end
           },
-          lch_color = {
-            pattern = "%s()lch%(%d*%.?%d+%p? %d*%.?%d+ %d*%.?%d+%)()",
+          lch = {
+            pattern = "lch%(%d+%.?%d+%p? %d+%.?%d+ %d+%.?%d+%)",
             group = function(_, match)
               local utils = require("USER.modules.utils.colors.lch")
-              local l, c, h = match:match("lch%((%d*%.?%d+)%p? (%d*%.?%d+) (%d*%.?%d+)%)")
-              l, c, h = tonumber(l), tonumber(c), tonumber(h)
-              local color = utils.lchToHex(l, c, h)
+              local l, c, h = match:match("lch%((%d+%.?%d+)%p? (%d+%.?%d+) (%d+%.?%d+)%)")
+              local color = utils.lchToHex(tonumber(l), tonumber(c), tonumber(h))
               return MiniHipatterns.compute_hex_color_group(color, "bg")
             end
           },
-          rgb_color = {
-            pattern = "%s()rgb%(%d+, %d+, %d+%)()",
+          rgb = {
+            pattern = "rgb%(%d+, %d+, %d+%)",
             group = function(_, match)
               local utils = require("USER.modules.utils.colors.rgb")
               local r, g, b = match:match("rgb%((%d+), (%d+), (%d+)%)")
-              r, g, b = tonumber(r), tonumber(g), tonumber(b)
-              local color = utils.rgbToHex(r, g, b)
+              local color = utils.rgbToHex(tonumber(r), tonumber(g), tonumber(b))
               return MiniHipatterns.compute_hex_color_group(color, "bg")
             end
-          }
+          },
+          british_colour = {
+            pattern = "colour%d+",
+            group = function(_, match)
+              local utils = require("USER.modules.utils.colors.british_colour")
+              local match_value = match:match("colour(%d+)")
+              local color = utils.convert_british_color("colour" .. match_value)
+              return MiniHipatterns.compute_hex_color_group(color, "bg")
+            end
+          },
+          css_variables = colorker.get_settings()
         }
       })
     end
   }
 }
-

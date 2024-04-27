@@ -3,10 +3,10 @@ local vim = vim
 local modeNI = {"n", "i"}
 
 -- SUMMARY
--- multiple-cursors.nvim
--- mini.surround
--- mini.align
--- search-replace.nvim
+-- * multiple-cursors.nvim
+-- * mini.surround
+-- * mini.align
+-- * search-replace.nvim
 
 return {
   {

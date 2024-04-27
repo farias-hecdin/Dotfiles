@@ -1,7 +1,7 @@
 local D = require("USER.modules.utils.dir")
 
 -- SUMMARY
--- onedark.nvim
+-- * onedark.nvim
 
 return {
   {

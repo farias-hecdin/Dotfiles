@@ -1,11 +1,15 @@
-local W = require("USER.modules.utils.widgets")
+local W = require("USER.modules.utils.misc.widgets")
 local D = require("USER.modules.utils.dir")
+local vim = vim
 
 -- SUMMARY
--- mini.notify
--- mini.tabline
--- mini.starter
--- staline.nvim
+-- * mini.indentscope
+-- * mini.notify
+-- * mini.starter
+-- * mini.tabline
+-- * outline.fork
+-- * simpleIndentGuides.nvim
+-- * staline.nvim
 
 return {
   {
@@ -74,15 +78,15 @@ return {
       defaults = {
         expand_null_ls = false,
         full_path = false,
-        line_column = " L:%l/%L C:%c",
+        line_column = " 󰞖 %l:%L 󰞘 %c ",
         fg = "#000000",
         bg = "#000000",
         inactive_color = "#ffffff",
         inactive_bgcolor = "#333333",
         true_colors = true,
         font_active = "none",
-        mod_symbol = " ",
-        lsp_client_symbol = " ",
+        mod_symbol = "xx",
+        lsp_client_symbol = "󰭳 ",
         lsp_client_character_length = 12,
         branch_symbol = " "
       },
@@ -112,7 +116,7 @@ return {
         ["ic"] = " IC "
       },
       sections = {
-        left = {"-mode", "file_size", "counter", " ", "%m", "branch"},
+        left = {"-mode", "file_size", "counter", "branch"},
         mid = {"line_column"},
         right = {"linter", "lsp_name", " ", "diagnostics", "lazy", "-clock"}
       },
@@ -128,9 +132,42 @@ return {
         Hint = " "
       },
       special_table = {
-        help = {"Help", " "}
+        help = {"Help", " "},
+        lazy = {"Lazy", " "}
       }
     }
-  }
+  },
+  {
+    -- url = "https://github.com/farias-hecdin/outline.fork.git",
+    dir = D.plugin .. "outline.fork",
+    cmd = "BSOpen",
+    opts = {
+      active_icon = "",
+      space_between = " ",
+      window_width = 80,
+      window_maxheight = 20
+    }
+  },
+  {
+    -- url = "https://github.com/lucastavaresa/simpleIndentGuides.nvim.git",
+    dir = D.plugin .. "simpleIndentGuides.nvim",
+    event = {"BufReadPre"},
+    config = function()
+      vim.opt.list = true
+      require("simpleIndentGuides").setup("┊", "ˉ")
+    end
+  },
+  {
+    -- url = "https://github.com/echasnovski/mini.indentscope.git",
+    dir = D.plugin .. "mini.indentscope",
+    event = "InsertEnter",
+    config = function()
+      require("mini.indentscope").setup( {
+        draw = {
+          animation = require("mini.indentscope").gen_animation.none()
+        },
+        symbol = " " --"│"
+      })
+    end
+  },
 }
-

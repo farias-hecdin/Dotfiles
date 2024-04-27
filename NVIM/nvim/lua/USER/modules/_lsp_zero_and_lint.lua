@@ -2,9 +2,9 @@ local D = require("USER.modules.utils.dir")
 local vim = vim
 
 -- SUMMARY
--- nvim-lsp-extras
--- lsp-zero.nvim
--- nvim-lint
+-- * lsp-zero.nvim
+-- * nvim-lint
+-- * nvim-lsp-extras
 
 return {
   {

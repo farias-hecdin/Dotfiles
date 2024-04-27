@@ -8,7 +8,7 @@ end
 
 -- Print current date
 W.date = function()
-  return "󰸗" .. os.date("%v")
+  return "󰸗 " .. os.date("%v")
 end
 
 -- Count the total number of words and characters
@@ -16,7 +16,7 @@ W.word_and_character_counter = function()
   local wc = vim.api.nvim_eval("wordcount()")
   local word = " "
   if wc["visual_chars"] then
-    return word .. "W:"..wc["visual_words"] .. " C:" .. wc["visual_chars"]
+    return word .. ""..wc["visual_words"] .. " 󰾹 " .. wc["visual_chars"]
   else
     return word .. wc["words"]
   end

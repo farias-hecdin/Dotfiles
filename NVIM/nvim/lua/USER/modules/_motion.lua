@@ -2,8 +2,9 @@ local D = require("USER.modules.utils.dir")
 local vim = vim
 
 -- SUMMARY
--- sentiment.nvim
--- mini.jump2d
+-- * mini.jump2d
+-- * sentiment.nvim
+-- * vim-matchtag
 
 return {
   {
@@ -13,6 +14,14 @@ return {
     opts = {},
     init = function()
       vim.g.loaded_matchparen = 1
+    end
+  },
+  {
+    "leafOfTree/vim-matchtag",
+    lazy = false,
+    config = function()
+      vim.cmd("let g:vim_matchtag_enable_by_default = 0")
+      vim.cmd("let g:vim_matchtag_files = '*.html,*.xml,*.js,*.jsx,*.vue,*.svelte,*.jsp'")
     end
   },
   {

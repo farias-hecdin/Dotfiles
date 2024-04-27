@@ -9,12 +9,12 @@ local number_toggle = augroup("numbertoggle", {clear = true})
 
 autocmd({"BufEnter", "FocusGained", "InsertLeave"}, {
   pattern = "*",
-  command = "set relativenumber nofoldenable",
+  command = "set relativenumber nofoldenable numberwidth=4",
   group = number_toggle
 })
 autocmd({"BufLeave", "FocusLost", "InsertEnter"}, {
   pattern = "*",
-  command = "set norelativenumber nofoldenable",
+  command = "set norelativenumber nofoldenable numberwidth=4",
   group = number_toggle
 })
 

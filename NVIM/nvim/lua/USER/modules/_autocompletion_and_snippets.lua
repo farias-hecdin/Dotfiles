@@ -1,15 +1,14 @@
 local D = require("USER.modules.utils.dir")
-local icons = require("USER.modules.utils.icons").lspkind
 local vim = vim
 
 -- SUMMARY
--- cmp-cmdline
--- cmp-buffer
--- cmp-nvim-lsp
--- cmp-path
--- cmp-vsnip
--- vim-vsnip
--- nvim-cmp
+-- * cmp-buffer
+-- * cmp-cmdline
+-- * cmp-nvim-lsp
+-- * cmp-path
+-- * cmp-vsnip
+-- * nvim-cmp
+-- * vim-vsnip
 
 return {
   {
@@ -47,6 +46,7 @@ return {
     event = "InsertEnter",
     keys = {mode = "n", ":", desc = "Command mode"},
     config = function()
+      local icons = require("USER.modules.utils.misc.icons").lspkind
       local cmp = require("cmp")
       -- local lsp_zero = require('lsp-zero')
       -- lsp_zero.extend_cmp()
