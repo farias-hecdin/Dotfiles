@@ -1,15 +1,11 @@
 lastupdatecheck: 0
 recentrepos:
-- /data/data/com.termux/files/home/GIT/Dotfiles
-- /data/data/com.termux/files/home/JAVASCRIPT/Pagelist
-- /data/data/com.termux/files/home/GIT/Impzy
-- /storage/emulated/0/@HECDIN/KBase.md
-- /data/data/com.termux/files/home/GIT/Luatiny
-- /data/data/com.termux/files/home/.local/share/nvim/lazy/nvim-treesitter
-- /data/data/com.termux/files/home/.local/share/nvim/lazy/nvim-cmp
-- /data/data/com.termux/files/home/.local/share/nvim/lazy/lsp-zero.nvim
-- /data/data/com.termux/files/home/.local/share/nvim/lazy/mason.nvim
-- /data/data/com.termux/files/home/.local/share/nvim/lazy/lazy.nvim
+- /data/data/com.termux/files/home/HECDIN/Javascript/Pagelist
+- /data/data/com.termux/files/home/HECDIN/Go/Dirc
+- /data/data/com.termux/files/home/HECDIN/Javascript/AboutStyle
+- /data/data/com.termux/files/home/HECDIN/Markdown/LRKB
+- /data/data/com.termux/files/home/HECDIN/Go/Lare
+- /data/data/com.termux/files/home/HECDIN/Git/Dotfiles
 startuppopupversion: 5
 customcommandshistory: []
 hidecommandlog: false
