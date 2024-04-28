@@ -1,4 +1,5 @@
-> 📌 Use Google Translate to read this file in your native language.
+> [!TIP]
+> Use `Google Translate` to read this file in your native language.
 
 # Dotfiles
 
@@ -29,7 +30,7 @@ Para usar estos dotfiles sigue los siguientes paso:
 
    * Copia todos los archivos o solo aquellos que necesites ¡Y disfruta de la configuración!
 
-### `Neovim`
+### Neovim
 
 El [directorio NVIM](./NVIM) contiene mi configuración de Neovim. Agrega algunos atajos de teclado útiles, temas, plugins y opciones de configuración personalizadas.
 
@@ -57,7 +58,7 @@ Para instalar la configuración de Neovim, sigue los siguientes pasos:
    rm -rf ~/.config/nvim/ && cp -r ./NVIM/nvim/ ~/.config/
    ```
 
-### `Tmux`
+### Tmux
 
 En el [directorio TMUX](./TMUX) se encuentra el archivo `tmux.conf` de contiene mi configuración de Tmux, que mejora la interfaz de usuario y agrega algunos atajos de teclado utiles.
 
@@ -70,7 +71,7 @@ Para instalar la configuración de Tmux, sigue los siguientes pasos:
    rm -rf ~/.tmux.conf && cp -r ./TMUX/.tmux.conf ~/
    ```
 
-### `Nnn`
+### Nnn
 
 El [directorio NNN](./NNN) contiene mi configuración para el gestor de archivos Nnn. Agrega algunos plugins útiles para moverse más rápidamente entre los directorios como `autojump` y `fzcd`.
 
@@ -83,7 +84,7 @@ Para instalarlo sigue los siguientes pasos:
    rm -rf ~/.config/nnn/plugins/ && cp -r ./@nnn/plugins/ ~/.config/nnn/
    ```
 
-### `Zsh`
+### Zsh
 
 En el [directorio ZSH](./ZSH) contiene mi configuración de Zsh. Incluye opciones de configuración personalizadas, alias y plugins como `zsh-z`, `fast-zsh-syntax-highlighting` y `zsh-vi-mode`.
 
@@ -98,7 +99,7 @@ Para instalarlo sigue los siguientes pasos:
 
 ### Otras configuraciones
 
-#### `Lazygit`
+#### Lazygit
 
 Para instalarlo sigue los siguientes pasos:
 
@@ -109,4 +110,3 @@ Para instalarlo sigue los siguientes pasos:
 ## Licencia
 
 Dotfiles se distribuye bajo la licencia MIT. Consulte el archivo `LICENSE` para obtener más información.
-
