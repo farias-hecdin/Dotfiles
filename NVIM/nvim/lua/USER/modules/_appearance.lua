@@ -51,7 +51,7 @@ return {
         content_hooks = {
           starter.gen_hook.adding_bullet(),
           starter.gen_hook.indexing("section"),
-          starter.gen_hook.padding(8, 1)
+          starter.gen_hook.padding(6, 1)
         },
         header = W.date() ..
           "  " ..
@@ -72,8 +72,8 @@ return {
       slots = {
         clock = W.time,
         counter = W.word_and_character_counter,
-        lazy = W.startuptime_lazy,
-        linter = W.lint_progress
+        -- lazy = W.startuptime_lazy,
+        -- linter = W.lint_progress
       },
       defaults = {
         expand_null_ls = false,
@@ -85,7 +85,7 @@ return {
         inactive_bgcolor = "#333333",
         true_colors = true,
         font_active = "none",
-        mod_symbol = "xx",
+        mod_symbol = " ",
         lsp_client_symbol = "󰭳 ",
         lsp_client_character_length = 12,
         branch_symbol = " "
@@ -116,9 +116,9 @@ return {
         ["ic"] = " IC "
       },
       sections = {
-        left = {"-mode", "file_size", "counter", "branch"},
-        mid = {"line_column"},
-        right = {"linter", "lsp_name", " ", "diagnostics", "lazy", "-clock"}
+        left = {"-mode", " ", "counter"},
+        mid = {""},
+        right = {"diagnostics", "-line_column"}
       },
       inactive_sections = {
         left = {""},
@@ -126,10 +126,10 @@ return {
         right = {""}
       },
       lsp_symbols = {
-        Error = " ",
-        Info = " ",
-        Warn = " ",
-        Hint = " "
+        Error = " ",
+        Info = " ",
+        Warn = " ",
+        Hint = " "
       },
       special_table = {
         help = {"Help", " "},

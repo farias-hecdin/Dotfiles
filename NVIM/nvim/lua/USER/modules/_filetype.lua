@@ -16,6 +16,36 @@ return {
     config = true
   },
   {
+    'farias-hecdin/CSSVarHighlight',
+    ft = "css",
+    dependencies = {
+      "echasnovski/mini.hipatterns",
+      "farias-hecdin/CSSPluginHelpers",
+    },
+    config = function()
+      require('CSSVarHighlight').setup({
+        -- <number> Parent search limit (number of levels to search upwards)
+        parent_search_limit = 5,
+        -- <string> Name of the file to track (e.g. "main" for main.lua)
+        filename_to_track = "main",
+        -- <string> Pattern to search for variables containing "color"
+        variable_pattern = "%-%-[-_%w]*co%-[-_%w]*",
+        -- <string> Initial color for variables (in hexadecimal format, e.g. "#000000" for black)
+        initial_variable_color = "#000000",
+        -- <boolean> Indicates whether keymaps are disabled
+        disable_keymaps = false,
+      })
+    end,
+  },
+  {
+    "farias-hecdin/CSSVarViewer",
+    ft = "css",
+    dependencies = {
+      "farias-hecdin/CSSPluginHelpers",
+    },
+    config = true,
+  },
+  {
     -- url = "https://github.com/jsongerber/nvim-px-to-rem.git",
     dir = D.plugin .. "nvim-px-to-rem",
     cmd = {
@@ -47,25 +77,10 @@ return {
     }
   },
   {
-    url = "https://github.com/farias-hecdin/Colorker.nvim",
-    -- dir = D.plugin .. "Colorker.nvim",
-    event = "BufReadPre",
-    ft = "css",
-    config = function()
-      require('colorker').setup({
-        parent_search_limit = 5,
-        filename_to_track = "main",
-        variable_pattern = "%-%-co%-[-_%w]*",
-        initial_variable_color = "#000000",
-        disable_keymaps = false,
-      })
-    end
-  },
-  {
     url = "https://github.com/farias-hecdin/Colorformat.nvim",
     -- dir = D.plugin .. "Colorformat.nvim",
     event = "BufReadPre",
-    ft = "css",
+    ft = {"css"},
     opts = {
       display_virtual_text = true,
       target_color_format = "hex",

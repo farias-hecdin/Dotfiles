@@ -1,6 +1,8 @@
 {
+  "CSSPluginHelpers": { "branch": "main", "commit": "334284134725e19aad5082cfd35c84f7066c34c8" },
+  "CSSVarHighlight": { "branch": "main", "commit": "885a124b8b477e3d75e4354776a9c6186aa785dd" },
+  "CSSVarViewer": { "branch": "main", "commit": "31e5153987982ea0451589e4ce503e3c939e637c" },
   "Colorformat.nvim": { "branch": "main", "commit": "6f3771a88dc91da304eee43816cdc2db106b3776" },
-  "Colorker.nvim": { "branch": "main", "commit": "2c294e05989af6bd46f55ec5884578ebd23c50dc" },
   "lazy.nvim": { "branch": "main", "commit": "af6afefbb46ab29a8a1db69536b04290a9403876" },
   "lsp-zero.nvim": { "branch": "v3.x", "commit": "fb6e35ceb559a4324aa688f47e1d1eebf193ea6e" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "9dfcf2036c223920826140f0151d929a43f9eceb" },

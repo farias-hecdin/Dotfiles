@@ -68,7 +68,7 @@ return {
     event = "BufReadPre",
     config = function()
       local hipatterns = require("mini.hipatterns")
-      local colorker = require("colorker")
+      local CSSVarHighlight = require("CSSVarHighlight")
 
       hipatterns.setup({
         highlighters = {
@@ -148,7 +148,7 @@ return {
               return MiniHipatterns.compute_hex_color_group(color, "bg")
             end
           },
-          css_variables = colorker.get_settings()
+          css_variables = CSSVarHighlight.get_settings()
         }
       })
     end
