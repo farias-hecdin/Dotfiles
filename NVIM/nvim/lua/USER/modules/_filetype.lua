@@ -46,6 +46,14 @@ return {
     config = true,
   },
   {
+    "farias-hecdin/CSSColorConverter",
+    ft = "css",
+    dependencies = {
+      "farias-hecdin/CSSPluginHelpers",
+    },
+    config = true
+  },
+  {
     -- url = "https://github.com/jsongerber/nvim-px-to-rem.git",
     dir = D.plugin .. "nvim-px-to-rem",
     cmd = {
@@ -74,18 +82,6 @@ return {
         omit_heading = "toc omit heading",
         omit_section = "toc omit section",
       },
-    }
-  },
-  {
-    url = "https://github.com/farias-hecdin/Colorformat.nvim",
-    -- dir = D.plugin .. "Colorformat.nvim",
-    event = "BufReadPre",
-    ft = {"css"},
-    opts = {
-      display_virtual_text = true,
-      target_color_format = "hex",
-      disable_keymaps = false,
-      filetypes = {"css", "scss", "sass"},
     }
   },
 }
