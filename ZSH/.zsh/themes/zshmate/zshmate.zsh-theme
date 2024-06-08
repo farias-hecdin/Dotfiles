@@ -2,44 +2,39 @@
 
 setopt prompt_subst
 
-DIR_LENGTH=28
+function get_user() {
+  if [[ $UID -ne 0 ]]; then
+    echo "%F{green}%n%f" "%F{green}%#%f" "%F{green}▶%f"
+  else
+    echo "%F{red}%n%f" "%F{red}%#%f" "%F{red}▶%f"
+  fi
+}
+
+function get_host() {
+  if [[ -n "$SSH_CLIENT" || -n "$SSH2_CLIENT" ]]; then
+    echo "%F{red}%M%f"
+  else
+    echo "%F{green}%M%f"
+  fi
+}
 
 function run() {
-  local PR_USER
-  local PR_USER_OP
-  local PR_PROMPT PR_HOST
+  local PR_USER PR_USER_OP PR_PROMPT PR_HOST
 
-  # Check the UID
-  if [[ $UID -ne 0 ]]; then # Normal user
-    PR_USER="%F{green}(%n%f"
-    PR_USER_OP="%F{green}%#%f"
-    PR_PROMPT="%F{green}▶%f"
-  else # Root user
-    PR_USER="%F{red}(%n%f"
-    PR_USER_OP="%F{red}%#%f"
-    PR_PROMPT="%F{red}▶%f"
-  fi
+  read PR_USER PR_USER_OP PR_PROMPT <<< $(get_user)
+  PR_HOST=$(get_host)
 
-  # Check if we are on SSH or not
-  if [[ -n "$SSH_CLIENT" || -n "$SSH2_CLIENT" ]]; then
-    PR_HOST="%F{red}%M)%f" # SSH
-  else
-    PR_HOST="%F{green}%M)%f" # No SSH
-  fi
+  local RETURN_CODE="%(?..%F{red}%? %f)"
+  local USER_HOST="$PR_USER%F{cyan}@$PR_HOST"
+  local DIR='%F{blue}%20<…<%~%<<%f'
+  local HOUR="%F{cyan}%D{%I:%M%p}%f"
+  local GIT_STATUS='%F{white}$(git_prompt_status)%f'
+  local GIT_BRANCH='$(git_prompt_info)'
 
-  # Prompt style
-  local return_code="%(?..%F{red}%? %f)"
-  local user_host="${PR_USER}%F{cyan}@${PR_HOST}"
-  local dir='%F{blue}(%$DIR_LENGTH<...<%~%<<)%f'
-  local hour="%F{cyan}%D{%I:%M%p}%f"
-  local git_status='%F{white}$(git_prompt_status)%f'
-  local git_branch='$(git_prompt_info)'
-
-  # Prompt
-  RPROMPT="${return_code}"
+  RPROMPT="$RETURN_CODE"
   ZSH_THEME_GIT_PROMPT_PREFIX="%F{yellow} "
   ZSH_THEME_GIT_PROMPT_SUFFIX="%f"
-  PROMPT="╭─ ${hour} ${user_host} ${dir} ${git_branch} ${git_status}
+  PROMPT="╭─ $HOUR $USER_HOST $DIR $GIT_BRANCH $GIT_STATUS
 ╰─$PR_PROMPT "
 }
 
