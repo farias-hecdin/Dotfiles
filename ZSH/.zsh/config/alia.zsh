@@ -87,4 +87,4 @@ alias @clean-pnpm="pnpm store prune"
 # Ssh
 alias @ssh-agent-start='eval "$(ssh-agent -s)"'
 alias @ssh-add-github='ssh-add ~/.ssh/github_EJ5Mx'
-alias @ssh-github="ssh-agent-start && ssh-add-github"
+alias @ssh-github="@ssh-agent-start && @ssh-add-github"
