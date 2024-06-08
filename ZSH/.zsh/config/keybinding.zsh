@@ -8,7 +8,7 @@ zle -N down-line-or-beginning-search
 zle -N edit-command-line
 
 # Keys
-bindkey '\033' edit-command-line # [ESC] Edit the command line in your editor
+bindkey '\033' beginning-of-line # [ESC] - Go to beginning of line
 bindkey "^[[A" up-line-or-beginning-search  # [Typing+Up] - Fuzzy find history forward
 bindkey "^[[B" down-line-or-beginning-search  # [Typing+Down] - Fuzzy find history backward
 bindkey "^[[1~" beginning-of-line  # [Home] - Go to beginning of line

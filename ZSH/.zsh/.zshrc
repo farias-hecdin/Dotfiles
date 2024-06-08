@@ -4,7 +4,7 @@
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export ZSH=$HOME/.zsh
-export EDITOR=nvim # Specifies the editor code
+export EDITOR=nvim # Specifies the $EDITOR code
 export KEYTIMEOUT=1
 
 # History config ==============================================================
@@ -26,13 +26,11 @@ setopt INC_APPEND_HISTORY_TIME # Append command to history file immediately afte
 # Themes
 source $ZSH/themes/zshmate/zshmate.zsh-theme
 
-# Motion
-export NNN_ZLUA="$ZSH/plugins/z.lua/z.lua"
-eval "$(lua ~/.zsh/plugins/z.lua/z.lua --init zsh)"
-
-# Editing support and git
-source $ZSH/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+# Tools
 source $ZSH/plugins/git-status/git-status.plugin.zsh
+
+export NNN_ZLUA="$ZSH/plugins/z.lua/z.lua"
+eval "$(lua ~/.zsh/plugins/z.lua/z.lua --init zsh once)"
 
 # Alias and Keybindings =======================================================
 
@@ -54,6 +52,7 @@ export PATH="$PNPM_HOME:$PATH"
 
 # nnn
 export NNN_PLUG="j:autojump;"
+# nnn end
 
 # other
 export PATH="$LOCAL_SHARE/luatiny:$PATH"
