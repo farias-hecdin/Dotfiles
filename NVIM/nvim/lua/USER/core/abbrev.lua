@@ -6,12 +6,12 @@ local cmd = vim.cmd
 cmd("cnoreabbrev q1  q!")
 cmd("cnoreabbrev qa1 qa!")
 
--- Group 2
+-- Group 2 (built-in)
 cmd("cnoreabbrev mk mark")
 cmd("cnoreabbrev st sort")
+cmd("cnoreabbrev cc colorcolumn")
 
--- Group 3
+-- Group 3 (third-party)
 cmd("cnoreabbrev Mn MiniNotifyHistory")
-cmd("cnoreabbrev Toc MDToc")
+cmd("cnoreabbrev Tc MDToc")
 cmd("cnoreabbrev Ps PomodoroStart")
-

@@ -17,11 +17,22 @@ return {
     end
   },
   {
-    "leafOfTree/vim-matchtag",
+    url = "https://github.com/leafOfTree/vim-matchtag.git",
     lazy = false,
+    enabled = function()
+      local filename = vim.api.nvim_buf_get_name(0)
+      local extensions = {".html", ".jsx", ".svelte", ".vue", ".svelte"}
+
+      for _, ext in pairs(extensions) do
+        if filename:match(ext) then
+          return true
+        end
+      end
+    end,
+    ft = {"html", "jsx", "svelte", "vue", "svelte"},
     config = function()
-      vim.cmd("let g:vim_matchtag_enable_by_default = 0")
-      vim.cmd("let g:vim_matchtag_files = '*.html,*.xml,*.js,*.jsx,*.vue,*.svelte,*.jsp'")
+      vim.cmd("let g:vim_matchtag_enable_by_default=0")
+      vim.cmd("let g:vim_matchtag_files='*.html,*.xml,*.js,*.jsx,*.vue,*.svelte,*.jsp'")
     end
   },
   {
@@ -39,4 +50,3 @@ return {
     }
   }
 }
-

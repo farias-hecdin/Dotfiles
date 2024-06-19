@@ -7,14 +7,18 @@ local vim = vim
 
 return {
   {
-    "williamboman/mason.nvim",
+    url = "https://github.com/williamboman/mason.nvim.git",
     cmd = "Mason",
     build = ":MasonUpdate",
-    dependencies = {"williamboman/mason-lspconfig.nvim"},
+    ft = {"nim", "java"},
+    dependencies = {
+      "williamboman/mason-lspconfig.nvim"
+    },
     config = function()
       local lsp_zero = require("lsp-zero")
 
       require("mason").setup({
+        PATH = "prepend", -- "skip" seems to cause the spawning error
         max_concurrent_installers = 1,
         ui = {
           border = "rounded",
@@ -35,7 +39,7 @@ return {
     end
   },
   {
-    "neovim/nvim-lspconfig",
+    url = "https://github.com/neovim/nvim-lspconfig.git",
     cmd = "LspInfo",
     event = {"BufReadPre", "BufNewFile"},
     config = function()
@@ -50,17 +54,17 @@ return {
         require("USER.modules.lsp." .. lang).lsp(servers)
       end
 
-      enable_lsp("bash", {"bashls"})
       enable_lsp("css", {"cssls"})
       enable_lsp("go", {"gopls"})
       enable_lsp("html", {"emmet_ls"})
-      enable_lsp("java", {"jdtls"})
+      -- enable_lsp("java", {"jdtls"})
       enable_lsp("javascript", {"astro", "tsserver"})
       enable_lsp("lua", {"lua_ls"})
       enable_lsp("php", {"phpactor"})
+      -- enable_lsp("bash", {"bashls"})
+      -- enable_lsp("nim", {"nimlsp"})
 
       -- Lsp-config -----------------------------------------------------------
-      local lspconfig = require("lspconfig")
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       -- add a border to `:LspInfo` window
       require("lspconfig.ui.windows").default_options.border = "rounded"
@@ -130,4 +134,3 @@ return {
     end
   }
 }
-

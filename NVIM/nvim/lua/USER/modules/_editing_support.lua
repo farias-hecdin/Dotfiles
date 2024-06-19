@@ -43,29 +43,23 @@ return {
         padding = true,
         sticky = true,
         ignore = nil,
-        toggler = {
-          line = ",c",
-          block = ",b"
-        },
-        opleader = {
-          line = "gc",
-          block = "gb"
-        },
+        toggler = {line = ",c", block = ",b"},
+        opleader = {line = "gc", block = "gb"},
         pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook()
       })
     end
   },
   {
-    -- 'JoosepAlviste/nvim-ts-context-commentstring',
+    -- url = "https://github.com/JoosepAlviste/nvim-ts-context-commentstring.git",
     dir = D.plugin .. "nvim-ts-context-commentstring",
-    opts = {
-      enable_autocmd = false
-    }
+    opts = {enable_autocmd = false}
   },
   {
     -- url = "https://github.com/echasnovski/mini.hipatterns.git",
     dir = D.plugin .. "mini.hipatterns",
-    event = "BufReadPre",
+    event = "InsertEnter",
+    cmd = "MiniHipatterns",
+    ft = "css",
     config = function()
       local hipatterns = require("mini.hipatterns")
       local CSSVarHighlight = require("CSSVarHighlight")

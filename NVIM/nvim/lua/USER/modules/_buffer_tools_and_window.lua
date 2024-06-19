@@ -21,10 +21,10 @@ return {
   {
     -- url = "https://github.com/tmillr/sos.nvim.git",
     dir = D.plugin .. "sos.nvim",
-    event = {"BufReadPre"},
+    event = "BufReadPost",
     opts = {
       enabled = true,
-      timeout = 5000,
+      timeout = 6 * 1000,
       autowrite = true,
       save_on_cmd = "some",
       save_on_bufleave = true,
@@ -45,4 +45,3 @@ return {
     }
   }
 }
-

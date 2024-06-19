@@ -8,14 +8,20 @@ local autocmd = vim.api.nvim_create_autocmd -- Create autocommand
 local number_toggle = augroup("numbertoggle", {clear = true})
 
 autocmd({"BufEnter", "FocusGained", "InsertLeave"}, {
+  group = number_toggle,
   pattern = "*",
-  command = "set relativenumber nofoldenable numberwidth=4",
-  group = number_toggle
+  callback = function()
+    vim.cmd("set relativenumber nofoldenable numberwidth=4")
+    vim.cmd("lua vim.b.miniindentscope_disable=false")
+  end,
 })
 autocmd({"BufLeave", "FocusLost", "InsertEnter"}, {
+  group = number_toggle,
   pattern = "*",
-  command = "set norelativenumber nofoldenable numberwidth=4",
-  group = number_toggle
+  callback = function()
+    vim.cmd("set norelativenumber nofoldenable numberwidth=4")
+    vim.cmd("lua vim.b.miniindentscope_disable=true")
+  end,
 })
 
 -- Start terminal in insert mode ----------------------------------------------
@@ -151,11 +157,10 @@ autocmd({"InsertLeave"}, {
 
 -- Disable semantic highlights ------------------------------------------------
 autocmd('ColorScheme', {
-    desc = 'Clear LSP highlight groups',
-    callback = function()
-      for _, group in ipairs(vim.fn.getcompletion('@lsp', 'highlight')) do
-        vim.api.nvim_set_hl(0, group, {})
-      end
+  desc = 'Clear LSP highlight groups',
+  callback = function()
+    for _, group in ipairs(vim.fn.getcompletion('@lsp', 'highlight')) do
+      vim.api.nvim_set_hl(0, group, {})
     end
-  })
-
+  end
+})

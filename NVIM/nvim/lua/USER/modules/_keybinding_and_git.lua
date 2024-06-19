@@ -8,7 +8,7 @@ local vim = vim
 return {
   {
     url = 'https://github.com/echasnovski/mini.diff.git',
-    event = {"InsertEnter"},
+    event = "InsertEnter",
     config = function()
       require('mini.diff').setup({
         -- Options for how hunks are visualized

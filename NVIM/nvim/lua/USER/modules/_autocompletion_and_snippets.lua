@@ -17,6 +17,12 @@ return {
     keys = {mode = "n", ":", desc = "Command mode"}
   },
   {
+    -- url = "https://github.com/hrsh7th/cmp-path.git",
+    dir = D.plugin .. "cmp-path",
+    event = "InsertEnter",
+    keys = {mode = "n", ":", desc = "Command mode"}
+  },
+  {
     -- url = "https://github.com/hrsh7th/cmp-buffer.git",
     dir = D.plugin .. "cmp-buffer",
     event = "InsertEnter"
@@ -24,11 +30,6 @@ return {
   {
     -- url = "https://github.com/hrsh7th/cmp-nvim-lsp.git",
     dir = D.plugin .. "cmp-nvim-lsp",
-    event = "InsertEnter"
-  },
-  {
-    -- url = "https://github.com/hrsh7th/cmp-path.git",
-    dir = D.plugin .. "cmp-path",
     event = "InsertEnter"
   },
   {
@@ -42,7 +43,7 @@ return {
     event = "InsertEnter"
   },
   {
-    "hrsh7th/nvim-cmp",
+    url = "https://github.com/hrsh7th/nvim-cmp.git",
     event = "InsertEnter",
     keys = {mode = "n", ":", desc = "Command mode"},
     config = function()
@@ -154,4 +155,3 @@ return {
     end
   }
 }
-

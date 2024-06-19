@@ -14,4 +14,3 @@ M.lsp = function(servers)
 end
 
 return M
-

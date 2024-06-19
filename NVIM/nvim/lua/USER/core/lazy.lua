@@ -26,6 +26,11 @@ require("lazy").setup("USER.modules", {
   git = {
     timeout = 999 -- kill processes that take more than X minutes
   },
+  change_detection = {
+    -- automatically check for config file changes and reload the ui
+    enabled = false,
+    notify = true, -- get a notification when changes are found
+  },
   ui = {
     -- a number <1 is a percentage., >1 is a fixed size
     size = {width = 0.9, height = 0.9},
@@ -72,4 +77,3 @@ require("lazy").setup("USER.modules", {
     }
   }
 })
-

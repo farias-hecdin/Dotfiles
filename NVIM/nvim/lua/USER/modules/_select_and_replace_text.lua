@@ -33,22 +33,20 @@ return {
     -- url = "https://github.com/echasnovski/mini.surround.git",
     dir = D.plugin .. "mini.surround",
     keys = {
-      {"gZ", mode = "n", desc = "Surround: replace"},
-      {"gz", mode = "n", desc = "Surround: add"},
-      {"gz", mode = "v", desc = "Surround: add"},
-      {"gz", mode = "v", desc = "Surround: add"}
+      {"gza", mode = "v", desc = "Surround: add"},
+      {"gzr", mode = "n", desc = "Surround: replace"},
     },
     opts = {
       custom_surroundings = nil,
       highlight_duration = 5000,
       mappings = {
-        add = "gz",
-        delete = "gZd",
-        find = "gZl",
-        find_left = "gZh",
-        highlight = "gZH",
-        replace = "gZr",
-        update_n_lines = "gZu",
+        add = "gza",
+        delete = "gzd",
+        find = "gzf",
+        find_left = "gzl",
+        highlight = "gzh",
+        replace = "gzr",
+        update_n_lines = "gzu",
         suffix_last = "l",
         suffix_next = "n"
       },
@@ -89,4 +87,3 @@ return {
     end
   }
 }
-

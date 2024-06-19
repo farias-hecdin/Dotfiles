@@ -1,4 +1,5 @@
 local D = require("USER.modules.utils.dir")
+local vim = vim
 
 -- SUMMARY
 -- * Colorformat
@@ -10,13 +11,29 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    url = "https://github.com/mfussenegger/nvim-jdtls",
+    url = "https://github.com/alaviss/nim.nvim.git",
+    ft = "nim",
+    config = function()
+      local aug = vim.api.nvim_create_augroup("NimRestartKeybinds", { clear = true })
+      vim.api.nvim_create_autocmd("Filetype", {
+        pattern = "nim",
+        group = aug,
+        desc = "Assign keybind to reset lang server attached to this buffer.",
+        callback = function()
+          vim.keymap.set("n", "<Leader>(", "<Cmd>LspStart<CR>", { buffer = 0, silent = true })
+          vim.keymap.set("n", "<Leader>)", "<Cmd>LspRestart<CR>", { buffer = 0, silent = true })
+        end,
+      })
+    end,
+  },
+  {
+    url = "https://github.com/mfussenegger/nvim-jdtls.git",
     -- dir = D.plugin .. "nvim-jdtls",
     ft = "java",
     config = true
   },
   {
-    'farias-hecdin/CSSVarHighlight',
+    url = "https://github.com/farias-hecdin/CSSVarHighlight.git",
     ft = "css",
     dependencies = {
       "echasnovski/mini.hipatterns",
@@ -24,29 +41,20 @@ return {
     },
     config = function()
       require('CSSVarHighlight').setup({
-        -- <number> Parent search limit (number of levels to search upwards)
-        parent_search_limit = 5,
-        -- <string> Name of the file to track (e.g. "main" for main.lua)
-        filename_to_track = "main",
-        -- <string> Pattern to search for variables containing "color"
         variable_pattern = "%-%-[-_%w]*co%-[-_%w]*",
-        -- <string> Initial color for variables (in hexadecimal format, e.g. "#000000" for black)
-        initial_variable_color = "#000000",
-        -- <boolean> Indicates whether keymaps are disabled
-        disable_keymaps = false,
       })
     end,
   },
   {
-    "farias-hecdin/CSSVarViewer",
+    url = "https://github.com/farias-hecdin/CSSVarViewer.git",
     ft = "css",
     dependencies = {
       "farias-hecdin/CSSPluginHelpers",
     },
-    config = true,
+    config = true
   },
   {
-    "farias-hecdin/CSSColorConverter",
+    url = "https://github.com/farias-hecdin/CSSColorConverter.git",
     ft = "css",
     dependencies = {
       "farias-hecdin/CSSPluginHelpers",
@@ -74,7 +82,7 @@ return {
     config = true
   },
   {
-    -- url = "https://github.com/tadmccorkle/markdown.nvim",
+    -- url = "https://github.com/tadmccorkle/markdown.nvim.git",
     dir = D.plugin .. "markdown.nvim",
     ft = "markdown",
     opts = {

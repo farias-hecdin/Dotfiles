@@ -6,6 +6,11 @@ usercmd("WindowNvim", function()
   require("nvim-window").pick()
 end, {desc = "Window nvim"})
 
+-- MiniHipatterns
+usercmd("MiniHipatterns", function()
+  require("mini.hipatterns").toggle()
+end, {desc = "Mini_Hipatterns", nargs = 0, bang = true, bar = true})
+
 -- MiniStarter
 usercmd("MiniStarter", function()
   require("mini.starter").open()
@@ -106,10 +111,3 @@ usercmd("ReloadColorscheme", function()
   require("plenary.reload").reload_module(current_colorscheme, true)
   vim.cmd("colorscheme " .. current_colorscheme)
 end, {})
-
--- Global note
-usercmd("GlobalNoteOpen", function ()
-  local global_note = require("global-note")
-  global_note.toggle_note()
-end, {desc = "Toggle global note"})
-

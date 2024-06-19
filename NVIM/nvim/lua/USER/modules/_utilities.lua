@@ -2,9 +2,12 @@ local D = require("USER.modules.utils.dir")
 local vim = vim
 
 -- SUMMARY
--- code_runner
--- flatten.nvim
--- messages.nvim
+-- * plenary.nvim
+-- * nvim-web-devicons
+-- * code_runner
+-- * url-open
+-- * flatten.nvim
+-- * messages.nvim
 
 return {
   {
@@ -23,7 +26,7 @@ return {
     }
   },
   {
-    -- url = "https://github.com/sontungexpt/url-open",
+    -- url = "https://github.com/sontungexpt/url-open.git",
     dir = D.plugin .. "url-open",
     cmd = "URLOpenUnderCursor",
     config = function()
@@ -42,13 +45,12 @@ return {
     dir = D.plugin .. "code_runner.nvim",
     cmd = {"RunCode", "RunFile", "RunFile", "RunProject", "RunClose", "CRFiletype", "CRProjects"},
     opts =  {
-      term = {
-        size = 5
-      },
+      term = {size = 5},
       filetype = {
         go = "go run",
         java = {"cd $dir &&", "javac $fileName &&", "java $fileNameWithoutExt &&", "rm -rf *.class"},
         lua = "luajit",
+        nim = "nim compile --run",
         php = "php",
         python = "python3 -u",
         sh = "bash",
@@ -66,7 +68,7 @@ return {
   {
     -- url = "https://github.com/AckslD/messages.nvim.git",
     dir = D.plugin .. "messages.nvim",
-    lazy = false,
+    cmd = "Messages",
     config = function()
       require('messages').setup({
         command_name = 'Messages',
@@ -102,4 +104,3 @@ return {
     end
   },
 }
-

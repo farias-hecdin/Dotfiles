@@ -117,6 +117,7 @@ map("n", "<C-w>", ":wq<cr>", {desc = "File: save/quit"})
 
 -- Save in all mode
 map({"i", "v", "n", "s"}, "<C-s>", "<cmd>w<cr><esc>", {desc = "Save: now"})
+map({"i", "v"}, "<C-w>", "<cmd>wq<cr><esc>", {desc = "Save: now and quit"})
 
 -- Select
 map("n", "<leader>ma", ":keepjumps normal! ggVG<cr>", {desc = "Select: all"})
@@ -165,6 +166,9 @@ map("n", ",j", ":m .+1<cr>==", {desc = "Move: line down"})
 map("v", "K", ":m '<-2<cr>gv=gv", {desc = "Move: lines up"})
 map("v", "J", ":m '>+1<cr>gv=gv", {desc = "Move: lines down"})
 
+-- Cursor on window
+map('n', '<leader>sc', function() vim.opt.scrolloff = 999 - vim.o.scrolloff end, {desc = "Centers cursor on screen"})
+
 -- Resize window
 map("n", "<leader>sj", ":resize +10<cr>", {desc = "Window: down"})
 map("n", "<leader>sk", ":resize -10<cr>", {desc = "Window: up"})
@@ -209,5 +213,5 @@ map("n", "<leader>W", ":checkhealth which_key<cr>", {desc = "Which key"})
 map("n", "<leader>Cd", ":lua require('cmp').setup.buffer {enabled = false}<cr>", {desc = "Cmp: disable"})
 map("n", "<leader>Ce", ":lua require('cmp').setup.buffer {enabled = true}<cr>", {desc = "Cmp: enabled"})
 
--- URL handling, thanks to: https://sbulav.github.io/vim/neovim-opening-urls
+-- URL handling (thanks to: https://sbulav.github.io/vim/neovim-opening-urls)
 map("n", "gx", ':call jobstart(["xdg-open", expand("<cfile>")], {"detach": v:true})<cr>', {desc = "Open: link"})

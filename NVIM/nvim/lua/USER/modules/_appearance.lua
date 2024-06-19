@@ -15,13 +15,17 @@ return {
   {
     -- url = "https://github.com/echasnovsk/mini.notify.git',
     dir = D.plugin .. "mini.notify",
-    event = "VeryLazy",
-    config = true
+    cmd = "PomodoroStart",
+    config = function()
+      require('mini.notify').setup({
+        lsp_progress = {enable = false}
+      })
+    end
   },
   {
     -- url = "https://github.com/echasnovski/mini.tabline.git",
     dir = D.plugin .. "mini.tabline",
-    event = {"BufReadPre"},
+    event = "BufReadPre",
     opts = {
       show_icons = true,
       tabpage_section = "right"
@@ -67,18 +71,18 @@ return {
   {
     -- url = "https://github.com/farias-hecdin/staline.nvim.git",
     dir = D.plugin .. "staline.nvim",
-    event = {"BufReadPre"},
+    event = "BufReadPre",
     opts = {
       slots = {
-        clock = W.time,
+        -- clock = W.time,
+        -- linter = W.lint_progress,
         counter = W.word_and_character_counter,
-        -- lazy = W.startuptime_lazy,
-        -- linter = W.lint_progress
+        lazy = W.startuptime_lazy,
       },
       defaults = {
         expand_null_ls = false,
         full_path = false,
-        line_column = " 󰞖 %l:%L 󰞘 %c ",
+        line_column = "󰞖 %l:%L 󰞘 %c",
         fg = "#000000",
         bg = "#000000",
         inactive_color = "#ffffff",
@@ -116,9 +120,9 @@ return {
         ["ic"] = " IC "
       },
       sections = {
-        left = {"-mode", " ", "counter"},
-        mid = {""},
-        right = {"diagnostics", "-line_column"}
+        left = {"-mode", "file_size", "counter", "branch"},
+        mid = {"lazy"},
+        right = {"diagnostics", "lsp_name", " ", "-line_column"}
       },
       inactive_sections = {
         left = {""},
@@ -151,22 +155,20 @@ return {
   {
     -- url = "https://github.com/lucastavaresa/simpleIndentGuides.nvim.git",
     dir = D.plugin .. "simpleIndentGuides.nvim",
-    event = {"BufReadPre"},
+    event = "BufReadPre",
     config = function()
       vim.opt.list = true
-      require("simpleIndentGuides").setup("┊", "ˉ")
+      require("simpleIndentGuides").setup("│", "·")
     end
   },
   {
     -- url = "https://github.com/echasnovski/mini.indentscope.git",
     dir = D.plugin .. "mini.indentscope",
-    event = "InsertEnter",
+    event = "CursorMoved",
     config = function()
-      require("mini.indentscope").setup( {
-        draw = {
-          animation = require("mini.indentscope").gen_animation.none()
-        },
-        symbol = " " --"│"
+      require("mini.indentscope").setup({
+        draw = {animation = require("mini.indentscope").gen_animation.none()},
+        symbol = " "
       })
     end
   },
