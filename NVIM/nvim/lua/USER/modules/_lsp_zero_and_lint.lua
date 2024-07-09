@@ -4,33 +4,8 @@ local vim = vim
 -- SUMMARY
 -- * lsp-zero.nvim
 -- * nvim-lint
--- * nvim-lsp-extras
 
 return {
-  -- {
-  --   url = "https://github.com/seblj/nvim-lsp-extras.git",
-  --   event = {
-  --     "BufReadPre",
-  --     "BufNewFile"
-  --   },
-  --   config = function()
-  --     require("nvim-lsp-extras").setup({
-  --       signature = false,
-  --       mouse_hover = false,
-  --       lightbulb = false,
-  --       treesitter_hover = {
-  --         highlights = {
-  --           ["|%S-|"] = "@text.reference",
-  --           ["@%S+"] = "@parameter",
-  --           ["^%s*(Parameters:)"] = "@text.title",
-  --           ["^%s*(Return:)"] = "@text.title",
-  --           ["^%s*(See also:)"] = "@text.title",
-  --           ["{%S-}"] = "@parameter",
-  --         },
-  --       },
-  --     })
-  --   end
-  -- },
   {
     url = "https://github.com/VonHeikemen/lsp-zero.nvim.git",
     branch = "v3.x",

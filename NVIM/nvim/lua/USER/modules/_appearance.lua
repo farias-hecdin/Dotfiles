@@ -161,15 +161,4 @@ return {
       require("simpleIndentGuides").setup("│", "·")
     end
   },
-  {
-    -- url = "https://github.com/echasnovski/mini.indentscope.git",
-    dir = D.plugin .. "mini.indentscope",
-    event = "CursorMoved",
-    config = function()
-      require("mini.indentscope").setup({
-        draw = {animation = require("mini.indentscope").gen_animation.none()},
-        symbol = " "
-      })
-    end
-  },
 }

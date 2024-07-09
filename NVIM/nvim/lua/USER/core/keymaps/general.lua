@@ -22,7 +22,7 @@ end
 -- Other
 map("n", "<leader>@", function() load_current_buffer() end, {desc = "Load current buffer"})
 map("n", "<leader>$", ":Messages messages<cr>", {desc = "Show message log"})
-map("n", "<bs>", ":URLOpenUnderCursor<cr>", {desc = "Open URL under cursor"})
+map("n", "<leader><enter>", ":URLOpenUnderCursor<cr>", {desc = "Open URL under cursor"})
 map("n", "<leader>#", ":set relativenumber nofoldenable<cr>", {desc = "Activate the NumberColumn"})
 
 map("n", "<leader>!C", ":set colorcolumn=80<cr>", {desc = "ColorColumn: adjust to 80"})

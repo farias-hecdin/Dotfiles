@@ -84,7 +84,7 @@ return {
         MiniTablineVisible         = {fg = "#000000", bg  = "#19702F", fmt = "NONE"},
         Pmenu                      = {bg = "#222222", fg  = "#cccccc"},
         Visual                     = {fg = "#CCCCCC", bg  = "#000066"},
-        Whitespace                 = {fg = "#313131"} -- SimpleIndentGuide
+        Whitespace                 = {fg = "#323232"} -- SimpleIndentGuide
       }
     }
   }

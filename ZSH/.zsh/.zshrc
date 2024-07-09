@@ -1,13 +1,13 @@
 # More information (https://dev.to/hbenvenutti/using-zsh-without-omz-4gch)
 
-# Zsh init ====================================================================
+### ZSH INIT ------------------------------------------------------------------
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export ZSH=$HOME/.zsh
 export EDITOR=nvim # Specifies the $EDITOR code
 export KEYTIMEOUT=1
 
-# History config ==============================================================
+### HISTORY CONFIG ------------------------------------------------------------
 
 export HISTFILE=$ZSH/.zsh_history
 export HISTSIZE=999 # How many commands zsh will load to memory.
@@ -21,7 +21,7 @@ setopt HIST_IGNORE_SPACE # Ignore commands that start with space
 setopt HIST_REDUCE_BLANKS # Remove unnecessary blanks.
 setopt INC_APPEND_HISTORY_TIME # Append command to history file immediately after execution.
 
-# Plugins and themes ==========================================================
+### PLUGINS AND THEMES ---------------------------------------------------------
 
 # Themes
 source $ZSH/themes/zshmate/zshmate.zsh-theme
@@ -32,12 +32,12 @@ source $ZSH/plugins/git-status/git-status.plugin.zsh
 export NNN_ZLUA="$ZSH/plugins/z.lua/z.lua"
 eval "$(lua ~/.zsh/plugins/z.lua/z.lua --init zsh once)"
 
-# Alias and Keybindings =======================================================
+### ALIAS AND KEYBINDINGS -----------------------------------------------------
 
 source $ZSH/config/alia.zsh
 source $ZSH/config/keybinding.zsh
 
-# Export ======================================================================
+### EXPORT --------------------------------------------------------------------
 
 LOCAL_SHARE="/data/data/com.termux/files/home/.local/share"
 
@@ -59,4 +59,6 @@ export PATH="$LOCAL_SHARE/luatiny:$PATH"
 export PATH="$LOCAL_SHARE/lare:$PATH"
 export PATH="$LOCAL_SHARE/impzy:$PATH"
 export PATH="$LOCAL_SHARE/phpactor:$PATH"
-export PATH="$LOCAL_SHARE/tgpt:$PATH"
+
+# commash
+source ~/.commacd/commacd.sh

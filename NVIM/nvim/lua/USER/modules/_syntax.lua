@@ -6,15 +6,9 @@ return {
   {
     url = "https://github.com/nvim-treesitter/nvim-treesitter.git",
     commit = "65ef62092ef997d2ecf68ede01a0afbda17808c3",
-    event = {
-      "BufReadPre",
-      "BufNewFile"
-    },
-    dependencies = {
-      "virchau13/tree-sitter-astro"
-    },
+    event = {"BufReadPre", "BufNewFile"},
+    dependencies = {"virchau13/tree-sitter-astro"},
     pin = true,
-    build = ":TSUpdate",
     cmd = {"TSUpdateSync", "TSUpdate", "TSInstall"},
     init = function(plugin)
       require("lazy.core.loader").add_to_rtp(plugin)
@@ -26,7 +20,6 @@ return {
           enable = true,
           disable = function(lang, _)
             local extensions = {"nim"}
-
             for _, ext in pairs(extensions) do
               if lang == ext then
                 return true
@@ -41,30 +34,28 @@ return {
           --   end
           -- end,
         },
-        autotag = {enable = true},
+        autotag = {enable = false},
         indent = {
-          enable = true,
+          enable = false,
           disable = {"python", "shell"}
         },
-        ignore_install = {
-          "json"
-        },
         ensure_installed = {
-          "css",
-          "html",
-          "javascript",
-          "markdown",
-          "markdown_inline",
-          "tsx",
-          "typescript",
           -- "astro",
           -- "bash",
+          -- "css",
           -- "go",
+          -- "html",
           -- "java",
+          -- "javascript",
           -- "lua",
+          -- "markdown",
+          -- "markdown_inline",
           -- "nim",
           -- "php",
           -- "sql",
+          -- "tsx",
+          -- "typescript",
+          -- "zig",
         },
         auto_install = false
       })

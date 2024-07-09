@@ -48,6 +48,13 @@ require("lazy").setup("USER.modules", {
       keys = " "
     }
   },
+  profiling = {
+    -- Enables extra stats on the debug tab related to the loader cache.
+    -- Additionally gathers stats about all package.loaders (Default: false)
+    loader = true,
+    -- Track each new require in the Lazy profiling tab (Default: false)
+    require = true,
+  },
   performance = {
     rtp = {
       disabled_plugins = {

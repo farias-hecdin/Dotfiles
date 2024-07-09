@@ -5,6 +5,7 @@
   "CSSVarViewer": { "branch": "main", "commit": "e87f9c09d3f028c2cf9bfb944d631f6481063a2f" },
   "lazy.nvim": { "branch": "main", "commit": "eb4957442e3182f051b0ae11da32e06d22c190e3" },
   "lsp-zero.nvim": { "branch": "v3.x", "commit": "16de3b18c5f7b6230d89b8e64ce9a4801b6f8d08" },
+  "markview.nvim": { "branch": "main", "commit": "6bc3832e26354cf4c1675b987a9cf921b3b46e86" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "8db12610bcb7ce67013cfdfaba4dd47a23c6e851" },
   "mason.nvim": { "branch": "main", "commit": "0950b15060067f752fde13a779a994f59516ce3d" },
   "mini.diff": { "branch": "main", "commit": "441975a43bbec22442a91fe2ab1c7c06984e4d8a" },
@@ -14,6 +15,5 @@
   "nvim-jdtls": { "branch": "master", "commit": "40e8494e04c1bcd5dd6c0d0bc187d2d10965017d" },
   "nvim-lspconfig": { "branch": "master", "commit": "92166b89ab4b3d60f24e58170cac53b7141fd032" },
   "nvim-treesitter": { "branch": "master", "commit": "65ef62092ef997d2ecf68ede01a0afbda17808c3" },
-  "tree-sitter-astro": { "branch": "master", "commit": "4be180759ec13651f72bacee65fa477c64222a1a" },
-  "vim-matchtag": { "branch": "master", "commit": "54357c00979e07d86aa12b383ddd1d6a7fbda2c2" }
+  "tree-sitter-astro": { "branch": "master", "commit": "4be180759ec13651f72bacee65fa477c64222a1a" }
 }

@@ -45,12 +45,12 @@ return {
     dir = D.plugin .. "code_runner.nvim",
     cmd = {"RunCode", "RunFile", "RunFile", "RunProject", "RunClose", "CRFiletype", "CRProjects"},
     opts =  {
-      term = {size = 5},
+      term = {size = 45},
       filetype = {
         go = "go run",
         java = {"cd $dir &&", "javac $fileName &&", "java $fileNameWithoutExt &&", "rm -rf *.class"},
         lua = "luajit",
-        nim = "nim compile --run",
+        nim = "nim compile --run -d:release",
         php = "php",
         python = "python3 -u",
         sh = "bash",
