@@ -4,8 +4,14 @@
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export ZSH=$HOME/.zsh
-export EDITOR=nvim # Specifies the $EDITOR code
 export KEYTIMEOUT=1
+
+# Specifies the $EDITOR code
+if command -v nvim &> /dev/null; then
+  export EDITOR=nvim
+else
+  export EDITOR=micro
+fi
 
 ### HISTORY CONFIG ------------------------------------------------------------
 
