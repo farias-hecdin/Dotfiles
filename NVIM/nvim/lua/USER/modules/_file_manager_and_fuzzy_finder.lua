@@ -8,8 +8,8 @@ local vim = vim
 
 return {
   {
-    -- url = "https://github.com/echasnovski/mini.files.git",
-    dir = D.plugin .. "mini.files",
+    url = "https://github.com/echasnovski/mini.files.git",
+    -- dir = D.plugin .. "mini.files",
     cond = function()
       local request, _ = pcall(require, 'which-key')
       if request then

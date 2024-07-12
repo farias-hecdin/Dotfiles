@@ -30,7 +30,7 @@ source $ZSH/themes/zshmate/zshmate.zsh-theme
 source $ZSH/plugins/git-status/git-status.plugin.zsh
 
 export NNN_ZLUA="$ZSH/plugins/z.lua/z.lua"
-eval "$(lua ~/.zsh/plugins/z.lua/z.lua --init zsh once)"
+eval "$(luajit ~/.zsh/plugins/z.lua/z.lua --init zsh once)"
 
 ### ALIAS AND KEYBINDINGS -----------------------------------------------------
 
@@ -61,4 +61,4 @@ export PATH="$LOCAL_SHARE/impzy:$PATH"
 export PATH="$LOCAL_SHARE/phpactor:$PATH"
 
 # commash
-source ~/.commacd/commacd.sh
+# source ~/.commacd/commacd.sh

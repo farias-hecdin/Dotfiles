@@ -1,4 +1,5 @@
 local vim = vim
+local enable_lsp_servers = false
 
 -- SUMMARY
 -- * mason.nvim
@@ -54,15 +55,17 @@ return {
         require("USER.modules.lsp." .. lang).lsp(servers)
       end
 
-      enable_lsp("css", {"cssls"})
-      enable_lsp("go", {"gopls"})
-      enable_lsp("html", {"emmet_ls"})
-      -- enable_lsp("java", {"jdtls"})
-      enable_lsp("javascript", {"astro", "tsserver"})
-      enable_lsp("lua", {"lua_ls"})
-      enable_lsp("php", {"phpactor"})
-      -- enable_lsp("bash", {"bashls"})
-      -- enable_lsp("nim", {"nimlsp"})
+      if enable_lsp_servers then
+        enable_lsp("css", {"cssls"})
+        enable_lsp("go", {"gopls"})
+        enable_lsp("html", {"emmet_ls"})
+        -- enable_lsp("java", {"jdtls"})
+        enable_lsp("javascript", {"astro", "tsserver"})
+        enable_lsp("lua", {"lua_ls"})
+        enable_lsp("php", {"phpactor"})
+        -- enable_lsp("bash", {"bashls"})
+        -- enable_lsp("nim", {"nimlsp"})
+      end
 
       -- Lsp-config -----------------------------------------------------------
       local capabilities = vim.lsp.protocol.make_client_capabilities()

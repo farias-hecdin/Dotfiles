@@ -3,7 +3,7 @@ local vim = vim
 
 -- SUMMARY
 -- * plenary.nvim
--- * nvim-web-devicons
+-- * mini.icons
 -- * code_runner
 -- * url-open
 -- * flatten.nvim
@@ -15,15 +15,11 @@ return {
     dir = D.plugin .. "plenary.nvim"
   },
   {
-    -- url = "https://github.com/nvim-tree/nvim-web-devicons.git",
-    dir = D.plugin .. "nvim-web-devicons",
-    opts = {
-      override_by_filename = {
-        ["astro"] = {icon = "", color = "#EF8547", name = "astro"},
-        ["test.md"] = {icon = "", color = "#CBCB41", name = "test"},
-        ["prettierrc"] = {icon = "", color = "#AAAAAA", name = "prettierrc"}
-      }
-    }
+    url = 'https://github.com/echasnovski/mini.icons.git',
+    lazy = false,
+    config = function ()
+      require('mini.icons').setup()
+    end
   },
   {
     -- url = "https://github.com/sontungexpt/url-open.git",

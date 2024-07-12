@@ -13,7 +13,6 @@ alias ls="ls -a -F -h --color=always -v --time-style=long-iso"
 alias nimble="nimble --verbose"
 
 # Basic
-alias $="./"
 alias q="exit"
 alias e="nnn"
 alias C="clear"
@@ -25,7 +24,7 @@ alias ..="cd .."
 alias ...="cd ~/"
 
 # Various
-alias bm="hyperfine --warmup 3"
+alias bm="hyperfine -r 250 --warmup 3"
 alias tr="tree -C"
 alias fz="fzf -e"
 alias ed="nvim"
@@ -95,7 +94,7 @@ alias @clean-pnpm="pnpm store prune"
 ### OTHERS --------------------------------------------------------------------
 
 # Ssh
-FILE_NAME="github_EJ5Mx"
+FILE_NAME="github1"
 
 alias @ssh-agent-start='eval "$(ssh-agent -s)"'
 alias @ssh-add-github="ssh-add ~/.ssh/${FILE_NAME}"

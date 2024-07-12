@@ -23,8 +23,8 @@ return {
     end
   },
   {
-    -- url = "https://github.com/echasnovski/mini.tabline.git",
-    dir = D.plugin .. "mini.tabline",
+    url = "https://github.com/echasnovski/mini.tabline.git",
+    -- dir = D.plugin .. "mini.tabline",
     event = "BufReadPre",
     opts = {
       show_icons = true,
@@ -77,7 +77,7 @@ return {
         -- clock = W.time,
         -- linter = W.lint_progress,
         counter = W.word_and_character_counter,
-        lazy = W.startuptime_lazy,
+        -- lazy = W.startuptime_lazy,
       },
       defaults = {
         expand_null_ls = false,
@@ -121,7 +121,7 @@ return {
       },
       sections = {
         left = {"-mode", "file_size", "counter", "branch"},
-        mid = {"lazy"},
+        mid = {""},
         right = {"diagnostics", "lsp_name", " ", "-line_column"}
       },
       inactive_sections = {
