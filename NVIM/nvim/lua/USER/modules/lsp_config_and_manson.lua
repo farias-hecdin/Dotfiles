@@ -1,5 +1,5 @@
 local vim = vim
-local enable_lsp_servers = false
+local enable_lsp_servers = true
 
 -- SUMMARY
 -- * mason.nvim

@@ -9,8 +9,10 @@ export KEYTIMEOUT=1
 # Specifies the $EDITOR code
 if command -v nvim &> /dev/null; then
   export EDITOR=nvim
-else
+elif command -v micro &> /dev/null; then
   export EDITOR=micro
+else
+  export EDITOR=nano
 fi
 
 ### HISTORY CONFIG ------------------------------------------------------------

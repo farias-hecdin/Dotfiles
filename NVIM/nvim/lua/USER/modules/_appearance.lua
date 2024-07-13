@@ -142,15 +142,8 @@ return {
     }
   },
   {
-    -- url = "https://github.com/farias-hecdin/outline.fork.git",
-    dir = D.plugin .. "outline.fork",
-    cmd = "BSOpen",
-    opts = {
-      active_icon = "",
-      space_between = " ",
-      window_width = 80,
-      window_maxheight = 20
-    }
+    url = "https://github.com/kilavila/nvim-bufferlist.git",
+    cmd = {"BufferListOpen", "QuickNavOpen"},
   },
   {
     -- url = "https://github.com/lucastavaresa/simpleIndentGuides.nvim.git",

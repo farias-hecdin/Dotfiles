@@ -132,7 +132,7 @@ map("n", "<leader>bn", ":bn<cr>", {desc = "Buffer: next"})
 map("n", "<leader>bp", ":bp<cr>", {desc = "Buffer: previous"})
 map("n", "<leader>ba", ":ls<cr>", {desc = "Buffer: all"})
 map("n", "<leader>bx", ":bd<cr>", {desc = "Buffer: close"})
-map("n", "<leader>bl", ":BSOpen<cr>", {desc = "Buffer: list"})
+map("n", "<leader>bl", ":BufferListOpen<cr>", {desc = "Buffer: list"})
 
 -- Refresh
 map("n", "<leader>%", ":source %<cr>", {desc = "Refresh"})

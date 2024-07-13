@@ -13,8 +13,8 @@
   "mini.pick": { "branch": "main", "commit": "27fc7862b7a1fc2e04356dc5ed1caf7049baccb4" },
   "mini.tabline": { "branch": "main", "commit": "6b13155987a6961c661e075acebf026d25b95ddf" },
   "nim.nvim": { "branch": "master", "commit": "076239e8869e3e9b061b17cbca2cea2df73d5f92" },
+  "nvim-bufferlist": { "branch": "main", "commit": "e6a33afe9a660524ca5a9635bdc446e8403fcdc2" },
   "nvim-cmp": { "branch": "main", "commit": "a110e12d0b58eefcf5b771f533fc2cf3050680ac" },
-  "nvim-jdtls": { "branch": "master", "commit": "40e8494e04c1bcd5dd6c0d0bc187d2d10965017d" },
   "nvim-lspconfig": { "branch": "master", "commit": "92166b89ab4b3d60f24e58170cac53b7141fd032" },
   "nvim-treesitter": { "branch": "master", "commit": "65ef62092ef997d2ecf68ede01a0afbda17808c3" },
   "tree-sitter-astro": { "branch": "master", "commit": "4be180759ec13651f72bacee65fa477c64222a1a" }
