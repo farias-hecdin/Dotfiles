@@ -1,0 +1,1 @@
+local a={}local b=require("multiple-cursors.common")local c=require("multiple-cursors.virtual_cursors")local d=require("multiple-cursors.insert_mode.completion")function a.escape()d.complete_if_selected()c.visit_with_cursor(function(e)if e.col~=1 then b.normal_bang(nil,0,"h",nil)e:save_cursor_position()end end)b.feedkeys(nil,0,"<Esc>",nil)end;return a

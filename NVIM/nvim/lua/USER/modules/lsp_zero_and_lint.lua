@@ -7,7 +7,7 @@ local vim = vim
 
 return {
   {
-    url = "https://github.com/VonHeikemen/lsp-zero.nvim.git",
+    "https://github.com/VonHeikemen/lsp-zero.nvim.git",
     branch = "v3.x",
     init = function()
       vim.g.lsp_zero_extend_cmp = 0
@@ -16,8 +16,8 @@ return {
     config = false
   },
   {
-    -- url = "https://github.com/arnevm123/nvim-lint.git",
-    dir = D.plugin .. "nvim-lint",
+    url = "https://github.com/arnevm123/nvim-lint.git",
+    -- dir = D.plugin .. "nvim-lint",
     enabled = false,
     -- event = {"BufReadPre"},
     config = function()

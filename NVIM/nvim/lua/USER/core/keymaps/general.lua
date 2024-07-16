@@ -59,8 +59,7 @@ map("i", "<C-k>", "<ESC>O", {desc = "Open a line above"})
 map("i", "<C-c>", "<ESC>V", {desc = "Open visual mode"})
 
 -- Return normal mode
-map("i", ",q", "<ESC>", {desc = "Return normal mode"})
-map("i", "qq", "<ESC>", {desc = "Return normal mode"})
+map("i", "qqq", "<ESC>", {desc = "Return normal mode"})
 
 -- Add undo break-points
 map("i", ",", ",<c-g>u", {desc = "Undo break-points"})
@@ -113,7 +112,6 @@ map("n", "<leader>F!q", ":q!<cr>", {desc = "Forced: quit"})
 map("n", "<leader>F@", ":qa<cr>", {desc = "File: exit"})
 map("n", "<leader>F!@", ":qa!<cr>", {desc = "Forced: exit"})
 map("n", "<C-q>", ":qa<cr>", {desc = "File: quit"})
-map("n", "<C-w>", ":wq<cr>", {desc = "File: save/quit"})
 
 -- Save in all mode
 map({"i", "v", "n", "s"}, "<C-s>", "<cmd>w<cr><esc>", {desc = "Save: now"})

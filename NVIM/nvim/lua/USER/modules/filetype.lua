@@ -13,6 +13,7 @@ local vim = vim
 return {
   {
     url = "https://github.com/alaviss/nim.nvim.git",
+    -- dir = D.plugin .. "nim.nvim",
     ft = "nim",
     config = function()
       local aug = vim.api.nvim_create_augroup("NimRestartKeybinds", { clear = true })
@@ -27,18 +28,11 @@ return {
       })
     end,
   },
-  -- {
-  --   url = "https://github.com/mfussenegger/nvim-jdtls.git",
-  --   dir = D.plugin .. "nvim-jdtls",
-  --   ft = "java",
-  --   config = true
-  -- },
   {
-    -- url = "https://github.com/echasnovski/mini.hipatterns.git",
-    dir = D.plugin .. "mini.hipatterns",
+    url = "https://github.com/echasnovski/mini.hipatterns.git",
+    -- dir = D.plugin .. "mini.hipatterns",
     event = "InsertEnter",
     cmd = "MiniHipatterns",
-    ft = "css",
     config = function()
       local hipatterns = require("mini.hipatterns")
       local CSSVarHighlight = require("CSSVarHighlight")
@@ -66,24 +60,24 @@ return {
             group = "MiniHipatternsPerf"
           },
           --[[
-            -- Extra highlights
-            -- @param , @returns and more
-            -- #THIS: or !THIS: or ¡THIS:
-            -- clog()
-            ]]
+          -- Extra highlights
+          -- @param , @returns and more
+          -- #THIS: or !THIS: or ¡THIS:
+          -- clog()
+          ]]
           docs = {pattern = {"%s()@[%l-]+()%s"}, group = "MiniHipatternsDocs"},
           show = {pattern = {"^+%s().+()"}, group = "minihipatternshighlight"},
           color = {pattern = {"![%a%d-_=\\.]+:"}, group = "MiniHipatternsColor"},
           color2 = {pattern = {"¡[%a%d-_=\\.]+:", "clog%(.*%)"}, group = "MiniHipatternsColor2"},
           color3 = {pattern = {"#[%a%d-_=\\.]+:"}, group = "MiniHipatternsColor3"},
           --[[
-            -- Highlight color systems using that color
-            -- hsl(200deg, 50%, 50%) or hsl(200, 50%, 50%) or hsl(200, 50, 50)
-            -- lch(58.36% 31.79 271.95)
-            -- rgb(64, 149, 191)
-            -- #4095BF
-            -- colour38
-            ]]
+          -- Highlight color systems using that color
+          -- hsl(200deg, 50%, 50%) or hsl(200, 50%, 50%) or hsl(200, 50, 50)
+          -- lch(58.36% 31.79 271.95)
+          -- rgb(64, 149, 191)
+          -- #4095BF
+          -- colour38
+          ]]
           hex = hipatterns.gen_highlighter.hex_color(),
           hsl = {
             pattern = "hsl%(%d+%a*, %d+%p?, %d+%p?%)",
@@ -128,11 +122,9 @@ return {
   },
   {
     url = "https://github.com/farias-hecdin/CSSVarHighlight.git",
+    -- dir = D.plugin .. "CSSVarHighlight",
     ft = "css",
-    dependencies = {
-      "echasnovski/mini.hipatterns",
-      "farias-hecdin/CSSPluginHelpers",
-    },
+    dependencies = {"farias-hecdin/CSSPluginHelpers"},
     config = function()
       require('CSSVarHighlight').setup({
         variable_pattern = "%-%-[-_%w]*co%-[-_%w]*",
@@ -141,23 +133,21 @@ return {
   },
   {
     url = "https://github.com/farias-hecdin/CSSVarViewer.git",
+    -- dir = D.plugin .. "CSSVarViewer",
     ft = "css",
-    dependencies = {
-      "farias-hecdin/CSSPluginHelpers",
-    },
+    dependencies = {"farias-hecdin/CSSPluginHelpers"},
     config = true
   },
   {
     url = "https://github.com/farias-hecdin/CSSColorConverter.git",
+    -- dir = D.plugin .. "CSSColorConverter",
     ft = "css",
-    dependencies = {
-      "farias-hecdin/CSSPluginHelpers",
-    },
+    dependencies = {"farias-hecdin/CSSPluginHelpers"},
     config = true
   },
   {
-    -- url = "https://github.com/jsongerber/nvim-px-to-rem.git",
-    dir = D.plugin .. "nvim-px-to-rem",
+    url = "https://github.com/jsongerber/nvim-px-to-rem.git",
+    -- dir = D.plugin .. "nvim-px-to-rem",
     cmd = {
       "PxToRemCursor",
       "PxToRemLine"
@@ -169,15 +159,15 @@ return {
     }
   },
   {
-    -- url = "https://github.com/antonk52/markdowny.nvim.git",
-    dir = D.plugin .. "markdowny.nvim",
+    url = "https://github.com/antonk52/markdowny.nvim.git",
+    -- dir = D.plugin .. "markdowny.nvim",
     keys = {"<C-i>", "<C-l>", "<C-n>"},
     ft = "markdown",
     config = true
   },
   {
-    -- url = "https://github.com/tadmccorkle/markdown.nvim.git",
-    dir = D.plugin .. "markdown.nvim",
+    url = "https://github.com/tadmccorkle/markdown.nvim.git",
+    -- dir = D.plugin .. "markdown.nvim",
     ft = "markdown",
     opts = {
       toc = {

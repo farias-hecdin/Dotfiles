@@ -8,19 +8,19 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- url = "https://github.com/beauwilliams/focus.nvim.git",
-    dir = D.plugin .. "focus.nvim",
+    url = "https://github.com/beauwilliams/focus.nvim.git",
+    -- dir = D.plugin .. "focus.nvim",
     event = {"BufReadPost", "BufNewFile"},
     config = true
   },
   {
-    -- url = "https://github.com/famiu/bufdelete.nvim.git",
-    dir = D.plugin .. "bufdelete.nvim",
+    url = "https://github.com/famiu/bufdelete.nvim.git",
+    -- dir = D.plugin .. "bufdelete.nvim",
     event = "WinNew"
   },
   {
-    -- url = "https://github.com/tmillr/sos.nvim.git",
-    dir = D.plugin .. "sos.nvim",
+    url = "https://github.com/tmillr/sos.nvim.git",
+    -- dir = D.plugin .. "sos.nvim",
     event = "BufReadPost",
     opts = {
       enabled = true,
@@ -32,8 +32,8 @@ return {
     }
   },
   {
-    -- url = "https://github.com/yorickpeterse/nvim-window.git",
-    dir = D.plugin .. "nvim-window",
+    url = "https://github.com/yorickpeterse/nvim-window.git",
+    -- dir = D.plugin .. "nvim-window",
     opts = {
       chars = {
         "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",

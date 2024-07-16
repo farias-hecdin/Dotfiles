@@ -1,0 +1,14 @@
+_appearance.lua
+_buffer_tools_and_window.lua
+_colorscheme.lua
+_editing_support.lua
+_file_manager_and_fuzzy_finder.lua
+_keybinding_and_git.lua
+_motion.lua
+_select_and_replace_text.lua
+_utilities.lua
+autocompletion_and_snippets.lua
+filetype.lua
+lsp_config_and_manson.lua
+lsp_zero_and_lint.lua
+syntax.lua

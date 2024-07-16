@@ -118,9 +118,7 @@ autocmd({"InsertEnter", "WinLeave"}, {
 
 -- Change cursor highlight ----------------------------------------------------
 autocmd("TermEnter", {
-  callback = function()
-    vim.cmd([[hi TermCursor guifg=#FFA000 guibg=NONE]])
-  end
+  command = "hi TermCursor guifg=#FFA000 guibg=NONE",
 })
 
 -- Active or desactive colorcolumn --------------------------------------------
@@ -143,16 +141,12 @@ local conceal_level = augroup("conceallevel", {clear = true})
 autocmd({"InsertEnter"}, {
   pattern = "*",
   group = conceal_level,
-  callback = function()
-    vim.cmd([[set conceallevel=0]])
-  end
+  command = "set conceallevel=0",
 })
 autocmd({"InsertLeave"}, {
   pattern = "*",
   group = conceal_level,
-  callback = function()
-    vim.cmd([[set conceallevel=3]])
-  end
+  command = "set conceallevel=3",
 })
 
 -- Disable semantic highlights ------------------------------------------------

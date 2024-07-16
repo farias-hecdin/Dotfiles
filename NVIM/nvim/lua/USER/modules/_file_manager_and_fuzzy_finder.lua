@@ -41,10 +41,10 @@ return {
     }
   },
   {
-    -- url = "https://github.com/luukvbaal/nnn.nvim.git",
-    dir = D.plugin .. "nnn.nvim",
+    url = "https://github.com/luukvbaal/nnn.nvim.git",
+    -- dir = D.plugin .. "nnn.nvim",
     cmd = {"NnnExplorer", "NnnPicker"},
-    keys = {"<leader>e", mode = "n", desc = "Enable Nnn"},
+    keys = {"<leader>ef"},
     opts = {
       explorer = {
         cmd = "nnn",
@@ -82,10 +82,7 @@ return {
       end
     end,
     config = function()
-      local MiniPick = require("mini.pick")
-
-      -- Centered on screen
-      local win_config = function()
+      local center_window = function()
         local height = math.floor(0.618 * vim.o.lines)
         local width = math.floor(0.618 * vim.o.columns)
         return {
@@ -96,9 +93,9 @@ return {
           col = math.floor(0.5 * (vim.o.columns - width))
         }
       end
-      -- Setup
-      MiniPick.setup( {
-        window = {config = win_config}
+
+      require("mini.pick").setup( {
+        window = {config = center_window}
       })
     end
   }

@@ -13,8 +13,8 @@ local vim = vim
 
 return {
   {
-    -- url = "https://github.com/echasnovsk/mini.notify.git',
-    dir = D.plugin .. "mini.notify",
+    url = "https://github.com/echasnovski/mini.notify.git",
+    -- dir = D.plugin .. "mini.notify",
     cmd = "PomodoroStart",
     config = function()
       require('mini.notify').setup({
@@ -32,8 +32,8 @@ return {
     }
   },
   {
-    -- url = "https://github.com/echasnovski/mini.starter.git",
-    dir = D.plugin .. "mini.starter",
+    url = "https://github.com/echasnovski/mini.starter.git",
+    -- dir = D.plugin .. "mini.starter",
     cond = function()
       local request, _ = pcall(require, 'which-key')
       if request then
@@ -69,15 +69,14 @@ return {
     end
   },
   {
-    -- url = "https://github.com/farias-hecdin/staline.nvim.git",
-    dir = D.plugin .. "staline.nvim",
+    url = "https://github.com/farias-hecdin/staline.nvim.git",
+    -- dir = D.plugin .. "staline.nvim",
     event = "BufReadPre",
     opts = {
       slots = {
-        -- clock = W.time,
         -- linter = W.lint_progress,
-        counter = W.word_and_character_counter,
         -- lazy = W.startuptime_lazy,
+        counter = W.word_and_character_counter,
       },
       defaults = {
         expand_null_ls = false,
@@ -143,11 +142,12 @@ return {
   },
   {
     url = "https://github.com/kilavila/nvim-bufferlist.git",
+    -- dir = D.plugin .. "nvim-bufferlist",
     cmd = {"BufferListOpen", "QuickNavOpen"},
   },
   {
-    -- url = "https://github.com/lucastavaresa/simpleIndentGuides.nvim.git",
-    dir = D.plugin .. "simpleIndentGuides.nvim",
+    url = "https://github.com/lucastavaresa/simpleIndentGuides.nvim.git",
+    -- dir = D.plugin .. "simpleIndentGuides.nvim",
     event = "BufReadPre",
     config = function()
       vim.opt.list = true

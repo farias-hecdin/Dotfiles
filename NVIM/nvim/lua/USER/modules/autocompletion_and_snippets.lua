@@ -12,38 +12,38 @@ local vim = vim
 
 return {
   {
-    -- url = "https://github.com/hrsh7th/cmp-cmdline.git",
-    dir = D.plugin .. "cmp-cmdline",
+    url = "https://github.com/hrsh7th/cmp-cmdline.git",
+    -- dir = D.plugin .. "cmp-cmdline",
     keys = {mode = "n", ":", desc = "Command mode"}
   },
   {
-    -- url = "https://github.com/hrsh7th/cmp-path.git",
-    dir = D.plugin .. "cmp-path",
+    url = "https://github.com/hrsh7th/cmp-path.git",
+    -- dir = D.plugin .. "cmp-path",
     event = "InsertEnter",
     keys = {mode = "n", ":", desc = "Command mode"}
   },
   {
-    -- url = "https://github.com/hrsh7th/cmp-buffer.git",
-    dir = D.plugin .. "cmp-buffer",
+    url = "https://github.com/hrsh7th/cmp-buffer.git",
+    -- dir = D.plugin .. "cmp-buffer",
     event = "InsertEnter"
   },
   {
-    -- url = "https://github.com/hrsh7th/cmp-nvim-lsp.git",
-    dir = D.plugin .. "cmp-nvim-lsp",
+    url = "https://github.com/hrsh7th/cmp-nvim-lsp.git",
+    -- dir = D.plugin .. "cmp-nvim-lsp",
     event = "InsertEnter"
   },
   {
-    -- url = "https://github.com/hrsh7th/cmp-vsnip.git",
-    dir = D.plugin .. "cmp-vsnip",
+    url = "https://github.com/hrsh7th/cmp-vsnip.git",
+    -- dir = D.plugin .. "cmp-vsnip",
     event = "InsertEnter"
   },
   {
-    -- url = "https://github.com/hrsh7th/vim-vsnip.git",
-    dir = D.plugin .. "vim-vsnip",
+    url = "https://github.com/hrsh7th/vim-vsnip.git",
+    -- dir = D.plugin .. "vim-vsnip",
     event = "InsertEnter"
   },
   {
-    url = "https://github.com/hrsh7th/nvim-cmp.git",
+    "https://github.com/hrsh7th/nvim-cmp.git",
     event = "InsertEnter",
     keys = {mode = "n", ":", desc = "Command mode"},
     config = function()
@@ -101,7 +101,7 @@ return {
           },
           {
             name = "vsnip",
-            max_item_count = 5,
+            max_item_count = 9,
             keyword_length = 2,
             priority = 50
           },
@@ -123,7 +123,7 @@ return {
             cmp.config.compare.offset,
             cmp.config.compare.exact,
             cmp.config.compare.score,
-            cmp.config.compare.recently_used
+            cmp.config.compare.recently_used,
           }
         },
         formatting = {
@@ -131,12 +131,7 @@ return {
           format = function(entry, vim_item)
             local vim_kind = vim_item.kind
             vim_item.kind = (icons[vim_kind] or "") .. " " .. vim_kind .. " "
-            vim_item.dup =
-            ({
-              vsnip = 0,
-              nvim_lsp = 0,
-              nvim_lua = 0
-            })[entry.source.name] or 0
+            vim_item.dup = ({vsnip = 0, nvim_lsp = 0, nvim_lua = 0})[entry.source.name] or 0
             return vim_item
           end
         }

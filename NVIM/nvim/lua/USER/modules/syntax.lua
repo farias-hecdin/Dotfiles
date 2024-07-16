@@ -4,7 +4,7 @@
 
 return {
   {
-    url = "https://github.com/nvim-treesitter/nvim-treesitter.git",
+    "https://github.com/nvim-treesitter/nvim-treesitter.git",
     commit = "65ef62092ef997d2ecf68ede01a0afbda17808c3",
     event = {"BufReadPre", "BufNewFile"},
     dependencies = {"virchau13/tree-sitter-astro"},

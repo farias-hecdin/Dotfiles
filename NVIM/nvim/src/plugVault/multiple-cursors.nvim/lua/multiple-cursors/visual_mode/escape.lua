@@ -1,0 +1,1 @@
+local a={}local b=require("multiple-cursors.common")local c=require("multiple-cursors.virtual_cursors")function a.escape()c.visit_all(function(d)d.col=vim.fn.min({d.col,b.get_max_col(d.lnum)-1})d.col=vim.fn.max({d.col,1})d.visual_start_lnum=0;d.visual_start_col=0 end)b.feedkeys(nil,0,"<Esc>",nil)end;return a

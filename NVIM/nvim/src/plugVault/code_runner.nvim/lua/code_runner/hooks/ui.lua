@@ -1,0 +1,1 @@
+local a={}function a.select(b,c)c=c or"Select option:"vim.ui.select(vim.tbl_keys(b),{prompt=c},function(d,e)if vim.tbl_get(b,d)==nil then vim.notify("Option not found",vim.log.levels.ERROR,{title="Invalid option"})return end;b[d]()end)end;return a

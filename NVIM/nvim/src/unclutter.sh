@@ -44,6 +44,9 @@ list+=($(find "$DIR" -type f -name "*.jpeg" \
   -o -name "TODO.md" \
   -o -name "CONTRIBUTING.md" \
   -o -name "Makefile" \
+  -o -name ".styluaignore" \
+  -o -name ".rockspec" \
+  -o -name ".lua-format" \
 ))
 
 if [[ ${#list[@]} -gt 0 ]]; then

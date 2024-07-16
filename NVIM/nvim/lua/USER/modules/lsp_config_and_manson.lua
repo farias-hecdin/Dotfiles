@@ -8,7 +8,7 @@ local enable_lsp_servers = true
 
 return {
   {
-    url = "https://github.com/williamboman/mason.nvim.git",
+    "https://github.com/williamboman/mason.nvim.git",
     cmd = "Mason",
     build = ":MasonUpdate",
     ft = {"nim", "java"},
@@ -40,7 +40,7 @@ return {
     end
   },
   {
-    url = "https://github.com/neovim/nvim-lspconfig.git",
+    "https://github.com/neovim/nvim-lspconfig.git",
     cmd = "LspInfo",
     event = {"BufReadPre", "BufNewFile"},
     config = function()
@@ -64,7 +64,7 @@ return {
         enable_lsp("lua", {"lua_ls"})
         enable_lsp("php", {"phpactor"})
         -- enable_lsp("bash", {"bashls"})
-        -- enable_lsp("nim", {"nimlsp"})
+        -- enable_lsp("nim", {"nimlangserver"})
       end
 
       -- Lsp-config -----------------------------------------------------------
@@ -90,7 +90,6 @@ return {
           local opt_type_definition = {buffer = ev.buf, desc = "LSP: show Type definition"}
           local opt_rename = {buffer = ev.buf, desc = "LSP: rename"}
           local opt_open_float = {buffer = ev.buf, desc = "LSP: show Type diagnostic"}
-          -- local opt_formatter = { buffer = ev.buf, desc = "LSP: formatter" }
 
           map.set("n", ",e", vimlsp.declaration, opt_declaration)
           map.set("n", ",d", vimlsp.definition, opt_definition)
@@ -100,7 +99,6 @@ return {
           map.set("n", ",t", vimlsp.type_definition, opt_type_definition)
           map.set("n", ",r", vimlsp.rename, opt_rename)
           map.set("n", ",a", vimdiag.open_float, opt_open_float)
-          -- map.set("n", ",f", function() vimlsp.buf.format({ timeout = 5000 }) end, opt_formatter)
         end
       })
 

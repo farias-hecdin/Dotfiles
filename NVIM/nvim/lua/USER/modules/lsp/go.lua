@@ -1,4 +1,5 @@
 local M = {}
+local D = require("USER.modules.utils.dir")
 
 M.lsp = function(servers)
   local lspconfig = require("lspconfig")
@@ -7,7 +8,7 @@ M.lsp = function(servers)
     -- Install with: go install golang.org/x/tools/gopls@latest
     if server == "gopls" then
       lspconfig["gopls"].setup({
-          cmd = {"/data/data/com.termux/files/home/" .. "go/bin/gopls", "serve"}
+          cmd = {D.home .. "go/bin/gopls", "serve"}
         })
     end
   end
