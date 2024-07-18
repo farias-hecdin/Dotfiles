@@ -10,12 +10,9 @@ local modeNI = {"n", "i"}
 
 return {
   {
-    url = "https://github.com/brenton-leighton/multiple-cursors.nvim.git",
-    -- dir = D.plugin .. "multiple-cursors.nvim",
-    cmd = {
-      "MultipleCursorsAddDown",
-      "MultipleCursorsAddUp"
-    },
+    -- url = "https://github.com/brenton-leighton/multiple-cursors.nvim.git",
+    dir = D.plugin .. "multiple-cursors.nvim",
+    cmd = {"MultipleCursorsAddDown", "MultipleCursorsAddUp"},
     keys = {
       {"<C-Down>", ":MultipleCursorsAddDown<CR>", mode = modeNI , desc = "MultipleCursors: add down"},
       {"<C-Up>", ":MultipleCursorsAddUp<CR>", mode = modeNI, desc = "MultipleCursors: add up"},
@@ -30,8 +27,8 @@ return {
     }
   },
   {
-    url = "https://github.com/echasnovski/mini.surround.git",
-    -- dir = D.plugin .. "mini.surround",
+    -- url = "https://github.com/echasnovski/mini.surround.git",
+    dir = D.plugin .. "mini.surround",
     keys = {
       {"gza", mode = "v", desc = "Surround: add"},
       {"gzr", mode = "n", desc = "Surround: replace"},
@@ -57,8 +54,8 @@ return {
     }
   },
   {
-    url = "https://github.com/echasnovski/mini.align.git",
-    -- dir = D.plugin .. "mini.align",
+    -- url = "https://github.com/echasnovski/mini.align.git",
+    dir = D.plugin .. "mini.align",
     keys = {
       {"ga", mode = "v", desc = "Align"},
       {"gA", mode = "v", desc = "Align with preview"}
@@ -66,8 +63,8 @@ return {
     config = true
   },
   {
-    url = "https://github.com/roobert/search-replace.nvim.git",
-    -- dir = D.plugin .. "search-replace.nvim",
+    -- url = "https://github.com/roobert/search-replace.nvim.git",
+    dir = D.plugin .. "search-replace.nvim",
     keys = {
       {"<leader>r", mode = "v", desc = "Replace"},
       {"<leader>r", mode = "n", desc = "Replace"}

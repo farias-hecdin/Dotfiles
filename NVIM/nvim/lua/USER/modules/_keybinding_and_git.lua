@@ -7,8 +7,8 @@ local vim = vim
 
 return {
   {
-    url = 'https://github.com/echasnovski/mini.diff.git',
-    -- dir = D.plugin .. "mini.diff",
+    -- url = 'https://github.com/echasnovski/mini.diff.git',
+    dir = D.plugin .. "mini.diff",
     event = "InsertEnter",
     config = function()
       require('mini.diff').setup({
@@ -38,8 +38,8 @@ return {
     end
   },
   {
-    url = "https://github.com/folke/which-key.nvim.git",
-    -- dir = D.plugin .. "which-key.nvim",
+    -- url = "https://github.com/folke/which-key.nvim.git",
+    dir = D.plugin .. "which-key.nvim",
     event = "InsertEnter",
     keys = {
       {"<leader>", mode = {"n", "v"}}
@@ -61,13 +61,13 @@ return {
         notify = true,
         -- Enable/disable WhichKey for certain mapping modes
         modes = {
-          n = true, -- Normal mode
-          i = true, -- Insert mode
-          x = true, -- Visual mode
-          s = true, -- Select mode
-          o = true, -- Operator pending mode
-          t = true, -- Terminal mode
-          c = true, -- Command mode
+          n = true,
+          i = true,
+          x = true,
+          s = true,
+          o = true,
+          t = true,
+          c = true,
           -- Start hidden and wait for a key to be pressed before showing the popup
           -- Only used by enabled xo mapping modes.
           -- Set to false to show the popup immediately (after the delay)

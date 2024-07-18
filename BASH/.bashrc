@@ -13,8 +13,9 @@ alias installed="apk list --installed"
 alias e="nnn"
 alias q="exit"
 alias C="clear"
+alias R="source /etc/profile"
 alias v-new="python3 -m venv /path/to/venv"
-alias v-go=". /path/to/venv/bin/activate"
+alias v=". /path/to/venv/bin/activate"
 
 # TTS
 function now() {
@@ -22,10 +23,12 @@ function now() {
 	echo "$datetime"
 }
 
+# setup 1. = pitch (-9) rate (+25)
+tts_pitch="-9"
+tts_rate="+20"
+tts_voice="es-CR-JuanNeural"
 tts_export="downloads/"
-tts_pitch="-18"
-tts_rate="18"
 
-alias tts="edge-tts --voice es-PA-RobertoNeural --write-media ${tts_export}tts_$(now).mp3 --write-subtitles ${tts_export}tts_$(now).vtt --pitch=${tts_pitch}Hz --rate=${tts_rate}% --text"
+alias tts="edge-tts --voice $tts_voice --write-media ${tts_export}tts_$(now).mp3 --write-subtitles ${tts_export}tts_$(now).vtt --pitch=${tts_pitch}Hz --rate=${tts_rate}% --text"
 alias tts-voices="edge-tts --list-voices"
 

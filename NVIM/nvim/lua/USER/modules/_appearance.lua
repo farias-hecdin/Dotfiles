@@ -3,18 +3,16 @@ local D = require("USER.modules.utils.dir")
 local vim = vim
 
 -- SUMMARY
--- * mini.indentscope
 -- * mini.notify
 -- * mini.starter
 -- * mini.tabline
--- * outline.fork
 -- * simpleIndentGuides.nvim
 -- * staline.nvim
 
 return {
   {
-    url = "https://github.com/echasnovski/mini.notify.git",
-    -- dir = D.plugin .. "mini.notify",
+    -- url = "https://github.com/echasnovski/mini.notify.git",
+    dir = D.plugin .. "mini.notify",
     cmd = "PomodoroStart",
     config = function()
       require('mini.notify').setup({
@@ -23,8 +21,8 @@ return {
     end
   },
   {
-    url = "https://github.com/echasnovski/mini.tabline.git",
-    -- dir = D.plugin .. "mini.tabline",
+    -- url = "https://github.com/echasnovski/mini.tabline.git",
+    dir = D.plugin .. "mini.tabline",
     event = "BufReadPre",
     opts = {
       show_icons = true,
@@ -32,8 +30,8 @@ return {
     }
   },
   {
-    url = "https://github.com/echasnovski/mini.starter.git",
-    -- dir = D.plugin .. "mini.starter",
+    -- url = "https://github.com/echasnovski/mini.starter.git",
+    dir = D.plugin .. "mini.starter",
     cond = function()
       local request, _ = pcall(require, 'which-key')
       if request then
@@ -69,8 +67,8 @@ return {
     end
   },
   {
-    url = "https://github.com/farias-hecdin/staline.nvim.git",
-    -- dir = D.plugin .. "staline.nvim",
+    -- url = "https://github.com/farias-hecdin/staline.nvim.git",
+    dir = D.plugin .. "staline.nvim",
     event = "BufReadPre",
     opts = {
       slots = {
@@ -141,13 +139,13 @@ return {
     }
   },
   {
-    url = "https://github.com/kilavila/nvim-bufferlist.git",
-    -- dir = D.plugin .. "nvim-bufferlist",
+    -- url = "https://github.com/kilavila/nvim-bufferlist.git",
+    dir = D.plugin .. "nvim-bufferlist",
     cmd = {"BufferListOpen", "QuickNavOpen"},
   },
   {
-    url = "https://github.com/lucastavaresa/simpleIndentGuides.nvim.git",
-    -- dir = D.plugin .. "simpleIndentGuides.nvim",
+    -- url = "https://github.com/lucastavaresa/simpleIndentGuides.nvim.git",
+    dir = D.plugin .. "simpleIndentGuides.nvim",
     event = "BufReadPre",
     config = function()
       vim.opt.list = true

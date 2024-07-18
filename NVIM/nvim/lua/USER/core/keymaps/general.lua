@@ -149,7 +149,7 @@ map("n", "<leader>tx", ":tabclose<cr>", {desc = "Tabs: close"})
 map("n", "<leader>eo", ":NnnExplorer<cr>", {desc = "Explorer: sidebar"})
 map("n", "<leader>ef", ":NnnPicker %:p:h<cr>", {desc = "Explorer: float (current buffer)"})
 map("n", "<leader>em", ":MiniFiles<cr>", {desc = "Explorer: miller columns"})
-map("n", "<leader>eM", ":lua MiniFiles.open(vim.api.nvim_buf_get_name(0), false)<cr>", {desc = "Explorer: miller columns (current buffer)"})
+map("n", "<leader>eM", ":MiniFilesOpenHere<cr>", {desc = "Explorer: miller columns (current buffer)"})
 
 -- Clear search with <esc>
 map("n", "<esc>", "<cmd>noh<cr><esc>", {desc = "Escape and clear hlsearch"})

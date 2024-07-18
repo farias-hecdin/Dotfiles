@@ -5,8 +5,8 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    url = "https://github.com/navarasu/onedark.nvim.git",
-    -- dir = D.plugin .. "onedark.nvim",
+    -- url = "https://github.com/navarasu/onedark.nvim.git",
+    dir = D.plugin .. "onedark.nvim",
     lazy = false,
     priority = 1000,
     init = function()

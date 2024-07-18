@@ -8,8 +8,8 @@ local vim = vim
 
 return {
   {
-    url = "https://github.com/utilyre/sentiment.nvim.git",
-    -- dir = D.plugin .. "sentiment.nvim",
+    -- url = "https://github.com/utilyre/sentiment.nvim.git",
+    dir = D.plugin .. "sentiment.nvim",
     event = "CursorMoved",
     opts = {},
     init = function()
@@ -36,8 +36,8 @@ return {
     end
   },
   {
-    url = "https://github.com/echasnovski/mini.jump2d.git",
-    -- dir = D.plugin .. "mini.jump2d",
+    -- url = "https://github.com/echasnovski/mini.jump2d.git",
+    dir = D.plugin .. "mini.jump2d",
     keys = {
       {mode = "n", ",,", desc = "Jump 2d"},
       {mode = "v", ",,", desc = "Jump 2d"}

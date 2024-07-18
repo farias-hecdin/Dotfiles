@@ -8,8 +8,8 @@ local vim = vim
 
 return {
   {
-    url = "https://github.com/echasnovski/mini.files.git",
-    -- dir = D.plugin .. "mini.files",
+    -- url = "https://github.com/echasnovski/mini.files.git",
+    dir = D.plugin .. "mini.files",
     cond = function()
       local request, _ = pcall(require, 'which-key')
       if request then
@@ -41,8 +41,8 @@ return {
     }
   },
   {
-    url = "https://github.com/luukvbaal/nnn.nvim.git",
-    -- dir = D.plugin .. "nnn.nvim",
+    -- url = "https://github.com/luukvbaal/nnn.nvim.git",
+    dir = D.plugin .. "nnn.nvim",
     cmd = {"NnnExplorer", "NnnPicker"},
     keys = {"<leader>ef"},
     opts = {
@@ -73,8 +73,8 @@ return {
     }
   },
   {
-    url = "https://github.com/echasnovski/mini.pick.git",
-    -- dir = D.plugin .. "mini.pick",
+    -- url = "https://github.com/echasnovski/mini.pick.git",
+    dir = D.plugin .. "mini.pick",
     cond = function()
       local request, _ = pcall(require, 'which-key')
       if request then

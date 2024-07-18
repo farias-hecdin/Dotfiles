@@ -11,20 +11,24 @@ local vim = vim
 
 return {
   {
-    url = "https://github.com/nvim-lua/plenary.nvim.git",
-    -- dir = D.plugin .. "plenary.nvim",
+    -- url = "https://github.com/nvim-lua/plenary.nvim.git",
+    dir = D.plugin .. "plenary.nvim",
   },
   {
-    url = 'https://github.com/echasnovski/mini.icons.git',
-    -- dir = D.plugin .. "mini.icons",
+    -- url = 'https://github.com/echasnovski/mini.icons.git',
+    dir = D.plugin .. "mini.icons",
     lazy = false,
     config = function ()
-      require('mini.icons').setup()
+      require('mini.icons').setup({
+        extension = {
+          ['astro'] = {glyph = '', hl = 'MiniIconsOrange'}
+        },
+      })
     end
   },
   -- {
   --   -- "https://github.com/sontungexpt/url-open.git",
-  --   -- dir = D.plugin .. "url-open",
+  --   dir = D.plugin .. "url-open",
   --   cmd = "URLOpenUnderCursor",
   --   config = function()
   --     require("url-open").setup({
@@ -38,8 +42,8 @@ return {
   --   end
   -- },
   {
-    url = "https://github.com/CRAG666/code_runner.nvim.git",
-    -- dir = D.plugin .. "code_runner.nvim",
+    -- url = "https://github.com/CRAG666/code_runner.nvim.git",
+    dir = D.plugin .. "code_runner.nvim",
     cmd = {"RunCode", "RunFile", "RunFile", "RunProject", "RunClose", "CRFiletype", "CRProjects"},
     opts =  {
       term = {size = 45},
@@ -56,15 +60,15 @@ return {
     }
   },
   {
-    url = "https://github.com/willothy/flatten.nvim.git",
-    -- dir = D.plugin .. "flatten.nvim",
+    -- url = "https://github.com/willothy/flatten.nvim.git",
+    dir = D.plugin .. "flatten.nvim",
     config = true,
     lazy = false,
     priority = 1001
   },
   {
-    url = "https://github.com/AckslD/messages.nvim.git",
-    -- dir = D.plugin .. "messages.nvim",
+    -- url = "https://github.com/AckslD/messages.nvim.git",
+    dir = D.plugin .. "messages.nvim",
     cmd = "Messages",
     config = function()
       require('messages').setup({

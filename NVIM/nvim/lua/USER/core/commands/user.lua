@@ -1,69 +1,63 @@
 local vim = vim
 local usercmd = vim.api.nvim_create_user_command -- Create usercommand
 
--- WindowNvim
-usercmd("WindowNvim", function()
-  require("nvim-window").pick()
-end, {desc = "Window nvim"})
+local simpleUserCmd = function(options, func)
+  usercmd(options.desc, func, options)
+end
 
--- MiniHipatterns
-usercmd("MiniHipatterns", function()
-  require("mini.hipatterns").toggle()
-end, {desc = "Mini_Hipatterns", nargs = 0, bang = true, bar = true})
+-- Generals ---------------------------
 
--- MiniStarter
-usercmd("MiniStarter", function()
-  require("mini.starter").open()
-end, {desc = "Mini_Starter", nargs = 0, bang = true, bar = true})
+simpleUserCmd({desc = "WindowNvim"},
+function() require("nvim-window").pick() end)
 
--- MiniPick
-usercmd("MiniPickGrep", function()
-  require("mini.pick").builtin.grep_live()
-end, {desc = "Mini_PickGrep", bang = false, nargs = 0, bar = false})
+simpleUserCmd({desc = "MiniHipatterns", nargs = 0, bang = true, bar = true},
+function() require("mini.hipatterns").toggle() end)
 
-usercmd("MiniPickFiles", function()
-  require("mini.pick").builtin.files()
-end, {desc = "Mini_PickFiles", bang = true, nargs = 0, bar = true})
+simpleUserCmd({desc = "MiniStarter", nargs = 0, bang = true, bar = true},
+function() require("mini.starter").open() end)
 
--- MiniFiles
-usercmd("MiniFiles", function()
-  require("mini.files").open()
-end, {desc = "Mini_Files", bang = true, nargs = 0, bar = true})
+simpleUserCmd({desc = "MiniFilesOpenHere", nargs = 0, bang = true, bar = true},
+function() require("mini.files").open(vim.api.nvim_buf_get_name(0), false) end)
 
--- MiniNotify
-usercmd("MiniNotifyHistory", function()
-  require("mini.notify").show_history()
-end, {desc = "Mini_NotifyHistory", bang = true, nargs = 0, bar = true})
+simpleUserCmd({desc = "MiniPickGrep", nargs = 0, bang = false, bar = false},
+function() require("mini.pick").builtin.grep_live() end)
 
--- Treesitter
-usercmd("TSHighlightEnable", function()
-  vim.cmd("TSBufEnable highlight")
-end, {desc = "Treesitter: enabled", bang = true})
+simpleUserCmd({desc = "MiniPickFiles", nargs = 0, bang = true, bar = true},
+function() require("mini.pick").builtin.files() end)
 
-usercmd("TSHighlightDisable", function()
-  vim.cmd("TSBufDisable highlight")
-end, {desc = "Treesitter: disabled", bang = true})
+simpleUserCmd({desc = "MiniFiles", nargs = 0, bang = true, bar = true},
+function() require("mini.files").open() end)
 
--- Lsp diagnostic
--- thanks to: https://github.com/neovim/neovim/issues/13324#issuecomment-1592038788
-usercmd("LspDiagnosticDisable", function(args)
-  vim.diagnostic.disable(args.buf)
-end, {desc = "Lsp diagnostic: disabled", bang = true})
+simpleUserCmd({desc = "MiniNotifyHistory", nargs = 0, bang = true, bar = true},
+function() require("mini.notify").show_history() end)
 
-usercmd("LspDiagnosticEnable", function(args)
-  vim.diagnostic.enable(args.buf)
-end, {desc = "Lsp diagnostic: enabled", bang = true})
+simpleUserCmd({desc = "TSHighlightEnable", bang = true},
+function() vim.cmd("TSBufEnable highlight") end)
+
+simpleUserCmd({desc = "TSHighlightDisable", bang = true},
+function() vim.cmd("TSBufDisable highlight") end)
+
+-- Lsp diagnostic (thanks to: https://github.com/neovim/neovim/issues/13324#issuecomment-1592038788)
+simpleUserCmd({desc = "LspDiagnosticDisable", bang = true},
+function(args) vim.diagnostic.disable(args.buf) end)
+
+simpleUserCmd({desc = "LspDiagnosticEnable", bang = true},
+function(args) vim.diagnostic.enable(args.buf) end)
+
+-- Specials ---------------------------
 
 -- Remove extra spaces
-usercmd("RemoveExtraSpaces", function()
+simpleUserCmd({desc = "RemoveExtraSpaces", bang = true},
+function()
   local res = vim.fn.input("Are you sure? (y/n): ")
   if res == "y" then
     vim.cmd("%s/\\s\\{2,}/ /ge")
   end
-end, {desc = "Remove extra spaces", bang = true})
+end)
 
 -- Enable a pomodoro
-usercmd("PomodoroStart", function(args)
+simpleUserCmd({desc = "PomodoroStart", nargs = "*"},
+function(args)
   local argTime = args.fargs[1]
   local argMsg = args.fargs[2] or "Default"
   local time = tonumber(argTime) * 60
@@ -84,5 +78,4 @@ usercmd("PomodoroStart", function(args)
     add_and_remove_notify("done", 60, "MiniNotifyError")
   end,
     time * 1000)
-end,
-{nargs = "*"})
+end)

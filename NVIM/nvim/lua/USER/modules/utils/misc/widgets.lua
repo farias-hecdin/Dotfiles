@@ -1,5 +1,6 @@
 local W = {}
 local vim = vim
+local format = string.format
 
 local round = function(number, decimals)
   local power = 10 ^ decimals
@@ -8,12 +9,12 @@ end
 
 -- Print the current time
 W.time = function()
-  return "  " .. os.date("%I:%M%p") .. " "
+  return format("  %s ", os.date("%I:%M%p"))
 end
 
 -- Print current date
 W.date = function()
-  return "󰸗 " .. os.date("%v")
+  return format("󰸗 %s", os.date("%v"))
 end
 
 -- Count the total number of words and characters
@@ -22,12 +23,11 @@ W.word_and_character_counter = function()
   local wc = vim.api.nvim_eval("wordcount()")
   local wc_words = wc["visual_words"]
   local wc_chars = wc["visual_chars"]
-  local word = " "
 
   local function dm2ms(decimalMin)
     local min = math.floor(decimalMin)
     local seg = (decimalMin - min) * 60
-    return min, math.floor(seg + 0.5) -- redondeo al segundo más cercano
+    return min, math.floor(seg + 0.5)
   end
   local function calc_wpm()
     local res = (wc_words / WPM)
@@ -41,9 +41,9 @@ W.word_and_character_counter = function()
 
   if wc_chars then
     local wpm = tostring(calc_wpm())
-    return word .. "".. wc_words .. ":(󰚜 " .. wpm .. " 󰾹 " .. wc_chars .. ")"
+    return format(" %s:(󰚜 %s 󰾹 %s)", wc_chars, wpm, wc_chars)
   else
-    return word .. wc["words"]
+    return format(" %s", wc["words"])
   end
 end
 
@@ -53,10 +53,10 @@ end
 W.startuptime_lazy = function()
   local stats = require("lazy").stats()
   local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-  return "󰓅 " .. tostring(ms) .. "ms "
+  return format("󰓅 %sms", tostring(ms))
 end
 
--- lint progress for statusline
+-- Lint progress for statusline
 W.lint_progress = function()
   local ok, lint = pcall(require, "lint")
   if not ok then
@@ -75,4 +75,3 @@ W.lint_progress = function()
 end
 
 return W
-

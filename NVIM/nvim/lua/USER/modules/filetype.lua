@@ -12,8 +12,8 @@ local vim = vim
 
 return {
   {
-    url = "https://github.com/alaviss/nim.nvim.git",
-    -- dir = D.plugin .. "nim.nvim",
+    -- url = "https://github.com/alaviss/nim.nvim.git",
+    dir = D.plugin .. "nim.nvim",
     ft = "nim",
     config = function()
       local aug = vim.api.nvim_create_augroup("NimRestartKeybinds", { clear = true })
@@ -121,8 +121,8 @@ return {
     end
   },
   {
-    url = "https://github.com/farias-hecdin/CSSVarHighlight.git",
-    -- dir = D.plugin .. "CSSVarHighlight",
+    -- url = "https://github.com/farias-hecdin/CSSVarHighlight.git",
+    dir = D.plugin .. "CSSVarHighlight",
     ft = "css",
     dependencies = {"farias-hecdin/CSSPluginHelpers"},
     config = function()
@@ -132,26 +132,23 @@ return {
     end,
   },
   {
-    url = "https://github.com/farias-hecdin/CSSVarViewer.git",
-    -- dir = D.plugin .. "CSSVarViewer",
+    -- url = "https://github.com/farias-hecdin/CSSVarViewer.git",
+    dir = D.plugin .. "CSSVarViewer",
     ft = "css",
     dependencies = {"farias-hecdin/CSSPluginHelpers"},
     config = true
   },
   {
-    url = "https://github.com/farias-hecdin/CSSColorConverter.git",
-    -- dir = D.plugin .. "CSSColorConverter",
+    -- url = "https://github.com/farias-hecdin/CSSColorConverter.git",
+    dir = D.plugin .. "CSSColorConverter",
     ft = "css",
     dependencies = {"farias-hecdin/CSSPluginHelpers"},
     config = true
   },
   {
-    url = "https://github.com/jsongerber/nvim-px-to-rem.git",
-    -- dir = D.plugin .. "nvim-px-to-rem",
-    cmd = {
-      "PxToRemCursor",
-      "PxToRemLine"
-    },
+    -- url = "https://github.com/jsongerber/nvim-px-to-rem.git",
+    dir = D.plugin .. "nvim-px-to-rem",
+    cmd = {"PxToRemCursor", "PxToRemLine"},
     ft = "css",
     opts = {
       add_cmp_source = false,
@@ -159,15 +156,15 @@ return {
     }
   },
   {
-    url = "https://github.com/antonk52/markdowny.nvim.git",
-    -- dir = D.plugin .. "markdowny.nvim",
+    -- url = "https://github.com/antonk52/markdowny.nvim.git",
+    dir = D.plugin .. "markdowny.nvim",
     keys = {"<C-i>", "<C-l>", "<C-n>"},
     ft = "markdown",
     config = true
   },
   {
-    url = "https://github.com/tadmccorkle/markdown.nvim.git",
-    -- dir = D.plugin .. "markdown.nvim",
+    -- url = "https://github.com/tadmccorkle/markdown.nvim.git",
+    dir = D.plugin .. "markdown.nvim",
     ft = "markdown",
     opts = {
       toc = {

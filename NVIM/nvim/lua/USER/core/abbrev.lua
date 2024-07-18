@@ -1,6 +1,5 @@
-local cmd = vim.cmd
-
 -- Thanks to: https://github.com/NormTurtle/Windots/blob/main/vi/init.lua
+local cmd = vim.cmd
 
 -- Group 1
 cmd("cnoreabbrev q1  q!")

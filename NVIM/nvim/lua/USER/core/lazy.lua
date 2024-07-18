@@ -16,25 +16,16 @@ vim.opt.runtimepath:prepend(lazypath)
 
 -- Plugin setup
 require("lazy").setup("USER.modules", {
-  defaults = {
-    lazy = true -- should plugins be lazy-loaded?
-  },
-  checker = {
-    enabled = false -- automatically check for plugin updates
-  },
-  concurrency = 1, ---@type number limit the maximum amount of concurrent tasks. Default [nil]
-  git = {
-    timeout = 999 -- kill processes that take more than X minutes
-  },
+  defaults = {lazy = true},
+  checker = {enabled = false},
+  concurrency = 1,
+  git = {timeout = 999},
   change_detection = {
-    -- automatically check for config file changes and reload the ui
     enabled = false,
     notify = true, -- get a notification when changes are found
   },
   ui = {
-    -- a number <1 is a percentage., >1 is a fixed size
     size = {width = 0.9, height = 0.9},
-    -- The border to use for the UI window. Accepts same border values as |nvim_open_win()|.
     border = "rounded",
     --border = { "┏", "━", "┓", "┃", "┛","━", "┗", "┃" },
     icons = {
