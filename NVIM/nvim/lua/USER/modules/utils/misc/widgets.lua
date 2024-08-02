@@ -18,7 +18,7 @@ W.date = function()
 end
 
 -- Count the total number of words and characters
-W.word_and_character_counter = function()
+W.word_and_character_counter = function(enable_wip)
   local WPM = 162.3
   local wc = vim.api.nvim_eval("wordcount()")
   local wc_words = wc["visual_words"]
@@ -40,8 +40,10 @@ W.word_and_character_counter = function()
   end
 
   if wc_chars then
+    return format(" %s:(󰾹 %s)", wc_words, wc_chars)
+  elseif wc_chars and enable_wip then
     local wpm = tostring(calc_wpm())
-    return format(" %s:(󰚜 %s 󰾹 %s)", wc_chars, wpm, wc_chars)
+    return format(" %s:(󰚜 %s 󰾹 %s)", wc_words, wpm, wc_chars)
   else
     return format(" %s", wc["words"])
   end

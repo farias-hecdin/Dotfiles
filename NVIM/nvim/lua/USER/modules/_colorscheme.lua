@@ -68,8 +68,9 @@ return {
         MiniHipatternsColor        = {fg = "#FFDC00", fmt = "BOLD"},
         MiniHipatternsColor2       = {fg = "#FFFFFF", fmt = "BOLD"},
         MiniHipatternsColor3       = {fg = "#0074D9", fmt = "BOLD"},
+        MiniHipatternsDebug        = {fg = "#FFFFFF", bg = "#940000", fmt = "BOLD"},
         MiniHipatternsHighlight    = {bg = "#1c1c1c", fg  = "#00ffff"},
-        MiniIndentscopeSymbol      = {bg = "#222222", fg  = "#000000"},
+        MiniIndentscopeSymbol      = {bg = "#000000", fg  = "#666666"},
         MiniJump2dSpot             = {fg = "#FFF000", fmt = "NONE"},
         MiniNotifyAlert            = {fg = "#FFEE58"},
         MiniNotifyError            = {fg = "#EF5350"},
@@ -84,7 +85,7 @@ return {
         MiniTablineVisible         = {fg = "#000000", bg  = "#19702F", fmt = "NONE"},
         Pmenu                      = {bg = "#222222", fg  = "#cccccc"},
         Visual                     = {fg = "#CCCCCC", bg  = "#000066"},
-        Whitespace                 = {fg = "#323232"} -- SimpleIndentGuide
+        Whitespace                 = {fg = "#323232"}, -- SimpleIndentGuide
       }
     }
   }

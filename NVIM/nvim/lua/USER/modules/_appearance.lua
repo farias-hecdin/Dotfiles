@@ -1,13 +1,14 @@
 local W = require("USER.modules.utils.misc.widgets")
 local D = require("USER.modules.utils.dir")
-local vim = vim
 
 -- SUMMARY
 -- * mini.notify
--- * mini.starter
 -- * mini.tabline
--- * simpleIndentGuides.nvim
+-- * mini.starter
+-- * mini.indentscope
 -- * staline.nvim
+-- * simpleIndentGuides.nvim
+-- * nvim-bufferlist
 
 return {
   {
@@ -79,7 +80,7 @@ return {
       defaults = {
         expand_null_ls = false,
         full_path = false,
-        line_column = "󰞖 %l:%L 󰞘 %c",
+        line_column = "󰞖 %l/%L 󰞘 %c",
         fg = "#000000",
         bg = "#000000",
         inactive_color = "#ffffff",
@@ -88,7 +89,7 @@ return {
         font_active = "none",
         mod_symbol = " ",
         lsp_client_symbol = "󰭳 ",
-        lsp_client_character_length = 12,
+        lsp_client_character_length = 10,
         branch_symbol = " "
       },
       mode_colors = {
@@ -103,17 +104,17 @@ return {
         ["t"] = "#FFA000"
       },
       mode_icons = {
-        ["c"] = " COM",
-        ["n"] = " NOR",
-        ["i"] = " INS",
-        ["v"] = " VIS",
-        ["V"] = " V-L",
+        ["c"]  = " COM",
+        ["n"]  = " NOR",
+        ["i"]  = " INS",
+        ["v"]  = " VIS",
+        ["V"]  = " V-L",
         [""] = " V-V",
-        ["r"] = " REP",
-        ["R"] = " R-L",
-        ["t"] = " TER",
-        ["s"] = " SEL",
-        ["S"] = " S-L",
+        ["r"]  = " REP",
+        ["R"]  = " R-L",
+        ["t"]  = " TER",
+        ["s"]  = " SEL",
+        ["S"]  = " S-L",
         ["ic"] = " IC "
       },
       sections = {
@@ -149,7 +150,18 @@ return {
     event = "BufReadPre",
     config = function()
       vim.opt.list = true
-      require("simpleIndentGuides").setup("│", "·")
+      require("simpleIndentGuides").setup("·", " ") --"│", "·"
+    end
+  },
+  {
+    -- url = "https://github.com/echasnovski/mini.indentscope.git",
+    dir = D.plugin .. "mini.indentscope",
+    event = "InsertEnter",
+    config = function()
+      require("mini.indentscope").setup {
+        draw = {animation = require("mini.indentscope").gen_animation.none()},
+        symbol = "·"--"│"
+      }
     end
   },
 }

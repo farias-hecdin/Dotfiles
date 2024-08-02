@@ -6,6 +6,7 @@ cmd("cnoreabbrev q1  q!")
 cmd("cnoreabbrev qa1 qa!")
 
 -- Group 2 (built-in)
+cmd("cnoreabbrev nw set numberwidth=4")
 cmd("cnoreabbrev mk mark")
 cmd("cnoreabbrev st sort")
 cmd("cnoreabbrev cc colorcolumn")

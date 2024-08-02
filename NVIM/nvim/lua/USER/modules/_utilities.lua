@@ -1,5 +1,4 @@
 local D = require("USER.modules.utils.dir")
-local vim = vim
 
 -- SUMMARY
 -- * plenary.nvim
@@ -18,29 +17,32 @@ return {
     -- url = 'https://github.com/echasnovski/mini.icons.git',
     dir = D.plugin .. "mini.icons",
     lazy = false,
-    config = function ()
+    config = function()
       require('mini.icons').setup({
+        file = {
+          ['init.lua'] = {glyph = '󰢱'},
+        },
         extension = {
           ['astro'] = {glyph = '', hl = 'MiniIconsOrange'}
         },
       })
     end
   },
-  -- {
-  --   -- "https://github.com/sontungexpt/url-open.git",
-  --   dir = D.plugin .. "url-open",
-  --   cmd = "URLOpenUnderCursor",
-  --   config = function()
-  --     require("url-open").setup({
-  --       extra_patterns = {
-  --         {
-  --           pattern = '"(github%.com/[^"]+)"',
-  --           prefix = "https://pkg.go.dev/",
-  --         },
-  --       },
-  --     })
-  --   end
-  -- },
+  {
+    -- url = "https://github.com/sontungexpt/url-open.git",
+    dir = D.plugin .. "url-open",
+    cmd = "URLOpenUnderCursor",
+    config = function()
+      require("url-open").setup({
+        extra_patterns = {
+          {
+            pattern = '"(github%.com/[^"]+)"',
+            prefix = "https://pkg.go.dev/",
+          },
+        },
+      })
+    end
+  },
   {
     -- url = "https://github.com/CRAG666/code_runner.nvim.git",
     dir = D.plugin .. "code_runner.nvim",
@@ -51,7 +53,7 @@ return {
         go = "go run",
         java = {"cd $dir &&", "javac $fileName &&", "java $fileNameWithoutExt &&", "rm -rf *.class"},
         lua = "luajit",
-        nim = "nim compile --run -d:release",
+        nim = "nim compile --run -d:release --hints:off",
         php = "php",
         python = "python3 -u",
         sh = "bash",
@@ -78,22 +80,23 @@ return {
           return vim.api.nvim_open_win(buf, true, opts)
         end,
         buffer_opts = function(lines)
-          local gheight = vim.api.nvim_list_uis()[1].height
-          local gwidth = vim.api.nvim_list_uis()[1].width
+          local ui = vim.api.nvim_list_uis()
+          local gheight = ui[1].height
+          local gwidth = ui[1].width
           return {
             relative = 'editor',
-            width = gwidth - 2,
-            height = gheight * 0.5,
+            height = gheight - 10,
+            width = gwidth - 5,
             anchor = 'SW',
             row = gheight - 1,
-            col = 0,
+            col = 2,
             style = 'minimal',
             border = 'rounded',
             zindex = 1,
           }
         end,
-        post_open_float = function(winnr)
-        end
+        -- post_open_float = function(winnr)
+        -- end
       })
     end
   },

@@ -1,4 +1,5 @@
 local vim = vim
+local D = require('USER.modules.utils.dir')
 
 -- Define autocommands with Lua APIs (See: h:api-autocmd, h:augroup)
 local augroup = vim.api.nvim_create_augroup -- Create/get autocommand group
@@ -12,7 +13,7 @@ autocmd({"BufEnter", "FocusGained", "InsertLeave"}, {
   pattern = "*",
   callback = function()
     vim.cmd("set relativenumber nofoldenable numberwidth=4")
-    vim.cmd("lua vim.b.miniindentscope_disable=false")
+    -- Useful to disable plugins for certain file types
   end,
 })
 autocmd({"BufLeave", "FocusLost", "InsertEnter"}, {
@@ -20,7 +21,6 @@ autocmd({"BufLeave", "FocusLost", "InsertEnter"}, {
   pattern = "*",
   callback = function()
     vim.cmd("set norelativenumber nofoldenable numberwidth=4")
-    vim.cmd("lua vim.b.miniindentscope_disable=true")
   end,
 })
 

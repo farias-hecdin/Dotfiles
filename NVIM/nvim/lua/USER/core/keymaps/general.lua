@@ -34,6 +34,8 @@ map("n", "<leader>R", ":RunCode<cr>", {desc = "Run Code"})
 -- Formatter
 map("n", "<Tab>", "==<cr>", {desc = "Formatter: inline"})
 map("n", ",f", "ggVG=", {desc = "Formatter: all"})
+map("n", "'t", "><left>", {desc = "Formatter: indent"})
+map("n", "'r", "<<right>", {desc = "Formatter: no-indent"})
 
 -- Mini.Pick
 map("n", "<leader>fg", ":MiniPickGrep<cr>", {desc = "Fuzzy finder: grep"})
@@ -48,7 +50,9 @@ map("n", ",D", ":DiagnosticDisable<cr>", {desc = "LSP: disabled"})
 map("v", "<leader>s", 'y/<C-r>"', {desc = "Search the selected text"})
 
 -- Git
-map("n", "<leader>gd", ":lua MiniDiff.toggle_overlay()<cr>", {desc = "Git: diff"})
+map("n", "<leader>gt", ":lua MiniDiff.toggle_overlay()<cr>", {desc = "Git: diff toggle"})
+map("n", "<leader>gd", ":MiniDiffOnly 0<cr>", {desc = "Git: diff only (off)"})
+map("n", "<leader>ge", ":MiniDiffOnly 1<cr>", {desc = "Git: diff only (on)"})
 
 -- Undo
 map("n", "<C-u>", "<ESC>u", {desc = "Undo"})
@@ -134,6 +138,10 @@ map("n", "<leader>bl", ":BufferListOpen<cr>", {desc = "Buffer: list"})
 
 -- Refresh
 map("n", "<leader>%", ":source %<cr>", {desc = "Refresh"})
+
+-- Treesitter playground
+map("n", "<leader>Pc", ":TSCaptureUnderCursor<cr>", {desc = "TsPlayground: cursor"})
+map("n", "<leader>Pt", ":TSPlaygroundToggle<cr>", {desc = "TsPlayground: toggle"})
 
 -- Numbers
 map("n", "<leader>ni", "<C-a>", {desc = "Number: increase"})

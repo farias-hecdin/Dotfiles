@@ -1,5 +1,4 @@
 local D = require("USER.modules.utils.dir")
-local vim = vim
 
 -- SUMMARY
 -- * mini.diff
@@ -15,10 +14,11 @@ return {
         view = {
           style ='sign',
           signs = {add = '', change = '󰚾', delete = '󰶹'},
-          priority = vim.highlight.priorities.user - 1,
+          -- priority = vim.highlight.priorities.user - 1,
+          priority = 1
         },
         source = nil,
-        delay = {text_change = 500},
+        delay = {text_change = 1000},
         -- Module mappings. Use `""` to disable one.
         mappings = {
           apply = 'gh',
@@ -35,6 +35,15 @@ return {
           linematch = 60,
         },
       })
+
+      -- Use Mini in normal mode only for an active buffer --------------
+      local augroup = vim.api.nvim_create_augroup -- Create/get autocommand group
+      local autocmd = vim.api.nvim_create_autocmd -- Create autocommand
+      local difftoggle = augroup("difftoggle", {clear = true})
+      local comm = "lua MiniDiff.toggle()"
+
+      autocmd({"InsertLeave"}, {group = difftoggle, pattern = "*", callback = function() vim.cmd(comm) end})
+      autocmd({"InsertEnter"}, {group = difftoggle, pattern = "*", callback = function() vim.cmd(comm) end})
     end
   },
   {
@@ -49,7 +58,7 @@ return {
 
       wk.setup({
         preset = "modern",
-        delay = (1 * 1000),
+        delay = (1 * 1500),
         filter = function(mapping)
           -- example to exclude mappings without a description
           -- return mapping.desc and mapping.desc ~= ""
@@ -211,6 +220,7 @@ return {
             {"<leader>.", group = "Move"},
             {"<leader>C", group = "Cmp"},
             {"<leader>F!", group = "Forced"},
+            {"<leader>P", group = "TSPlayground"},
             {"<leader>M", group = "Markdown"},
             {"<leader>T", group = "Treesitter"},
             {"<leader>b", group = "Buffer"},

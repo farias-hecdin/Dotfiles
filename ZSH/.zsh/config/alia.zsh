@@ -1,3 +1,6 @@
+### Distro --------------------------------------------------------------------
+
+alias proot-alpine="proot-distro login alpine"
 alias alpine="termux-alpine"
 
 ### APP CONFIGURATION ---------------------------------------------------------
@@ -11,7 +14,7 @@ alias zconfig="$EDITOR ~/.zshrc"
 ### SHORTCUTS -----------------------------------------------------------------
 
 alias fd="fd -H"
-alias ls="ls -a -F -h --color=always -v --time-style=long-iso"
+alias Ls="ls -a -F -h --color=always -v --time-style=long-iso"
 alias nimble="nimble --verbose"
 
 # Basic
@@ -29,82 +32,101 @@ alias ...="cd ~/"
 alias tr="tree -C"
 alias fz="fzf -e"
 alias ed="nvim"
+alias ed-noPlugins="nvim --noplugin"
 alias zi="z -I ."
-alias ds="gdu"
+alias ds="dua"
 alias lg="lazygit"
 
 # Git
 alias gt="git"
 alias gtc="git clone"
-alias @git-add="git add"
-alias @git-clone="git clone"
-alias @git-merge="git merge --no-ff"
-alias @git-remote-change="git remote set-url origin"
-alias @git-remote-view="git remote -v"
-alias @git-log="git log --graph --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%an%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %s%C(reset)' --all"
+alias Git-add="git add"
+alias Git-clone="git clone"
+alias Git-merge="git merge --no-ff"
+alias Git-branch-rename="git branch -m" # -> <old-name> <new-name>
+alias Git-branch-rename-remote="git push origin" #. -> :<old-name> <new-name>
+alias Git-remote-change="git remote set-url origin"
+alias Git-remote-view="git remote -v"
+alias Git-log="git log --graph --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%an%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %s%C(reset)' --all"
 
 # Tmux
 alias tx="tmux"
-alias @tmux-list="tmux list-sessions"
-alias @tmux-new-session="tmux new-session -s"
-alias @tmux-kill-all="tmux kill-server"
-alias @tmux-kill-this="tmux kill-server -t"
-alias @tmux-attach="tmux attach -t"
+alias Tmux-list="tmux list-sessions"
+alias Tmux-new-session="tmux new-session -s"
+alias Tmux-kill-all="tmux kill-server"
+alias Tmux-kill-this="tmux kill-server -t"
+alias Tmux-attach="tmux attach -t"
 
 # Nanoid
-alias @id="nanoid --alphabet abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 --size"
-alias @id-int="nanoid --alphabet 1234567890 --size"
-alias @id-string="nanoid --alphabet abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ --size"
+alias Id="nanoid --alphabet abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 --size"
+alias Id-int="nanoid --alphabet 1234567890 --size"
+alias Id-string="nanoid --alphabet abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ --size"
+
+# Others
+alias lua="luajit"
+alias find-clones="fclones group"
 
 ### SPECIALS ------------------------------------------------------------------
 
-alias measure="hyperfine -r 250 --warmup 3"
+# Hyperfine (benchmark)
+alias Bm5="hyperfine -r 5 --warmup 5"
+alias Bm25="hyperfine -r 25 --warmup 5"
+alias Bm50="hyperfine -r 50 --warmup 5"
+alias Bm100="hyperfine -r 100 --warmup 5"
+alias Bm200="hyperfine -r 200 --warmup 5"
 
 # Tar
-alias tar-gz="tar -xzf"
-alias tar-xz="tar -xvf"
-alias tarC-lz4="tar --use-compress-program=lz4 -cvf archive.lz4" # Need: "pkg install lz4"
-alias tarD-lz4="tar --use-compress-program=lz4 -xvf archive.lz4 -C"
+alias Tar-gz="tar -xzf"
+alias Tar-xz="tar -xvf"
+alias Tar-lz4-c="tar --use-compress-program=lz4 -cvf archive.lz4" # Need: "pkg install lz4"
+alias Tar-lz4-d="tar --use-compress-program=lz4 -xvf archive.lz4 -C"
 
 # Build
-alias @go-build='go build'
-alias @go-build-min='go build -a -gcflags=all="-l -B" -ldflags="-w -s"'
-alias @nim-build="nim c -d:release"
-alias @nim-build-min="nim c -d:release --opt:size --passC:-flto --passL:-flto --panics:on"
-alias @nim-build-speed="nim c -d:release --opt:speed --passC:-flto --passL:-flto --panics:on"
+alias Go-build='go build'
+alias Go-build-min='go build -a -gcflags=all="-l -B" -ldflags="-w -s"'
+alias Nim-build="nim c -d:release --hints:off"
+alias Nim-build-min="nim c -d:release --opt:speed --passC:-flto --passL:-flto --panics:on"
+alias Nim-build-end="nim c -d:release --opt:speed --passC:'-flto -ffast-math -fsingle-precision-constant' --passL:-flto --panics:on"
 
 # Javascript
-alias @js-server="five-server"
-alias @postcss-opts="pnpm postcss --no-map --replace src/**/*.css --config ./opts/postcss.config.cjs"
+alias Js-server="five-server"
+alias Postcss-opts="pnpm postcss --no-map --replace src/**/*.css --config ./opts/postcss.config.cjs"
 
-alias @pnpm-pkg-base="pnpm i -D modern-normalize eruda"
-alias @pnpm-pkg-extra="pnpm i -D @svgr/core @svgr/plugin-jsx"
-alias @pnpm-pkg-icons="pnpm i -D unplugin-auto-import unplugin-icons @iconify-json/material-symbols"
-alias @pnpm-pkg-postcss="pnpm i -D postcss autoprefixer postcss-cli postcss-nested postcss-sorting"
+alias Pnpm-add-base="pnpm i -D modern-normalize eruda"
+alias Pnpm-add-extra="pnpm i -D @svgr/core @svgr/plugin-jsx"
+alias Pnpm-add-icons="pnpm i -D unplugin-auto-import unplugin-icons @iconify-json/material-symbols"
+alias Pnpm-add-postcss="pnpm i -D postcss autoprefixer postcss-cli postcss-nested postcss-sorting"
 
-alias @prettier="prettier --write '**/*.{html,css,js,ts,jsx,json}'"
-alias @prettier-all="prettier --write '**/*.{html,css,scss,js,ts,jsx,vue,json,astro}'"
+alias Prettier="prettier --write '**/*.{html,css,js,ts,jsx,json}'"
+alias Prettier-all="prettier --write '**/*.{html,css,scss,js,ts,jsx,vue,json,astro}'"
 
 # Clean
-alias @clean-apt="apt autoremove"
-alias @clean-composer="composer clear-cache"
-alias @clean-go="go clean -modcache"
-alias @clean-npm="npm cache clean --force"
-alias @clean-pnpm="pnpm store prune"
+alias Clean-apt="apt autoremove && pkg clean"
+alias Clean-composer="composer clear-cache"
+alias Clean-go="go clean -modcache"
+alias Clean-npm="npm cache clean --force"
+alias Clean-pnpm="pnpm store prune"
 
 # Croc (share file)
-alias @croc-unsafe="croc send --code hk2308"
-alias @croc-safe="CROC_SECRET=hk2308 croc"
-alias @croc-mode-classic="croc --classic"
+alias Croc-unsafe="croc send --code hk2308"
+alias Croc-safe="CROC_SECRET=hk2308 croc"
+alias Croc-mode-classic="croc --classic"
 
 ### OTHERS --------------------------------------------------------------------
+
+# Termux
+alias Add="pkg install"
+alias Del="pkg uninstall"
+alias Search="pkg search"
+alias Installed="pkg list-installed"
+alias Upgradable="apt list --upgradable"
 
 # Ssh
 FILE_NAME="github1"
 
-alias @ssh-agent-start='eval "$(ssh-agent -s)"'
-alias @ssh-add-github="ssh-add ~/.ssh/${FILE_NAME}"
-alias @ssh-github="@ssh-agent-start && @ssh-add-github"
+alias Ssh-agent-start='eval "$(ssh-agent -s)"'
+alias Ssh-add-github="ssh-add ~/.ssh/${FILE_NAME}"
+alias Ssh-github="@ssh-agent-start && @ssh-add-github"
 
 
 # TTS

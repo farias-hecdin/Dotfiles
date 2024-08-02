@@ -7,6 +7,7 @@ export ZSH=$HOME/.zsh
 export KEYTIMEOUT=1
 
 # Specifies the $EDITOR code
+
 if command -v nvim &> /dev/null; then
   export EDITOR=nvim
 elif command -v micro &> /dev/null; then
@@ -31,6 +32,17 @@ setopt INC_APPEND_HISTORY_TIME # Append command to history file immediately afte
 
 ### PLUGINS AND THEMES ---------------------------------------------------------
 
+function cd_to_dir() {
+    local selected_dir
+    selected_dir=$(fd -t d . "$1" | fzf --height 90%)
+    if [[ -n "$selected_dir" ]]; then
+        # Change to the selected directory
+        cd "$selected_dir" || return 1
+    fi
+}
+
+alias cdd='cd_to_dir'
+
 # Themes
 source $ZSH/themes/zshmate/zshmate.zsh-theme
 
@@ -50,7 +62,7 @@ source $ZSH/config/keybinding.zsh
 LOCAL_SHARE="/data/data/com.termux/files/home/.local/share"
 
 # fzf
-export FZF_DEFAULT_OPTS="--height 80% --layout=reverse --border"
+export FZF_DEFAULT_OPTS="--height 90% --layout=reverse --border"
 # fzf end
 
 # pnpm

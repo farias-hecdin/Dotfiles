@@ -1,12 +1,12 @@
 {
   "CSSPluginHelpers": { "branch": "main", "commit": "8303e04fde935bc0e57befbf2c7acda967ed623f" },
+  "NimDye": { "branch": "master", "commit": "44234fefa9735680b83f162acbc7b8e4fc92e8e7" },
   "lazy.nvim": { "branch": "main", "commit": "d1de92dffab5a862332fdd1892889d362369c12f" },
   "lsp-zero.nvim": { "branch": "v3.x", "commit": "87701af045b3032515776abeb47eb8c2ddb5e679" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "8db12610bcb7ce67013cfdfaba4dd47a23c6e851" },
   "mason.nvim": { "branch": "main", "commit": "0950b15060067f752fde13a779a994f59516ce3d" },
-  "mini.hipatterns": { "branch": "main", "commit": "aa68eb143ce77a57b6416fb4bd71ee0adba5a517" },
   "nvim-cmp": { "branch": "main", "commit": "a110e12d0b58eefcf5b771f533fc2cf3050680ac" },
   "nvim-lspconfig": { "branch": "master", "commit": "92166b89ab4b3d60f24e58170cac53b7141fd032" },
-  "nvim-treesitter": { "branch": "master", "commit": "65ef62092ef997d2ecf68ede01a0afbda17808c3" },
+  "nvim-treesitter": { "branch": "master", "commit": "debf5816eee21b7d51025ef17ba0647386226cb5" },
   "tree-sitter-astro": { "branch": "master", "commit": "4be180759ec13651f72bacee65fa477c64222a1a" }
 }

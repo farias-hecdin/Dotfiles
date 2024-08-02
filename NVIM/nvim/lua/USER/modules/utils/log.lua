@@ -2,7 +2,6 @@
 --
 -- Inspired by rxi/log.lua
 -- Modified by tjdevries and can be found at github.com/tjdevries/vlog.nvim
---
 -- This library is free software; you can redistribute it and/or modify it
 -- under the terms of the MIT license. See LICENSE for details.
 
@@ -10,41 +9,33 @@
 local default_config = {
   -- Name of the plugin. Prepended to log messages
   plugin = 'vlog.nvim',
-
   -- Should print the output to neovim while running
   use_console = true,
-
   -- Should highlighting be used in console (using echohl)
   highlights = true,
-
   -- Should write to a file
   use_file = true,
-
   -- Any messages above this level will be logged.
   level = "trace",
-
   -- Level configuration
   modes = {
-    { name = "trace", hl = "Comment", },
-    { name = "debug", hl = "Comment", },
-    { name = "info",  hl = "None", },
-    { name = "warn",  hl = "WarningMsg", },
-    { name = "error", hl = "ErrorMsg", },
-    { name = "fatal", hl = "ErrorMsg", },
+    {name = "trace", hl = "Comment"},
+    {name = "debug", hl = "Comment"},
+    {name = "info",  hl = "None"},
+    {name = "warn",  hl = "WarningMsg"},
+    {name = "error", hl = "ErrorMsg"},
+    {name = "fatal", hl = "ErrorMsg"},
   },
-
   -- Can limit the number of decimals displayed for floats
   float_precision = 0.01,
 }
 
 -- {{{ NO NEED TO CHANGE
 local log = {}
-
 local unpack = unpack or table.unpack
 
 log.new = function(config, standalone)
   config = vim.tbl_deep_extend("force", default_config, config)
-
   local outfile = string.format('%s/%s.log', vim.api.nvim_call_function('stdpath', {'data'}), config.plugin)
 
   local obj
@@ -82,7 +73,6 @@ log.new = function(config, standalone)
     end
     return table.concat(t, " ")
   end
-
 
   local log_at_level = function(level, level_config, message_maker, ...)
     -- Return early if we're below the config.level

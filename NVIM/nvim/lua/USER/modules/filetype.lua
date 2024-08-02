@@ -1,5 +1,4 @@
 local D = require("USER.modules.utils.dir")
-local vim = vim
 
 -- SUMMARY
 -- * CSSVarViewer
@@ -12,25 +11,12 @@ local vim = vim
 
 return {
   {
-    -- url = "https://github.com/alaviss/nim.nvim.git",
-    dir = D.plugin .. "nim.nvim",
+    url = "https://github.com/farias-hecdin/NimDye.git",
     ft = "nim",
-    config = function()
-      local aug = vim.api.nvim_create_augroup("NimRestartKeybinds", { clear = true })
-      vim.api.nvim_create_autocmd("Filetype", {
-        pattern = "nim",
-        group = aug,
-        desc = "Assign keybind to reset lang server attached to this buffer.",
-        callback = function()
-          vim.keymap.set("n", "<Leader>(", "<Cmd>LspStart<CR>", { buffer = 0, silent = true })
-          vim.keymap.set("n", "<Leader>)", "<Cmd>LspRestart<CR>", { buffer = 0, silent = true })
-        end,
-      })
-    end,
   },
   {
-    url = "https://github.com/echasnovski/mini.hipatterns.git",
-    -- dir = D.plugin .. "mini.hipatterns",
+    -- url = "https://github.com/echasnovski/mini.hipatterns.git",
+    dir = D.plugin .. "mini.hipatterns",
     event = "InsertEnter",
     cmd = "MiniHipatterns",
     config = function()
@@ -67,9 +53,10 @@ return {
           ]]
           docs = {pattern = {"%s()@[%l-]+()%s"}, group = "MiniHipatternsDocs"},
           show = {pattern = {"^+%s().+()"}, group = "minihipatternshighlight"},
-          color = {pattern = {"![%a%d-_=\\.]+:"}, group = "MiniHipatternsColor"},
-          color2 = {pattern = {"¡[%a%d-_=\\.]+:", "clog%(.*%)"}, group = "MiniHipatternsColor2"},
-          color3 = {pattern = {"#[%a%d-_=\\.]+:"}, group = "MiniHipatternsColor3"},
+          debug = {pattern = {"()clog()%("}, group = "MiniHipatternsDebug"},
+          color = {pattern = {"![%a%d_]+:"}, group = "MiniHipatternsColor"},
+          color2 = {pattern = {"¡[%a%d_]+:"}, group = "MiniHipatternsColor2"},
+          color3 = {pattern = {"#[%a%d_]+:"}, group = "MiniHipatternsColor3"},
           --[[
           -- Highlight color systems using that color
           -- hsl(200deg, 50%, 50%) or hsl(200, 50%, 50%) or hsl(200, 50, 50)

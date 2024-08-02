@@ -1,5 +1,5 @@
-local vim = vim
 local enable_lsp_servers = true
+local D = require('USER.modules.utils.dir')
 
 -- SUMMARY
 -- * mason.nvim
@@ -11,7 +11,7 @@ return {
     "https://github.com/williamboman/mason.nvim.git",
     cmd = "Mason",
     build = ":MasonUpdate",
-    ft = {"nim", "java"},
+    ft = {"java"},
     dependencies = {
       "williamboman/mason-lspconfig.nvim"
     },
@@ -41,13 +41,14 @@ return {
   },
   {
     "https://github.com/neovim/nvim-lspconfig.git",
+    enabled = D.noFiletype({ "nim" }),
     cmd = "LspInfo",
     event = {"BufReadPre", "BufNewFile"},
     config = function()
       -- Lsp-zero -------------------------------------------------------------
       local lsp_zero = require("lsp-zero")
       lsp_zero.extend_lspconfig()
-      lsp_zero.on_attach(function(client, bufnr)
+      lsp_zero.on_attach(function(_, bufnr)
         lsp_zero.default_keymaps({buffer = bufnr})
       end)
 
@@ -65,6 +66,7 @@ return {
         enable_lsp("php", {"phpactor"})
         -- enable_lsp("bash", {"bashls"})
         -- enable_lsp("nim", {"nimlangserver"})
+        -- enable_lsp("zig", {"zls"})
       end
 
       -- Lsp-config -----------------------------------------------------------
@@ -113,8 +115,7 @@ return {
         vim.fn.sign_define(sign.name, {texthl = sign.name, text = sign.text, numhl = ""})
       end
       vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = "rounded"})
-      vim.lsp.handlers["textDocument/signatureHelp"] =
-      vim.lsp.with(vim.lsp.handlers.signature_help, {border = "rounded"})
+      vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {border = "rounded"})
 
       -- Commands -------------------------------------------------------------
       local format_default = {
@@ -127,8 +128,17 @@ return {
           show_header = true,
           source = "always",
           focusable = false,
-          border = "rounded"
+          border = "rounded",
         },
+        -- virtual_text = {
+        --   spacing = 3,
+        --   prefix = "󰓾",
+        --   format = function(_)
+        --     -- Only show the first line with virtualtext.
+        --     -- return string.gsub(diagnostic.message, '\n.*', '')
+        --     return ""
+        --   end,
+        -- }
         virtual_text = false
       }
       vim.diagnostic.config(format_default)

@@ -53,7 +53,8 @@ local function main()
 
   local remove_plugins = function(data, dirname, path)
     print('\n** OPERATION: remove\n')
-    print('Removed dirs:')
+    print('Removed dirs: ' .. dirname)
+
     for _, pluginName in ipairs(data) do
       local PATH = path .. pluginName
       print(format(" " .. PATH))

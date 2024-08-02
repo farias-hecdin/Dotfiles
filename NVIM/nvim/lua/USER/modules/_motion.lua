@@ -1,5 +1,4 @@
 local D = require("USER.modules.utils.dir")
-local vim = vim
 
 -- SUMMARY
 -- * mini.jump2d
@@ -10,8 +9,7 @@ return {
   {
     -- url = "https://github.com/utilyre/sentiment.nvim.git",
     dir = D.plugin .. "sentiment.nvim",
-    event = "CursorMoved",
-    opts = {},
+    event = "InsertEnter",
     init = function()
       vim.g.loaded_matchparen = 1
     end

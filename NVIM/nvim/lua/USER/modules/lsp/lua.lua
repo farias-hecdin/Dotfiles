@@ -9,12 +9,20 @@ M.lsp = function(servers)
       lspconfig["lua_ls"].setup({
         settings = {
           Lua = {
-            completion = {
-              callSnippet = "Replace"
+            runtime = {
+              version = "LuaJIT",
+              path = vim.split(package.path, ";"),
             },
-            workspace = {
-              checkThirdParty = false
-            }
+            diagnostics = {
+              -- Get the language server to recognize common globals
+              globals = { "vim", "describe", "it", "before_each", "after_each" },
+              disable = { "need-check-nil", "lowercase-global", "undefined-global" },
+              -- Don't make workspace diagnostic, as it consumes too much CPU and RAM
+              workspaceDelay = -1,
+            },
+            completion = {callSnippet = "Replace"},
+            telemetry = {enable = false},
+            workspace = {checkThirdParty = false}
           }
         }
       })

@@ -16,15 +16,16 @@ return {
   {
     -- url = "https://github.com/famiu/bufdelete.nvim.git",
     dir = D.plugin .. "bufdelete.nvim",
-    event = "WinNew"
+    cmd = "Bdelete",
+    keys = "<leader>sx"
   },
   {
     -- url = "https://github.com/tmillr/sos.nvim.git",
     dir = D.plugin .. "sos.nvim",
-    event = "BufReadPost",
+    event = "InsertEnter",
     opts = {
       enabled = true,
-      timeout = 6 * 1000,
+      timeout = 8 * 1000,
       autowrite = true,
       save_on_cmd = "some",
       save_on_bufleave = true,

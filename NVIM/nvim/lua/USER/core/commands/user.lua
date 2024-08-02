@@ -5,7 +5,7 @@ local simpleUserCmd = function(options, func)
   usercmd(options.desc, func, options)
 end
 
--- Generals ---------------------------
+-- Generals -------------------------------------------------------------------
 
 simpleUserCmd({desc = "WindowNvim"},
 function() require("nvim-window").pick() end)
@@ -15,6 +15,23 @@ function() require("mini.hipatterns").toggle() end)
 
 simpleUserCmd({desc = "MiniStarter", nargs = 0, bang = true, bar = true},
 function() require("mini.starter").open() end)
+
+simpleUserCmd({desc = "MiniDiffToggle", nargs = 0, bang = true},
+function() require("mini.diff").toggle() end)
+
+simpleUserCmd({desc = "MiniDiffOnly", nargs = 1},
+function(args)
+  local enable = tonumber(args.fargs[1]) or 0
+  vim.cmd("MiniDiffToggle")
+
+  if enable > 0 then
+    print("[MiniDiffOnly] On")
+    vim.cmd("LspDiagnosticDisable")
+  else
+    print("[MiniDiffOnly] Off")
+    vim.cmd("LspDiagnosticEnable")
+  end
+end)
 
 simpleUserCmd({desc = "MiniFilesOpenHere", nargs = 0, bang = true, bar = true},
 function() require("mini.files").open(vim.api.nvim_buf_get_name(0), false) end)
@@ -44,7 +61,7 @@ function(args) vim.diagnostic.disable(args.buf) end)
 simpleUserCmd({desc = "LspDiagnosticEnable", bang = true},
 function(args) vim.diagnostic.enable(args.buf) end)
 
--- Specials ---------------------------
+-- Specials -------------------------------------------------------------------
 
 -- Remove extra spaces
 simpleUserCmd({desc = "RemoveExtraSpaces", bang = true},

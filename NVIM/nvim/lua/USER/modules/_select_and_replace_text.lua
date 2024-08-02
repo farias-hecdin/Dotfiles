@@ -1,5 +1,4 @@
 local D = require("USER.modules.utils.dir")
-local vim = vim
 local modeNI = {"n", "i"}
 
 -- SUMMARY
