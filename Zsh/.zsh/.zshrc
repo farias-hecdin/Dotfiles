@@ -41,7 +41,13 @@ function cd_to_dir() {
     fi
 }
 
+function add_ssh() {
+  local keyword="git@github.com:"
+  echo "${keyword}${1}"
+}
+
 alias cdd='cd_to_dir'
+alias Git-add-ssh='add_ssh'
 
 # Themes
 source $ZSH/themes/zshmate/zshmate.zsh-theme
@@ -79,6 +85,6 @@ export PATH="$LOCAL_SHARE/luatiny:$PATH"
 export PATH="$LOCAL_SHARE/lare:$PATH"
 export PATH="$LOCAL_SHARE/impzy:$PATH"
 export PATH="$LOCAL_SHARE/phpactor:$PATH"
+export PATH="$LOCAL_SHARE/nph:$PATH"
 
-# commash
-# source ~/.commacd/commacd.sh
+export PATH="/data/data/com.termux/files/home/.local/share/impzy:$PATH"

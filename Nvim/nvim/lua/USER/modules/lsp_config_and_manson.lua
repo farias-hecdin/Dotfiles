@@ -12,9 +12,7 @@ return {
     cmd = "Mason",
     build = ":MasonUpdate",
     ft = {"java"},
-    dependencies = {
-      "williamboman/mason-lspconfig.nvim"
-    },
+    dependencies = {"williamboman/mason-lspconfig.nvim"},
     config = function()
       local lsp_zero = require("lsp-zero")
 
@@ -41,7 +39,7 @@ return {
   },
   {
     "https://github.com/neovim/nvim-lspconfig.git",
-    enabled = D.noFiletype({ "nim" }),
+    cond = D.notContainFiletype({"nim", "md"}),
     cmd = "LspInfo",
     event = {"BufReadPre", "BufNewFile"},
     config = function()

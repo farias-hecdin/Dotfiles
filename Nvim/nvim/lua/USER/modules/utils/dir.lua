@@ -7,7 +7,7 @@ D.plugin = "~/.config/nvim/src/plugVault/"
 D.home = "/data/data/com.termux/files/home/"
 
 -- Useful for disable plugins
-D.noFiletype = function(extensions)
+D.notContainFiletype = function(extensions)
   local file = vim.fn.expand("%")
   local extension = file:match("^.+(%..+)$")
 

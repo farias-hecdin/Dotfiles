@@ -75,21 +75,31 @@ return {
       slots = {
         -- linter = W.lint_progress,
         -- lazy = W.startuptime_lazy,
-        counter = W.word_and_character_counter,
+        counter = function() return W.word_and_character_counter(false) end,
+      },
+      sections = {
+        left = {"-mode", "file_size", "counter", "branch"},
+        mid = {""},
+        right = {"diagnostics", "lsp_name", " ", "-line_column"}
+      },
+      inactive_sections = {
+        left = {""},
+        mid = {"file_name"},
+        right = {""}
       },
       defaults = {
         expand_null_ls = false,
         full_path = false,
-        line_column = "󰞖 %l/%L 󰞘 %c",
+        line_column = "%L:%c ",
         fg = "#000000",
         bg = "#000000",
         inactive_color = "#ffffff",
         inactive_bgcolor = "#333333",
         true_colors = true,
         font_active = "none",
-        mod_symbol = " ",
+        mod_symbol = "",
         lsp_client_symbol = "󰭳 ",
-        lsp_client_character_length = 10,
+        lsp_client_character_length = 1,
         branch_symbol = " "
       },
       mode_colors = {
@@ -104,28 +114,18 @@ return {
         ["t"] = "#FFA000"
       },
       mode_icons = {
-        ["c"]  = " COM",
-        ["n"]  = " NOR",
-        ["i"]  = " INS",
-        ["v"]  = " VIS",
-        ["V"]  = " V-L",
-        [""] = " V-V",
-        ["r"]  = " REP",
-        ["R"]  = " R-L",
-        ["t"]  = " TER",
-        ["s"]  = " SEL",
-        ["S"]  = " S-L",
+        ["c"]  = " CO",
+        ["n"]  = " NO",
+        ["i"]  = " IN",
+        ["v"]  = " VI",
+        ["V"]  = " VL",
+        [""] = " VV",
+        ["r"]  = " RE",
+        ["R"]  = " RL",
+        ["t"]  = " TE",
+        ["s"]  = " SE",
+        ["S"]  = " SL",
         ["ic"] = " IC "
-      },
-      sections = {
-        left = {"-mode", "file_size", "counter", "branch"},
-        mid = {""},
-        right = {"diagnostics", "lsp_name", " ", "-line_column"}
-      },
-      inactive_sections = {
-        left = {""},
-        mid = {"file_name"},
-        right = {""}
       },
       lsp_symbols = {
         Error = " ",

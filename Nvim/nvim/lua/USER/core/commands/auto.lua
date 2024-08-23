@@ -13,7 +13,6 @@ autocmd({"BufEnter", "FocusGained", "InsertLeave"}, {
   pattern = "*",
   callback = function()
     vim.cmd("set relativenumber nofoldenable numberwidth=4")
-    -- Useful to disable plugins for certain file types
   end,
 })
 autocmd({"BufLeave", "FocusLost", "InsertEnter"}, {
@@ -150,11 +149,11 @@ autocmd({"InsertLeave"}, {
 })
 
 -- Disable semantic highlights ------------------------------------------------
--- autocmd('ColorScheme', {
---   desc = 'Clear LSP highlight groups',
---   callback = function()
---     for _, group in ipairs(vim.fn.getcompletion('@lsp', 'highlight')) do
---       vim.api.nvim_set_hl(0, group, {})
---     end
---   end
--- })
+autocmd('ColorScheme', {
+  desc = 'Clear LSP highlight groups',
+  callback = function()
+    for _, group in ipairs(vim.fn.getcompletion('@lsp', 'highlight')) do
+      vim.api.nvim_set_hl(0, group, {})
+    end
+  end
+})

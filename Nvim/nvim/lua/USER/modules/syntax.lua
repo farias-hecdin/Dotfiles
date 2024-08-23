@@ -6,12 +6,15 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
+    "virchau13/tree-sitter-astro",
+    ft = "astro",
+  },
+  {
     "https://github.com/nvim-treesitter/nvim-treesitter.git",
     -- commit = "65ef62092ef997d2ecf68ede01a0afbda17808c3",
     pin = true,
-    enabled = D.noFiletype({ "nim" }),
+    cond = D.notContainFiletype({"nim"}),
     event = {"BufReadPre", "BufNewFile"},
-    dependencies = {"virchau13/tree-sitter-astro"},
     cmd = {"TSUpdateSync", "TSUpdate", "TSInstall"},
     init = function(plugin)
       require("lazy.core.loader").add_to_rtp(plugin)
@@ -29,7 +32,7 @@ return {
           -- "astro",
           -- "bash",
           "css",
-          "go",
+          -- "go",
           "html",
           -- "java",
           -- "kotlin",
@@ -47,5 +50,11 @@ return {
         auto_install = false
       })
     end
+  },
+  {
+    url = "https://github.com/nvim-treesitter/playground.git",
+    -- dir = D.plugin .. "playground",
+    keys = {"<leader>Pc", "<leader>Pt"},
+    cond = D.notContainFiletype({"nim"}),
   }
 }

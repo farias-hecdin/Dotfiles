@@ -13,15 +13,15 @@ alias zconfig="$EDITOR ~/.zshrc"
 
 ### SHORTCUTS -----------------------------------------------------------------
 
-alias fd="fd -H"
+alias Fd="fd -H"
 alias Ls="ls -a -F -h --color=always -v --time-style=long-iso"
-alias nimble="nimble --verbose"
+alias Nimble="nimble --verbose"
 
 # Basic
-alias q="exit"
-alias e="nnn"
 alias C="clear"
 alias R="exec zsh"
+alias q="exit"
+alias e="nnn"
 
 # Change dir
 alias .="cd ."
@@ -32,9 +32,9 @@ alias ...="cd ~/"
 alias tr="tree -C"
 alias fz="fzf -e"
 alias ed="nvim"
-alias ed-noPlugins="nvim --noplugin"
+alias edn="nvim --noplugin"
 alias zi="z -I ."
-alias ds="dua"
+alias ds="dua i"
 alias lg="lazygit"
 
 # Git
@@ -64,7 +64,6 @@ alias Id-string="nanoid --alphabet abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRS
 
 # Others
 alias lua="luajit"
-alias find-clones="fclones group"
 
 ### SPECIALS ------------------------------------------------------------------
 
@@ -73,6 +72,7 @@ alias Bm5="hyperfine -r 5 --warmup 5"
 alias Bm25="hyperfine -r 25 --warmup 5"
 alias Bm50="hyperfine -r 50 --warmup 5"
 alias Bm100="hyperfine -r 100 --warmup 5"
+alias Bm150="hyperfine -r 100 --warmup 5"
 alias Bm200="hyperfine -r 200 --warmup 5"
 
 # Tar
@@ -84,9 +84,9 @@ alias Tar-lz4-d="tar --use-compress-program=lz4 -xvf archive.lz4 -C"
 # Build
 alias Go-build='go build'
 alias Go-build-min='go build -a -gcflags=all="-l -B" -ldflags="-w -s"'
-alias Nim-build="nim c -d:release --hints:off"
-alias Nim-build-min="nim c -d:release --opt:speed --passC:-flto --passL:-flto --panics:on"
-alias Nim-build-end="nim c -d:release --opt:speed --passC:'-flto -ffast-math -fsingle-precision-constant' --passL:-flto --panics:on"
+alias Nim-build="nim c -d:release"
+alias Nim-build-min="clear && nim c -d:release  --hints:off --opt:speed --passC:-flto --passL:-flto --panics:on"
+alias Nim-build-end="clear && nim c -d:release  --hints:off --opt:speed --passC:'-flto -ffast-math -fsingle-precision-constant' --passL:-flto --panics:on"
 
 # Javascript
 alias Js-server="five-server"
@@ -122,20 +122,9 @@ alias Installed="pkg list-installed"
 alias Upgradable="apt list --upgradable"
 
 # Ssh
-FILE_NAME="github1"
+FNAME="github1"
 
 alias Ssh-agent-start='eval "$(ssh-agent -s)"'
-alias Ssh-add-github="ssh-add ~/.ssh/${FILE_NAME}"
-alias Ssh-github="@ssh-agent-start && @ssh-add-github"
+alias Ssh-add-github="ssh-add ~/.ssh/$FNAME"
+alias Ssh-github="Ssh-agent-start && Ssh-add-github"
 
-
-# TTS
-function now() {
-  local datetime=$(date +"%m-%d_%H:%M:%S")
-  echo "${datetime}"
-}
-
-audio_export="downloads/"
-alias tts="edge-tts --voice es-PA-RobertoNeural --write-media ${audio_export}tts_$(now).mp3 --write-subtitles ${audio_export}tts_$(now).vtt --pitch=-15Hz --rate=+18% --text"
-
-# alias vpy="python3 -m venv /path/to/venv && . /path/to/venv/bin/activate"

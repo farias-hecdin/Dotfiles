@@ -39,7 +39,7 @@ W.word_and_character_counter = function(enable_wip)
     end
   end
 
-  if wc_chars then
+  if wc_chars and not enable_wip then
     return format(" %s:(󰾹 %s)", wc_words, wc_chars)
   elseif wc_chars and enable_wip then
     local wpm = tostring(calc_wpm())

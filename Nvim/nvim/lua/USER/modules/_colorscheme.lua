@@ -41,8 +41,9 @@ return {
       },
       highlights = {
         ["@comment"]               = {fg = "#007272"},
-        ["@label"]                 = {bg = "#222222", fg  = "#888888", fmt = "italic"},
+        ["@label"]                 = {bg = "#222222", fg  = "#888888", fmt = "ITALIC"},
         ["@text.strong"]           = {fg = "#D0D0D0"},
+        ["@markup.strong"]         = {fg = "#EEEEEE", fmt = "NONE"},
         CmpItemAbbrMatch           = {fg = "#0074D9", fmt = "BOLD"},
         ColorColumn                = {bg = "#330000"},
         Comment                    = {fg = "#007272"},
@@ -86,6 +87,9 @@ return {
         Pmenu                      = {bg = "#222222", fg  = "#cccccc"},
         Visual                     = {fg = "#CCCCCC", bg  = "#000066"},
         Whitespace                 = {fg = "#323232"}, -- SimpleIndentGuide
+        MarkviewCode               = {bg = "#101010"},
+        MarkviewInlineCode         = {bg = "#000000"},
+        MarkviewHeadingIcon        = {fg = "#CCCCCC", fmt = "BOLD"},
       }
     }
   }

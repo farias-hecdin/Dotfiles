@@ -4,25 +4,24 @@ gray="\e[2m"
 bold="\e[1m"
 end="\e[0m"
 
-### Objetivos
-folder="HECDIN/Git/"
+### Directorio objetivo
+folder="Hecdin/_Git/"
 # nvim
-nvim_target="${HOME}/${folder}Dotfiles/NVIM/nvim/"
+nvim_target="${HOME}/${folder}Dotfiles/Nvim/nvim/"
 nvim_data="${HOME}/.config/nvim/"
 # zsh
-zsh_target="${HOME}/${folder}Dotfiles/ZSH/.zsh/"
+zsh_target="${HOME}/${folder}Dotfiles/Zsh/.zsh/"
 zsh_data="${HOME}/.zsh/"
 # tmux
-tmux_target="${HOME}/${folder}Dotfiles/TMUX/tmux/"
+tmux_target="${HOME}/${folder}Dotfiles/Tmux/"
 tmux_data="${HOME}/.tmux.conf"
 # lazygit
-lazygit_target="${HOME}/${folder}Dotfiles/LAZYGIT/lazygit/"
+lazygit_target="${HOME}/${folder}Dotfiles/Lazygit/lazygit/"
 lazygit_data="${HOME}/.config/lazygit/"
 
-function func_move_data_to_directory() {
+function f_move_to_dir() {
   local target="$1"
   local data="$2"
-
   # Comprobamos si el directorio A existe
   if ! [ -d "$target" ]; then
     echo -e " El directorio no existe"
@@ -38,7 +37,7 @@ function func_move_data_to_directory() {
   fi
 }
 
-function func_main() {
+function f_main() {
   echo -e " ${bold}¿Quiero crear una copia de respaldo para?${end}"
   echo -e "  ${gray}[1] Nvim${end}"
   echo -e "  ${gray}[2] Zsh${end}"
@@ -49,12 +48,12 @@ function func_main() {
   echo -e " "
 
   case $option in
-    1) func_move_data_to_directory "$nvim_target" "$nvim_data" ;;
-    2) func_move_data_to_directory "$zsh_target" "$zsh_data" ;;
-    3) func_move_data_to_directory "$tmux_target" "$tmux_data" ;;
-    4) func_move_data_to_directory "$lazygit_target" "$lazygit_data" ;;
+    1) f_move_to_dir "$nvim_target" "$nvim_data" ;;
+    2) f_move_to_dir "$zsh_target" "$zsh_data" ;;
+    3) f_move_to_dir "$tmux_target" "$tmux_data" ;;
+    4) f_move_to_dir "$lazygit_target" "$lazygit_data" ;;
     *) echo " Opción inválida" ;;
   esac
 }
 
-func_main
+f_main

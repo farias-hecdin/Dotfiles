@@ -11,17 +11,52 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    url = "https://github.com/farias-hecdin/NimDye.git",
+    url = "https://github.com/farias-hecdin/NimTinyHighlight.git",
     ft = "nim",
+  },
+  {
+    url = "https://github.com/OXY2DEV/markview.nvim.git",
+    -- dir = D.plugin .. "markview.nvim",
+    ft = "markdown",
+    opts = {
+      hybrid_modes = {"n"},
+      code_blocks = {
+        icons = false,
+        min_width = 80,
+        pad_amount = 1,
+        pad_char = " ",
+        language_direction = "right",
+      },
+      headings = {
+        enable = true,
+        shift_width = 0,
+        heading_1 = {style = "icon", icon = "H1 ", hl = "", sign = "󰌖", icon_hl = "MarkviewHeadingIcon"},
+        heading_2 = {style = "icon", icon = "H2 ", hl = "", sign = "󰌖", icon_hl = "MarkviewHeadingIcon"},
+        heading_3 = {style = "icon", icon = "H3 ", hl = "", sign = "󰌖", icon_hl = "MarkviewHeadingIcon"},
+        heading_4 = {style = "icon", icon = "H4 ", hl = "", sign = "󰌖", icon_hl = "MarkviewHeadingIcon"},
+        heading_5 = {style = "icon", icon = "H5 ", hl = "", sign = "󰌖", icon_hl = "MarkviewHeadingIcon"},
+        heading_6 = {style = "icon", icon = "H6 ", hl = "", sign = "󰌖", icon_hl = "MarkviewHeadingIcon"},
+      },
+      checkboxes = {
+        enable = true,
+        checked = {text = " "},
+        unchecked = {text = " "},
+        pending = {text = " "}
+      },
+      inline_codes = {enable = false},
+      links = {enable = false},
+      list_items = {enable = false},
+      tables = {enable = false}
+    }
   },
   {
     -- url = "https://github.com/echasnovski/mini.hipatterns.git",
     dir = D.plugin .. "mini.hipatterns",
     event = "InsertEnter",
+    ft = "css",
     cmd = "MiniHipatterns",
     config = function()
       local hipatterns = require("mini.hipatterns")
-      local CSSVarHighlight = require("CSSVarHighlight")
 
       hipatterns.setup({
         highlighters = {
@@ -54,9 +89,9 @@ return {
           docs = {pattern = {"%s()@[%l-]+()%s"}, group = "MiniHipatternsDocs"},
           show = {pattern = {"^+%s().+()"}, group = "minihipatternshighlight"},
           debug = {pattern = {"()clog()%("}, group = "MiniHipatternsDebug"},
-          color = {pattern = {"![%a%d_]+:"}, group = "MiniHipatternsColor"},
-          color2 = {pattern = {"¡[%a%d_]+:"}, group = "MiniHipatternsColor2"},
-          color3 = {pattern = {"#[%a%d_]+:"}, group = "MiniHipatternsColor3"},
+          color = {pattern = {"!()[%u%d%s_-]+:"}, group = "MiniHipatternsColor"},
+          color2 = {pattern = {"¡()[%u%d%s_-]+:"}, group = "MiniHipatternsColor2"},
+          color3 = {pattern = {"#()[%u%d%s_-]+:"}, group = "MiniHipatternsColor3"},
           --[[
           -- Highlight color systems using that color
           -- hsl(200deg, 50%, 50%) or hsl(200, 50%, 50%) or hsl(200, 50, 50)
@@ -102,14 +137,14 @@ return {
               return MiniHipatterns.compute_hex_color_group(color, "bg")
             end
           },
-          css_variables = CSSVarHighlight.get_settings()
+          css_variables = require("CSSVarHighlight").get_settings()
         }
       })
     end
   },
   {
-    -- url = "https://github.com/farias-hecdin/CSSVarHighlight.git",
-    dir = D.plugin .. "CSSVarHighlight",
+    url = "https://github.com/farias-hecdin/CSSVarHighlight.git",
+    -- dir = D.plugin .. "CSSVarHighlight",
     ft = "css",
     dependencies = {"farias-hecdin/CSSPluginHelpers"},
     config = function()
