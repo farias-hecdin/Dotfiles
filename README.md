@@ -37,10 +37,10 @@ El [directorio Nvim](./Nvim) contiene mi configuración de Neovim. Agrega alguno
 
 Antes de instalar esta configuración, asegúrate de tener instalados los siguientes paquetes:
 
-1. `clang`: Para compilar e instalar correctamente los parsers de lenguaje con treesitter.
-2. `termux-api`: Para copiar texto al portapapeles (solo si utilizas Termux).
-3. `fzf`: Para utilizar la herramienta el buscador fuzzy finder en neovim.
-4. `nnn`: Para utilizar el gestor de archivos Nnn en neovim.
+1. `Clang`: Para compilar e instalar correctamente los parsers de lenguaje con treesitter.
+2. `Termux-api`: Para copiar texto al portapapeles (solo si utilizas Termux).
+3. `Fzf`: Para utilizar la herramienta el buscador fuzzy finder en neovim.
+4. `Nnn`: Para utilizar el gestor de archivos Nnn en neovim.
 
 Para instalar estos paquetes, puedes usar los siguientes comandos:
 
@@ -85,7 +85,7 @@ rm -rf ~/.config/nnn/plugins/ && cp -r ./@nnn/plugins/ ~/.config/nnn/
 
 ### Zsh
 
-En el [directorio Zsh](./Zsh) contiene mi configuración de Zsh. Incluye opciones de configuración personalizadas, alias y plugins como `zsh-z`, `fast-zsh-syntax-highlighting` y `zsh-vi-mode`.
+En el [directorio Zsh](./Zsh) contiene mi configuración de Zsh. Incluye opciones de configuración personalizadas, alias y plugins como `z.lua` y `git-status`.
 
 Para instalarlo sigue los siguientes pasos:
 
