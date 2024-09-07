@@ -1,4 +1,5 @@
 ;; extends
+
 (class_name) @tag.error
 (id_selector) @tag.error
 (nesting_selector) @tag.error

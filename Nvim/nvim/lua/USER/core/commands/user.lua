@@ -1,4 +1,3 @@
-local vim = vim
 local usercmd = vim.api.nvim_create_user_command -- Create usercommand
 
 local simpleUserCmd = function(options, func)

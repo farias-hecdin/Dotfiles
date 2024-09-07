@@ -32,22 +32,7 @@ setopt INC_APPEND_HISTORY_TIME # Append command to history file immediately afte
 
 ### PLUGINS AND THEMES ---------------------------------------------------------
 
-function cd_to_dir() {
-    local selected_dir
-    selected_dir=$(fd -t d . "$1" | fzf --height 90%)
-    if [[ -n "$selected_dir" ]]; then
-        # Change to the selected directory
-        cd "$selected_dir" || return 1
-    fi
-}
 
-function add_ssh() {
-  local keyword="git@github.com:"
-  echo "${keyword}${1}"
-}
-
-alias cdd='cd_to_dir'
-alias Git-add-ssh='add_ssh'
 
 # Themes
 source $ZSH/themes/zshmate/zshmate.zsh-theme
@@ -58,7 +43,7 @@ source $ZSH/plugins/git-status/git-status.plugin.zsh
 export NNN_ZLUA="$ZSH/plugins/z.lua/z.lua"
 eval "$(luajit ~/.zsh/plugins/z.lua/z.lua --init zsh once)"
 
-### ALIAS AND KEYBINDINGS -----------------------------------------------------
+### ALIAS, KEYBINDINGS AND UTILS ----------------------------------------------
 
 source $ZSH/config/alia.zsh
 source $ZSH/config/keybinding.zsh

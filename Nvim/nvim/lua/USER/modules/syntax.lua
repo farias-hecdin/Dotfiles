@@ -6,7 +6,7 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    "virchau13/tree-sitter-astro",
+    "https://github.com/virchau13/tree-sitter-astro.git",
     ft = "astro",
   },
   {

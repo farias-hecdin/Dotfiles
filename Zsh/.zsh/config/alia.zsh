@@ -1,6 +1,8 @@
+source $ZSH/config/utils.zsh
+
 ### Distro --------------------------------------------------------------------
 
-alias proot-alpine="proot-distro login alpine"
+alias os="proot-distro login"
 alias alpine="termux-alpine"
 
 ### APP CONFIGURATION ---------------------------------------------------------
@@ -12,10 +14,6 @@ alias zalias="$EDITOR ~/.zsh/config/alia.zsh"
 alias zconfig="$EDITOR ~/.zshrc"
 
 ### SHORTCUTS -----------------------------------------------------------------
-
-alias Fd="fd -H"
-alias Ls="ls -a -F -h --color=always -v --time-style=long-iso"
-alias Nimble="nimble --verbose"
 
 # Basic
 alias C="clear"
@@ -29,33 +27,42 @@ alias ..="cd .."
 alias ...="cd ~/"
 
 # Various
-alias tr="tree -C"
-alias fz="fzf -e"
-alias ed="nvim"
-alias edn="nvim --noplugin"
-alias zi="z -I ."
 alias ds="dua i"
+alias ed="nvim"
+alias fz="fzf -e"
 alias lg="lazygit"
+alias tr="tree -C"
+alias zi="z -I ."
+
+alias Fd="fd -H"
+alias Ls="ls -a -F -h --color=always -v --time-style=long-iso"
+alias Cd='f_cdToDir .'
+alias Ed="nvim --noplugin"
 
 # Git
-alias gt="git"
-alias gtc="git clone"
+alias Git-ssh-prefix='f_addSshPrefix'
+alias Git-compress="git gc --aggressive --prune=now"
 alias Git-add="git add"
-alias Git-clone="git clone"
 alias Git-merge="git merge --no-ff"
 alias Git-branch-rename="git branch -m" # -> <old-name> <new-name>
-alias Git-branch-rename-remote="git push origin" #. -> :<old-name> <new-name>
+alias Git-branch-rename-remote="git push origin" # -> :<old-name> <new-name>
 alias Git-remote-change="git remote set-url origin"
 alias Git-remote-view="git remote -v"
 alias Git-log="git log --graph --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%an%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %s%C(reset)' --all"
 
+alias gtc="git clone"
+alias gtrc="Git-remote-change"
+alias gtrv="Git-remote-view"
+
 # Tmux
-alias tx="tmux"
 alias Tmux-list="tmux list-sessions"
 alias Tmux-new-session="tmux new-session -s"
 alias Tmux-kill-all="tmux kill-server"
 alias Tmux-kill-this="tmux kill-server -t"
 alias Tmux-attach="tmux attach -t"
+
+alias tx="tmux"
+alias txa="Tmux-kill-all"
 
 # Nanoid
 alias Id="nanoid --alphabet abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 --size"
@@ -64,16 +71,17 @@ alias Id-string="nanoid --alphabet abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRS
 
 # Others
 alias lua="luajit"
+alias nimble="nimble --verbose"
 
 ### SPECIALS ------------------------------------------------------------------
 
 # Hyperfine (benchmark)
-alias Bm5="hyperfine -r 5 --warmup 5"
-alias Bm25="hyperfine -r 25 --warmup 5"
-alias Bm50="hyperfine -r 50 --warmup 5"
-alias Bm100="hyperfine -r 100 --warmup 5"
-alias Bm150="hyperfine -r 100 --warmup 5"
-alias Bm200="hyperfine -r 200 --warmup 5"
+alias B5="hyperfine -r 5 --warmup 5"
+alias B25="hyperfine -r 25 --warmup 5"
+alias B50="hyperfine -r 50 --warmup 5"
+alias B100="hyperfine -r 100 --warmup 5"
+alias B150="hyperfine -r 100 --warmup 5"
+alias B200="hyperfine -r 200 --warmup 5"
 
 # Tar
 alias Tar-gz="tar -xzf"
@@ -86,7 +94,6 @@ alias Go-build='go build'
 alias Go-build-min='go build -a -gcflags=all="-l -B" -ldflags="-w -s"'
 alias Nim-build="nim c -d:release"
 alias Nim-build-min="clear && nim c -d:release  --hints:off --opt:speed --passC:-flto --passL:-flto --panics:on"
-alias Nim-build-end="clear && nim c -d:release  --hints:off --opt:speed --passC:'-flto -ffast-math -fsingle-precision-constant' --passL:-flto --panics:on"
 
 # Javascript
 alias Js-server="five-server"
@@ -107,24 +114,15 @@ alias Clean-go="go clean -modcache"
 alias Clean-npm="npm cache clean --force"
 alias Clean-pnpm="pnpm store prune"
 
-# Croc (share file)
-alias Croc-unsafe="croc send --code hk2308"
-alias Croc-safe="CROC_SECRET=hk2308 croc"
-alias Croc-mode-classic="croc --classic"
-
 ### OTHERS --------------------------------------------------------------------
 
 # Termux
 alias Add="pkg install"
 alias Del="pkg uninstall"
 alias Search="pkg search"
+alias Update-list-package="pkg update"
 alias Installed="pkg list-installed"
 alias Upgradable="apt list --upgradable"
 
 # Ssh
-FNAME="github1"
-
-alias Ssh-agent-start='eval "$(ssh-agent -s)"'
-alias Ssh-add-github="ssh-add ~/.ssh/$FNAME"
-alias Ssh-github="Ssh-agent-start && Ssh-add-github"
-
+alias load-ssh="f_loadSSH"

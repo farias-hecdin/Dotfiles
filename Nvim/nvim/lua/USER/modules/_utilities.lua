@@ -16,14 +16,15 @@ return {
   {
     -- url = 'https://github.com/echasnovski/mini.icons.git',
     dir = D.plugin .. "mini.icons",
-    lazy = false,
+    event = 'VeryLazy',
     config = function()
       require('mini.icons').setup({
         file = {
           ['init.lua'] = {glyph = '󰢱'},
         },
         extension = {
-          ['astro'] = {glyph = '', hl = 'MiniIconsOrange'}
+          ['astro'] = {glyph = '', hl = 'MiniIconsOrange'},
+          ['yaml'] = {glyph = '󰦪', hl = ''}
         },
       })
     end

@@ -1,5 +1,4 @@
 -- Thanks to: https://github.com/mireq/neovim-config/blob/master/lua/core/largefile.lua
-local vim = vim
 local group = vim.api.nvim_create_augroup("LargeFileAutocmds", {})
 local old_eventignore = vim.o.eventignore
 local largefile_opened = false

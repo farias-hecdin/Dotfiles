@@ -1,4 +1,3 @@
-local vim = vim
 local map = vim.keymap.set
 
 -- Automatically Pair brackets, parethesis, quotes and more -------------------

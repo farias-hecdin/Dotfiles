@@ -1,17 +1,20 @@
 local D = require("USER.modules.utils.dir")
 
 -- SUMMARY
--- * CSSVarViewer
+-- * CSSColorConverter
 -- * CSSVarHighlight
+-- * CSSVarViewer
+-- * NimTinyHighlight
 -- * markdown.nvim
 -- * markdowny.nvim
--- * nvim-jdtls
--- * nvim-px-to-rem
+-- * markview.nvim
 -- * mini.hipatterns
+-- * nvim-px-to-rem
 
 return {
   {
     url = "https://github.com/farias-hecdin/NimTinyHighlight.git",
+    -- dir = D.plugin .. "NimTinyHighlight",
     ft = "nim",
   },
   {
@@ -20,6 +23,12 @@ return {
     ft = "markdown",
     opts = {
       hybrid_modes = {"n"},
+      callbacks = {
+        on_enable = function (_, win)
+          vim.wo[win].conceallevel = 2;
+          vim.wo[win].concealcursor = "c";
+        end
+      },
       code_blocks = {
         icons = false,
         min_width = 80,
@@ -40,8 +49,8 @@ return {
       checkboxes = {
         enable = true,
         checked = {text = " "},
-        unchecked = {text = " "},
-        pending = {text = " "}
+        unchecked = {text = " "},
+        pending = {text = " "}
       },
       inline_codes = {enable = false},
       links = {enable = false},
@@ -145,8 +154,7 @@ return {
   {
     url = "https://github.com/farias-hecdin/CSSVarHighlight.git",
     -- dir = D.plugin .. "CSSVarHighlight",
-    ft = "css",
-    dependencies = {"farias-hecdin/CSSPluginHelpers"},
+    cmd = "InsertEnter",
     config = function()
       require('CSSVarHighlight').setup({
         variable_pattern = "%-%-[-_%w]*co%-[-_%w]*",
@@ -154,24 +162,21 @@ return {
     end,
   },
   {
-    -- url = "https://github.com/farias-hecdin/CSSVarViewer.git",
-    dir = D.plugin .. "CSSVarViewer",
+    url = "https://github.com/farias-hecdin/CSSVarViewer.git",
+    -- dir = D.plugin .. "CSSVarViewer",
     ft = "css",
-    dependencies = {"farias-hecdin/CSSPluginHelpers"},
     config = true
   },
   {
-    -- url = "https://github.com/farias-hecdin/CSSColorConverter.git",
-    dir = D.plugin .. "CSSColorConverter",
+    url = "https://github.com/farias-hecdin/CSSColorConverter.git",
+    -- dir = D.plugin .. "CSSColorConverter",
     ft = "css",
-    dependencies = {"farias-hecdin/CSSPluginHelpers"},
     config = true
   },
   {
     -- url = "https://github.com/jsongerber/nvim-px-to-rem.git",
     dir = D.plugin .. "nvim-px-to-rem",
     cmd = {"PxToRemCursor", "PxToRemLine"},
-    ft = "css",
     opts = {
       add_cmp_source = false,
       disable_keymaps = true

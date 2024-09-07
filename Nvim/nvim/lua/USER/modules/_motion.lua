@@ -22,7 +22,8 @@ return {
     end
   },
   {
-    "https://github.com/leafOfTree/vim-matchtag.git",
+    url = "https://github.com/leafOfTree/vim-matchtag.git",
+    -- dir = D.plugin .. "vim-matchtag",
     cond = D.notContainFiletype({"html", "jsx", "svelte", "vue", "svelte"}),
     ft = {"html", "jsx", "svelte", "vue", "svelte"},
     config = function()

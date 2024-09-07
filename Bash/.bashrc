@@ -21,7 +21,8 @@ alias v=". /path/to/venv/bin/activate"
 
 # Text-to-speech (TTS)
 
-# setup 1. = pitch (-9) rate (+25)
+# Setup
+# 1: pitch (-9) rate (+25)
 PITCH="-9Hz"
 RATE="+20%"
 VOICE="es-CR-JuanNeural"
@@ -30,4 +31,3 @@ ID=$RANDOM
 
 alias tts="edge-tts --voice $VOICE --write-media ${FOLDER}TTS_${ID}.mp3 --pitch=$PITCH --rate=$RATE --text"
 alias tts-voices="edge-tts --list-voices"
-

@@ -1,10 +1,7 @@
-local D = require("USER.modules.utils.dir")
-
 return {
   {
-    url = "https://github.com/stevearc/quicker.nvim",
-    event = "FileType qf",
-    ft = "lua",
+    "https://github.com/stevearc/quicker.nvim.git",
+    keys = ",d",
     config = function()
       require("quicker").setup({
         -- Local options to set for quickfix

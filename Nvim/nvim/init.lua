@@ -7,8 +7,6 @@
 ╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝ ╚═╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═╝
 --]]
 
-local vim = vim
-
 -- Leader keys
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
@@ -22,4 +20,3 @@ require("USER.core.keymaps.general")
 require("USER.core.keymaps.shortcut")
 require("USER.core.commands.user")
 require("USER.core.abbrev")
-

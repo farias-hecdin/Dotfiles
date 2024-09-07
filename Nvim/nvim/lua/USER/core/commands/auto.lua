@@ -1,6 +1,3 @@
-local vim = vim
-local D = require('USER.modules.utils.dir')
-
 -- Define autocommands with Lua APIs (See: h:api-autocmd, h:augroup)
 local augroup = vim.api.nvim_create_augroup -- Create/get autocommand group
 local autocmd = vim.api.nvim_create_autocmd -- Create autocommand
@@ -11,20 +8,17 @@ local number_toggle = augroup("numbertoggle", {clear = true})
 autocmd({"BufEnter", "FocusGained", "InsertLeave"}, {
   group = number_toggle,
   pattern = "*",
-  callback = function()
-    vim.cmd("set relativenumber nofoldenable numberwidth=4")
-  end,
+  command = "set relativenumber nofoldenable"
 })
 autocmd({"BufLeave", "FocusLost", "InsertEnter"}, {
   group = number_toggle,
   pattern = "*",
-  callback = function()
-    vim.cmd("set norelativenumber nofoldenable numberwidth=4")
-  end,
+  command = "set norelativenumber nofoldenable"
 })
 
 -- Start terminal in insert mode ----------------------------------------------
 local buf_check = augroup("bufcheck", {clear = true})
+
 autocmd("TermOpen", {
   pattern = "*",
   command = "startinsert | set winfixheight",

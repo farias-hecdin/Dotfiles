@@ -1,5 +1,4 @@
 local W = {}
-local vim = vim
 local format = string.format
 
 local round = function(number, decimals)

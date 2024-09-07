@@ -3,4 +3,3 @@ vim.filetype.add({
         astro = "astro"
     }
 })
-

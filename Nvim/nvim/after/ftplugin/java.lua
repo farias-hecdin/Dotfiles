@@ -1,10 +1,10 @@
-local vim = vim
-
 -- Options
+local x = 2
+
 vim.opt_local.expandtab = true
-vim.opt_local.shiftwidth = 2
-vim.opt_local.softtabstop = 2
-vim.opt_local.tabstop = 2
+vim.opt_local.shiftwidth = x
+vim.opt_local.softtabstop = x
+vim.opt_local.tabstop = x
 
 -- Setup plugins --------------------------------------------------------------
 
@@ -98,7 +98,6 @@ local config = {
   -- One dedicated LSP server & client will be started per unique root_dir
   root_dir = require("jdtls.setup").find_root(root_markers),
   -- INFO: Only for "java-debug" users
-  --
   -- init_options = {
   --   bundles = {
   --     vim.fn.glob(java_debug_path .. "extension/server/com.microsoft.java.debug.plugin-*.jar", 1),
@@ -150,4 +149,3 @@ local config = {
 -- This starts a new client & server,
 -- or attaches to an existing client & server depending on the `root_dir`.
 jdtls.start_or_attach(config)
-

@@ -42,7 +42,9 @@ return {
     event = "InsertEnter"
   },
   {
-    "https://github.com/hrsh7th/nvim-cmp.git",
+    -- "https://github.com/hrsh7th/nvim-cmp.git",
+    'yioneko/nvim-cmp',
+    branch = 'perf',
     event = "InsertEnter",
     keys = {mode = "n", ":", desc = "Command mode"},
     config = function()
