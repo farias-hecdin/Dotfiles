@@ -1,1 +1,40 @@
-local a=require("onedark.colors")return{normal={bg=a.none,fg=a.light_grey},ellipsis={fg=a.grey},separator={fg=a.grey},modified={fg=a.green},dirname={},basename={fg=a.fg},context={},context_file={fg=a.blue},context_module={fg=a.orange},context_namespace={fg=a.orange},context_package={fg=a.orange},context_class={fg=a.yellow},context_method={fg=a.blue},context_property={fg=a.cyan},context_field={fg=a.purple},context_constructor={fg=a.blue},context_enum={fg=a.purple},context_interface={fg=a.green},context_function={fg=a.blue},context_variable={fg=a.purple},context_constant={fg=a.orange},context_string={fg=a.green},context_number={fg=a.orange},context_boolean={fg=a.orange},context_array={fg=a.purple},context_object={fg=a.purple},context_key={fg=a.purple},context_null={fg=a.red},context_enum_member={fg=a.yellow},context_struct={fg=a.purple},context_event={fg=a.yellow},context_operator={fg=a.red},context_type_parameter={fg=a.red}}
+local c = require("onedark.colors")
+
+return {
+    normal = {
+        bg = c.none,
+        fg = c.light_grey,
+    },
+    ellipsis = { fg = c.grey }, -- Conceal's or Normal's fg
+    separator = { fg = c.grey }, -- Conceal's or Normal's fg
+    modified = { fg = c.green }, -- BufferVisibleMod's fg (a yellow color)
+    dirname = {},
+    basename = { fg = c.fg },
+    context = {},
+    context_file = { fg = c.blue }, -- CmpItemKindFile's fg
+    context_module = { fg = c.orange }, -- CmpItemKindModule's fg
+    context_namespace = { fg = c.orange }, -- CmpItemKindModule's fg
+    context_package = { fg = c.orange }, -- CmpItemKindModule's fg
+    context_class = { fg = c.yellow }, -- CmpItemKindClass's fg
+    context_method = { fg = c.blue }, -- CmpItemKindMethod's fg
+    context_property = { fg = c.cyan }, -- CmpItemKindProperty's fg
+    context_field = { fg = c.purple }, -- CmpItemKindField's fg
+    context_constructor = { fg = c.blue }, -- CmpItemKindConstructor's fg
+    context_enum = { fg = c.purple }, -- CmpItemKindEnum's fg
+    context_interface = { fg = c.green }, -- CmpItemKindInterface's fg
+    context_function = { fg = c.blue }, -- CmpItemKindFunction's fg
+    context_variable = { fg = c.purple }, -- CmpItemKindVariable's fg
+    context_constant = { fg = c.orange }, -- CmpItemKindConstant's fg
+    context_string = { fg = c.green }, -- String's fg
+    context_number = { fg = c.orange }, -- Number's fg
+    context_boolean = { fg = c.orange }, -- Boolean's fg
+    context_array = { fg = c.purple }, -- CmpItemKindStruct's fg
+    context_object = { fg = c.purple }, -- CmpItemKindStruct's fg
+    context_key = { fg = c.purple }, -- CmpItemKindVariable's fg
+    context_null = { fg = c.red }, -- Special's fg
+    context_enum_member = { fg = c.yellow }, -- CmpItemKindEnumMember's fg
+    context_struct = { fg = c.purple }, -- CmpItemKindStruct's fg
+    context_event = { fg = c.yellow }, -- CmpItemKindEvent's fg
+    context_operator = { fg = c.red }, -- CmpItemKindOperator's fg
+    context_type_parameter = { fg = c.red }, -- CmpItemKindTypeParameter's fg
+}

@@ -1,1 +1,54 @@
-local a=require("utils")local b={}b.get_keyword_pattern=function()return[[\d\+\(\.\d\+\)\?\(px\?\)\?]]end;b.add_to_cmp=function(c,d,e)local f={}f.priority=9999;f.new=function()return setmetatable({},{__index=f})end;f.get_keyword_pattern=function()return b.get_keyword_pattern()end;f.is_available=function()return vim.tbl_contains(e,vim.bo.filetype)end;f.complete=function(self,g,h)local i=string.sub(g.context.cursor_before_line,g.offset)local j=string.match(i,"%d+%.?%d*")local k=tonumber(j)local l=k/c;local m=string.format("%srem",tostring(a.round(l,d)))local n={{label=j.."px -> "..m,insertText=m}}self.items=n;local o=string.find(i,"(-?%d+%.?%d*)px")==nil;h({items=n,isIncomplete=o})end;return f end;return b
+local utils = require("utils")
+
+local M = {}
+
+---@return string
+M.get_keyword_pattern = function()
+	return [[\d\+\(\.\d\+\)\?\(px\?\)\?]]
+end
+
+M.add_to_cmp = function(font_size, decimal_count, filetypes)
+	local source = {}
+
+	source.priority = 9999
+
+	source.new = function()
+		return setmetatable({}, { __index = source })
+	end
+
+	source.get_keyword_pattern = function()
+		-- return [=[\%(\s\|^\)\zs:[[:alnum:]_\-\+]*:\?]=]
+		-- return "(%d+%.?%d*)px"
+		return M.get_keyword_pattern()
+	end
+
+	source.is_available = function()
+		return vim.tbl_contains(filetypes, vim.bo.filetype)
+	end
+
+	source.complete = function(self, params, callback)
+		local input = string.sub(params.context.cursor_before_line, params.offset)
+		local px = string.match(input, "%d+%.?%d*")
+
+		local px_size = tonumber(px)
+		local rem_size = px_size / font_size
+		local pxrem = string.format("%srem", tostring(utils.round(rem_size, decimal_count)))
+		local items = {
+			{
+				-- word = input,
+				label = px .. "px -> " .. pxrem,
+				insertText = pxrem,
+				-- filterText = input,
+			},
+		}
+
+		self.items = items
+		local is_incomplete = string.find(input, "(-?%d+%.?%d*)px") == nil
+
+		callback({ items = items, isIncomplete = is_incomplete })
+	end
+
+	return source
+end
+
+return M

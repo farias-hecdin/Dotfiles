@@ -1,4 +1,339 @@
-local a=require"plenary.path"local b=a.path.sep;local c=require"plenary.functional"local d=require"plenary.compat"local e=vim.loop;local f={}local g=function(h)local i={}local j=false;for k,l in ipairs(h)do local m=a:new(l..b..".gitignore")if m:exists()then j=true;i[l]={ignored={},negated={}}for n in m:iter()do local o=n:sub(1,1)local p=o=="!"if p then n=n:sub(2)o=n:sub(1,1)end;if o=="/"then n=l..n end;if not(o==""or o=="#")then local q=vim.trim(n)q=q:gsub("%-","%%-")q=q:gsub("%.","%%.")q=q:gsub("/%*%*/","/%%w+/")q=q:gsub("%*%*","")q=q:gsub("%*","%%w+")q=q:gsub("%?","%%w")if q~=""then table.insert(p and i[l].negated or i[l].ignored,q)end end end end end;if not j then return nil end;return function(r,s)for k,l in ipairs(r)do if s:find(l,1,true)then local p=false;for k,t in ipairs(i[l].ignored)do if not p and s:match(t)then for k,u in ipairs(i[l].negated)do if not p and s:match(u)then p=true end end;if not p then return false end end end end end;return true end end;f.__make_gitignore=g;local v=function(w,s,x)for k,l in ipairs(w)do if s:find(l,1,true)then local y=s:sub(#l+1,-1)y=y:sub(1,1)==b and y:sub(2,-1)or y;local k,z=y:gsub(b,"")if x<=z+1 then return nil end end end;return s end;local A=function(B)if type(B)=="string"then return function(s)return s:match(B)end elseif type(B)=="table"then return function(s)for k,l in ipairs(B)do if s:match(l)then return true end end;return false end elseif type(B)=="function"then return B end end;local C=function(D,E,F,G,H,r,I,J,K)if D.hidden or E:sub(1,1)~="."then if F=="directory"then local s=G..b..E;if D.depth then table.insert(H,v(r,s,D.depth))else table.insert(H,s)end;if D.add_dirs or D.only_dirs then if not J or J(r,s.."/")then if not K or K(s)then table.insert(I,s)if D.on_insert then D.on_insert(s,F)end end end end elseif not D.only_dirs then local s=G..b..E;if not J or J(r,s)then if not K or K(s)then table.insert(I,s)if D.on_insert then D.on_insert(s,F)end end end end end end;f.scan_dir=function(L,D)D=D or{}local I={}local w=d.flatten{L}local H=d.flatten{L}local M=D.respect_gitignore and g(w)or nil;local N=D.search_pattern and A(D.search_pattern)or nil;for O=#w,1,-1 do if e.fs_access(w[O],"X")==false then if not c.if_nil(D.silent,false,D.silent)then print(string.format("%s is not accessible by the current user!",w[O]))end;table.remove(w,O)end end;if#w==0 then return{}end;repeat local G=table.remove(H,1)local P=e.fs_scandir(G)if P then while true do local E,F=e.fs_scandir_next(P)if E==nil then break end;C(D,E,F,G,H,w,I,M,N)end end until#H==0;return I end;f.scan_dir_async=function(L,D)D=D or{}local I={}local w=d.flatten{L}local H=d.flatten{L}local G=table.remove(H,1)local M=D.respect_gitignore and g(w)or nil;local N=D.search_pattern and A(D.search_pattern)or nil;for O=#w,1,-1 do if e.fs_access(w[O],"X")==false then if not c.if_nil(D.silent,false,D.silent)then print(string.format("%s is not accessible by the current user!",w[O]))end;table.remove(w,O)end end;if#w==0 then return{}end;local Q;Q=function(R,P)if not R then while true do local E,F=e.fs_scandir_next(P)if E==nil then break end;C(D,E,F,G,H,w,I,M,N)end;if#H==0 then if D.on_exit then D.on_exit(I)end else G=table.remove(H,1)e.fs_scandir(G,Q)end end end;e.fs_scandir(G,Q)end;local S=(function()local T=function(U)local V,O=0,1;while U~=0 do V=V+U%8*O;U=math.floor(U/8)O=O*10 end;return V end;local W={[1]="p",[2]="c",[4]="d",[6]="b",[10]=".",[12]="l",[14]="s"}local X={[0]="---","--x","-w-","-wx","r--","r-x","rw-","rwx"}local Y={4,2,1}return function(Z,_)if Z[_]then return Z[_]end;local V=string.format("%6d",T(_))local a0=V:sub(#V-3,-1)local a1=tonumber(a0:sub(1,1))local a2=W[tonumber(V:sub(1,2))]or"-"for O=2,#a0 do a2=a2 ..X[tonumber(a0:sub(O,O))]if a1-Y[O-1]>=0 then a2=a2:sub(1,-2)..(Y[O-1]==1 and"T"or"S")a1=a1-Y[O-1]end end;Z[_]=a2;return a2 end end)()local a3=(function()local a4={"","K","M","G","T","P","E","Z"}return function(a5)for k,l in ipairs(a4)do if math.abs(a5)<1024.0 then if math.abs(a5)>9 then return string.format("%3d%s",a5,l)else return string.format("%3.1f%s",a5,l)end end;a5=a5/1024.0 end;return string.format("%.1f%s",a5,"Y")end end)()local a6=(function()local a7=os.date"%Y"return function(a8)if a7~=os.date("%Y",a8)then return os.date("%b %d  %Y",a8)end;return os.date("%b %d %H:%M",a8)end end)()local a9=(function()local aa=function(ab,ac)if not ab then return ac end;if ab[ac]then return ab[ac]end;ab[ac]=tostring(ac)return ac end;if jit and b~="\\"then local ad=require"ffi"ad.cdef[[
+local Path = require "plenary.path"
+local os_sep = Path.path.sep
+local F = require "plenary.functional"
+local compat = require "plenary.compat"
+
+local uv = vim.loop
+
+local m = {}
+
+local make_gitignore = function(basepath)
+  local patterns = {}
+  local valid = false
+  for _, v in ipairs(basepath) do
+    local p = Path:new(v .. os_sep .. ".gitignore")
+    if p:exists() then
+      valid = true
+      patterns[v] = { ignored = {}, negated = {} }
+      for l in p:iter() do
+        local prefix = l:sub(1, 1)
+        local negated = prefix == "!"
+        if negated then
+          l = l:sub(2)
+          prefix = l:sub(1, 1)
+        end
+        if prefix == "/" then
+          l = v .. l
+        end
+        if not (prefix == "" or prefix == "#") then
+          local el = vim.trim(l)
+          el = el:gsub("%-", "%%-")
+          el = el:gsub("%.", "%%.")
+          el = el:gsub("/%*%*/", "/%%w+/")
+          el = el:gsub("%*%*", "")
+          el = el:gsub("%*", "%%w+")
+          el = el:gsub("%?", "%%w")
+          if el ~= "" then
+            table.insert(negated and patterns[v].negated or patterns[v].ignored, el)
+          end
+        end
+      end
+    end
+  end
+  if not valid then
+    return nil
+  end
+  return function(bp, entry)
+    for _, v in ipairs(bp) do
+      if entry:find(v, 1, true) then
+        local negated = false
+        for _, w in ipairs(patterns[v].ignored) do
+          if not negated and entry:match(w) then
+            for _, inverse in ipairs(patterns[v].negated) do
+              if not negated and entry:match(inverse) then
+                negated = true
+              end
+            end
+            if not negated then
+              return false
+            end
+          end
+        end
+      end
+    end
+    return true
+  end
+end
+-- exposed for testing
+m.__make_gitignore = make_gitignore
+
+local handle_depth = function(base_paths, entry, depth)
+  for _, v in ipairs(base_paths) do
+    if entry:find(v, 1, true) then
+      local cut = entry:sub(#v + 1, -1)
+      cut = cut:sub(1, 1) == os_sep and cut:sub(2, -1) or cut
+      local _, count = cut:gsub(os_sep, "")
+      if depth <= (count + 1) then
+        return nil
+      end
+    end
+  end
+  return entry
+end
+
+local gen_search_pat = function(pattern)
+  if type(pattern) == "string" then
+    return function(entry)
+      return entry:match(pattern)
+    end
+  elseif type(pattern) == "table" then
+    return function(entry)
+      for _, v in ipairs(pattern) do
+        if entry:match(v) then
+          return true
+        end
+      end
+      return false
+    end
+  elseif type(pattern) == "function" then
+    return pattern
+  end
+end
+
+local process_item = function(opts, name, typ, current_dir, next_dir, bp, data, giti, msp)
+  if opts.hidden or name:sub(1, 1) ~= "." then
+    if typ == "directory" then
+      local entry = current_dir .. os_sep .. name
+      if opts.depth then
+        table.insert(next_dir, handle_depth(bp, entry, opts.depth))
+      else
+        table.insert(next_dir, entry)
+      end
+      if opts.add_dirs or opts.only_dirs then
+        if not giti or giti(bp, entry .. "/") then
+          if not msp or msp(entry) then
+            table.insert(data, entry)
+            if opts.on_insert then
+              opts.on_insert(entry, typ)
+            end
+          end
+        end
+      end
+    elseif not opts.only_dirs then
+      local entry = current_dir .. os_sep .. name
+      if not giti or giti(bp, entry) then
+        if not msp or msp(entry) then
+          table.insert(data, entry)
+          if opts.on_insert then
+            opts.on_insert(entry, typ)
+          end
+        end
+      end
+    end
+  end
+end
+
+--- m.scan_dir
+-- Search directory recursive and syncronous
+-- @param path: string or table
+--   string has to be a valid path
+--   table has to be a array of valid paths
+-- @param opts: table to change behavior
+--   opts.hidden (bool):              if true hidden files will be added
+--   opts.add_dirs (bool):            if true dirs will also be added to the results
+--   opts.only_dirs (bool):           if true only dirs will be added to the results
+--   opts.respect_gitignore (bool):   if true will only add files that are not ignored by the git
+--   opts.depth (int):                depth on how deep the search should go
+--   opts.search_pattern (regex):     regex for which files will be added, string, table of strings, or fn(e) -> bool
+--   opts.on_insert(entry):           Will be called for each element
+--   opts.silent (bool):              if true will not echo messages that are not accessible
+-- @return array with files
+m.scan_dir = function(path, opts)
+  opts = opts or {}
+
+  local data = {}
+  local base_paths = compat.flatten { path }
+  local next_dir = compat.flatten { path }
+
+  local gitignore = opts.respect_gitignore and make_gitignore(base_paths) or nil
+  local match_search_pat = opts.search_pattern and gen_search_pat(opts.search_pattern) or nil
+
+  for i = #base_paths, 1, -1 do
+    if uv.fs_access(base_paths[i], "X") == false then
+      if not F.if_nil(opts.silent, false, opts.silent) then
+        print(string.format("%s is not accessible by the current user!", base_paths[i]))
+      end
+      table.remove(base_paths, i)
+    end
+  end
+  if #base_paths == 0 then
+    return {}
+  end
+
+  repeat
+    local current_dir = table.remove(next_dir, 1)
+    local fd = uv.fs_scandir(current_dir)
+    if fd then
+      while true do
+        local name, typ = uv.fs_scandir_next(fd)
+        if name == nil then
+          break
+        end
+        process_item(opts, name, typ, current_dir, next_dir, base_paths, data, gitignore, match_search_pat)
+      end
+    end
+  until #next_dir == 0
+  return data
+end
+
+--- m.scan_dir_async
+-- Search directory recursive and asyncronous
+-- @param path: string or table
+--   string has to be a valid path
+--   table has to be a array of valid paths
+-- @param opts: table to change behavior
+--   opts.hidden (bool):              if true hidden files will be added
+--   opts.add_dirs (bool):            if true dirs will also be added to the results
+--   opts.only_dirs (bool):           if true only dirs will be added to the results
+--   opts.respect_gitignore (bool):   if true will only add files that are not ignored by git
+--   opts.depth (int):                depth on how deep the search should go
+--   opts.search_pattern (regex):     regex for which files will be added, string, table of strings, or fn(e) -> bool
+--   opts.on_insert function(entry):  will be called for each element
+--   opts.on_exit function(results):  will be called at the end
+--   opts.silent (bool):              if true will not echo messages that are not accessible
+m.scan_dir_async = function(path, opts)
+  opts = opts or {}
+
+  local data = {}
+  local base_paths = compat.flatten { path }
+  local next_dir = compat.flatten { path }
+  local current_dir = table.remove(next_dir, 1)
+
+  -- TODO(conni2461): get gitignore is not async
+  local gitignore = opts.respect_gitignore and make_gitignore(base_paths) or nil
+  local match_search_pat = opts.search_pattern and gen_search_pat(opts.search_pattern) or nil
+
+  -- TODO(conni2461): is not async. Shouldn't be that big of a problem but still
+  -- Maybe obers async pr can take me out of callback hell
+  for i = #base_paths, 1, -1 do
+    if uv.fs_access(base_paths[i], "X") == false then
+      if not F.if_nil(opts.silent, false, opts.silent) then
+        print(string.format("%s is not accessible by the current user!", base_paths[i]))
+      end
+      table.remove(base_paths, i)
+    end
+  end
+  if #base_paths == 0 then
+    return {}
+  end
+
+  local read_dir
+  read_dir = function(err, fd)
+    if not err then
+      while true do
+        local name, typ = uv.fs_scandir_next(fd)
+        if name == nil then
+          break
+        end
+        process_item(opts, name, typ, current_dir, next_dir, base_paths, data, gitignore, match_search_pat)
+      end
+      if #next_dir == 0 then
+        if opts.on_exit then
+          opts.on_exit(data)
+        end
+      else
+        current_dir = table.remove(next_dir, 1)
+        uv.fs_scandir(current_dir, read_dir)
+      end
+    end
+  end
+  uv.fs_scandir(current_dir, read_dir)
+end
+
+local gen_permissions = (function()
+  local conv_to_octal = function(nr)
+    local octal, i = 0, 1
+
+    while nr ~= 0 do
+      octal = octal + (nr % 8) * i
+      nr = math.floor(nr / 8)
+      i = i * 10
+    end
+
+    return octal
+  end
+
+  local type_tbl = { [1] = "p", [2] = "c", [4] = "d", [6] = "b", [10] = ".", [12] = "l", [14] = "s" }
+  local permissions_tbl = { [0] = "---", "--x", "-w-", "-wx", "r--", "r-x", "rw-", "rwx" }
+  local bit_tbl = { 4, 2, 1 }
+
+  return function(cache, mode)
+    if cache[mode] then
+      return cache[mode]
+    end
+
+    local octal = string.format("%6d", conv_to_octal(mode))
+    local l4 = octal:sub(#octal - 3, -1)
+    local bit = tonumber(l4:sub(1, 1))
+
+    local result = type_tbl[tonumber(octal:sub(1, 2))] or "-"
+    for i = 2, #l4 do
+      result = result .. permissions_tbl[tonumber(l4:sub(i, i))]
+      if bit - bit_tbl[i - 1] >= 0 then
+        result = result:sub(1, -2) .. (bit_tbl[i - 1] == 1 and "T" or "S")
+        bit = bit - bit_tbl[i - 1]
+      end
+    end
+
+    cache[mode] = result
+    return result
+  end
+end)()
+
+local gen_size = (function()
+  local size_types = { "", "K", "M", "G", "T", "P", "E", "Z" }
+
+  return function(size)
+    -- TODO(conni2461): If type directory we could just return 4.0K
+    for _, v in ipairs(size_types) do
+      if math.abs(size) < 1024.0 then
+        if math.abs(size) > 9 then
+          return string.format("%3d%s", size, v)
+        else
+          return string.format("%3.1f%s", size, v)
+        end
+      end
+      size = size / 1024.0
+    end
+    return string.format("%.1f%s", size, "Y")
+  end
+end)()
+
+local gen_date = (function()
+  local current_year = os.date "%Y"
+  return function(mtime)
+    if current_year ~= os.date("%Y", mtime) then
+      return os.date("%b %d  %Y", mtime)
+    end
+    return os.date("%b %d %H:%M", mtime)
+  end
+end)()
+
+local get_username = (function()
+  local fallback = function(tbl, id)
+    if not tbl then
+      return id
+    end
+    if tbl[id] then
+      return tbl[id]
+    end
+    tbl[id] = tostring(id)
+    return id
+  end
+
+  if jit and os_sep ~= "\\" then
+    local ffi = require "ffi"
+    ffi.cdef [[
       typedef unsigned int __uid_t;
       typedef __uid_t uid_t;
       typedef unsigned int __gid_t;
@@ -15,7 +350,49 @@ local a=require"plenary.path"local b=a.path.sep;local c=require"plenary.function
       } passwd;
 
       passwd *getpwuid(uid_t uid);
-    ]]local ae=function(ab,ac)if ab[ac]then return ab[ac]end;local af=ad.C.getpwuid(ac)local E;if af==nil then E=tostring(ac)else E=ad.string(af.pw_name)end;ab[ac]=E;return E end;local ag=pcall(ae,{},1000)if ag then return ae else return aa end else return aa end end)()local ah=(function()local aa=function(ab,ac)if not ab then return ac end;if ab[ac]then return ab[ac]end;ab[ac]=tostring(ac)return ac end;if jit and b~="\\"then local ad=require"ffi"ad.cdef[[
+    ]]
+
+    local ffi_func = function(tbl, id)
+      if tbl[id] then
+        return tbl[id]
+      end
+      local struct = ffi.C.getpwuid(id)
+      local name
+      if struct == nil then
+        name = tostring(id)
+      else
+        name = ffi.string(struct.pw_name)
+      end
+      tbl[id] = name
+      return name
+    end
+
+    local ok = pcall(ffi_func, {}, 1000)
+    if ok then
+      return ffi_func
+    else
+      return fallback
+    end
+  else
+    return fallback
+  end
+end)()
+
+local get_groupname = (function()
+  local fallback = function(tbl, id)
+    if not tbl then
+      return id
+    end
+    if tbl[id] then
+      return tbl[id]
+    end
+    tbl[id] = tostring(id)
+    return id
+  end
+
+  if jit and os_sep ~= "\\" then
+    local ffi = require "ffi"
+    ffi.cdef [[
       typedef unsigned int __gid_t;
       typedef __gid_t gid_t;
 
@@ -26,4 +403,218 @@ local a=require"plenary.path"local b=a.path.sep;local c=require"plenary.function
         char **gr_mem;
       } group;
       group *getgrgid(gid_t gid);
-    ]]local ae=function(ab,ac)if ab[ac]then return ab[ac]end;local af=ad.C.getgrgid(ac)local E;if af==nil then E=tostring(ac)else E=ad.string(af.gr_name)end;ab[ac]=E;return E end;local ag=pcall(ae,{},1000)if ag then return ae else return aa end else return aa end end)()local ai=function(ab)if not ab then return 0 end;local aj=0;for k,l in pairs(ab)do if#l>aj then aj=#l end end;return aj end;local ak=function(I,L,D)if not I or#I==0 then return{},{}end;local al=function(am,an)if am:sub(1,1)=="l"then local ao=e.fs_realpath(L..b..an)if not ao then return an end;if ao:sub(1,#L)==L then ao=ao:sub(#L+2,-1)end;return string.format("%s -> %s",an,ao)end;return an end;local ap,aq={},{}local ar=b~="\\"and{}or nil;local as=b~="\\"and{}or nil;local at,au={},{}for k,l in ipairs(I)do local av=e.fs_lstat(l)if av then at[l]=av;a9(ar,av.uid)ah(as,av.gid)end end;local aw=(function()if not ar and not as then local ax={[5]=2,[6]=0}return function(...)local ay={...}local az={{start_index=01,end_index=11},{start_index=12,end_index=17}}local aA=19;for aB=5,6 do local l=ax[aB]local aC=aA+#ay[aB]table.insert(az,{start_index=aA,end_index=aC})aA=aC+l end;table.insert(aq,az)table.insert(ap,string.format("%10s %5s  %s  %s",ay[1],ay[2],ay[5],al(ay[1],ay[6])))end else local aD=ai(ar)local aE=ai(as)local ax={[3]={max=aD,add=1},[4]={max=aE,add=2},[5]={add=2},[6]={add=0}}local aF="%10s %5s %-"..aD.."s %-"..aE.."s  %s  %s"return function(...)local ay={...}local az={{start_index=01,end_index=11},{start_index=12,end_index=17}}local aA=18;for aB=3,6 do local l=ax[aB]local aC=aA+#ay[aB]table.insert(az,{start_index=aA,end_index=aC})if l.max then aA=aA+l.max+l.add else aA=aC+l.add end end;table.insert(aq,az)table.insert(ap,string.format(aF,ay[1],ay[2],ay[3],ay[4],ay[5],al(ay[1],ay[6])))end end end)()for E,av in pairs(at)do aw(S(au,av.mode),a3(av.size),a9(ar,av.uid),ah(as,av.gid),a6(av.mtime.sec),E:sub(#L+2,-1))end;if D and D.group_directories_first then local aG={}local aH={}for aB,l in ipairs(ap)do if l:sub(1,1)=="d"then table.insert(aG,l)table.insert(aH,aq[aB])end end;for aB,l in ipairs(ap)do if l:sub(1,1)~="d"then table.insert(aG,l)table.insert(aH,aq[aB])end end;return aG,aH else return ap,aq end end;f.ls=function(L,D)D=D or{}D.depth=D.depth or 1;D.add_dirs=D.add_dirs or true;local I=f.scan_dir(L,D)return ak(I,L,D)end;f.ls_async=function(L,D)D=D or{}D.depth=D.depth or 1;D.add_dirs=D.add_dirs or true;local aI=vim.deepcopy(D)aI.on_exit=function(I)if D.on_exit then D.on_exit(ak(I,L,aI))end end;f.scan_dir_async(L,aI)end;return f
+    ]]
+
+    local ffi_func = function(tbl, id)
+      if tbl[id] then
+        return tbl[id]
+      end
+      local struct = ffi.C.getgrgid(id)
+      local name
+      if struct == nil then
+        name = tostring(id)
+      else
+        name = ffi.string(struct.gr_name)
+      end
+      tbl[id] = name
+      return name
+    end
+    local ok = pcall(ffi_func, {}, 1000)
+    if ok then
+      return ffi_func
+    else
+      return fallback
+    end
+  else
+    return fallback
+  end
+end)()
+
+local get_max_len = function(tbl)
+  if not tbl then
+    return 0
+  end
+  local max_len = 0
+  for _, v in pairs(tbl) do
+    if #v > max_len then
+      max_len = #v
+    end
+  end
+  return max_len
+end
+
+local gen_ls = function(data, path, opts)
+  if not data or #data == 0 then
+    return {}, {}
+  end
+
+  local check_link = function(per, file)
+    if per:sub(1, 1) == "l" then
+      local resolved = uv.fs_realpath(path .. os_sep .. file)
+      if not resolved then
+        return file
+      end
+      if resolved:sub(1, #path) == path then
+        resolved = resolved:sub(#path + 2, -1)
+      end
+      return string.format("%s -> %s", file, resolved)
+    end
+    return file
+  end
+
+  local results, sections = {}, {}
+
+  local users_tbl = os_sep ~= "\\" and {} or nil
+  local groups_tbl = os_sep ~= "\\" and {} or nil
+
+  local stats, permissions_cache = {}, {}
+  for _, v in ipairs(data) do
+    local stat = uv.fs_lstat(v)
+    if stat then
+      stats[v] = stat
+      get_username(users_tbl, stat.uid)
+      get_groupname(groups_tbl, stat.gid)
+    end
+  end
+
+  local insert_in_results = (function()
+    if not users_tbl and not groups_tbl then
+      local section_spacing_tbl = { [5] = 2, [6] = 0 }
+
+      return function(...)
+        local args = { ... }
+        local section = {
+          { start_index = 01, end_index = 11 }, -- permissions, hardcoded indexes
+          { start_index = 12, end_index = 17 }, -- size, hardcoded indexes
+        }
+        local cur_index = 19
+        for k = 5, 6 do
+          local v = section_spacing_tbl[k]
+          local end_index = cur_index + #args[k]
+          table.insert(section, { start_index = cur_index, end_index = end_index })
+          cur_index = end_index + v
+        end
+        table.insert(sections, section)
+        table.insert(
+          results,
+          string.format("%10s %5s  %s  %s", args[1], args[2], args[5], check_link(args[1], args[6]))
+        )
+      end
+    else
+      local max_user_len = get_max_len(users_tbl)
+      local max_group_len = get_max_len(groups_tbl)
+
+      local section_spacing_tbl = {
+        [3] = { max = max_user_len, add = 1 },
+        [4] = { max = max_group_len, add = 2 },
+        [5] = { add = 2 },
+        [6] = { add = 0 },
+      }
+      local fmt_str = "%10s %5s %-" .. max_user_len .. "s %-" .. max_group_len .. "s  %s  %s"
+
+      return function(...)
+        local args = { ... }
+        local section = {
+          { start_index = 01, end_index = 11 }, -- permissions, hardcoded indexes
+          { start_index = 12, end_index = 17 }, -- size, hardcoded indexes
+        }
+        local cur_index = 18
+        for k = 3, 6 do
+          local v = section_spacing_tbl[k]
+          local end_index = cur_index + #args[k]
+          table.insert(section, { start_index = cur_index, end_index = end_index })
+          if v.max then
+            cur_index = cur_index + v.max + v.add
+          else
+            cur_index = end_index + v.add
+          end
+        end
+        table.insert(sections, section)
+        table.insert(
+          results,
+          string.format(fmt_str, args[1], args[2], args[3], args[4], args[5], check_link(args[1], args[6]))
+        )
+      end
+    end
+  end)()
+
+  for name, stat in pairs(stats) do
+    insert_in_results(
+      gen_permissions(permissions_cache, stat.mode),
+      gen_size(stat.size),
+      get_username(users_tbl, stat.uid),
+      get_groupname(groups_tbl, stat.gid),
+      gen_date(stat.mtime.sec),
+      name:sub(#path + 2, -1)
+    )
+  end
+
+  if opts and opts.group_directories_first then
+    local sorted_results = {}
+    local sorted_sections = {}
+    for k, v in ipairs(results) do
+      if v:sub(1, 1) == "d" then
+        table.insert(sorted_results, v)
+        table.insert(sorted_sections, sections[k])
+      end
+    end
+    for k, v in ipairs(results) do
+      if v:sub(1, 1) ~= "d" then
+        table.insert(sorted_results, v)
+        table.insert(sorted_sections, sections[k])
+      end
+    end
+    return sorted_results, sorted_sections
+  else
+    return results, sections
+  end
+end
+
+--- m.ls
+-- List directory contents. Will always apply --long option.  Use scan_dir for without --long
+-- @param path: string
+--   string has to be a valid path
+-- @param opts: table to change behavior
+--   opts.hidden (bool):                  if true hidden files will be added
+--   opts.add_dirs (bool):                if true dirs will also be added to the results, default: true
+--   opts.respect_gitignore (bool):       if true will only add files that are not ignored by git
+--   opts.depth (int):                    depth on how deep the search should go, default: 1
+--   opts.group_directories_first (bool): same as real ls
+-- @return array with formatted output
+m.ls = function(path, opts)
+  opts = opts or {}
+  opts.depth = opts.depth or 1
+  opts.add_dirs = opts.add_dirs or true
+  local data = m.scan_dir(path, opts)
+
+  return gen_ls(data, path, opts)
+end
+
+--- m.ls_async
+-- List directory contents. Will always apply --long option. Use scan_dir for without --long
+-- @param path: string
+--   string has to be a valid path
+-- @param opts: table to change behavior
+--   opts.hidden (bool):                  if true hidden files will be added
+--   opts.add_dirs (bool):                if true dirs will also be added to the results, default: true
+--   opts.respect_gitignore (bool):       if true will only add files that are not ignored by git
+--   opts.depth (int):                    depth on how deep the search should go, default: 1
+--   opts.group_directories_first (bool): same as real ls
+--   opts.on_exit function(results):      will be called at the end (required)
+m.ls_async = function(path, opts)
+  opts = opts or {}
+  opts.depth = opts.depth or 1
+  opts.add_dirs = opts.add_dirs or true
+
+  local opts_copy = vim.deepcopy(opts)
+
+  opts_copy.on_exit = function(data)
+    if opts.on_exit then
+      opts.on_exit(gen_ls(data, path, opts_copy))
+    end
+  end
+
+  m.scan_dir_async(path, opts_copy)
+end
+
+return m

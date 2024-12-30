@@ -1,1 +1,127 @@
-local a={__call=function(self)self:revert()end}local b={__mode="kv"}local c={}local d;local e={}e.revert=function(self)if not self then self=d;if not self.previous then return end end;if getmetatable(self)~=a then error("Value provided is not a valid snapshot",2)end;if self.next then self.next:revert()end;self.formatters={}self.parameters={}for f,g in pairs(self.spies)do self.spies[f]=nil;f:revert()end;setmetatable(self,nil)d=self.previous;d.next=nil end;e.snapshot=function()local h=setmetatable({formatters={},parameters={},spies=setmetatable({},b),previous=d,revert=e.revert},a)if d then d.next=h end;d=h;return d end;e.add_formatter=function(i)table.insert(d.formatters,1,i)end;e.remove_formatter=function(i,f)f=f or d;for j,k in ipairs(f.formatters)do if k==i then table.remove(f.formatters,j)break end end;if f.previous then e.remove_formatter(i,f.previous)end end;e.format_argument=function(l,f,m)f=f or d;for g,n in ipairs(f.formatters)do local o=n(l,m)if o~=nil then return o end end;if f.previous then return e.format_argument(l,f.previous,m)end;return nil end;e.set_parameter=function(p,q)if q==nil then q=c end;d.parameters[p]=q end;e.get_parameter=function(p,f)f=f or d;local l=f.parameters[p]if l==nil and f.previous then return e.get_parameter(p,f.previous)end;if l~=c then return l end;return nil end;e.add_spy=function(r)d.spies[r]=true end;e.snapshot()return e
+-- maintains a state of the assert engine in a linked-list fashion
+-- records; formatters, parameters, spies and stubs
+
+local state_mt = {
+  __call = function(self)
+    self:revert()
+  end
+}
+
+local spies_mt = { __mode = "kv" }
+
+local nilvalue = {} -- unique ID to refer to nil values for parameters
+
+-- will hold the current state
+local current
+
+-- exported module table
+local state = {}
+
+------------------------------------------------------
+-- Reverts to a (specific) snapshot.
+-- @param self (optional) the snapshot to revert to. If not provided, it will revert to the last snapshot.
+state.revert = function(self)
+  if not self then
+    -- no snapshot given, so move 1 up
+    self = current
+    if not self.previous then
+      -- top of list, no previous one, nothing to do
+      return
+    end
+  end
+  if getmetatable(self) ~= state_mt then error("Value provided is not a valid snapshot", 2) end
+
+  if self.next then
+    self.next:revert()
+  end
+  -- revert formatters in 'last'
+  self.formatters = {}
+  -- revert parameters in 'last'
+  self.parameters = {}
+  -- revert spies/stubs in 'last'
+  for s,_ in pairs(self.spies) do
+    self.spies[s] = nil
+    s:revert()
+  end
+  setmetatable(self, nil) -- invalidate as a snapshot
+  current = self.previous
+  current.next = nil
+end
+
+------------------------------------------------------
+-- Creates a new snapshot.
+-- @return snapshot table
+state.snapshot = function()
+  local new = setmetatable ({
+    formatters = {},
+    parameters = {},
+    spies = setmetatable({}, spies_mt),
+    previous = current,
+    revert = state.revert,
+  }, state_mt)
+  if current then current.next = new end
+  current = new
+  return current
+end
+
+
+--  FORMATTERS
+state.add_formatter = function(callback)
+  table.insert(current.formatters, 1, callback)
+end
+
+state.remove_formatter = function(callback, s)
+  s = s or current
+  for i, v in ipairs(s.formatters) do
+    if v == callback then
+      table.remove(s.formatters, i)
+      break
+    end
+  end
+  -- wasn't found, so traverse up 1 state
+  if s.previous then
+    state.remove_formatter(callback, s.previous)
+  end
+end
+
+state.format_argument = function(val, s, fmtargs)
+  s = s or current
+  for _, fmt in ipairs(s.formatters) do
+    local valfmt = fmt(val, fmtargs)
+    if valfmt ~= nil then return valfmt end
+  end
+  -- nothing found, check snapshot 1 up in list
+  if s.previous then
+    return state.format_argument(val, s.previous, fmtargs)
+  end
+  return nil -- end of list, couldn't format
+end
+
+
+--  PARAMETERS
+state.set_parameter = function(name, value)
+  if value == nil then value = nilvalue end
+  current.parameters[name] = value
+end
+
+state.get_parameter = function(name, s)
+  s = s or current
+  local val = s.parameters[name]
+  if val == nil and s.previous then
+    -- not found, so check 1 up in list
+    return state.get_parameter(name, s.previous)
+  end
+  if val ~= nilvalue then
+    return val
+  end
+  return nil
+end
+
+--  SPIES / STUBS
+state.add_spy = function(spy)
+  current.spies[spy] = true
+end
+
+state.snapshot()  -- create initial state
+
+return state

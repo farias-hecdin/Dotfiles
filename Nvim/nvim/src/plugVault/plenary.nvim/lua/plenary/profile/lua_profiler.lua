@@ -1,1 +1,252 @@
-local a="lua/telescope/profile/lua_profiler.lua"local b="0.0000"local c="~"local d=75;local e=22;local f=6;local g=7;local h=6;local i=4;local j=" > Report saved to"local k="| %-"..d.."s: %-"..e.."s: %-"..f.."s: %-"..g.."s: %-"..h.."s: %-"..i.."s|\n"local l="%-"..d.."."..d.."s: %-"..e.."."..e.."s: %-"..f.."s"local m="| %s: %-"..g.."s: %-"..h.."s: %-"..i.."s|\n"local n="TOTAL TIME   = %f s\n"local o="%"..f-2 .."i"local p="%04.4f"local q="%03.1f"local r="%"..i-1 .."i"local s=string.format(k,"FILE","FUNCTION","LINE","TIME","%","#")local t={}local u=os.clock;local string=string;local debug=debug;local table=table;local v={}local w={}local x=0;local y=0;local z=0;local A=nil;local B=false;local function C(D)local E=D.short_src;if E==nil then E="<C>"elseif string.sub(E,#E-3,#E)==".lua"then E=string.sub(E,1,#E-4)end;local F=D.name;if F==nil then F="Anon"elseif string.sub(F,#F-1,#F)=="_l"then F=string.sub(F,1,#F-2)end;local G=string.format(l,E,F,string.format(o,D.linedefined or 0))local H=v[G]if not H then H={title=string.format(l,E,F,string.format(o,D.linedefined or 0)),count=0,timer=0}v[G]=H;x=x+1;w[x]=H end;return H end;local I=function(J)local D=debug.getinfo(2,"nS")if J=="call"then local H=C(D)H.callTime=u()H.count=H.count+1 elseif J=="return"then local H=C(D)if H.callTime and H.count>0 then H.timer=H.timer+u()-H.callTime end end end;local function K(L,M)local N=""M=M or" "for O=1,L do N=N..M end;return N end;local function P(Q,R)for O in string.gmatch(Q,R)do do return true end end;return false end;local S=K(#s-1,"-").."\n"function t.attachPrintFunction(T,U)A=T;if U~=nil then B=U end end;function t.start()v={}w={}x=0;y=u()z=nil;debug.sethook(I,"cr",0)end;function t.stop()z=u()debug.sethook()end;function t.report(V)if z==nil then t.stop()end;if x>0 then V=V or"profiler.log"table.sort(w,function(W,X)return W.timer>X.timer end)local Y=io.open(V,"w+")if x>0 then local Z=false;local _=z-y;local a0=" > "..string.format(n,_)Y:write(a0)if A~=nil then A(a0)end;Y:write("\n"..S)Y:write(s)Y:write(S)for a1=1,x do local H=w[a1]if H.count>0 and H.timer<=_ then local a2=true;if a~=""then if P(H.title,a)then a2=false end end;if a2==true then if P(H.title,"[[C]]")then a2=false end end;if a2==true then local a3=string.format(r,H.count)local a4=string.format(p,H.timer)local a5=string.format(q,H.timer/_*100)if Z==false and a4==b then Y:write(S)Z=true end;if a4==b then a4=c;a5=c end;local a6=string.format(m,H.title,a4,a5,a3)Y:write(a6)if A~=nil and B==true then A(a6)end end end end;Y:write(S)end;Y:close()if A~=nil then A(j.."'"..V.."'")end end end;return t
+--[[ Copyright (c) 2018-2020, Charles Mallah ]]
+-- Released with MIT License
+--
+-- Originally link:
+--  https://github.com/charlesmallah/lua-profiler
+--
+-- Hopefully will add some better neovim stuff in the future.
+-- Shoutout to @clason for finding this.
+
+
+---------------------------------------|
+--- Configuration
+--
+---------------------------------------|
+
+local PROFILER_FILENAME = "lua/telescope/profile/lua_profiler.lua" -- Location and name of profiler (to remove itself from reports);
+-- e.g. if this is in a 'tool' folder, rename this as: "tool/profiler.lua"
+
+local EMPTY_TIME = "0.0000" -- Detect empty time, replace with tag below
+local emptyToThis = "~"
+
+local fileWidth = 75
+local funcWidth = 22
+local lineWidth = 6
+local timeWidth = 7
+local relaWidth = 6
+local callWidth = 4
+
+local reportSaved = " > Report saved to"
+local formatOutputHeader = "| %-"..fileWidth.."s: %-"..funcWidth.."s: %-"..lineWidth.."s: %-"..timeWidth.."s: %-"..relaWidth.."s: %-"..callWidth.."s|\n"
+local formatOutputTitle = "%-"..fileWidth.."."..fileWidth.."s: %-"..funcWidth.."."..funcWidth.."s: %-"..lineWidth.."s" -- File / Function / Line count
+local formatOutput = "| %s: %-"..timeWidth.."s: %-"..relaWidth.."s: %-"..callWidth.."s|\n" -- Time / Relative / Called
+local formatTotalTime = "TOTAL TIME   = %f s\n"
+local formatFunLine = "%"..(lineWidth - 2).."i"
+local formatFunTime = "%04.4f"
+local formatFunRelative = "%03.1f"
+local formatFunCount = "%"..(callWidth - 1).."i"
+local formatHeader = string.format(formatOutputHeader, "FILE", "FUNCTION", "LINE", "TIME", "%", "#")
+
+
+---------------------------------------|
+--- Locals
+--
+---------------------------------------|
+
+local module = {}
+
+local getTime = os.clock
+local string = string
+local debug = debug
+local table = table
+
+local TABL_REPORT_CACHE = {}
+local TABL_REPORTS = {}
+local reportCount = 0
+local startTime = 0
+local stopTime = 0
+
+local printFun = nil
+local verbosePrint = false
+
+local function functionReport(information)
+  local src = information.short_src
+  if src == nil then
+    src = "<C>"
+  elseif string.sub(src, #src - 3, #src) == ".lua" then
+    src = string.sub(src, 1, #src - 4)
+  end
+
+  local name = information.name
+  if name == nil then
+    name = "Anon"
+  elseif string.sub(name, #name - 1, #name) == "_l" then
+    name = string.sub(name, 1, #name - 2)
+  end
+
+  local title = string.format(formatOutputTitle,
+    src, name,
+  string.format(formatFunLine, information.linedefined or 0))
+
+  local funcReport = TABL_REPORT_CACHE[title]
+  if not funcReport then
+    funcReport = {
+      title = string.format(formatOutputTitle,
+        src, name,
+      string.format(formatFunLine, information.linedefined or 0)),
+      count = 0,
+      timer = 0,
+    }
+    TABL_REPORT_CACHE[title] = funcReport
+    reportCount = reportCount + 1
+    TABL_REPORTS[reportCount] = funcReport
+  end
+
+  return funcReport
+end
+
+local onDebugHook = function(hookType)
+  local information = debug.getinfo(2, "nS")
+  if hookType == "call" then
+    local funcReport = functionReport(information)
+    funcReport.callTime = getTime()
+    funcReport.count = funcReport.count + 1
+  elseif hookType == "return" then
+    local funcReport = functionReport(information)
+    if funcReport.callTime and funcReport.count > 0 then
+      funcReport.timer = funcReport.timer + (getTime() - funcReport.callTime)
+    end
+  end
+end
+
+local function charRepetition(n, character)
+  local s = ""
+  character = character or " "
+  for _ = 1, n do
+    s = s..character
+  end
+  return s
+end
+
+local function singleSearchReturn(str, search)
+  for _ in string.gmatch(str, search) do
+    do return true end
+  end
+  return false
+end
+
+local divider = charRepetition(#formatHeader - 1, "-").."\n"
+
+
+---------------------------------------|
+--- Functions
+--
+---------------------------------------|
+
+--- Attach a print function to the profiler, to receive a single string parameter
+--
+function module.attachPrintFunction(fn, verbose)
+  printFun = fn
+  if verbose ~= nil then
+    verbosePrint = verbose
+  end
+end
+
+---
+--
+function module.start()
+  TABL_REPORT_CACHE = {}
+  TABL_REPORTS = {}
+  reportCount = 0
+  startTime = getTime()
+  stopTime = nil
+  debug.sethook(onDebugHook, "cr", 0)
+end
+
+---
+--
+function module.stop()
+  stopTime = getTime()
+  debug.sethook()
+end
+
+--- Writes the profile report to file
+--
+function module.report(filename)
+  if stopTime == nil then
+    module.stop()
+  end
+
+  if reportCount > 0 then
+    filename = filename or "profiler.log"
+    table.sort(TABL_REPORTS, function(a, b) return a.timer > b.timer end)
+    local file = io.open(filename, "w+")
+
+    if reportCount > 0 then
+      local divide = false
+      local totalTime = stopTime - startTime
+      local totalTimeOutput = " > "..string.format(formatTotalTime, totalTime)
+
+      file:write(totalTimeOutput)
+      if printFun ~= nil then
+        printFun(totalTimeOutput)
+      end
+
+      file:write("\n"..divider)
+      file:write(formatHeader)
+      file:write(divider)
+
+      for i = 1, reportCount do
+        local funcReport = TABL_REPORTS[i]
+
+        if funcReport.count > 0 and funcReport.timer <= totalTime then
+          local printThis = true
+
+          if PROFILER_FILENAME ~= "" then
+            if singleSearchReturn(funcReport.title, PROFILER_FILENAME) then
+              printThis = false
+            end
+          end
+
+          -- Remove line if not needed
+          if printThis == true then
+            if singleSearchReturn(funcReport.title, "[[C]]") then
+              printThis = false
+            end
+          end
+
+          if printThis == true then
+            local count = string.format(formatFunCount, funcReport.count)
+            local timer = string.format(formatFunTime, funcReport.timer)
+            local relTime = string.format(formatFunRelative, (funcReport.timer / totalTime) * 100)
+            if divide == false and timer == EMPTY_TIME then
+              file:write(divider)
+              divide = true
+            end
+
+            -- Replace
+            if timer == EMPTY_TIME then
+              timer = emptyToThis
+              relTime = emptyToThis
+            end
+
+            -- Build final line
+            local outputLine = string.format(formatOutput, funcReport.title, timer, relTime, count)
+            file:write(outputLine)
+
+            -- This is a verbose print to the printFun, however maybe make this smaller for on screen debug?
+            if printFun ~= nil and verbosePrint == true then
+              printFun(outputLine)
+            end
+
+          end
+        end
+      end
+
+      file:write(divider)
+
+    end
+
+    file:close()
+
+    if printFun ~= nil then
+      printFun(reportSaved.."'"..filename.."'")
+    end
+
+  end
+
+end
+
+--- End
+--
+return module

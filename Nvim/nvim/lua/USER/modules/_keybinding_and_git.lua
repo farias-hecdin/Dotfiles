@@ -6,13 +6,13 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- url = 'https://github.com/echasnovski/mini.diff.git',
-    dir = D.plugin .. "mini.diff",
+    url = 'https://github.com/echasnovski/mini.diff.git',
+    -- dir = D.plugin .. "mini.diff",
     event = "InsertEnter",
     config = function()
       require('mini.diff').setup({
         view = {
-          style ='sign',
+          style ='number',
           signs = {add = '', change = '󰚾', delete = '󰶹'},
           -- priority = vim.highlight.priorities.user - 1,
           priority = 1
@@ -47,8 +47,8 @@ return {
     end
   },
   {
-    -- url = "https://github.com/folke/which-key.nvim.git",
-    dir = D.plugin .. "which-key.nvim",
+    url = "https://github.com/folke/which-key.nvim.git",
+    -- dir = D.plugin .. "which-key.nvim",
     event = "InsertEnter",
     keys = {
       {"<leader>", mode = {"n", "v"}}
@@ -69,22 +69,6 @@ return {
         -- show a warning when issues were detected with your mappings
         notify = true,
         -- Enable/disable WhichKey for certain mapping modes
-        modes = {
-          n = true,
-          i = true,
-          x = true,
-          s = true,
-          o = true,
-          t = true,
-          c = true,
-          -- Start hidden and wait for a key to be pressed before showing the popup
-          -- Only used by enabled xo mapping modes.
-          -- Set to false to show the popup immediately (after the delay)
-          defer = {
-            ["<C-V>"] = true,
-            V = true,
-          },
-        },
         plugins = {
           marks = true, -- shows a list of your marks on ' and `
           registers = true, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
@@ -199,16 +183,11 @@ return {
           -- Which-key automatically sets up triggers for your mappings.
           -- But you can disable this and setup the triggers yourself.
           -- Be aware, that triggers are not needed for visual and operator pending mode.
-          triggers = true, -- automatically setup triggers
+          -- triggers = true, -- automatically setup triggers
           disable = {
             -- disable WhichKey for certain buf types and file types.
             ft = {},
             bt = {},
-            -- disable a trigger for a certain context by returning true
-            ---@type fun(ctx: { keys: string, mode: string, plugin?: string }):boolean?
-            trigger = function(ctx)
-              return false
-            end,
           },
           debug = false, -- enable wk.log in the current directory
         })

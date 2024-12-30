@@ -1,1 +1,52 @@
-local a={}a._queue={}local b=(vim.uv or vim.loop).new_timer()b:start(500,0,vim.schedule_wrap(function()a.setup()end))function a.show(c)c=c or{}c=type(c)=="string"and{keys=c}or c;c.delay=0;c.waited=vim.o.timeoutlen;if not require("which-key.state").start(c)then require("which-key.util").warn("No mappings found for mode `"..(c.mode or"n").."` and keys `"..(c.keys or"").."`")end end;function a.setup(c)b:stop()require("which-key.config").setup(c)end;function a.register(d,c)if c then for e,f in pairs(c)do d[e]=f end end;a.add(d,{version=1})end;function a.add(d,c)table.insert(a._queue,{spec=d,opts=c})end;return a
+---@class wk
+---@field private _queue {spec: wk.Spec, opts?: wk.Parse}[]
+local M = {}
+
+M._queue = {}
+M.did_setup = false
+
+--- Open which-key
+---@param opts? wk.Filter|string
+function M.show(opts)
+  opts = opts or {}
+  opts = type(opts) == "string" and { keys = opts } or opts
+  if opts.delay == nil then
+    opts.delay = 0
+  end
+  opts.waited = vim.o.timeoutlen
+  ---@diagnostic disable-next-line: param-type-mismatch
+  if not require("which-key.state").start(opts) then
+    require("which-key.util").warn(
+      "No mappings found for mode `" .. (opts.mode or "n") .. "` and keys `" .. (opts.keys or "") .. "`"
+    )
+  end
+end
+
+---@param opts? wk.Opts
+function M.setup(opts)
+  M.did_setup = true
+  require("which-key.config").setup(opts)
+end
+
+-- Use `require("which-key").add()` instead.
+-- The spec is different though, so check the docs!
+---@deprecated
+---@param mappings wk.Spec
+---@param opts? wk.Mapping
+function M.register(mappings, opts)
+  if opts then
+    for k, v in pairs(opts) do
+      mappings[k] = v
+    end
+  end
+  M.add(mappings, { version = 1 })
+end
+
+--- Add mappings to which-key
+---@param mappings wk.Spec
+---@param opts? wk.Parse
+function M.add(mappings, opts)
+  table.insert(M._queue, { spec = mappings, opts = opts })
+end
+
+return M

@@ -1,1 +1,167 @@
-local a=vim.api;local b,c;local d={}local e=1;local function f()b=a.nvim_create_buf(false,true)local g=a.nvim_create_buf(false,true)a.nvim_buf_set_option(b,'bufhidden','wipe')a.nvim_buf_set_option(b,'filetype','bufferlist')local h=a.nvim_get_option("columns")local i=a.nvim_get_option("lines")local j=math.ceil(i*0.5-4)local k=math.ceil(h*0.4)local l=math.ceil((i-j)/2-1)local m=math.ceil((h-k)/2)local n={style='minimal',relative='editor',width=k+2,height=j+2,row=l-1,col=m-1}local o={style='minimal',relative='editor',width=k,height=j,row=l,col=m}local p=' Quick Navigation 'local q={'╭'..p..string.rep('─',k-string.len(p))..'╮'}local r='│'..string.rep(' ',k)..'│'for s=1,j do table.insert(q,r)end;table.insert(q,'╰'..string.rep('─',k)..'╯')a.nvim_buf_set_lines(g,0,-1,false,q)local t=a.nvim_open_win(g,true,n)c=a.nvim_open_win(b,true,o)a.nvim_command('au BufWipeout <buffer> exe "silent bwipeout! "'..g)a.nvim_win_set_option(c,'cursorline',true)end;local function u()local v=a.nvim_buf_get_name(0)table.insert(d,v)end;local function w()a.nvim_buf_set_option(b,'modifiable',true)a.nvim_buf_set_lines(b,0,-1,false,d)a.nvim_buf_set_option(b,'modifiable',true)end;local function x()d={}local y=a.nvim_buf_get_lines(b,0,-1,false)if#y~=0 then for s,z in ipairs(y)do if z~=''then table.insert(d,z)end end end end;local function A()x()a.nvim_win_close(c,true)end;local function B()local C=a.nvim_get_current_line()A()a.nvim_command('edit '..C)end;local function D()local E=math.max(4,a.nvim_win_get_cursor(c)[1]-1)a.nvim_win_set_cursor(c,{E,0})end;local function F()local G={['<esc>']='close_window()',['<cr>']='go_to_file()'}for H,I in pairs(G)do a.nvim_buf_set_keymap(b,'n',H,':lua require"nvim-quicknav".'..I..'<cr>',{nowait=true,noremap=true,silent=true})end end;local function J(K)if K=='next'then if e<#d then e=e+1 else e=1 end else if e>#d then e=#d elseif e>1 then e=e-1 else e=#d end end;return e end;local function L()local M=J('next')vim.cmd('edit '..d[M])end;local function N()local M=J('prev')vim.cmd('edit '..d[M])end;local function O()f()w()F()a.nvim_win_set_cursor(c,{1,0})end;return{quicknav=O,add_current_file=u,update_view=w,go_to_file=B,move_cursor=D,close_window=A,go_to_next_file=L,go_to_prev_file=N}
+local api = vim.api
+local buf, win
+
+local pinned_files = {}
+local pinned_files_index = 1
+
+local function open_window()
+  buf = api.nvim_create_buf(false, true)
+  local border_buf = api.nvim_create_buf(false, true)
+
+  api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+  api.nvim_buf_set_option(buf, 'filetype', 'bufferlist')
+
+  local width = api.nvim_get_option("columns")
+  local height = api.nvim_get_option("lines")
+
+  local win_height = math.ceil(height * 0.5 - 4)
+  local win_width = math.ceil(width * 0.4)
+  local row = math.ceil((height - win_height) / 2 - 1)
+  local col = math.ceil((width - win_width) / 2)
+
+  local border_opts = {
+    style = 'minimal',
+    relative = 'editor',
+    width = win_width + 2,
+    height = win_height + 2,
+    row = row - 1,
+    col = col - 1
+  }
+
+  local opts = {
+    style = 'minimal',
+    relative = 'editor',
+    width = win_width,
+    height = win_height,
+    row = row,
+    col = col
+  }
+
+  local border_title = ' Quick Navigation '
+  local border_lines = { '╭' .. border_title .. string.rep('─', win_width - string.len(border_title)) .. '╮' }
+  local middle_line = '│' .. string.rep(' ', win_width) .. '│'
+  for _ = 1, win_height do
+    table.insert(border_lines, middle_line)
+  end
+  table.insert(border_lines, '╰' .. string.rep('─', win_width) .. '╯')
+  api.nvim_buf_set_lines(border_buf, 0, -1, false, border_lines)
+
+  local border_win = api.nvim_open_win(border_buf, true, border_opts)
+  win = api.nvim_open_win(buf, true, opts)
+  api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout! "' .. border_buf)
+
+  api.nvim_win_set_option(win, 'cursorline', true)
+end
+
+local function add_current_file()
+  local current_file = api.nvim_buf_get_name(0)
+  table.insert(pinned_files, current_file)
+end
+
+local function update_view()
+  api.nvim_buf_set_option(buf, 'modifiable', true)
+
+  api.nvim_buf_set_lines(buf, 0, -1, false, pinned_files)
+  api.nvim_buf_set_option(buf, 'modifiable', true)
+end
+
+local function update_pinned_files()
+  pinned_files = {}
+  local lines = api.nvim_buf_get_lines(buf, 0, -1, false)
+
+  if #lines ~= 0 then
+    for _, line in ipairs(lines) do
+      if line ~= '' then
+        table.insert(pinned_files, line)
+      end
+    end
+  end
+end
+
+local function close_window()
+  update_pinned_files()
+  api.nvim_win_close(win, true)
+end
+
+local function go_to_file()
+  local selected_line = api.nvim_get_current_line()
+
+  close_window()
+  api.nvim_command('edit ' .. selected_line)
+end
+
+local function move_cursor()
+  local new_pos = math.max(4, api.nvim_win_get_cursor(win)[1] - 1)
+  api.nvim_win_set_cursor(win, { new_pos, 0 })
+end
+
+local function set_mappings()
+  local mappings = {
+    ['<esc>'] = 'close_window()',
+    ['<cr>'] = 'go_to_file()',
+  }
+
+  for k, v in pairs(mappings) do
+    api.nvim_buf_set_keymap(buf, 'n', k, ':lua require"nvim-quicknav".' .. v .. '<cr>', {
+      nowait = true, noremap = true, silent = true
+    })
+  end
+
+  --[[ local other_chars = {
+    'a', 'b', 'c', 'e', 'f', 'g', 'i', 'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+  }
+
+  for _, v in ipairs(other_chars) do
+    api.nvim_buf_set_keymap(buf, 'n', v, '', { nowait = true, noremap = true, silent = true })
+    api.nvim_buf_set_keymap(buf, 'n', v:upper(), '', { nowait = true, noremap = true, silent = true })
+    api.nvim_buf_set_keymap(buf, 'n', '<c-' .. v .. '>', '', { nowait = true, noremap = true, silent = true })
+  end ]]
+end
+
+local function get_pinned_index(direction)
+  if direction == 'next' then
+    if pinned_files_index < #pinned_files then
+      pinned_files_index = pinned_files_index + 1
+    else
+      pinned_files_index = 1
+    end
+  else
+    if pinned_files_index > #pinned_files then
+      pinned_files_index = #pinned_files
+    elseif pinned_files_index > 1 then
+      pinned_files_index = pinned_files_index - 1
+    else
+      pinned_files_index = #pinned_files
+    end
+  end
+
+  return pinned_files_index
+end
+
+local function go_to_next_file()
+  local index = get_pinned_index('next')
+  vim.cmd('edit ' .. pinned_files[index])
+end
+
+local function go_to_prev_file()
+  local index = get_pinned_index('prev')
+  vim.cmd('edit ' .. pinned_files[index])
+end
+
+local function quicknav()
+  open_window()
+  update_view()
+  set_mappings()
+  api.nvim_win_set_cursor(win, { 1, 0 })
+end
+
+return {
+  quicknav = quicknav,
+  add_current_file = add_current_file,
+  update_view = update_view,
+  go_to_file = go_to_file,
+  move_cursor = move_cursor,
+  close_window = close_window,
+  go_to_next_file = go_to_next_file,
+  go_to_prev_file = go_to_prev_file
+}

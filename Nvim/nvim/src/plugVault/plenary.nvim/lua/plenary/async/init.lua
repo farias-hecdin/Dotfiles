@@ -1,1 +1,57 @@
-local b={uv="plenary.async.uv_async",util="plenary.async.util",lsp="plenary.async.lsp",api="plenary.async.api",tests="plenary.async.tests",control="plenary.async.control"}local c=setmetatable(require"plenary.async.async",{__index=function(d,e)local f=b[e]if not f then return end;local g=require(f)d[e]=g;return g end})c.tests.add_globals=function()a=c;a.describe=c.tests.describe;a.it=c.tests.it;a.pending=c.tests.pending;a.before_each=c.tests.before_each;a.after_each=c.tests.after_each end;c.tests.add_to_env=function()local h=getfenv(2)h.a=c;h.a.describe=c.tests.describe;h.a.it=c.tests.it;h.a.pending=c.tests.pending;h.a.before_each=c.tests.before_each;h.a.after_each=c.tests.after_each;setfenv(2,h)end;return c
+---@brief [[
+--- NOTE: This API is still under construction.
+---         It may change in the future :)
+---@brief ]]
+
+local lookups = {
+  uv = "plenary.async.uv_async",
+  util = "plenary.async.util",
+  lsp = "plenary.async.lsp",
+  api = "plenary.async.api",
+  tests = "plenary.async.tests",
+  control = "plenary.async.control",
+}
+
+local exports = setmetatable(require "plenary.async.async", {
+  __index = function(t, k)
+    local require_path = lookups[k]
+    if not require_path then
+      return
+    end
+
+    local mod = require(require_path)
+    t[k] = mod
+
+    return mod
+  end,
+})
+
+exports.tests.add_globals = function()
+  a = exports
+
+  -- must prefix with a or stack overflow, plenary.test harness already added it
+  a.describe = exports.tests.describe
+  -- must prefix with a or stack overflow
+  a.it = exports.tests.it
+  a.pending = exports.tests.pending
+  a.before_each = exports.tests.before_each
+  a.after_each = exports.tests.after_each
+end
+
+exports.tests.add_to_env = function()
+  local env = getfenv(2)
+
+  env.a = exports
+
+  -- must prefix with a or stack overflow, plenary.test harness already added it
+  env.a.describe = exports.tests.describe
+  -- must prefix with a or stack overflow
+  env.a.it = exports.tests.it
+  env.a.pending = exports.tests.pending
+  env.a.before_each = exports.tests.before_each
+  env.a.after_each = exports.tests.after_each
+
+  setfenv(2, env)
+end
+
+return exports

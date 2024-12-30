@@ -1,1 +1,228 @@
-local a=require('Comment.utils')local b=require('Comment.config')local c=vim.api;local d={}function d.opfunc(e,f,g,h)local i=a.get_region(e)local j=e==nil and a.cmotion.line or a.cmotion[e]local k=j==a.cmotion.char or j==a.cmotion.v;local l=k and i.srow==i.erow;local m=a.get_lines(i)if a.is_empty(m)then return end;local n={cmode=g,cmotion=j,ctype=l and a.ctype.blockwise or h,range=i}local o,p=a.parse_cstr(f,n)local q={cfg=f,lines=m,lcs=o,rcs=p,cmode=g,range=i}if e~=nil and(l or h==a.ctype.blockwise)then n.cmode=d.blockwise(q,k)else n.cmode=d.linewise(q)end;if f.sticky and b.position and j~=a.cmotion.v and j~=a.cmotion.V then c.nvim_win_set_cursor(0,b.position)b.position=nil end;a.is_fn(f.post_hook,n)end;function d.count(r,f,g,h)local m,i=a.get_count_lines(r)local n={cmode=g,cmotion=a.cmotion.line,ctype=h,range=i}local o,p=a.parse_cstr(f,n)local q={cfg=f,cmode=n.cmode,lines=m,lcs=o,rcs=p,range=i}if h==a.ctype.blockwise then n.cmode=d.blockwise(q)else n.cmode=d.linewise(q)end;a.is_fn(f.post_hook,n)end;function d.linewise(s)local t=a.is_fn(s.cfg.ignore)local u=a.is_fn(s.cfg.padding)local v=a.is_commented(s.lcs,s.rcs,u)local g=a.cmode.uncomment;local w,x=-1,false;if s.cmode~=a.cmode.uncomment then for y,z in ipairs(s.lines)do if not a.ignore(z,t)then if g==a.cmode.uncomment and s.cmode==a.cmode.toggle and not v(z)then g=a.cmode.comment end;if not a.is_empty(z)and s.cmode~=a.cmode.uncomment then local y,A=string.find(z,'^%s*')if w==-1 or w>A then w,x=A,string.find(z,'^\t')~=nil end end end end end;if s.cmode~=a.cmode.toggle then g=s.cmode end;if g==a.cmode.uncomment then local B=a.uncommenter(s.lcs,s.rcs,u)for C,z in ipairs(s.lines)do if not a.ignore(z,t)then s.lines[C]=B(z)end end else local D=a.commenter(s.lcs,s.rcs,u,w,nil,x)for C,z in ipairs(s.lines)do if not a.ignore(z,t)then s.lines[C]=D(z)end end end;c.nvim_buf_set_lines(0,s.range.srow-1,s.range.erow,false,s.lines)return g end;function d.blockwise(s,E)local F=#s.lines==1;local m=F and s.lines[1]or s.lines;local u=a.is_fn(s.cfg.padding)local G,H=nil,nil;if F or E then G,H=s.range.scol,s.range.ecol end;local g=s.cmode;if g==a.cmode.toggle then local I=a.is_commented(s.lcs,s.rcs,u,G,H)(m)g=I and a.cmode.uncomment or a.cmode.comment end;if g==a.cmode.uncomment then m=a.uncommenter(s.lcs,s.rcs,u,G,H)(m)else m=a.commenter(s.lcs,s.rcs,u,G,H)(m)end;if F then c.nvim_set_current_line(m)else c.nvim_buf_set_lines(0,s.range.srow-1,s.range.erow,false,m)end;return g end;return d
+---@mod comment.opfunc Operator-mode API
+---@brief [[
+---Underlying functions that powers the |comment.api.toggle|, |comment.api.comment|,
+---and |comment.api.uncomment| lua API.
+---@brief ]]
+
+local U = require('Comment.utils')
+local Config = require('Comment.config')
+local A = vim.api
+
+local Op = {}
+
+---Vim operator-mode motion enum. Read |:map-operator|
+---@alias OpMotion
+---| '"line"' # Vertical motion
+---| '"char"' # Horizontal motion
+---| '"v"' # Visual Block motion
+---| '"V"' # Visual Line motion
+
+---Common operatorfunc callback
+---This function contains the core logic for comment/uncomment
+---@param motion? OpMotion
+---If given 'nil', it'll only (un)comment
+---the current line
+---@param cfg CommentConfig
+---@param cmode integer See |comment.utils.cmode|
+---@param ctype integer See |comment.utils.ctype|
+function Op.opfunc(motion, cfg, cmode, ctype)
+    local range = U.get_region(motion)
+    local cmotion = motion == nil and U.cmotion.line or U.cmotion[motion]
+
+    -- If we are doing char or visual motion on the same line
+    -- then we would probably want block comment instead of line comment
+    local is_partial = cmotion == U.cmotion.char or cmotion == U.cmotion.v
+    local is_blockx = is_partial and range.srow == range.erow
+
+    local lines = U.get_lines(range)
+
+    -- sometimes there might be a case when there are no lines
+    -- like, executing a text object returns nothing
+    if U.is_empty(lines) then
+        return
+    end
+
+    ---@type CommentCtx
+    local ctx = {
+        cmode = cmode,
+        cmotion = cmotion,
+        ctype = is_blockx and U.ctype.blockwise or ctype,
+        range = range,
+    }
+
+    local lcs, rcs = U.parse_cstr(cfg, ctx)
+
+    ---@type OpFnParams
+    local params = {
+        cfg = cfg,
+        lines = lines,
+        lcs = lcs,
+        rcs = rcs,
+        cmode = cmode,
+        range = range,
+    }
+
+    if motion ~= nil and (is_blockx or ctype == U.ctype.blockwise) then
+        ctx.cmode = Op.blockwise(params, is_partial)
+    else
+        ctx.cmode = Op.linewise(params)
+    end
+
+    -- We only need to restore cursor if both sticky and position are available
+    -- As this function is also called for visual mapping where we are not storing the position
+    --
+    -- And I found out that if someone presses `gc` but doesn't provide operators and
+    -- does visual comments then cursor jumps to previous stored position. Thus the check for visual modes
+    if cfg.sticky and Config.position and cmotion ~= U.cmotion.v and cmotion ~= U.cmotion.V then
+        A.nvim_win_set_cursor(0, Config.position)
+        Config.position = nil
+    end
+
+    U.is_fn(cfg.post_hook, ctx)
+end
+
+---Line commenting with count
+---@param count integer Value of |v:count|
+---@param cfg CommentConfig
+---@param cmode integer See |comment.utils.cmode|
+---@param ctype integer See |comment.utils.ctype|
+function Op.count(count, cfg, cmode, ctype)
+    local lines, range = U.get_count_lines(count)
+
+    ---@type CommentCtx
+    local ctx = {
+        cmode = cmode,
+        cmotion = U.cmotion.line,
+        ctype = ctype,
+        range = range,
+    }
+    local lcs, rcs = U.parse_cstr(cfg, ctx)
+
+    ---@type OpFnParams
+    local params = {
+        cfg = cfg,
+        cmode = ctx.cmode,
+        lines = lines,
+        lcs = lcs,
+        rcs = rcs,
+        range = range,
+    }
+
+    if ctype == U.ctype.blockwise then
+        ctx.cmode = Op.blockwise(params)
+    else
+        ctx.cmode = Op.linewise(params)
+    end
+
+    U.is_fn(cfg.post_hook, ctx)
+end
+
+---Operator-mode function parameters
+---@class OpFnParams
+---@field cfg CommentConfig
+---@field cmode integer See |comment.utils.cmode|
+---@field lines string[] List of lines
+---@field rcs string RHS of commentstring
+---@field lcs string LHS of commentstring
+---@field range CommentRange
+
+---Line commenting
+---@param param OpFnParams
+---@return integer _ Returns a calculated comment mode
+function Op.linewise(param)
+    local pattern = U.is_fn(param.cfg.ignore)
+    local padding = U.is_fn(param.cfg.padding)
+    local check_comment = U.is_commented(param.lcs, param.rcs, padding)
+
+    -- While commenting a region, there could be lines being both commented and non-commented
+    -- So, if any line is uncommented then we should comment the whole block or vise-versa
+    local cmode = U.cmode.uncomment
+
+    ---When commenting multiple line, it is to be expected that indentation should be preserved
+    ---So, When looping over multiple lines we need to store the indentation of the mininum length (except empty line)
+    ---Which will be used to semantically comment rest of the lines
+    local min_indent, tabbed = -1, false
+
+    -- If the given cmode is uncomment then we actually don't want to compute the cmode or min_indent
+    if param.cmode ~= U.cmode.uncomment then
+        for _, line in ipairs(param.lines) do
+            -- I wish lua had `continue` statement [sad noises]
+            if not U.ignore(line, pattern) then
+                if cmode == U.cmode.uncomment and param.cmode == U.cmode.toggle and (not check_comment(line)) then
+                    cmode = U.cmode.comment
+                end
+
+                if not U.is_empty(line) and param.cmode ~= U.cmode.uncomment then
+                    local _, len = string.find(line, '^%s*')
+                    if min_indent == -1 or min_indent > len then
+                        min_indent, tabbed = len, string.find(line, '^\t') ~= nil
+                    end
+                end
+            end
+        end
+    end
+
+    -- If the comment mode given is not toggle than force that mode
+    if param.cmode ~= U.cmode.toggle then
+        cmode = param.cmode
+    end
+
+    if cmode == U.cmode.uncomment then
+        local uncomment = U.uncommenter(param.lcs, param.rcs, padding)
+        for i, line in ipairs(param.lines) do
+            if not U.ignore(line, pattern) then
+                param.lines[i] = uncomment(line) --[[@as string]]
+            end
+        end
+    else
+        local comment = U.commenter(param.lcs, param.rcs, padding, min_indent, nil, tabbed)
+        for i, line in ipairs(param.lines) do
+            if not U.ignore(line, pattern) then
+                param.lines[i] = comment(line) --[[@as string]]
+            end
+        end
+    end
+
+    A.nvim_buf_set_lines(0, param.range.srow - 1, param.range.erow, false, param.lines)
+
+    return cmode
+end
+
+---Full/Partial/Current-Line Block commenting
+---@param param OpFnParams
+---@param partial? boolean Comment the partial region (visual mode)
+---@return integer _ Returns a calculated comment mode
+function Op.blockwise(param, partial)
+    local is_x = #param.lines == 1 -- current-line blockwise
+    local lines = is_x and param.lines[1] or param.lines
+
+    local padding = U.is_fn(param.cfg.padding)
+
+    local scol, ecol = nil, nil
+    if is_x or partial then
+        scol, ecol = param.range.scol, param.range.ecol
+    end
+
+    -- If given mode is toggle then determine whether to comment or not
+    local cmode = param.cmode
+    if cmode == U.cmode.toggle then
+        local is_cmt = U.is_commented(param.lcs, param.rcs, padding, scol, ecol)(lines)
+        cmode = is_cmt and U.cmode.uncomment or U.cmode.comment
+    end
+
+    if cmode == U.cmode.uncomment then
+        lines = U.uncommenter(param.lcs, param.rcs, padding, scol, ecol)(lines)
+    else
+        lines = U.commenter(param.lcs, param.rcs, padding, scol, ecol)(lines)
+    end
+
+    if is_x then
+        A.nvim_set_current_line(lines)
+    else
+        A.nvim_buf_set_lines(0, param.range.srow - 1, param.range.erow, false, lines)
+    end
+
+    return cmode
+end
+
+return Op

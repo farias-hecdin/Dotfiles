@@ -1,1 +1,248 @@
-local a=require('cmp')local function b(c,d)local e=[[\%(]]..table.concat(c,[[\|]])..[[\)]]if d then e='^'..e end;return vim.regex(e)end;local f={treat_trailing_slash=true,ignore_cmds={'Man','!'}}local g=b({[=[\s*abo\%[veleft]\s*]=],[=[\s*bel\%[owright]\s*]=],[=[\s*bo\%[tright]\s*]=],[=[\s*bro\%[wse]\s*]=],[=[\s*conf\%[irm]\s*]=],[=[\s*hid\%[e]\s*]=],[=[\s*keepal\s*t]=],[=[\s*keeppa\%[tterns]\s*]=],[=[\s*lefta\%[bove]\s*]=],[=[\s*loc\%[kmarks]\s*]=],[=[\s*nos\%[wapfile]\s*]=],[=[\s*rightb\%[elow]\s*]=],[=[\s*sil\%[ent]\s*]=],[=[\s*tab\s*]=],[=[\s*to\%[pleft]\s*]=],[=[\s*verb\%[ose]\s*]=],[=[\s*vert\%[ical]\s*]=]},true)local h=b({[=[\s*\%(\d\+\|\$\)\%[,\%(\d\+\|\$\)]\s*]=],[=[\s*'\%[<,'>]\s*]=],[=[\s*\%(\d\+\|\$\)\s*]=]},true)local i=b({[=[^\s*\%(\d\+\|\$\)\%[,\%(\d\+\|\$\)]\s*$]=],[=[^\s*'\%[<,'>]\s*$]=],[=[^\s*\%(\d\+\|\$\)\s*$]=]},true)local j=b({[=[se\%[tlocal][^=]*$]=]},true)local function k(l)local m,n=pcall(function()return vim.opt[l]:get()end)if m then return type(n)=='boolean'end end;local o={{ctype='cmdline',regex=[=[[^[:blank:]]*$]=],kind=a.lsp.CompletionItemKind.Variable,isIncomplete=true,exec=function(p,q,r,s)if not s and i:match_str(r)then return{}end;local t,u=pcall(function()local v=r;local w,x=h:match_str(v)if w and x then v=v:sub(x+1)end;return vim.api.nvim_parse_cmd(v,{})or{}end)u=u or{}if vim.tbl_contains(p.ignore_cmds,u.cmd)then return{}end;if q~=r then while true do local w,x=g:match_str(r)if w==nil then break end;r=string.sub(r,x+1)end end;local y;do local z=vim.regex([[\h\w*$]]):match_str(q)y=string.sub(q,1,z or#q)end;local A=j:match_str(r)~=nil;local B={}local C=r:gsub([[\\]],[[\\\\]])for t,D in ipairs(vim.fn.getcompletion(C,'cmdline'))do local l=type(D)=='string'and D or D.word;local E={label=l}table.insert(B,E)if A and k(l)then table.insert(B,vim.tbl_deep_extend('force',{},E,{label='no'..l,filterText=l}))end end;for t,E in ipairs(B)do if not string.find(E.label,y,1,true)then E.label=y..E.label end end;if p.treat_trailing_slash then for t,E in ipairs(B)do local F=string.match(E.label,[[/$]])F=F and not string.match(E.label,[[~/$]])F=F and not string.match(E.label,[[%./$]])F=F and not string.match(E.label,[[%.%./$]])if F then E.label=E.label:sub(1,-2)end end end;return B end}}local G={}G.new=function()return setmetatable({before_line='',offset=-1,ctype='',items={}},{__index=G})end;G.get_keyword_pattern=function()return[=[[^[:blank:]]*]=]end;G.get_trigger_characters=function()return{' ','.','#','-'}end;G.complete=function(self,H,I)local J=0;local K=''local B={}local L;local M=false;for t,N in ipairs(o)do local w,x=vim.regex(N.regex):match_str(H.context.cursor_before_line)if w and x then J=w;K=N.ctype;B=N.exec(vim.tbl_deep_extend('keep',H.option or{},f),string.sub(H.context.cursor_before_line,w+1),H.context.cursor_before_line,H.context:get_reason()==a.ContextReason.Manual)L=N.kind;M=N.isIncomplete;if not(#B==0 and N.fallback)then break end end end;local O={}for t,E in ipairs(B)do E.kind=L;O[E.label]=true end;local P=false;if#H.context.cursor_before_line>#self.before_line then P=string.find(H.context.cursor_before_line,self.before_line,1,true)==1 elseif#H.context.cursor_before_line<#self.before_line then P=string.find(self.before_line,H.context.cursor_before_line,1,true)==1 end;if P and self.offset==J and self.ctype==K then for t,E in ipairs(self.items)do if not O[E.label]then table.insert(B,E)end end end;self.before_line=H.context.cursor_before_line;self.offset=J;self.ctype=K;self.items=B;I({isIncomplete=M,items=B})end;return G
+local cmp = require('cmp')
+
+---@param patterns string[]
+---@param head boolean
+---@return table #regex object
+local function create_regex(patterns, head)
+  local pattern = [[\%(]] .. table.concat(patterns, [[\|]]) .. [[\)]]
+  if head then
+    pattern = '^' .. pattern
+  end
+  return vim.regex(pattern)
+end
+
+---@class cmp-cmdline.Option
+---@field treat_trailing_slash boolean
+---@field ignore_cmds string[]
+local DEFAULT_OPTION = {
+  treat_trailing_slash = true,
+  ignore_cmds = { 'Man', '!' }
+}
+
+local MODIFIER_REGEX = create_regex({
+  [=[\s*abo\%[veleft]\s*]=],
+  [=[\s*bel\%[owright]\s*]=],
+  [=[\s*bo\%[tright]\s*]=],
+  [=[\s*bro\%[wse]\s*]=],
+  [=[\s*conf\%[irm]\s*]=],
+  [=[\s*hid\%[e]\s*]=],
+  [=[\s*keepal\s*t]=],
+  [=[\s*keeppa\%[tterns]\s*]=],
+  [=[\s*lefta\%[bove]\s*]=],
+  [=[\s*loc\%[kmarks]\s*]=],
+  [=[\s*nos\%[wapfile]\s*]=],
+  [=[\s*rightb\%[elow]\s*]=],
+  [=[\s*sil\%[ent]\s*]=],
+  [=[\s*tab\s*]=],
+  [=[\s*to\%[pleft]\s*]=],
+  [=[\s*verb\%[ose]\s*]=],
+  [=[\s*vert\%[ical]\s*]=],
+}, true)
+
+local COUNT_RANGE_REGEX = create_regex({
+  [=[\s*\%(\d\+\|\$\)\%[,\%(\d\+\|\$\)]\s*]=],
+  [=[\s*'\%[<,'>]\s*]=],
+  [=[\s*\%(\d\+\|\$\)\s*]=],
+}, true)
+
+local ONLY_RANGE_REGEX = create_regex({
+  [=[^\s*\%(\d\+\|\$\)\%[,\%(\d\+\|\$\)]\s*$]=],
+  [=[^\s*'\%[<,'>]\s*$]=],
+  [=[^\s*\%(\d\+\|\$\)\s*$]=],
+}, true)
+
+local OPTION_NAME_COMPLETION_REGEX = create_regex({
+  [=[se\%[tlocal][^=]*$]=],
+}, true)
+
+---@param word string
+---@return boolean?
+local function is_boolean_option(word)
+  local ok, opt = pcall(function()
+    return vim.opt[word]:get()
+  end)
+  if ok then
+    return type(opt) == 'boolean'
+  end
+end
+
+---@class cmp.Cmdline.Definition
+---@field ctype string
+---@field regex string
+---@field kind lsp.CompletionItemKind
+---@field isIncomplete boolean
+---@field exec fun(option: table, arglead: string, cmdline: string, force: boolean): lsp.CompletionItem[]
+---@field fallback boolean?
+
+---@type cmp.Cmdline.Definition[]
+local definitions = {
+  {
+    ctype = 'cmdline',
+    regex = [=[[^[:blank:]]*$]=],
+    kind = cmp.lsp.CompletionItemKind.Variable,
+    isIncomplete = true,
+    ---@param option cmp-cmdline.Option
+    exec = function(option, arglead, cmdline, force)
+      -- Ignore range only cmdline. (e.g.: 4, '<,'>)
+      if not force and ONLY_RANGE_REGEX:match_str(cmdline) then
+        return {}
+      end
+
+      local _, parsed = pcall(function()
+        local target = cmdline
+        local s, e = COUNT_RANGE_REGEX:match_str(target)
+        if s and e then
+          target = target:sub(e + 1)
+        end
+        -- nvim_parse_cmd throw error when the cmdline contains range specifier.
+        return vim.api.nvim_parse_cmd(target, {}) or {}
+      end)
+      parsed = parsed or {}
+
+      -- Check ignore cmd.
+      if vim.tbl_contains(option.ignore_cmds, parsed.cmd) then
+        return {}
+      end
+
+      -- Cleanup modifiers.
+      -- We can just remove modifiers because modifiers is always separated by space.
+      if arglead ~= cmdline then
+        while true do
+          local s, e = MODIFIER_REGEX:match_str(cmdline)
+          if s == nil then
+            break
+          end
+          cmdline = string.sub(cmdline, e + 1)
+        end
+      end
+
+      -- Support `lua vim.treesitter._get|` or `'<,'>del|` completion.
+      -- In this case, the `vim.fn.getcompletion` will return only `get_query` for `vim.treesitter.get_|`.
+      -- We should detect `vim.treesitter.` and `get_query` separately.
+      -- TODO: The `\h\w*` was choosed by huristic. We should consider more suitable detection.
+      local fixed_input
+      do
+        local suffix_pos = vim.regex([[\h\w*$]]):match_str(arglead)
+        fixed_input = string.sub(arglead, 1, suffix_pos or #arglead)
+      end
+
+      -- The `vim.fn.getcompletion` does not return `*no*cursorline` option.
+      -- cmp-cmdline corrects `no` prefix for option name.
+      local is_option_name_completion = OPTION_NAME_COMPLETION_REGEX:match_str(cmdline) ~= nil
+
+      --- create items.
+      local items = {}
+      local escaped = cmdline:gsub([[\\]], [[\\\\]]);
+      for _, word_or_item in ipairs(vim.fn.getcompletion(escaped, 'cmdline')) do
+        local word = type(word_or_item) == 'string' and word_or_item or word_or_item.word
+        local item = { label = word }
+        table.insert(items, item)
+        if is_option_name_completion and is_boolean_option(word) then
+          table.insert(items, vim.tbl_deep_extend('force', {}, item, {
+            label = 'no' .. word,
+            filterText = word,
+          }))
+        end
+      end
+
+      -- fix label with `fixed_input`
+      for _, item in ipairs(items) do
+        if not string.find(item.label, fixed_input, 1, true) then
+          item.label = fixed_input .. item.label
+        end
+      end
+
+      -- fix trailing slash for path like item
+      if option.treat_trailing_slash then
+        for _, item in ipairs(items) do
+          local is_target = string.match(item.label, [[/$]])
+          is_target = is_target and not (string.match(item.label, [[~/$]]))
+          is_target = is_target and not (string.match(item.label, [[%./$]]))
+          is_target = is_target and not (string.match(item.label, [[%.%./$]]))
+          if is_target then
+            item.label = item.label:sub(1, -2)
+          end
+        end
+      end
+      return items
+    end
+  },
+}
+
+local source = {}
+
+source.new = function()
+  return setmetatable({
+    before_line = '',
+    offset = -1,
+    ctype = '',
+    items = {},
+  }, { __index = source })
+end
+
+source.get_keyword_pattern = function()
+  return [=[[^[:blank:]]*]=]
+end
+
+source.get_trigger_characters = function()
+  return { ' ', '.', '#', '-' }
+end
+
+source.complete = function(self, params, callback)
+  local offset = 0
+  local ctype = ''
+  local items = {}
+  local kind
+  local isIncomplete = false
+  for _, def in ipairs(definitions) do
+    local s, e = vim.regex(def.regex):match_str(params.context.cursor_before_line)
+    if s and e then
+      offset = s
+      ctype = def.ctype
+      items = def.exec(
+        vim.tbl_deep_extend('keep', params.option or {}, DEFAULT_OPTION),
+        string.sub(params.context.cursor_before_line, s + 1),
+        params.context.cursor_before_line,
+        params.context:get_reason() == cmp.ContextReason.Manual
+      )
+      kind = def.kind
+      isIncomplete = def.isIncomplete
+      if not (#items == 0 and def.fallback) then
+        break
+      end
+    end
+  end
+
+  local labels = {}
+  for _, item in ipairs(items) do
+    item.kind = kind
+    labels[item.label] = true
+  end
+
+  -- `vim.fn.getcompletion` does not handle fuzzy matches. So, we must return all items, including items that were matched in the previous input.
+  local should_merge_previous_items = false
+  if #params.context.cursor_before_line > #self.before_line then
+    should_merge_previous_items = string.find(params.context.cursor_before_line, self.before_line, 1, true) == 1
+  elseif #params.context.cursor_before_line < #self.before_line then
+    should_merge_previous_items = string.find(self.before_line, params.context.cursor_before_line, 1, true) == 1
+  end
+
+  if should_merge_previous_items and self.offset == offset and self.ctype == ctype then
+    for _, item in ipairs(self.items) do
+      if not labels[item.label] then
+        table.insert(items, item)
+      end
+    end
+  end
+  self.before_line = params.context.cursor_before_line
+  self.offset = offset
+  self.ctype = ctype
+  self.items = items
+
+  callback({
+    isIncomplete = isIncomplete,
+    items = items,
+  })
+end
+
+return source

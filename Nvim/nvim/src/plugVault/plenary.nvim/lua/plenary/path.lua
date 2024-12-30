@@ -1,4 +1,944 @@
-local a=require"plenary.bit"local b=vim.loop;local c=require"plenary.functional"local d={DIR=0x4000,REG=0x8000}local e={}e.home=vim.loop.os_homedir()e.sep=(function()if jit then local os=string.lower(jit.os)if os~="windows"then return"/"else return"\\"end else return package.config:sub(1,1)end end)()e.root=(function()if e.sep=="/"then return function()return"/"end else return function(f)f=f or vim.loop.cwd()return f:sub(1,1)..":\\"end end end)()e.S_IF=d;local g=function(h,i)return a.band(h,i)==h end;local j=function(...)return table.concat({...},e.sep)end;local function k(l)if e.sep=="\\"then return string.match(l,"^[A-Z]:\\?$")end;return l=="/"end;local m=(function()local n=string.format("([^%s]+)",e.sep)return function(o)local p={}for q in string.gmatch(o,n)do table.insert(p,q)end;return p end end)()local r=function(s)return string.match(s,"^%a[%w+-.]*://")~=nil end;local t=function(s,u)if u=="\\"then return string.match(s,"^[%a]:[\\/].*$")~=nil end;return string.sub(s,1,1)==u end;local function v(s,w)if r(s)then return s end;local x=e.sep.."%."..e.sep;if s:match(x)then s=s:gsub(x,e.sep)end;local y=s;local z=string.find(s,e.sep.."..",1,true)or string.find(s,".."..e.sep,1,true)if z then local A=t(s,e.sep)local B=function(C)local D=m(C)if e.sep=="\\"and A then table.remove(D,1)end;return D end;local D=B(s)local E=1;local F=0;repeat if D[E]==".."then if E==1 then F=F+1 end;table.remove(D,E)table.remove(D,E-1)if E>1 then E=E-2 else E=E-1 end end;E=E+1 until E>#D;local G=""if A or#B(w)==F then G=e.root(s)end;y=G..table.concat(D,e.sep)end;return y end;local H=function(l)if r(l)then return l end;l=l:gsub(e.sep..e.sep,e.sep)if not k(l)and l:sub(-1)==e.sep then return l:sub(1,-2)end;return l end;local I={path=e}local J=function(self)if type(self)=="string"then return I:new(self)end;return self end;I.__index=function(p,K)local L=rawget(I,K)if L then return L end;if K=="_cwd"then local w=b.fs_realpath"."p._cwd=w;return w end;if K=="_absolute"then local M=b.fs_realpath(p.filename)p._absolute=M;return M end end;I.__div=function(self,N)assert(I.is_path(self))assert(I.is_path(N)or type(N)=="string")return self:joinpath(N)end;I.__tostring=function(self)return H(self.filename)end;I.__concat=function(self,N)return self.filename..N end;I.is_path=function(O)return getmetatable(O)==I end;function I:new(...)local P={...}if type(self)=="string"then table.insert(P,1,self)self=I end;local Q;if#P==1 then Q=P[1]else Q=P end;if I.is_path(Q)then return Q end;local u=e.sep;if type(Q)=="table"then u=Q.sep or e.sep;Q.sep=nil end;local R;if type(Q)=="table"then local S={}for T,U in ipairs(Q)do if I.is_path(U)then table.insert(S,U.filename)else assert(type(U)=="string")table.insert(S,U)end end;R=table.concat(S,u)else assert(type(Q)=="string",vim.inspect(Q))R=Q end;local V={filename=R,_sep=u}setmetatable(V,I)return V end;function I:_fs_filename()return self:absolute()or self.filename end;function I:_stat()return b.fs_stat(self:_fs_filename())or{}end;function I:_st_mode()return self:_stat().mode or 0 end;function I:joinpath(...)return I:new(self.filename,...)end;function I:absolute()if self:is_absolute()then return v(self.filename,self._cwd)else return v(self._absolute or table.concat({self._cwd,self.filename},self._sep),self._cwd)end end;function I:exists()return not vim.tbl_isempty(self:_stat())end;function I:expand()if r(self.filename)then return self.filename end;local W;if string.find(self.filename,"~")then W=string.gsub(self.filename,"^~",vim.loop.os_homedir())elseif string.find(self.filename,"^%.")then W=vim.loop.fs_realpath(self.filename)if W==nil then W=vim.fn.fnamemodify(self.filename,":p")end elseif string.find(self.filename,"%$")then local X=string.match(self.filename,"([^%$][^/]*)")local Y=os.getenv(X)if Y then W=string.gsub(string.gsub(self.filename,X,Y),"%$","")else W=nil end else W=self.filename end;return W and W or error"Path not valid"end;function I:make_relative(w)if r(self.filename)then return self.filename end;self.filename=H(self.filename)w=H(c.if_nil(w,self._cwd,w))if self.filename==w then self.filename="."else if w:sub(#w,#w)~=e.sep then w=w..e.sep end;if self.filename:sub(1,#w)==w then self.filename=self.filename:sub(#w+1,-1)end end;return self.filename end;function I:normalize(w)if r(self.filename)then return self.filename end;self:make_relative(w)local Z=e.home;if string.sub(e.home,-1)~=e.sep then Z=Z..e.sep end;local _,a0=string.find(self.filename,Z,1,true)if _==1 then self.filename="~"..e.sep..string.sub(self.filename,a0+1,-1)end;return v(H(self.filename),self._cwd)end;local function a1(s,a2,a3)a2=a2 or 1;a3=a3 or{-1}local a4={}local D={}local a5={}for a6 in(s..e.sep):gmatch("(.-)"..e.sep)do if a6~=""then D[#D+1]=a6 else table.insert(a5,#D+1)end end;for T,U in pairs(a3)do if U<0 then a4[U+#D+1]=true else a4[U]=true end end;local a7={}local a8=1;for T,a9 in ipairs(D)do if not a4[a8]and#a9>a2 then table.insert(a7,string.sub(a9,1,a2))else table.insert(a7,a9)end;table.insert(a7,e.sep)a8=a8+1 end;local aa=#a7;table.remove(a7,aa)for ab=#a5,1,-1 do table.insert(a7,a5[ab],e.sep)end;return table.concat(a7)end;local ac=(function()local ad=function(s)return a1(s,1)end;if jit and e.sep~="\\"then local ae=require"ffi"ae.cdef[[
+--- Path.lua
+---
+--- Goal: Create objects that are extremely similar to Python's `Path` Objects.
+--- Reference: https://docs.python.org/3/library/pathlib.html
+
+local bit = require "plenary.bit"
+local uv = vim.loop
+
+local F = require "plenary.functional"
+
+local S_IF = {
+  -- S_IFDIR  = 0o040000  # directory
+  DIR = 0x4000,
+  -- S_IFREG  = 0o100000  # regular file
+  REG = 0x8000,
+}
+
+local path = {}
+path.home = vim.loop.os_homedir()
+
+path.sep = (function()
+  if jit then
+    local os = string.lower(jit.os)
+    if os ~= "windows" then
+      return "/"
+    else
+      return "\\"
+    end
+  else
+    return package.config:sub(1, 1)
+  end
+end)()
+
+path.root = (function()
+  if path.sep == "/" then
+    return function()
+      return "/"
+    end
+  else
+    return function(base)
+      base = base or vim.loop.cwd()
+      return base:sub(1, 1) .. ":\\"
+    end
+  end
+end)()
+
+path.S_IF = S_IF
+
+local band = function(reg, value)
+  return bit.band(reg, value) == reg
+end
+
+local concat_paths = function(...)
+  return table.concat({ ... }, path.sep)
+end
+
+local function is_root(pathname)
+  if path.sep == "\\" then
+    return string.match(pathname, "^[A-Z]:\\?$")
+  end
+  return pathname == "/"
+end
+
+local _split_by_separator = (function()
+  local formatted = string.format("([^%s]+)", path.sep)
+  return function(filepath)
+    local t = {}
+    for str in string.gmatch(filepath, formatted) do
+      table.insert(t, str)
+    end
+    return t
+  end
+end)()
+
+local is_uri = function(filename)
+  return string.match(filename, "^%a[%w+-.]*://") ~= nil
+end
+
+local is_absolute = function(filename, sep)
+  if sep == "\\" then
+    return string.match(filename, "^[%a]:[\\/].*$") ~= nil
+  end
+  return string.sub(filename, 1, 1) == sep
+end
+
+local function _normalize_path(filename, cwd)
+  if is_uri(filename) then
+    return filename
+  end
+
+  -- handles redundant `./` in the middle
+  local redundant = path.sep .. "%." .. path.sep
+  if filename:match(redundant) then
+    filename = filename:gsub(redundant, path.sep)
+  end
+
+  local out_file = filename
+
+  local has = string.find(filename, path.sep .. "..", 1, true) or string.find(filename, ".." .. path.sep, 1, true)
+
+  if has then
+    local is_abs = is_absolute(filename, path.sep)
+    local split_without_disk_name = function(filename_local)
+      local parts = _split_by_separator(filename_local)
+      -- Remove disk name part on Windows
+      if path.sep == "\\" and is_abs then
+        table.remove(parts, 1)
+      end
+      return parts
+    end
+
+    local parts = split_without_disk_name(filename)
+    local idx = 1
+    local initial_up_count = 0
+
+    repeat
+      if parts[idx] == ".." then
+        if idx == 1 then
+          initial_up_count = initial_up_count + 1
+        end
+        table.remove(parts, idx)
+        table.remove(parts, idx - 1)
+        if idx > 1 then
+          idx = idx - 2
+        else
+          idx = idx - 1
+        end
+      end
+      idx = idx + 1
+    until idx > #parts
+
+    local prefix = ""
+    if is_abs or #split_without_disk_name(cwd) == initial_up_count then
+      prefix = path.root(filename)
+    end
+
+    out_file = prefix .. table.concat(parts, path.sep)
+  end
+
+  return out_file
+end
+
+local clean = function(pathname)
+  if is_uri(pathname) then
+    return pathname
+  end
+
+  -- Remove double path seps, it's annoying
+  pathname = pathname:gsub(path.sep .. path.sep, path.sep)
+
+  -- Remove trailing path sep if not root
+  if not is_root(pathname) and pathname:sub(-1) == path.sep then
+    return pathname:sub(1, -2)
+  end
+  return pathname
+end
+
+-- S_IFCHR  = 0o020000  # character device
+-- S_IFBLK  = 0o060000  # block device
+-- S_IFIFO  = 0o010000  # fifo (named pipe)
+-- S_IFLNK  = 0o120000  # symbolic link
+-- S_IFSOCK = 0o140000  # socket file
+
+---@class Path
+local Path = {
+  path = path,
+}
+
+local check_self = function(self)
+  if type(self) == "string" then
+    return Path:new(self)
+  end
+
+  return self
+end
+
+Path.__index = function(t, k)
+  local raw = rawget(Path, k)
+  if raw then
+    return raw
+  end
+
+  if k == "_cwd" then
+    local cwd = uv.fs_realpath "."
+    t._cwd = cwd
+    return cwd
+  end
+
+  if k == "_absolute" then
+    local absolute = uv.fs_realpath(t.filename)
+    t._absolute = absolute
+    return absolute
+  end
+end
+
+-- TODO: Could use this to not have to call new... not sure
+-- Path.__call = Path:new
+
+Path.__div = function(self, other)
+  assert(Path.is_path(self))
+  assert(Path.is_path(other) or type(other) == "string")
+
+  return self:joinpath(other)
+end
+
+Path.__tostring = function(self)
+  return clean(self.filename)
+end
+
+-- TODO: See where we concat the table, and maybe we could make this work.
+Path.__concat = function(self, other)
+  return self.filename .. other
+end
+
+Path.is_path = function(a)
+  return getmetatable(a) == Path
+end
+
+function Path:new(...)
+  local args = { ... }
+
+  if type(self) == "string" then
+    table.insert(args, 1, self)
+    self = Path -- luacheck: ignore
+  end
+
+  local path_input
+  if #args == 1 then
+    path_input = args[1]
+  else
+    path_input = args
+  end
+
+  -- If we already have a Path, it's fine.
+  --   Just return it
+  if Path.is_path(path_input) then
+    return path_input
+  end
+
+  -- TODO: Should probably remove and dumb stuff like double seps, periods in the middle, etc.
+  local sep = path.sep
+  if type(path_input) == "table" then
+    sep = path_input.sep or path.sep
+    path_input.sep = nil
+  end
+
+  local path_string
+  if type(path_input) == "table" then
+    -- TODO: It's possible this could be done more elegantly with __concat
+    --       But I'm unsure of what we'd do to make that happen
+    local path_objs = {}
+    for _, v in ipairs(path_input) do
+      if Path.is_path(v) then
+        table.insert(path_objs, v.filename)
+      else
+        assert(type(v) == "string")
+        table.insert(path_objs, v)
+      end
+    end
+
+    path_string = table.concat(path_objs, sep)
+  else
+    assert(type(path_input) == "string", vim.inspect(path_input))
+    path_string = path_input
+  end
+
+  local obj = {
+    filename = path_string,
+
+    _sep = sep,
+  }
+
+  setmetatable(obj, Path)
+
+  return obj
+end
+
+function Path:_fs_filename()
+  return self:absolute() or self.filename
+end
+
+function Path:_stat()
+  return uv.fs_stat(self:_fs_filename()) or {}
+  -- local stat = uv.fs_stat(self:absolute())
+  -- if not self._absolute then return {} end
+
+  -- if not self._stat_result then
+  --   self._stat_result =
+  -- end
+
+  -- return self._stat_result
+end
+
+function Path:_st_mode()
+  return self:_stat().mode or 0
+end
+
+function Path:joinpath(...)
+  return Path:new(self.filename, ...)
+end
+
+function Path:absolute()
+  if self:is_absolute() then
+    return _normalize_path(self.filename, self._cwd)
+  else
+    return _normalize_path(self._absolute or table.concat({ self._cwd, self.filename }, self._sep), self._cwd)
+  end
+end
+
+function Path:exists()
+  return not vim.tbl_isempty(self:_stat())
+end
+
+function Path:expand()
+  if is_uri(self.filename) then
+    return self.filename
+  end
+
+  -- TODO support windows
+  local expanded
+  if string.find(self.filename, "~") then
+    expanded = string.gsub(self.filename, "^~", vim.loop.os_homedir())
+  elseif string.find(self.filename, "^%.") then
+    expanded = vim.loop.fs_realpath(self.filename)
+    if expanded == nil then
+      expanded = vim.fn.fnamemodify(self.filename, ":p")
+    end
+  elseif string.find(self.filename, "%$") then
+    local rep = string.match(self.filename, "([^%$][^/]*)")
+    local val = os.getenv(rep)
+    if val then
+      expanded = string.gsub(string.gsub(self.filename, rep, val), "%$", "")
+    else
+      expanded = nil
+    end
+  else
+    expanded = self.filename
+  end
+  return expanded and expanded or error "Path not valid"
+end
+
+function Path:make_relative(cwd)
+  if is_uri(self.filename) then
+    return self.filename
+  end
+
+  self.filename = clean(self.filename)
+  cwd = clean(F.if_nil(cwd, self._cwd, cwd))
+  if self.filename == cwd then
+    self.filename = "."
+  else
+    if cwd:sub(#cwd, #cwd) ~= path.sep then
+      cwd = cwd .. path.sep
+    end
+
+    if self.filename:sub(1, #cwd) == cwd then
+      self.filename = self.filename:sub(#cwd + 1, -1)
+    end
+  end
+
+  return self.filename
+end
+
+function Path:normalize(cwd)
+  if is_uri(self.filename) then
+    return self.filename
+  end
+
+  self:make_relative(cwd)
+
+  -- Substitute home directory w/ "~"
+  -- string.gsub is not useful here because usernames with dashes at the end
+  -- will be seen as a regexp pattern rather than a raw string
+  local home = path.home
+  if string.sub(path.home, -1) ~= path.sep then
+    home = home .. path.sep
+  end
+  local start, finish = string.find(self.filename, home, 1, true)
+  if start == 1 then
+    self.filename = "~" .. path.sep .. string.sub(self.filename, (finish + 1), -1)
+  end
+
+  return _normalize_path(clean(self.filename), self._cwd)
+end
+
+local function shorten_len(filename, len, exclude)
+  len = len or 1
+  exclude = exclude or { -1 }
+  local exc = {}
+
+  -- get parts in a table
+  local parts = {}
+  local empty_pos = {}
+  for m in (filename .. path.sep):gmatch("(.-)" .. path.sep) do
+    if m ~= "" then
+      parts[#parts + 1] = m
+    else
+      table.insert(empty_pos, #parts + 1)
+    end
+  end
+
+  for _, v in pairs(exclude) do
+    if v < 0 then
+      exc[v + #parts + 1] = true
+    else
+      exc[v] = true
+    end
+  end
+
+  local final_path_components = {}
+  local count = 1
+  for _, match in ipairs(parts) do
+    if not exc[count] and #match > len then
+      table.insert(final_path_components, string.sub(match, 1, len))
+    else
+      table.insert(final_path_components, match)
+    end
+    table.insert(final_path_components, path.sep)
+    count = count + 1
+  end
+
+  local l = #final_path_components -- so that we don't need to keep calculating length
+  table.remove(final_path_components, l) -- remove final slash
+
+  -- add back empty positions
+  for i = #empty_pos, 1, -1 do
+    table.insert(final_path_components, empty_pos[i], path.sep)
+  end
+
+  return table.concat(final_path_components)
+end
+
+local shorten = (function()
+  local fallback = function(filename)
+    return shorten_len(filename, 1)
+  end
+
+  if jit and path.sep ~= "\\" then
+    local ffi = require "ffi"
+    ffi.cdef [[
     typedef unsigned char char_u;
     void shorten_dir(char_u *str);
-    ]]local af=function(s)if not s or r(s)then return s end;local ag=ae.new("char[?]",#s+1)ae.copy(ag,s)ae.C.shorten_dir(ag)return ae.string(ag)end;local ah=pcall(af,"/tmp/path/file.lua")if ah then return af else return ad end end;return ad end)()function I:shorten(a2,a3)assert(a2~=0,"len must be at least 1")if a2 and a2>1 or a3~=nil then return a1(self.filename,a2,a3)end;return ac(self.filename)end;function I:mkdir(ai)ai=ai or{}local aj=ai.mode or 448;local ak=c.if_nil(ai.parents,false,ai.parents)local al=c.if_nil(ai.exists_ok,true,ai.exists_ok)local am=self:exists()if not al and am then error("FileExistsError:"..self:absolute())end;if not b.fs_mkdir(self:_fs_filename(),aj)and not am then if ak then local an=self:_split()local ao=""for T,ap in ipairs(an)do if ap~=""then local aq=j(ao,ap)if ao==""and self._sep=="\\"then aq=ap end;local ar=b.fs_stat(aq)or{}local as=ar.mode or 0;if g(d.REG,as)then error(string.format("%s is a regular file so we can't mkdir it",aq))elseif g(d.DIR,as)then ao=aq else if b.fs_mkdir(aq,aj)then ao=aq else error("We couldn't mkdir: "..aq)end end end end else error"FileNotFoundError"end end;return true end;function I:rmdir()if not self:exists()then return end;b.fs_rmdir(self:absolute())end;function I:rename(ai)ai=ai or{}if not ai.new_name or ai.new_name==""then error"Please provide the new name!"end;if ai.new_name:match"^%.%.?/?\\?.+"then ai.new_name={b.fs_realpath(ai.new_name:sub(1,3)),ai.new_name:sub(4,#ai.new_name)}end;local at=I:new(ai.new_name)if at:exists()then error"File or directory already exists!"end;local au=b.fs_rename(self:absolute(),at:absolute())self.filename=at.filename;return au end;function I:copy(ai)ai=ai or{}ai.recursive=c.if_nil(ai.recursive,false,ai.recursive)ai.override=c.if_nil(ai.override,true,ai.override)local av=ai.destination;if not I.is_path(av)then if type(av)=="string"and av:match"^%.%.?/?\\?.+"then av={b.fs_realpath(av:sub(1,3)),av:sub(4,#av)}end;av=I:new(av)end;local aw={}if not self:is_dir()then if ai.interactive and av:exists()then vim.ui.select({"Yes","No"},{prompt=string.format("Overwrite existing %s?",av:absolute())},function(T,E)aw[av]=b.fs_copyfile(self:absolute(),av:absolute(),{excl=E~=1})or false end)else aw[av]=b.fs_copyfile(self:absolute(),av:absolute(),{excl=not ai.override})or false end;return aw end;if ai.recursive then av:mkdir{parents=c.if_nil(ai.parents,false,ai.parents),exists_ok=c.if_nil(ai.exists_ok,true,ai.exists_ok)}local ax=require"plenary.scandir"local ay=ax.scan_dir(self.filename,{respect_gitignore=c.if_nil(ai.respect_gitignore,false,ai.respect_gitignore),hidden=c.if_nil(ai.hidden,true,ai.hidden),depth=1,add_dirs=true})for T,az in ipairs(ay)do local aA=I:new(az)local aB=table.remove(aA:_split())local aC=av:joinpath(aB)ai.destination=nil;local aD=vim.tbl_deep_extend("force",ai,{destination=aC})aw[aC]=aA:copy(aD)or false end;return aw else error(string.format("Warning: %s was not copied as `recursive=false`",self:absolute()))end end;function I:touch(ai)ai=ai or{}local aj=ai.mode or 420;local ak=c.if_nil(ai.parents,false,ai.parents)if self:exists()then local aE=os.time()b.fs_utime(self:_fs_filename(),aE,aE)return end;if ak then I:new(self:parent()):mkdir{parents=true}end;local aF=b.fs_open(self:_fs_filename(),"w",aj)if not aF then error("Could not create file: "..self:_fs_filename())end;b.fs_close(aF)return true end;function I:rm(ai)ai=ai or{}local aG=c.if_nil(ai.recursive,false,ai.recursive)if aG then local ax=require"plenary.scandir"local aH=self:absolute()ax.scan_dir(aH,{hidden=true,on_insert=function(aI)b.fs_unlink(aI)end})local an=ax.scan_dir(aH,{add_dirs=true,hidden=true})for ab=#an,1,-1 do b.fs_rmdir(an[ab])end;b.fs_rmdir(aH)else b.fs_unlink(self:absolute())end end;function I:is_dir()return g(d.DIR,self:_st_mode())end;function I:is_absolute()return t(self.filename,self._sep)end;function I:_split()return vim.split(self:absolute(),self._sep)end;local aJ=(function()local n=string.format("^(.+)%s[^%s]+",e.sep,e.sep)return function(aK)local aL=aK:match(n)if aL~=nil and not aL:find(e.sep)then return aL..e.sep end;return aL end end)()function I:parent()return I:new(aJ(self:absolute())or e.root(self:absolute()))end;function I:parents()local aM={}local aN=self:absolute()repeat aN=aJ(aN)table.insert(aM,aN)until not aN;table.insert(aM,e.root(self:absolute()))return aM end;function I:is_file()return self:_stat().type=="file"and true or nil end;function I:open()end;function I:close()end;function I:write(aO,aP,aj)assert(aP,[[Path:write_text requires a flag! For example: 'w' or 'a']])aj=aj or 438;local aF=assert(b.fs_open(self:_fs_filename(),aP,aj))assert(b.fs_write(aF,aO,-1))assert(b.fs_close(aF))end;function I:_read()self=J(self)local aF=assert(b.fs_open(self:_fs_filename(),"r",438))local ar=assert(b.fs_fstat(aF))local ay=assert(b.fs_read(aF,ar.size,0))assert(b.fs_close(aF))return ay end;function I:_read_async(aQ)vim.loop.fs_open(self.filename,"r",438,function(aR,aF)if aR then print("We tried to open this file but couldn't. We failed with following error message: "..aR)return end;vim.loop.fs_fstat(aF,function(aS,ar)assert(not aS,aS)if ar.type~="file"then return aQ""end;vim.loop.fs_read(aF,ar.size,0,function(aT,ay)assert(not aT,aT)vim.loop.fs_close(aF,function(aU)assert(not aU,aU)return aQ(ay)end)end)end)end)end;function I:read(aQ)if aQ then return self:_read_async(aQ)end;return self:_read()end;function I:head(aV)aV=aV or 10;self=J(self)local aW=256;local aF=b.fs_open(self:_fs_filename(),"r",438)if not aF then return end;local ar=assert(b.fs_fstat(aF))if ar.type~="file"then b.fs_close(aF)return nil end;local ay=""local aX,a8=0,0;while a8<aV and aX<ar.size do local aY=assert(b.fs_read(aF,aW,aX))local ab=0;for aZ in aY:gmatch"."do if aZ=="\n"then a8=a8+1;if a8>=aV then break end end;aX=aX+1;ab=ab+1 end;ay=ay..aY:sub(1,ab)end;assert(b.fs_close(aF))if ay:sub(-1)=="\n"then ay=ay:sub(1,-2)end;return ay end;function I:tail(aV)aV=aV or 10;self=J(self)local aW=256;local aF=b.fs_open(self:_fs_filename(),"r",438)if not aF then return end;local ar=assert(b.fs_fstat(aF))if ar.type~="file"then b.fs_close(aF)return nil end;local ay=""local aX,a8=ar.size-1,0;while a8<aV and aX>0 do local a_=aX-aW;if a_<0 then aW=aW+a_;a_=0 end;local aY=assert(b.fs_read(aF,aW,a_))local ab=#aY;while ab>0 do local aZ=aY:sub(ab,ab)if aZ=="\n"then a8=a8+1;if a8>=aV then break end end;aX=aX-1;ab=ab-1 end;ay=aY:sub(ab+1,#aY)..ay end;assert(b.fs_close(aF))return ay end;function I:readlines()self=J(self)local ay=self:read()ay=ay:gsub("\r","")return vim.split(ay,"\n")end;function I:iter()local ay=self:readlines()local ab=0;local b0=#ay;return function()ab=ab+1;if ab<=b0 then return ay[ab]end end end;function I:readbyterange(b1,b2)self=J(self)local aF=b.fs_open(self:_fs_filename(),"r",438)if not aF then return end;local ar=assert(b.fs_fstat(aF))if ar.type~="file"then b.fs_close(aF)return nil end;if b1<0 then b1=ar.size+b1;if b1<0 then b1=0 end end;local ay=""while#ay<b2 do local aY=assert(b.fs_read(aF,b2-#ay,b1))if#aY==0 then break end;ay=ay..aY;b1=b1+#aY end;assert(b.fs_close(aF))return ay end;function I:find_upwards(s)local b3=I:new(self)local b4=e.root(b3)while b3:absolute()~=b4 do local b5=b3:joinpath(s)if b5:exists()then return b5 end;b3=b3:parent()end;return""end;return I
+    ]]
+    local ffi_func = function(filename)
+      if not filename or is_uri(filename) then
+        return filename
+      end
+
+      local c_str = ffi.new("char[?]", #filename + 1)
+      ffi.copy(c_str, filename)
+      ffi.C.shorten_dir(c_str)
+      return ffi.string(c_str)
+    end
+    local ok = pcall(ffi_func, "/tmp/path/file.lua")
+    if ok then
+      return ffi_func
+    else
+      return fallback
+    end
+  end
+  return fallback
+end)()
+
+function Path:shorten(len, exclude)
+  assert(len ~= 0, "len must be at least 1")
+  if (len and len > 1) or exclude ~= nil then
+    return shorten_len(self.filename, len, exclude)
+  end
+  return shorten(self.filename)
+end
+
+function Path:mkdir(opts)
+  opts = opts or {}
+
+  local mode = opts.mode or 448 -- 0700 -> decimal
+  local parents = F.if_nil(opts.parents, false, opts.parents)
+  local exists_ok = F.if_nil(opts.exists_ok, true, opts.exists_ok)
+
+  local exists = self:exists()
+  if not exists_ok and exists then
+    error("FileExistsError:" .. self:absolute())
+  end
+
+  -- fs_mkdir returns nil if folder exists
+  if not uv.fs_mkdir(self:_fs_filename(), mode) and not exists then
+    if parents then
+      local dirs = self:_split()
+      local processed = ""
+      for _, dir in ipairs(dirs) do
+        if dir ~= "" then
+          local joined = concat_paths(processed, dir)
+          if processed == "" and self._sep == "\\" then
+            joined = dir
+          end
+          local stat = uv.fs_stat(joined) or {}
+          local file_mode = stat.mode or 0
+          if band(S_IF.REG, file_mode) then
+            error(string.format("%s is a regular file so we can't mkdir it", joined))
+          elseif band(S_IF.DIR, file_mode) then
+            processed = joined
+          else
+            if uv.fs_mkdir(joined, mode) then
+              processed = joined
+            else
+              error("We couldn't mkdir: " .. joined)
+            end
+          end
+        end
+      end
+    else
+      error "FileNotFoundError"
+    end
+  end
+
+  return true
+end
+
+function Path:rmdir()
+  if not self:exists() then
+    return
+  end
+
+  uv.fs_rmdir(self:absolute())
+end
+
+function Path:rename(opts)
+  opts = opts or {}
+  if not opts.new_name or opts.new_name == "" then
+    error "Please provide the new name!"
+  end
+
+  -- handles `.`, `..`, `./`, and `../`
+  if opts.new_name:match "^%.%.?/?\\?.+" then
+    opts.new_name = {
+      uv.fs_realpath(opts.new_name:sub(1, 3)),
+      opts.new_name:sub(4, #opts.new_name),
+    }
+  end
+
+  local new_path = Path:new(opts.new_name)
+
+  if new_path:exists() then
+    error "File or directory already exists!"
+  end
+
+  local status = uv.fs_rename(self:absolute(), new_path:absolute())
+  self.filename = new_path.filename
+
+  return status
+end
+
+--- Copy files or folders with defaults akin to GNU's `cp`.
+---@param opts table: options to pass to toggling registered actions
+---@field destination string|Path: target file path to copy to
+---@field recursive bool: whether to copy folders recursively (default: false)
+---@field override bool: whether to override files (default: true)
+---@field interactive bool: confirm if copy would override; precedes `override` (default: false)
+---@field respect_gitignore bool: skip folders ignored by all detected `gitignore`s (default: false)
+---@field hidden bool: whether to add hidden files in recursively copying folders (default: true)
+---@field parents bool: whether to create possibly non-existing parent dirs of `opts.destination` (default: false)
+---@field exists_ok bool: whether ok if `opts.destination` exists, if so folders are merged (default: true)
+---@return table {[Path of destination]: bool} indicating success of copy; nested tables constitute sub dirs
+function Path:copy(opts)
+  opts = opts or {}
+  opts.recursive = F.if_nil(opts.recursive, false, opts.recursive)
+  opts.override = F.if_nil(opts.override, true, opts.override)
+
+  local dest = opts.destination
+  -- handles `.`, `..`, `./`, and `../`
+  if not Path.is_path(dest) then
+    if type(dest) == "string" and dest:match "^%.%.?/?\\?.+" then
+      dest = {
+        uv.fs_realpath(dest:sub(1, 3)),
+        dest:sub(4, #dest),
+      }
+    end
+    dest = Path:new(dest)
+  end
+  -- success is true in case file is copied, false otherwise
+  local success = {}
+  if not self:is_dir() then
+    if opts.interactive and dest:exists() then
+      vim.ui.select(
+        { "Yes", "No" },
+        { prompt = string.format("Overwrite existing %s?", dest:absolute()) },
+        function(_, idx)
+          success[dest] = uv.fs_copyfile(self:absolute(), dest:absolute(), { excl = idx ~= 1 }) or false
+        end
+      )
+    else
+      -- nil: not overriden if `override = false`
+      success[dest] = uv.fs_copyfile(self:absolute(), dest:absolute(), { excl = not opts.override }) or false
+    end
+    return success
+  end
+  -- dir
+  if opts.recursive then
+    dest:mkdir {
+      parents = F.if_nil(opts.parents, false, opts.parents),
+      exists_ok = F.if_nil(opts.exists_ok, true, opts.exists_ok),
+    }
+    local scan = require "plenary.scandir"
+    local data = scan.scan_dir(self.filename, {
+      respect_gitignore = F.if_nil(opts.respect_gitignore, false, opts.respect_gitignore),
+      hidden = F.if_nil(opts.hidden, true, opts.hidden),
+      depth = 1,
+      add_dirs = true,
+    })
+    for _, entry in ipairs(data) do
+      local entry_path = Path:new(entry)
+      local suffix = table.remove(entry_path:_split())
+      local new_dest = dest:joinpath(suffix)
+      -- clear destination as it might be Path table otherwise failing w/ extend
+      opts.destination = nil
+      local new_opts = vim.tbl_deep_extend("force", opts, { destination = new_dest })
+      -- nil: not overriden if `override = false`
+      success[new_dest] = entry_path:copy(new_opts) or false
+    end
+    return success
+  else
+    error(string.format("Warning: %s was not copied as `recursive=false`", self:absolute()))
+  end
+end
+
+function Path:touch(opts)
+  opts = opts or {}
+
+  local mode = opts.mode or 420
+  local parents = F.if_nil(opts.parents, false, opts.parents)
+
+  if self:exists() then
+    local new_time = os.time()
+    uv.fs_utime(self:_fs_filename(), new_time, new_time)
+    return
+  end
+
+  if parents then
+    Path:new(self:parent()):mkdir { parents = true }
+  end
+
+  local fd = uv.fs_open(self:_fs_filename(), "w", mode)
+  if not fd then
+    error("Could not create file: " .. self:_fs_filename())
+  end
+  uv.fs_close(fd)
+
+  return true
+end
+
+function Path:rm(opts)
+  opts = opts or {}
+
+  local recursive = F.if_nil(opts.recursive, false, opts.recursive)
+  if recursive then
+    local scan = require "plenary.scandir"
+    local abs = self:absolute()
+
+    -- first unlink all files
+    scan.scan_dir(abs, {
+      hidden = true,
+      on_insert = function(file)
+        uv.fs_unlink(file)
+      end,
+    })
+
+    local dirs = scan.scan_dir(abs, { add_dirs = true, hidden = true })
+    -- iterate backwards to clean up remaining dirs
+    for i = #dirs, 1, -1 do
+      uv.fs_rmdir(dirs[i])
+    end
+
+    -- now only abs is missing
+    uv.fs_rmdir(abs)
+  else
+    uv.fs_unlink(self:absolute())
+  end
+end
+
+-- Path:is_* {{{
+function Path:is_dir()
+  -- TODO: I wonder when this would be better, if ever.
+  -- return self:_stat().type == 'directory'
+
+  return band(S_IF.DIR, self:_st_mode())
+end
+
+function Path:is_absolute()
+  return is_absolute(self.filename, self._sep)
+end
+-- }}}
+
+function Path:_split()
+  return vim.split(self:absolute(), self._sep)
+end
+
+local _get_parent = (function()
+  local formatted = string.format("^(.+)%s[^%s]+", path.sep, path.sep)
+  return function(abs_path)
+    local parent = abs_path:match(formatted)
+    if parent ~= nil and not parent:find(path.sep) then
+      return parent .. path.sep
+    end
+    return parent
+  end
+end)()
+
+function Path:parent()
+  return Path:new(_get_parent(self:absolute()) or path.root(self:absolute()))
+end
+
+function Path:parents()
+  local results = {}
+  local cur = self:absolute()
+  repeat
+    cur = _get_parent(cur)
+    table.insert(results, cur)
+  until not cur
+  table.insert(results, path.root(self:absolute()))
+  return results
+end
+
+function Path:is_file()
+  return self:_stat().type == "file" and true or nil
+end
+
+-- TODO:
+--  Maybe I can use libuv for this?
+function Path:open() end
+
+function Path:close() end
+
+function Path:write(txt, flag, mode)
+  assert(flag, [[Path:write_text requires a flag! For example: 'w' or 'a']])
+
+  mode = mode or 438
+
+  local fd = assert(uv.fs_open(self:_fs_filename(), flag, mode))
+  assert(uv.fs_write(fd, txt, -1))
+  assert(uv.fs_close(fd))
+end
+
+-- TODO: Asyncify this and use vim.wait in the meantime.
+--  This will allow other events to happen while we're waiting!
+function Path:_read()
+  self = check_self(self)
+
+  local fd = assert(uv.fs_open(self:_fs_filename(), "r", 438)) -- for some reason test won't pass with absolute
+  local stat = assert(uv.fs_fstat(fd))
+  local data = assert(uv.fs_read(fd, stat.size, 0))
+  assert(uv.fs_close(fd))
+
+  return data
+end
+
+function Path:_read_async(callback)
+  vim.loop.fs_open(self.filename, "r", 438, function(err_open, fd)
+    if err_open then
+      print("We tried to open this file but couldn't. We failed with following error message: " .. err_open)
+      return
+    end
+    vim.loop.fs_fstat(fd, function(err_fstat, stat)
+      assert(not err_fstat, err_fstat)
+      if stat.type ~= "file" then
+        return callback ""
+      end
+      vim.loop.fs_read(fd, stat.size, 0, function(err_read, data)
+        assert(not err_read, err_read)
+        vim.loop.fs_close(fd, function(err_close)
+          assert(not err_close, err_close)
+          return callback(data)
+        end)
+      end)
+    end)
+  end)
+end
+
+function Path:read(callback)
+  if callback then
+    return self:_read_async(callback)
+  end
+  return self:_read()
+end
+
+function Path:head(lines)
+  lines = lines or 10
+  self = check_self(self)
+  local chunk_size = 256
+
+  local fd = uv.fs_open(self:_fs_filename(), "r", 438)
+  if not fd then
+    return
+  end
+  local stat = assert(uv.fs_fstat(fd))
+  if stat.type ~= "file" then
+    uv.fs_close(fd)
+    return nil
+  end
+
+  local data = ""
+  local index, count = 0, 0
+  while count < lines and index < stat.size do
+    local read_chunk = assert(uv.fs_read(fd, chunk_size, index))
+
+    local i = 0
+    for char in read_chunk:gmatch "." do
+      if char == "\n" then
+        count = count + 1
+        if count >= lines then
+          break
+        end
+      end
+      index = index + 1
+      i = i + 1
+    end
+    data = data .. read_chunk:sub(1, i)
+  end
+  assert(uv.fs_close(fd))
+
+  -- Remove potential newline at end of file
+  if data:sub(-1) == "\n" then
+    data = data:sub(1, -2)
+  end
+
+  return data
+end
+
+function Path:tail(lines)
+  lines = lines or 10
+  self = check_self(self)
+  local chunk_size = 256
+
+  local fd = uv.fs_open(self:_fs_filename(), "r", 438)
+  if not fd then
+    return
+  end
+  local stat = assert(uv.fs_fstat(fd))
+  if stat.type ~= "file" then
+    uv.fs_close(fd)
+    return nil
+  end
+
+  local data = ""
+  local index, count = stat.size - 1, 0
+  while count < lines and index > 0 do
+    local real_index = index - chunk_size
+    if real_index < 0 then
+      chunk_size = chunk_size + real_index
+      real_index = 0
+    end
+
+    local read_chunk = assert(uv.fs_read(fd, chunk_size, real_index))
+
+    local i = #read_chunk
+    while i > 0 do
+      local char = read_chunk:sub(i, i)
+      if char == "\n" then
+        count = count + 1
+        if count >= lines then
+          break
+        end
+      end
+      index = index - 1
+      i = i - 1
+    end
+    data = read_chunk:sub(i + 1, #read_chunk) .. data
+  end
+  assert(uv.fs_close(fd))
+
+  return data
+end
+
+function Path:readlines()
+  self = check_self(self)
+
+  local data = self:read()
+
+  data = data:gsub("\r", "")
+  return vim.split(data, "\n")
+end
+
+function Path:iter()
+  local data = self:readlines()
+  local i = 0
+  local n = #data
+  return function()
+    i = i + 1
+    if i <= n then
+      return data[i]
+    end
+  end
+end
+
+function Path:readbyterange(offset, length)
+  self = check_self(self)
+
+  local fd = uv.fs_open(self:_fs_filename(), "r", 438)
+  if not fd then
+    return
+  end
+  local stat = assert(uv.fs_fstat(fd))
+  if stat.type ~= "file" then
+    uv.fs_close(fd)
+    return nil
+  end
+
+  if offset < 0 then
+    offset = stat.size + offset
+    -- Windows fails if offset is < 0 even though offset is defined as signed
+    -- http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_read
+    if offset < 0 then
+      offset = 0
+    end
+  end
+
+  local data = ""
+  while #data < length do
+    local read_chunk = assert(uv.fs_read(fd, length - #data, offset))
+    if #read_chunk == 0 then
+      break
+    end
+    data = data .. read_chunk
+    offset = offset + #read_chunk
+  end
+
+  assert(uv.fs_close(fd))
+
+  return data
+end
+
+function Path:find_upwards(filename)
+  local folder = Path:new(self)
+  local root = path.root(folder)
+
+  while folder:absolute() ~= root do
+    local p = folder:joinpath(filename)
+    if p:exists() then
+      return p
+    end
+    folder = folder:parent()
+  end
+  return ""
+end
+
+return Path

@@ -1,1 +1,255 @@
-local a=require('luassert.assert')local b=require('luassert.match')local c=require('luassert.util')local d,e;do local f,g=pcall(require,'term')d=io.type(io.stdout)=='file'and f and g.isatty(io.stdout)if not d then local h=package.config:sub(1,1)=='\\'if h and os.getenv("ANSICON")then d=true end end;e=setmetatable({none=function(i)return i end},{__index=function(self,j)return function(i)for k in j:gmatch("[^%.]+")do i=g.colors[k](i)end;return i end end})end;local function l(m)if type(m)=="string"then return string.format("(string) '%s'",m)end end;local function n(m)if type(m)~="number"then return tostring(m)end;if m~=m then return"NaN"elseif m==1/0 then return"Inf"elseif m==-1/0 then return"-Inf"end;local o=string.format("%.20g",m)if math.type and math.type(m)=="float"and not o:find("[%.,]")then o=o:gsub("%d+","%0.0",1)end;return o end;local function p(m)if type(m)=="number"then return string.format("(number) %s",n(m))end end;local function q(m)if type(m)=="boolean"then return string.format("(boolean) %s",tostring(m))end end;local function r(m)if type(m)=="nil"then return"(nil)"end end;local s={number=1,boolean=2,string=3,table=4,["function"]=5,userdata=6,thread=7}local function t(j,u)return type(j)=="number"and 1<=j and j<=u and math.floor(j)==j end;local function v(w)local x={}local y=0;for j in pairs(w)do y=y+1;x[y]=j end;local u=#w;local function z(A,B)local C,D=type(A),type(B)local E=t(A,u)and 0 or s[C]or 8;local F=t(B,u)and 0 or s[D]or 8;if E==F then if C=="string"or C=="number"then return A<B elseif C=="boolean"then return A end else return E<F end end;table.sort(x,z)return x,y end;local function G(m,H)if type(m)~="table"then return end;local I=a:get_parameter("TableFormatLevel")local J=a:get_parameter("TableFormatShowRecursion")local K=a:get_parameter("TableErrorHighlightCharacter")or""local L=a:get_parameter("TableErrorHighlightColor")local M=H and H.crumbs or{}local N={}local O;if getmetatable(m)==nil then O="("..tostring(m)..") "elseif not pcall(setmetatable,m,getmetatable(m))then O="(table) "else local P=getmetatable(m)setmetatable(m,nil)O="("..tostring(m)..") "setmetatable(m,P)end;local function Q(w,R,S)if J and N[w]and N[w]>0 then return"{ ... recursive }"end;if next(w)==nil then return"{ }"end;if R>I and I>=0 then return"{ ... more }"end;local T="{"local x,y=v(w)N[w]=(N[w]or 0)+1;local U=M[#M-R+1]for V=1,y do local W=x[V]local X=w[W]local Y=S and W==U;if type(X)=="table"then X=Q(X,R+1,Y)elseif type(X)=="string"then X="'"..X.."'"end;local Z=Y and K or""local _=string.rep(" ",R*2-Z:len())local a0=Z:len()==0 and""or e[L](Z)T=T..string.format("\n%s%s[%s] = %s",_,a0,n(W),n(X))end;N[w]=N[w]-1;return T.." }"end;return O..Q(m,1,true)end;local function a1(m)if type(m)=="function"then local a2=debug.getinfo(m)return string.format("%s @ line %s in %s",tostring(m),tostring(a2.linedefined),tostring(a2.source))end end;local function a3(m)if type(m)=="userdata"then return string.format("(userdata) '%s'",tostring(m))end end;local function a4(m)if type(m)=="thread"then return string.format("(thread) '%s'",tostring(m))end end;local function a5(m)if not b.is_matcher(m)then return end;local a6={[true]="is.",[false]="no."}local a7={}for a8=1,m.arguments.n do table.insert(a7,a:format({m.arguments[a8],n=1})[1])end;return string.format("(matcher) %s%s(%s)",a6[m.mod],tostring(m.name),table.concat(a7,", "))end;local function a9(aa)if not c.is_arglist(aa)then return end;local ab={}for a8=1,aa.n do table.insert(ab,a:format({aa[a8],n=1})[1])end;return"(values list) ("..table.concat(ab,", ")..")"end;a:add_formatter(l)a:add_formatter(p)a:add_formatter(q)a:add_formatter(r)a:add_formatter(G)a:add_formatter(a1)a:add_formatter(a3)a:add_formatter(a4)a:add_formatter(a5)a:add_formatter(a9)a:set_parameter("TableFormatLevel",3)a:set_parameter("TableFormatShowRecursion",false)a:set_parameter("TableErrorHighlightCharacter","*")a:set_parameter("TableErrorHighlightColor",d and"red"or"none")
+-- module will not return anything, only register formatters with the main assert engine
+local assert = require('luassert.assert')
+local match = require('luassert.match')
+local util = require('luassert.util')
+
+local isatty, colors do
+  local ok, term = pcall(require, 'term')
+  isatty = io.type(io.stdout) == 'file' and ok and term.isatty(io.stdout)
+  if not isatty then
+    local isWindows = package.config:sub(1,1) == '\\'
+    if isWindows and os.getenv("ANSICON") then
+      isatty = true
+    end
+  end
+
+  colors = setmetatable({
+    none = function(c) return c end
+  },{ __index = function(self, key)
+    return function(c)
+      for token in key:gmatch("[^%.]+") do
+        c = term.colors[token](c)
+      end
+      return c
+    end
+  end
+  })
+end
+
+local function fmt_string(arg)
+  if type(arg) == "string" then
+    return string.format("(string) '%s'", arg)
+  end
+end
+
+-- A version of tostring which formats numbers more precisely.
+local function tostr(arg)
+  if type(arg) ~= "number" then
+    return tostring(arg)
+  end
+
+  if arg ~= arg then
+    return "NaN"
+  elseif arg == 1/0 then
+    return "Inf"
+  elseif arg == -1/0 then
+    return "-Inf"
+  end
+
+  local str = string.format("%.20g", arg)
+
+  if math.type and math.type(arg) == "float" and not str:find("[%.,]") then
+    -- Number is a float but looks like an integer.
+    -- Insert ".0" after first run of digits.
+    str = str:gsub("%d+", "%0.0", 1)
+  end
+
+  return str
+end
+
+local function fmt_number(arg)
+  if type(arg) == "number" then
+    return string.format("(number) %s", tostr(arg))
+  end
+end
+
+local function fmt_boolean(arg)
+  if type(arg) == "boolean" then
+    return string.format("(boolean) %s", tostring(arg))
+  end
+end
+
+local function fmt_nil(arg)
+  if type(arg) == "nil" then
+    return "(nil)"
+  end
+end
+
+local type_priorities = {
+  number = 1,
+  boolean = 2,
+  string = 3,
+  table = 4,
+  ["function"] = 5,
+  userdata = 6,
+  thread = 7
+}
+
+local function is_in_array_part(key, length)
+  return type(key) == "number" and 1 <= key and key <= length and math.floor(key) == key
+end
+
+local function get_sorted_keys(t)
+  local keys = {}
+  local nkeys = 0
+
+  for key in pairs(t) do
+    nkeys = nkeys + 1
+    keys[nkeys] = key
+  end
+
+  local length = #t
+
+  local function key_comparator(key1, key2)
+    local type1, type2 = type(key1), type(key2)
+    local priority1 = is_in_array_part(key1, length) and 0 or type_priorities[type1] or 8
+    local priority2 = is_in_array_part(key2, length) and 0 or type_priorities[type2] or 8
+
+    if priority1 == priority2 then
+      if type1 == "string" or type1 == "number" then
+        return key1 < key2
+      elseif type1 == "boolean" then
+        return key1  -- put true before false
+      end
+    else
+      return priority1 < priority2
+    end
+  end
+
+  table.sort(keys, key_comparator)
+  return keys, nkeys
+end
+
+local function fmt_table(arg, fmtargs)
+  if type(arg) ~= "table" then
+    return
+  end
+
+  local tmax = assert:get_parameter("TableFormatLevel")
+  local showrec = assert:get_parameter("TableFormatShowRecursion")
+  local errchar = assert:get_parameter("TableErrorHighlightCharacter") or ""
+  local errcolor = assert:get_parameter("TableErrorHighlightColor")
+  local crumbs = fmtargs and fmtargs.crumbs or {}
+  local cache = {}
+  local type_desc
+
+  if getmetatable(arg) == nil then
+    type_desc = "(" .. tostring(arg) .. ") "
+  elseif not pcall(setmetatable, arg, getmetatable(arg)) then
+    -- cannot set same metatable, so it is protected, skip id
+    type_desc = "(table) "
+  else
+    -- unprotected metatable, temporary remove the mt
+    local mt = getmetatable(arg)
+    setmetatable(arg, nil)
+    type_desc = "(" .. tostring(arg) .. ") "
+    setmetatable(arg, mt)
+  end
+
+  local function ft(t, l, with_crumbs)
+    if showrec and cache[t] and cache[t] > 0 then
+      return "{ ... recursive }"
+    end
+
+    if next(t) == nil then
+      return "{ }"
+    end
+
+    if l > tmax and tmax >= 0 then
+      return "{ ... more }"
+    end
+
+    local result = "{"
+    local keys, nkeys = get_sorted_keys(t)
+
+    cache[t] = (cache[t] or 0) + 1
+    local crumb = crumbs[#crumbs - l + 1]
+
+    for i = 1, nkeys do
+      local k = keys[i]
+      local v = t[k]
+      local use_crumbs = with_crumbs and k == crumb
+
+      if type(v) == "table" then
+        v = ft(v, l + 1, use_crumbs)
+      elseif type(v) == "string" then
+        v = "'"..v.."'"
+      end
+
+      local ch = use_crumbs and errchar or ""
+      local indent = string.rep(" ",l * 2 - ch:len())
+      local mark = (ch:len() == 0 and "" or colors[errcolor](ch))
+      result = result .. string.format("\n%s%s[%s] = %s", indent, mark, tostr(k), tostr(v))
+    end
+
+    cache[t] = cache[t] - 1
+
+    return result .. " }"
+  end
+
+  return type_desc .. ft(arg, 1, true)
+end
+
+local function fmt_function(arg)
+  if type(arg) == "function" then
+    local debug_info = debug.getinfo(arg)
+    return string.format("%s @ line %s in %s", tostring(arg), tostring(debug_info.linedefined), tostring(debug_info.source))
+  end
+end
+
+local function fmt_userdata(arg)
+  if type(arg) == "userdata" then
+    return string.format("(userdata) '%s'", tostring(arg))
+  end
+end
+
+local function fmt_thread(arg)
+  if type(arg) == "thread" then
+    return string.format("(thread) '%s'", tostring(arg))
+  end
+end
+
+local function fmt_matcher(arg)
+  if not match.is_matcher(arg) then
+    return
+  end
+  local not_inverted = {
+    [true] = "is.",
+    [false] = "no.",
+  }
+  local args = {}
+  for idx = 1, arg.arguments.n do
+    table.insert(args, assert:format({ arg.arguments[idx], n = 1, })[1])
+  end
+  return string.format("(matcher) %s%s(%s)",
+                       not_inverted[arg.mod],
+                       tostring(arg.name),
+                       table.concat(args, ", "))
+end
+
+local function fmt_arglist(arglist)
+  if not util.is_arglist(arglist) then
+    return
+  end
+  local formatted_vals = {}
+  for idx = 1, arglist.n do
+    table.insert(formatted_vals, assert:format({ arglist[idx], n = 1, })[1])
+  end
+  return "(values list) (" .. table.concat(formatted_vals, ", ") .. ")"
+end
+
+assert:add_formatter(fmt_string)
+assert:add_formatter(fmt_number)
+assert:add_formatter(fmt_boolean)
+assert:add_formatter(fmt_nil)
+assert:add_formatter(fmt_table)
+assert:add_formatter(fmt_function)
+assert:add_formatter(fmt_userdata)
+assert:add_formatter(fmt_thread)
+assert:add_formatter(fmt_matcher)
+assert:add_formatter(fmt_arglist)
+-- Set default table display depth for table formatter
+assert:set_parameter("TableFormatLevel", 3)
+assert:set_parameter("TableFormatShowRecursion", false)
+assert:set_parameter("TableErrorHighlightCharacter", "*")
+assert:set_parameter("TableErrorHighlightColor", isatty and "red" or "none")

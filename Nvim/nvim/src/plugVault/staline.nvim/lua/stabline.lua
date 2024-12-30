@@ -1,1 +1,114 @@
-local a={}local b=require("staline.utils")local c;local d,e;local f={style='bar',exclude_fts={'NvimTree','help','dashboard','lir','alpha'},numbers=nil}local g={bar={left="┃",right=" "},slant={left="",right=""},arrow={left="",right=""},bubble={left="",right=""}}function PickBuffer(h)local i=vim.api.nvim_get_current_win()vim.api.nvim_win_set_buf(i,h)end;local j=function()local k=vim.api.nvim_get_hl_by_name('Normal',{})d,e=k.background,k.foreground;local l=f.style or"bar"local m=f.bg or(d and("#%06x"):format(d)or"none")local n=f.fg or(e and("#%06x"):format(e)or"none")local o=f.stab_bg or b.extract_hl('NormalFloat',true)local p,q=f.inactive_bg or o,f.inactive_fg or n;local r,s={},{}if l=="bar"then r={left={f=n,b=m},right={f=n,b=m}}s={left={f=p,b=p},right={f=n,b=p}}elseif l=="slant"then r={left={f=m,b=o},right={f=m,b=o}}s={left={f=p,b=o},right={f=p,b=o}}elseif l=="arrow"then r={left={f=o,b=m},right={f=m,b=o}}s={left={f=o,b=p},right={f=p,b=o}}elseif l=="bubble"then r={left={f=m,b=o},right={f=m,b=o}}s={left={f=p,b=o},right={f=p,b=o}}end;b.colorize('Stabline',nil,o,nil)b.colorize('StablineSel',n,m,f.font_active or'bold')b.colorize('StablineLeft',r.left.f,r.left.b,nil)b.colorize('StablineRight',r.right.f,r.right.b)b.colorize('StablineInactive',q,p,f.font_inactive)b.colorize('StablineInactiveRight',s.right.f,s.right.b)b.colorize('StablineInactiveLeft',s.left.f,s.left.b)end;a.setup=function(t)if c then return else c=true end;f=vim.tbl_deep_extend('force',f,t or{})vim.api.nvim_create_autocmd({'BufEnter','BufLeave','ColorScheme'},{callback=j})vim.o.tabline='%!v:lua.require\'stabline\'.get_tabline()'end;local u=function(v)local w=b.extract_hl(v)local x=f.bg or(d and("#%06x"):format(d)or"none")vim.api.nvim_set_hl(0,'StablineTempHighlight',{bg=x,fg=w})return'%#StablineTempHighlight#'end;local y=function(z,A)if type(f.numbers)=="string"then return f.numbers=="buf"and vim.api.nvim_buf_get_number(z)..' 'or A..' 'end;return f.numbers and f.numbers(vim.api.nvim_buf_get_number(z),A)or''end;a.get_tabline=function()local l=f.style;local B=f.stab_left or g[l].left;local C=f.stab_right or g[l].right;local D=type(f.stab_start)=="function"and(f.stab_start()or"")or f.stab_start;local E=type(f.stab_end)=="function"and(f.stab_end()or"")or f.stab_end;local F="%#Stabline#"..(D or"")local A=1;for G,z in pairs(vim.api.nvim_list_bufs())do if vim.api.nvim_buf_is_valid(z)and vim.api.nvim_buf_is_loaded(z)then local H=vim.bo.modified and""or" "local I=vim.api.nvim_buf_get_name(z):match("^.+[\\/](.+)$")or""local J=string.match(I,"%w+%.(.+)")local K,v=b.get_file_icon(I,J)local L=vim.tbl_contains(f.exclude_fts,vim.bo[z].ft)or I==""if L then goto M else I=" "..I.." "end;local N=vim.api.nvim_get_current_buf()==z;F=F.."%#Stabline"..(N and""or"Inactive").."Left#"..B.."%#Stabline"..(N and"Sel"or"Inactive").."#   "..(" "):rep(f.padding or 0).."%"..z.."@v:lua.PickBuffer@"..y(z,A)..(N and u(v)or"")..K.."%#Stabline"..(N and"Sel"or"Inactive").."#"..I.." ".."%X"..(" "):rep(f.padding or 0)..(N and H or" ").."%#Stabline"..(N and""or"Inactive").."Right#"..C;A=A+1 end::M::end;return F.."%#Stabline#%="..(E or"")end;return a
+local Stabline = {}
+local util = require("staline.utils")
+local stabline_loaded
+local normal_bg, normal_fg
+local opts = { style='bar', exclude_fts={'NvimTree', 'help', 'dashboard', 'lir', 'alpha'}, numbers=nil }
+-- NOTE: other opts: fg, bg, stab_start, stab_end, stab_right, stab_left, stab_bg, inactive_bg, inactive_fg
+
+local type_chars={ bar={left="┃", right=" "}, slant={left="", right=""}, arrow={left="", right=""}, bubble={left="", right=""} }
+
+function PickBuffer(buf_id)
+   local window = vim.api.nvim_get_current_win()
+   vim.api.nvim_win_set_buf(window, buf_id)
+end
+
+local refresh_colors = function()
+    local normal = vim.api.nvim_get_hl_by_name('Normal', {})
+    normal_bg, normal_fg = normal.background, normal.foreground
+
+    local stab_type = opts.style or "bar"
+    local bg_hex = opts.bg or (normal_bg and ("#%06x"):format(normal_bg) or "none")
+    local fg_hex = opts.fg or (normal_fg and ("#%06x"):format(normal_fg) or "none")
+    local dark_bg = opts.stab_bg or util.extract_hl('NormalFloat', true) -- TODO: clean later?
+    local inactive_bg, inactive_fg = opts.inactive_bg or dark_bg, opts.inactive_fg or fg_hex
+    local active, inactive = {}, {}
+
+    if stab_type == "bar" then
+        active = { left={ f=fg_hex, b=bg_hex }, right={ f=fg_hex, b=bg_hex } }
+        inactive = { left={ f=inactive_bg, b=inactive_bg }, right={ f=fg_hex, b=inactive_bg } }
+    elseif stab_type == "slant" then
+        active = { left={ f=bg_hex, b=dark_bg }, right={ f=bg_hex, b=dark_bg } }
+        inactive = { left={ f=inactive_bg, b=dark_bg }, right={ f=inactive_bg, b=dark_bg } }
+    elseif stab_type == "arrow" then
+        active = { left={ f=dark_bg, b=bg_hex }, right={ f=bg_hex, b=dark_bg } }
+        inactive = { left={ f=dark_bg, b=inactive_bg }, right={ f=inactive_bg, b=dark_bg } }
+    elseif stab_type == "bubble" then
+        active = { left={ f=bg_hex, b=dark_bg }, right={ f=bg_hex, b=dark_bg } }
+        inactive = { left={ f=inactive_bg, b=dark_bg }, right={ f=inactive_bg, b=dark_bg } }
+    end
+
+    util.colorize('Stabline', nil, dark_bg, nil)
+    util.colorize('StablineSel', fg_hex, bg_hex, opts.font_active or 'bold')
+    util.colorize('StablineLeft',active.left.f, active.left.b, nil)
+    util.colorize('StablineRight',active.right.f, active.right.b)
+    util.colorize('StablineInactive', inactive_fg, inactive_bg, opts.font_inactive)
+    util.colorize('StablineInactiveRight', inactive.right.f, inactive.right.b)
+    util.colorize('StablineInactiveLeft', inactive.left.f, inactive.left.b)
+end
+
+Stabline.setup = function(setup_opts)
+    if stabline_loaded then return else stabline_loaded = true end
+    opts = vim.tbl_deep_extend('force', opts, setup_opts or {})
+
+    vim.api.nvim_create_autocmd({'BufEnter', 'BufLeave', 'ColorScheme'}, {callback=refresh_colors})
+    vim.o.tabline = '%!v:lua.require\'stabline\'.get_tabline()'
+end
+
+local do_icon_hl = function(icon_hl)
+    local new_fg = util.extract_hl(icon_hl)
+    local icon_bg = opts.bg or (normal_bg and ("#%06x"):format(normal_bg) or "none")
+    vim.api.nvim_set_hl(0, 'StablineTempHighlight', {bg=icon_bg, fg=new_fg})
+    return '%#StablineTempHighlight#'
+end
+
+local get_number_format = function(buf, counter)
+    if type(opts.numbers) == "string" then
+        return opts.numbers == "buf" and vim.api.nvim_buf_get_number(buf)..' ' or counter..' '
+    end
+    return opts.numbers and opts.numbers(vim.api.nvim_buf_get_number(buf), counter) or ''
+end
+
+Stabline.get_tabline = function()
+    local stab_type = opts.style
+    local stab_left = opts.stab_left or type_chars[stab_type].left
+    local stab_right= opts.stab_right or type_chars[stab_type].right
+    local start_string = type(opts.stab_start) == "function" and (opts.stab_start() or "") or opts.stab_start
+    local end_string = type(opts.stab_end) == "function" and (opts.stab_end() or "") or opts.stab_end
+    local tabline = "%#Stabline#"..(start_string or "")
+
+    local counter = 1
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted then
+            local edited = vim.bo.modified and "" or " "
+
+            local f_name = vim.api.nvim_buf_get_name(buf):match("^.+[\\/](.+)$") or "" -- TODO: use fnamemodify()?
+            local ext = string.match(f_name, "%w+%.(.+)")
+            local f_icon, icon_hl = util.get_file_icon(f_name, ext)
+
+            local conditions = vim.tbl_contains(opts.exclude_fts, vim.bo[buf].ft) or f_name == ""
+            if conditions then goto do_nothing else f_name = " ".. f_name .." " end
+
+            local s = vim.api.nvim_get_current_buf() == buf
+
+            -- TODO: change to `format` so as to remove padding??
+            tabline = tabline..
+            "%#Stabline"..(s and "" or "Inactive").."Left#"..stab_left..
+            "%#Stabline"..(s and "Sel" or "Inactive").."#   "..
+            (" "):rep(opts.padding or 0)..
+            "%"..buf.."@v:lua.PickBuffer@".. -- start for picking buffer
+            get_number_format(buf, counter)..
+            (s and do_icon_hl(icon_hl) or "")..f_icon.." "..
+            "%#Stabline"..(s and "Sel" or "Inactive").."#"..f_name.." "..
+            "%X".. -- end for picking buffer
+            (" "):rep(opts.padding or 0).. (s and edited or " ")..
+            "%#Stabline"..(s and "" or "Inactive").."Right#"..stab_right
+
+            counter = counter + 1
+        end
+        ::do_nothing::
+    end
+
+    return tabline.."%#Stabline#%="..(end_string or "")
+end
+
+return Stabline

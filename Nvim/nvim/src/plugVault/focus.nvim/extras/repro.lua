@@ -1,1 +1,62 @@
-local a=vim.fn.fnamemodify('./.repro',':p')for b,c in ipairs({'config','data','state','cache'})do vim.env[('XDG_%s_HOME'):format(c:upper())]=a..'/'..c end;local d=a..'/plugins/lazy.nvim'if not vim.loop.fs_stat(d)then vim.fn.system({'git','clone','--filter=blob:none','https://github.com/folke/lazy.nvim',d})end;vim.opt.runtimepath:prepend(d)local e={'nvim-focus/focus.nvim'}require('lazy').setup(e,{root=a..'/plugins'})require('focus').setup({enable=true,commands=true,autoresize={enable=true,width=0,height=0,minwidth=0,minheight=0,height_quickfix=10},split={bufnew=false,tmux=false},ui={number=false,relativenumber=false,hybridnumber=false,absolutenumber_unfocussed=false,cursorline=true,cursorcolumn=false,colorcolumn={enable=false,list='+1'},signcolumn=true,winhighlight=false}})
+-- DO NOT change the paths
+local root = vim.fn.fnamemodify('./.repro', ':p')
+
+-- set stdpaths to use .repro
+for _, name in ipairs({ 'config', 'data', 'state', 'cache' }) do
+    vim.env[('XDG_%s_HOME'):format(name:upper())] = root .. '/' .. name
+end
+
+-- bootstrap lazy
+local lazypath = root .. '/plugins/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        'git',
+        'clone',
+        '--filter=blob:none',
+        'https://github.com/folke/lazy.nvim',
+        lazypath,
+    })
+end
+vim.opt.runtimepath:prepend(lazypath)
+
+-- install plugins
+local plugins = {
+    'nvim-focus/focus.nvim',
+    -- add any other plugins here
+}
+require('lazy').setup(plugins, {
+    root = root .. '/plugins',
+})
+
+require('focus').setup({
+    enable = true, -- Enable module
+    commands = true, -- Create Focus commands
+    autoresize = {
+        enable = true, -- Enable or disable auto-resizing of splits
+        width = 0, -- Force width for the focused window
+        height = 0, -- Force height for the focused window
+        minwidth = 0, -- Force minimum width for the unfocused window
+        minheight = 0, -- Force minimum height for the unfocused window
+        height_quickfix = 10, -- Set the height of quickfix panel
+    },
+    split = {
+        bufnew = false, -- Create blank buffer for new split windows
+        tmux = false, -- Create tmux splits instead of neovim splits
+    },
+    ui = {
+        number = false, -- Display line numbers in the focussed window only
+        relativenumber = false, -- Display relative line numbers in the focussed window only
+        hybridnumber = false, -- Display hybrid line numbers in the focussed window only
+        absolutenumber_unfocussed = false, -- Preserve absolute numbers in the unfocussed windows
+
+        cursorline = true, -- Display a cursorline in the focussed window only
+        cursorcolumn = false, -- Display cursorcolumn in the focussed window only
+        colorcolumn = {
+            enable = false, -- Display colorcolumn in the foccused window only
+            list = '+1', -- Set the comma-saperated list for the colorcolumn
+        },
+        signcolumn = true, -- Display signcolumn in the focussed window only
+        winhighlight = false, -- Auto highlighting for focussed/unfocussed windows
+    },
+})
+-- add anything else here

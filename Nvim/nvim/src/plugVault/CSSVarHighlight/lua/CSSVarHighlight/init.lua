@@ -1,1 +1,131 @@
-local a={}local vim=vim;local b=require('CSSPluginHelpers')a.options={parent_search_limit=5,filename_to_track="main",variable_pattern="%-%-[-_%w]*color[-_%w]*",initial_variable_color="#000000",disable_keymaps=false}local c={}a.setup=function(d)a.options=vim.tbl_deep_extend("keep",d or{},a.options)if not a.options.disable_keymaps then local e={buffer=0,silent=true}vim.api.nvim_create_autocmd('FileType',{desc='CSSVarHighlight keymaps',pattern='css',callback=function()vim.keymap.set('n','<leader>ch',":CSSVarHighlight<CR>",e)end})end end;vim.api.nvim_create_user_command("CSSVarHighlight",function(f)if#(f.fargs[1]or"")>1 then f.fargs[1],f.fargs[2],f.fargs[3]=1,f.fargs[1],f.fargs[2]end;local g=f.fargs[1]or a.options.parent_search_limit;local h=(f.fargs[2]or a.options.filename_to_track)..".css"local i=f.fargs[3]or nil;a.get_colors_from_file(tonumber(g),h,i)end,{desc="Track the colors of the CSS variables",nargs="*"})a.get_colors_from_file=function(g,h,i)local j=b.find_file(h,i,1,g)if not j then vim.print("[CSSVarHighlight] Attempt limit reached. Operation cancelled.")return end;local k=b.get_css_attribute(j,a.options.variable_pattern)c=a.convert_color(k)vim.cmd('lua MiniHipatterns.update()')end;a.convert_color=function(k)local l={}for m,n in pairs(k)do if string.match(n,"%#%w%w%w%w%w%w")then l[m]=n elseif string.match(n,"lch%(.+%)")then local o,p,q=string.match(n,"lch%((%d+%.?%d+)%p? (%d+%.?%d+) (%d+%.?%d+)%)")l[m]=a.lchToHex(o,p,q)elseif string.match(n,"hsl%(.+%)")then local o,p,q=string.match(n,"hsl%((%d+)%a*, (%d+)%p?, (%d+)%p?%)")l[m]=a.hslToHex(o,p,q)elseif string.match(n,"rgb%(.+%)")then local o,p,q=string.match(n,"rgb%((%d+), (%d+), (%d+)%)")l[m]=a.rgbToHex(o,p,q)end end;return l end;a.get_settings=function()local r=require('mini.hipatterns')local k={pattern="var%("..a.options.variable_pattern.."%)",group=function(s,t)local u=t:match("var%((.+)%)")local v=c[u]or a.options.initial_variable_color;return r.compute_hex_color_group(v,"bg")end}return k end;a.rgbToHex=function(w,x,y)local function z(A)local B={"0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"}return B[math.floor(A*0.0625)+1]..B[A%16+1]end;return"#"..z(w)..z(x)..z(y)end;function a.lchToHex(C,D,E)local F=math.floor(D*math.cos(math.rad(E))+0.5)local y=math.floor(D*math.sin(math.rad(E))+0.5)local G,H,I=0.948110,1.00000,1.07304;local J=(C+16)*0.0086206897;local K=J+F*0.002;local L=J-y*0.002;local o=G*(K^3>0.008856 and K^3 or(K-0.137931034)*0.1284)local p=H*(J^3>0.008856 and J^3 or(J-0.137931034)*0.1284)local q=I*(L^3>0.008856 and L^3 or(L-0.137931034)*0.1284)local M=o*3.2406-p*1.5372-q*0.4986;local N=-o*0.9689+p*1.8758+q*0.0415;local O=o*0.0557-p*0.2040+q*1.0570;M=M>0.0031308 and 1.055*M^0.416666667-0.055 or 12.92*M;N=N>0.0031308 and 1.055*N^0.416666667-0.055 or 12.92*N;O=O>0.0031308 and 1.055*O^0.416666667-0.055 or 12.92*O;M=math.floor(math.max(math.min(M,1),0)*255+0.5)N=math.floor(math.max(math.min(N,1),0)*255+0.5)O=math.floor(math.max(math.min(O,1),0)*255+0.5)return string.format("#%02x%02x%02x",M,N,O)end;function a.hslToHex(P,Q,R)local function S(T,U,V)if V<0 then V=V+1 end;if V>1 then V=V-1 end;if V<0.1666666667 then return T+(U-T)*6*V end;if V<0.5 then return U end;if V<0.6666666667 then return T+(U-T)*(0.6666666667-V)*6 end;return T end;local function W(E,X,C)local w,x,y;if X==0 then w,x,y=C,C,C else local U;if C<0.5 then U=C*(1+X)else U=C+X-C*X end;local T=2*C-U;w=S(T,U,E+0.3333333333)x=S(T,U,E)y=S(T,U,E-0.3333333333)end;return w*255,x*255,y*255 end;local w,x,y=W(P*0.0027777778,Q*0.01,R*0.01)return string.format("#%02x%02x%02x",w,x,y)end;return a
+local M = {}
+local cfg = require('CSSVarHighlight.config')
+local fos = require('CSSVarHighlight.file_ops')
+local cvr = require('CSSVarHighlight.convert_color')
+local gdt = require('CSSVarHighlight.get_data')
+
+local g_colorsFromFile = {}
+local g_lastFile, g_lastDir = nil, nil
+local g_isPluginInitialized, g_showLog = false, true
+
+M.setup = function(options)
+  -- Merge the user-provided options with the default options
+  cfg.options = vim.tbl_deep_extend("keep", options or {}, cfg.options)
+  -- Enable keymap if they are not disableds
+  if not cfg.options.disable_keymaps then
+    local keymaps_opts = {buffer = 0, silent = true}
+    vim.api.nvim_create_autocmd('FileType', {
+      desc = 'CSSVarHighlight keymaps',
+      pattern = 'css',
+      callback = function()
+        vim.keymap.set('n', '<leader>ch', ":CSSVarHighlight<CR>", keymaps_opts)
+      end,
+    })
+  end
+end
+
+-- Analyze the arguments provided
+local function parse_args(args)
+  local attempt_limit = tonumber(cfg.options.parent_search_limit)
+  local fname = g_lastFile or cfg.options.filename_to_track
+  local fdir = g_lastDir or nil
+  local num_args = #args.fargs
+
+  if num_args > 0 then
+    local arg1, numArg1 = args.fargs[1], tonumber(arg1)
+    if numArg1 then
+      attempt_limit = numArg1
+    else
+      fname = arg1
+    end
+  end
+
+  if num_args > 1 then
+    local arg2 = args.fargs[2]
+    if string.match(arg2, '^%d+$')  then
+      attempt_limit = tonumber(arg2)
+    else
+      fdir = arg2
+    end
+  end
+
+  return attempt_limit, fname, fdir
+end
+
+--- Create a user command
+vim.api.nvim_create_user_command("CSSVarHighlight", function(args)
+  local attempt_limit, fname, fdir = parse_args(args)
+  g_lastFile, g_lastDir = fname, fdir
+  if g_lastFile ~= fname then
+    g_showLog = true
+  end
+
+  local data = M.get_colors_from_file(attempt_limit, fname .. ".css", fdir)
+  if not data then
+    return
+  end
+
+  -- Event to auto-reload the data when save
+  if not g_isPluginInitialized then
+    vim.api.nvim_create_autocmd({"BufWritePost"}, {
+      pattern = "*.css",
+      callback = function()
+        vim.schedule(function()
+          vim.cmd('CSSVarHighlight')
+        end)
+      end
+    })
+  end
+
+  g_isPluginInitialized = true
+end, {desc = "Track the colors of the CSS variables", nargs = "*"})
+
+--- Retrieves color values from a file and updates the mini.hipatterns plugin
+M.get_colors_from_file = function(attempt_limit, fname, fdir)
+  -- Search for the file with the given parameters.
+  local fpath = fos.find_file(fname, fdir, 1, attempt_limit)
+  if not fpath then
+    vim.print("[CSSVarHighlight] Attempt limit reached. Operation cancelled.")
+    return false
+  end
+  -- Extract colors from the found file.
+  local data = gdt.get_css_attribute(fpath, cfg.options.variable_pattern)
+  g_colorsFromFile = cvr.convert_color(data)
+  -- Try to load the 'mini.hipatterns' plugin.
+  local plugin_ok, _ = pcall(require, "mini.hipatterns")
+  if not plugin_ok then
+    vim.print("[CSSVarHighlight] The 'mini.hipatterns' plugin was not found.")
+    return
+  end
+
+  vim.cmd('lua MiniHipatterns.update()')
+  if g_showLog then
+    vim.print("[CSSVarHighlight] The data has been updated. " .. os.date("%H:%M:%S"))
+    g_showLog = false
+  end
+  return true
+end
+
+--- Retrieves the settings for the mini.hipatterns plugin
+M.get_settings = function()
+  local plugin_ok, plugin = pcall(require, "mini.hipatterns")
+  if not plugin_ok then
+    vim.print("[CSSVarHighlight] The 'mini.hipatterns' plugin was not found.")
+    return
+  end
+
+  local data = {
+    pattern = "var%(" .. cfg.options.variable_pattern .. "%)",
+    group = function (_, match)
+      local match_value = match:match("var%((.+)%)")
+      local color = g_colorsFromFile[match_value] or cfg.options.initial_variable_color
+      if g_isPluginInitialized then
+        return plugin.compute_hex_color_group(color, "bg")
+      end
+      return nil
+    end
+  }
+  return data
+end
+
+return M

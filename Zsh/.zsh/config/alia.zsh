@@ -72,6 +72,7 @@ alias Id-string="nanoid --alphabet abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRS
 # Others
 alias lua="luajit"
 alias nimble="nimble --verbose"
+alias info="fastfetch"
 
 ### SPECIALS ------------------------------------------------------------------
 
@@ -92,8 +93,10 @@ alias Tar-lz4-d="tar --use-compress-program=lz4 -xvf archive.lz4 -C"
 # Build
 alias Go-build='go build'
 alias Go-build-min='go build -a -gcflags=all="-l -B" -ldflags="-w -s"'
+
+alias Nim="clear && nim c --hints:off"
 alias Nim-build="nim c -d:release"
-alias Nim-build-min="clear && nim c -d:release  --hints:off --opt:speed --passC:-flto --passL:-flto --panics:on"
+alias Nim-build-min="nim c -d:release --opt:speed --passC:-flto --passL:-flto --panics:on"
 
 # Javascript
 alias Js-server="five-server"
@@ -120,8 +123,9 @@ alias Clean-pnpm="pnpm store prune"
 alias Add="pkg install"
 alias Del="pkg uninstall"
 alias Search="pkg search"
-alias Update-list-package="pkg update"
 alias Installed="pkg list-installed"
+alias Update-list-package="pkg update"
+alias Upgrade="pkg update && pkg upgrade"
 alias Upgradable="apt list --upgradable"
 
 # Ssh

@@ -1,1 +1,33 @@
-local a={}a.bounded=function(b,c,d)c=c or 0;d=d or math.huge;if c then b=math.max(b,c)end;if d then b=math.min(b,d)end;return b end;a.apply_defaults=function(e,f)if e==nil then e={}end;e=vim.deepcopy(e)for g,h in pairs(f)do if e[g]==nil then e[g]=h end end;return e end;return a
+local utils = {}
+
+utils.bounded = function(value, min, max)
+  min = min or 0
+  max = max or math.huge
+
+  if min then
+    value = math.max(value, min)
+  end
+  if max then
+    value = math.min(value, max)
+  end
+
+  return value
+end
+
+utils.apply_defaults = function(original, defaults)
+  if original == nil then
+    original = {}
+  end
+
+  original = vim.deepcopy(original)
+
+  for k, v in pairs(defaults) do
+    if original[k] == nil then
+      original[k] = v
+    end
+  end
+
+  return original
+end
+
+return utils

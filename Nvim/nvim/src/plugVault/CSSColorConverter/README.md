@@ -1,5 +1,4 @@
-> [!TIP]
-> Use `Google Translate` to read this file in your native language.
+> Translate this file into your native language using `Google Translate` or a [similar service](https://immersivetranslate.com).
 
 # CSSColorConverter
 
@@ -8,7 +7,6 @@ Este plugin para Neovim proporciona herramientas para trabajar con diferentes mo
 ## Requerimientos
 
 * [`Neovim`](https://github.com/neovim/neovim): Versión 0.7 o superior.
-* [`CSSPluginHelpers`](https://github.com/farias-hecdin/CSSPluginHelpers): Funciones esenciales para el plugin.
 * [`plenary.nvim`](https://github.com/nvim-lua/plenary.nvim): Para interactua con curl desde Neovim.
 * [`curl`](https://curl.se) Para descargar la lista de nombres de colores.
 
@@ -19,9 +17,6 @@ Usando [`folke/lazy.nvim`](https://github.com/folke/lazy.nvim):
 ```lua
 {
     'farias-hecdin/Colorformat.nvim',
-    dependencies = {
-        "farias-hecdin/CSSPluginHelpers",
-    },
     config = true,
     -- If you want to configure some options, replace the previous line with:
     -- config = function()
@@ -29,18 +24,15 @@ Usando [`folke/lazy.nvim`](https://github.com/folke/lazy.nvim):
 }
 ```
 
-## Configuración
+## 🗒️ Configuración
 
 Estas son las opciones de configuración predeterminadas:
 
 ```lua
 require('CSSColorConverter').setup({
-  -- <boolean> Display virtual text for color variables
-  display_virtual_text = true,
-  -- <string> Format for target color (e.g. "hex" for hexadecimal)
-  target_color_format = "hex",
-  -- <boolean> Indicates whether keymaps are disabled
-  disable_keymaps = false,
+  display_virtual_text = true, -- <boolean> Display virtual text for color variables.
+  target_color_format = "hex", -- <string> Format for target color (e.g. "hex" for hexadecimal).
+  disable_keymaps = false, -- <boolean> Indicates whether keymaps are disabled.
 })
 ```
 
@@ -68,15 +60,15 @@ vim.keymap.set('v', '<leader>cr', ":lua require('CSSColorConverter').get_color_c
 
 Puedes desactivar los atajos de teclado predeterminados estableciendo la opción `disable_keymaps` en `true`
 
-## Agradecimientos a
+## 🗒️ Agradecimientos a
 
 * [`jsongerber/nvim-px-to-rem`](https://github.com/jsongerber/nvim-px-to-rem): Ha sido la base y fuente de inspiración para este plugin.
 * [`meodai/color-names`](https://github.com/meodai/color-names): Por proveer la lista de nombres de colores.
 
-## Plugins similares
+## 🗒️ Plugins similares
 
 [`colortils.nvim`](https://github.com/nvim-colortils/colortils.nvim)
 
-## Licencia
+## 🛡️ Licencia
 
 CSSColorConverter está bajo la licencia MIT. Consulta el archivo `LICENSE` para obtener más información.

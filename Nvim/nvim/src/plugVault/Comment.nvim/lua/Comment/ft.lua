@@ -1,1 +1,321 @@
-local a=vim.api;local b={cxx_l='//%s',cxx_b='/*%s*/',dbl_hash='##%s',dash='--%s',dash_bracket='--[[%s]]',handlebars='{{!--%s--}}',hash='#%s',hash_bracket='#[[%s]]',haskell_b='{-%s-}',fsharp_b='(*%s*)',html='<!--%s-->',latex='%%s',semicolon=';%s',lisp_l=';;%s',lisp_b='#|%s|#',twig='{#%s#}',vim='"%s',lean_b='/-%s-/',ruby_block='=begin%s=end'}local c=setmetatable({arduino={b.cxx_l,b.cxx_b},applescript={b.hash},asm={b.hash},astro={b.html},autohotkey={b.semicolon,b.cxx_b},bash={b.hash},beancount={b.semicolon},bib={b.latex},blueprint={b.cxx_l},c={b.cxx_l,b.cxx_b},cabal={b.dash},cairo={b.cxx_l},cmake={b.hash,b.hash_bracket},conf={b.hash},conkyrc={b.dash,b.dash_bracket},coq={b.fsharp_b,b.fsharp_b},cpp={b.cxx_l,b.cxx_b},cs={b.cxx_l,b.cxx_b},css={b.cxx_b,b.cxx_b},cuda={b.cxx_l,b.cxx_b},cue={b.cxx_l},dart={b.cxx_l,b.cxx_b},dhall={b.dash,b.haskell_b},dnsmasq={b.hash},dosbatch={'REM%s'},dot={b.cxx_l,b.cxx_b},dts={b.cxx_l,b.cxx_b},editorconfig={b.hash},eelixir={b.html,b.html},elixir={b.hash},elm={b.dash,b.haskell_b},elvish={b.hash},faust={b.cxx_l,b.cxx_b},fennel={b.semicolon},fish={b.hash},func={b.lisp_l},fsharp={b.cxx_l,b.fsharp_b},gdb={b.hash},gdscript={b.hash},gdshader={b.cxx_l,b.cxx_b},gitignore={b.hash},gleam={b.cxx_l},glsl={b.cxx_l,b.cxx_b},gnuplot={b.hash,b.hash_bracket},go={b.cxx_l,b.cxx_b},gomod={b.cxx_l},graphql={b.hash},groovy={b.cxx_l,b.cxx_b},handlebars={b.handlebars,b.handlebars},haskell={b.dash,b.haskell_b},haxe={b.cxx_l,b.cxx_b},hcl={b.hash,b.cxx_b},heex={b.html,b.html},html={b.html,b.html},htmldjango={b.html,b.html},hyprlang={b.hash},idris={b.dash,b.haskell_b},idris2={b.dash,b.haskell_b},ini={b.hash},jai={b.cxx_l,b.cxx_b},java={b.cxx_l,b.cxx_b},javascript={b.cxx_l,b.cxx_b},javascriptreact={b.cxx_l,b.cxx_b},jq={b.hash},jsonc={b.cxx_l},jsonnet={b.cxx_l,b.cxx_b},julia={b.hash,'#=%s=#'},kdl={b.cxx_l,b.cxx_b},kotlin={b.cxx_l,b.cxx_b},lean={b.dash,b.lean_b},lean3={b.dash,b.lean_b},lidris={b.dash,b.haskell_b},lilypond={b.latex,'%{%s%}'},lisp={b.lisp_l,b.lisp_b},lua={b.dash,b.dash_bracket},metalua={b.dash,b.dash_bracket},luau={b.dash,b.dash_bracket},markdown={b.html,b.html},make={b.hash},mbsyncrc={b.dbl_hash},mermaid={'%%%s'},meson={b.hash},mojo={b.hash},nextflow={b.cxx_l,b.cxx_b},nim={b.hash,'#[%s]#'},nix={b.hash,b.cxx_b},nu={b.hash},objc={b.cxx_l,b.cxx_b},objcpp={b.cxx_l,b.cxx_b},ocaml={b.fsharp_b,b.fsharp_b},odin={b.cxx_l,b.cxx_b},openscad={b.cxx_l,b.cxx_b},plantuml={"'%s","/'%s'/"},purescript={b.dash,b.haskell_b},puppet={b.hash},python={b.hash},php={b.cxx_l,b.cxx_b},prisma={b.cxx_l},proto={b.cxx_l,b.cxx_b},quarto={b.html,b.html},r={b.hash},racket={b.lisp_l,b.lisp_b},rasi={b.cxx_l,b.cxx_b},readline={b.hash},reason={b.cxx_l,b.cxx_b},rego={b.hash},remind={b.hash},rescript={b.cxx_l,b.cxx_b},robot={b.hash},ron={b.cxx_l,b.cxx_b},ruby={b.hash,b.ruby_block},rust={b.cxx_l,b.cxx_b},sbt={b.cxx_l,b.cxx_b},scala={b.cxx_l,b.cxx_b},scss={b.cxx_b,b.cxx_b},scheme={b.lisp_l,b.lisp_b},sh={b.hash},solidity={b.cxx_l,b.cxx_b},supercollider={b.cxx_l,b.cxx_b},sql={b.dash,b.cxx_b},stata={b.cxx_l,b.cxx_b},svelte={b.html,b.html},swift={b.cxx_l,b.cxx_b},sxhkdrc={b.hash},systemverilog={b.cxx_l,b.cxx_b},tablegen={b.cxx_l,b.cxx_b},teal={b.dash,b.dash_bracket},terraform={b.hash,b.cxx_b},tex={b.latex},template={b.dbl_hash},tidal={b.dash,b.haskell_b},tmux={b.hash},toml={b.hash},twig={b.twig,b.twig},typescript={b.cxx_l,b.cxx_b},typescriptreact={b.cxx_l,b.cxx_b},typst={b.cxx_l,b.cxx_b},v={b.cxx_l,b.cxx_b},vala={b.cxx_l,b.cxx_b},verilog={b.cxx_l},vhdl={b.dash},vim={b.vim},vifm={b.vim},vue={b.html,b.html},wgsl={b.cxx_l,b.cxx_b},xdefaults={'!%s'},xml={b.html,b.html},xonsh={b.hash},yaml={b.hash},yuck={b.lisp_l},zig={b.cxx_l}},{__index=function(d,e)local f,g=string.match(e,'^(.-)%.(.*)')if not(f or g)then return nil end;return d[f]or d[g]end})local h={}function h.set(i,j)c[i]=type(j)=='string'and{j}or j;return h end;function h.get(i,k)local l=c[i]if not l then return nil end;if not k then return vim.deepcopy(l)end;return l[k]end;function h.contains(m,n)for i,o in pairs(m:children())do if i~='comment'and o:contains(n)then return h.contains(o,n)end end;return m end;function h.calculate(p)local q,r=pcall(vim.treesitter.get_parser,a.nvim_get_current_buf())if not q then return h.get(vim.bo.filetype,p.ctype)end;local i=h.contains(r,{p.range.srow-1,p.range.scol,p.range.erow-1,p.range.ecol}):lang()return h.get(i,p.ctype)or h.get(vim.bo.filetype,p.ctype)end;return setmetatable(h,{__newindex=function(d,e,s)d.set(e,s)end,__call=function(d,t,u)for v,i in ipairs(t)do d.set(i,u)end;return d end})
+---@mod comment.ft Language/Filetype detection
+---@brief [[
+---This module is the core of filetype and commentstring detection and uses the
+---|lua-treesitter| APIs to accurately detect filetype and gives the corresponding
+---commentstring, stored inside the plugin, for the filetype/langauge.
+---
+---Compound (dot-separated) filetypes are also supported i.e. 'ansible.yaml',
+---'ios.swift' etc. The commentstring resolution will be done from left to right.
+---For example, If the filetype is 'ansible.yaml' then 'ansible' commenstring will
+---be used if found otherwise it'll fallback to 'yaml'. Read `:h 'filetype'`
+---@brief ]]
+
+local A = vim.api
+
+---Common commentstring shared b/w multiple languages
+local M = {
+    cxx_l = '//%s',
+    cxx_b = '/*%s*/',
+    dbl_hash = '##%s',
+    dash = '--%s',
+    dash_bracket = '--[[%s]]',
+    handlebars = '{{!--%s--}}',
+    hash = '#%s',
+    hash_bracket = '#[[%s]]',
+    haskell_b = '{-%s-}',
+    fsharp_b = '(*%s*)',
+    html = '<!--%s-->',
+    latex = '%%s',
+    semicolon = ';%s',
+    lisp_l = ';;%s',
+    lisp_b = '#|%s|#',
+    twig = '{#%s#}',
+    vim = '"%s',
+    lean_b = '/-%s-/',
+    ruby_block = '=begin%s=end',
+}
+
+---Lang table that contains commentstring (linewise/blockwise) for multiple filetypes
+---Structure = { filetype = { linewise, blockwise } }
+---@type table<string,string[]>
+local L = setmetatable({
+    arduino = { M.cxx_l, M.cxx_b },
+    applescript = { M.hash },
+    asm = { M.hash },
+    astro = { M.html },
+    autohotkey = { M.semicolon, M.cxx_b },
+    bash = { M.hash },
+    beancount = { M.semicolon },
+    bib = { M.latex },
+    blueprint = { M.cxx_l }, -- Blueprint doesn't have block comments
+    c = { M.cxx_l, M.cxx_b },
+    cabal = { M.dash },
+    cairo = { M.cxx_l },
+    cmake = { M.hash, M.hash_bracket },
+    conf = { M.hash },
+    conkyrc = { M.dash, M.dash_bracket },
+    coq = { M.fsharp_b, M.fsharp_b },
+    cpp = { M.cxx_l, M.cxx_b },
+    cs = { M.cxx_l, M.cxx_b },
+    css = { M.cxx_b, M.cxx_b },
+    cuda = { M.cxx_l, M.cxx_b },
+    cue = { M.cxx_l },
+    dart = { M.cxx_l, M.cxx_b },
+    dhall = { M.dash, M.haskell_b },
+    dnsmasq = { M.hash },
+    dosbatch = { 'REM%s' },
+    dot = { M.cxx_l, M.cxx_b },
+    dts = { M.cxx_l, M.cxx_b },
+    editorconfig = { M.hash },
+    eelixir = { M.html, M.html },
+    elixir = { M.hash },
+    elm = { M.dash, M.haskell_b },
+    elvish = { M.hash },
+    faust = { M.cxx_l, M.cxx_b },
+    fennel = { M.semicolon },
+    fish = { M.hash },
+    func = { M.lisp_l },
+    fsharp = { M.cxx_l, M.fsharp_b },
+    gdb = { M.hash },
+    gdscript = { M.hash },
+    gdshader = { M.cxx_l, M.cxx_b },
+    gitignore = { M.hash },
+    gleam = { M.cxx_l },
+    glsl = { M.cxx_l, M.cxx_b },
+    gnuplot = { M.hash, M.hash_bracket },
+    go = { M.cxx_l, M.cxx_b },
+    gomod = { M.cxx_l },
+    graphql = { M.hash },
+    groovy = { M.cxx_l, M.cxx_b },
+    handlebars = { M.handlebars, M.handlebars },
+    haskell = { M.dash, M.haskell_b },
+    haxe = { M.cxx_l, M.cxx_b },
+    hcl = { M.hash, M.cxx_b },
+    heex = { M.html, M.html },
+    html = { M.html, M.html },
+    htmldjango = { M.html, M.html },
+    hyprlang = { M.hash },
+    idris = { M.dash, M.haskell_b },
+    idris2 = { M.dash, M.haskell_b },
+    ini = { M.hash },
+    jai = { M.cxx_l, M.cxx_b },
+    java = { M.cxx_l, M.cxx_b },
+    javascript = { M.cxx_l, M.cxx_b },
+    javascriptreact = { M.cxx_l, M.cxx_b },
+    jq = { M.hash },
+    jsonc = { M.cxx_l },
+    jsonnet = { M.cxx_l, M.cxx_b },
+    julia = { M.hash, '#=%s=#' },
+    kdl = { M.cxx_l, M.cxx_b },
+    kotlin = { M.cxx_l, M.cxx_b },
+    lean = { M.dash, M.lean_b },
+    lean3 = { M.dash, M.lean_b },
+    lidris = { M.dash, M.haskell_b },
+    lilypond = { M.latex, '%{%s%}' },
+    lisp = { M.lisp_l, M.lisp_b },
+    lua = { M.dash, M.dash_bracket },
+    metalua = { M.dash, M.dash_bracket },
+    luau = { M.dash, M.dash_bracket },
+    markdown = { M.html, M.html },
+    make = { M.hash },
+    mbsyncrc = { M.dbl_hash },
+    mermaid = { '%%%s' },
+    meson = { M.hash },
+    mojo = { M.hash },
+    nextflow = { M.cxx_l, M.cxx_b },
+    nim = { M.hash, '#[%s]#' },
+    nix = { M.hash, M.cxx_b },
+    nu = { M.hash },
+    objc = { M.cxx_l, M.cxx_b },
+    objcpp = { M.cxx_l, M.cxx_b },
+    ocaml = { M.fsharp_b, M.fsharp_b },
+    odin = { M.cxx_l, M.cxx_b },
+    openscad = { M.cxx_l, M.cxx_b },
+    plantuml = { "'%s", "/'%s'/" },
+    purescript = { M.dash, M.haskell_b },
+    puppet = { M.hash },
+    python = { M.hash }, -- Python doesn't have block comments
+    php = { M.cxx_l, M.cxx_b },
+    prisma = { M.cxx_l },
+    proto = { M.cxx_l, M.cxx_b },
+    quarto = { M.html, M.html },
+    r = { M.hash }, -- R doesn't have block comments
+    racket = { M.lisp_l, M.lisp_b },
+    rasi = { M.cxx_l, M.cxx_b },
+    readline = { M.hash },
+    reason = { M.cxx_l, M.cxx_b },
+    rego = { M.hash },
+    remind = { M.hash },
+    rescript = { M.cxx_l, M.cxx_b },
+    robot = { M.hash }, -- Robotframework doesn't have block comments
+    ron = { M.cxx_l, M.cxx_b },
+    ruby = { M.hash, M.ruby_block },
+    rust = { M.cxx_l, M.cxx_b },
+    sbt = { M.cxx_l, M.cxx_b },
+    scala = { M.cxx_l, M.cxx_b },
+    scss = { M.cxx_b, M.cxx_b },
+    scheme = { M.lisp_l, M.lisp_b },
+    sh = { M.hash },
+    solidity = { M.cxx_l, M.cxx_b },
+    supercollider = { M.cxx_l, M.cxx_b },
+    sql = { M.dash, M.cxx_b },
+    stata = { M.cxx_l, M.cxx_b },
+    svelte = { M.html, M.html },
+    swift = { M.cxx_l, M.cxx_b },
+    sxhkdrc = { M.hash },
+    systemverilog = { M.cxx_l, M.cxx_b },
+    tablegen = { M.cxx_l, M.cxx_b },
+    teal = { M.dash, M.dash_bracket },
+    terraform = { M.hash, M.cxx_b },
+    tex = { M.latex },
+    template = { M.dbl_hash },
+    tidal = { M.dash, M.haskell_b },
+    tmux = { M.hash },
+    toml = { M.hash },
+    twig = { M.twig, M.twig },
+    typescript = { M.cxx_l, M.cxx_b },
+    typescriptreact = { M.cxx_l, M.cxx_b },
+    typst = { M.cxx_l, M.cxx_b },
+    v = { M.cxx_l, M.cxx_b },
+    vala = { M.cxx_l, M.cxx_b },
+    verilog = { M.cxx_l },
+    vhdl = { M.dash },
+    vim = { M.vim },
+    vifm = { M.vim },
+    vue = { M.html, M.html },
+    wgsl = { M.cxx_l, M.cxx_b },
+    xdefaults = { '!%s' },
+    xml = { M.html, M.html },
+    xonsh = { M.hash }, -- Xonsh doesn't have block comments
+    yaml = { M.hash },
+    yuck = { M.lisp_l },
+    zig = { M.cxx_l }, -- Zig doesn't have block comments
+}, {
+    -- Support for compound filetype i.e. 'ios.swift', 'ansible.yaml' etc.
+    __index = function(this, k)
+        local base, fallback = string.match(k, '^(.-)%.(.*)')
+        if not (base or fallback) then
+            return nil
+        end
+        return this[base] or this[fallback]
+    end,
+})
+
+local ft = {}
+
+---Sets a commentstring(s) for a filetype/language
+---@param lang string Filetype/Language of the buffer
+---@param val string|string[]
+---@return table self Returns itself
+---@usage [[
+---local ft = require('Comment.ft')
+---
+-----1. Using method signature
+----- Set only line comment or both
+----- You can also chain the set calls
+---ft.set('yaml', '#%s').set('javascript', {'//%s', '/*%s*/'})
+---
+----- 2. Metatable magic
+---ft.javascript = {'//%s', '/*%s*/'}
+---ft.yaml = '#%s'
+---
+----- 3. Multiple filetypes
+---ft({'go', 'rust'}, {'//%s', '/*%s*/'})
+---ft({'toml', 'graphql'}, '#%s')
+---@usage ]]
+function ft.set(lang, val)
+    L[lang] = type(val) == 'string' and { val } or val --[[ @as string[] ]]
+    return ft
+end
+
+---Get line/block/both commentstring(s) for a given filetype
+---@param lang string Filetype/Language of the buffer
+---@param ctype? integer See |comment.utils.ctype|. If given `nil`, it'll
+---return a copy of { line, block } commentstring.
+---@return nil|string|string[] #Returns stored commentstring
+---@usage [[
+---local ft = require('Comment.ft')
+---local U = require('Comment.utils')
+---
+----- 1. Primary filetype
+---ft.get('rust', U.ctype.linewise) -- `//%s`
+---ft.get('rust') -- `{ '//%s', '/*%s*/' }`
+---
+----- 2. Compound filetype
+----- NOTE: This will return `yaml` commenstring(s),
+-----       as `ansible` commentstring is not found.
+---ft.get('ansible.yaml', U.ctype.linewise) -- `#%s`
+---ft.get('ansible.yaml') -- { '#%s' }
+---@usage ]]
+function ft.get(lang, ctype)
+    local tuple = L[lang]
+    if not tuple then
+        return nil
+    end
+    if not ctype then
+        return vim.deepcopy(tuple)
+    end
+    return tuple[ctype]
+end
+
+---Get a language tree for a given range by walking the parse tree recursively.
+---This uses 'lua-treesitter' API under the hood. This can be used to calculate
+---language of a particular region which embedded multiple filetypes like html,
+---vue, markdown etc.
+---
+---NOTE: This ignores `tree-sitter-comment` parser, if installed.
+---@param tree userdata Parse tree to be walked
+---@param range integer[] Range to check
+---{start_row, start_col, end_row, end_col}
+---@return userdata #Returns a |treesitter-languagetree|
+---@see treesitter-languagetree
+---@see lua-treesitter-core
+---@usage [[
+---local ok, parser = pcall(vim.treesitter.get_parser, 0)
+---assert(ok, "No parser found!")
+---local tree = require('Comment.ft').contains(parser, {0, 0, -1, 0})
+---print('Lang:', tree:lang())
+---@usage ]]
+function ft.contains(tree, range)
+    for lang, child in pairs(tree:children()) do
+        if lang ~= 'comment' and child:contains(range) then
+            return ft.contains(child, range)
+        end
+    end
+
+    return tree
+end
+
+---Calculate commentstring with the power of treesitter
+---@param ctx CommentCtx
+---@return nil|string #Commentstring
+---@see comment.utils.CommentCtx
+function ft.calculate(ctx)
+    local ok, parser = pcall(vim.treesitter.get_parser, A.nvim_get_current_buf())
+
+    if not ok then
+        return ft.get(vim.bo.filetype, ctx.ctype) --[[ @as string ]]
+    end
+
+    local lang = ft.contains(parser, {
+        ctx.range.srow - 1,
+        ctx.range.scol,
+        ctx.range.erow - 1,
+        ctx.range.ecol,
+    }):lang()
+
+    return ft.get(lang, ctx.ctype) or ft.get(vim.bo.filetype, ctx.ctype) --[[ @as string ]]
+end
+
+---@export ft
+return setmetatable(ft, {
+    __newindex = function(this, k, v)
+        this.set(k, v)
+    end,
+    __call = function(this, langs, spec)
+        for _, lang in ipairs(langs) do
+            this.set(lang, spec)
+        end
+        return this
+    end,
+})

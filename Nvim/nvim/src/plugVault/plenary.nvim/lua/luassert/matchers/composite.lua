@@ -1,1 +1,61 @@
-local a=require('luassert.assert')local b=require('luassert.match')local c=require('say')local function d(e,f,g)local g=(g or 1)+1;local h=f.n;a(h>0,c("assertion.internal.argtolittle",{"none",1,tostring(h)}),g)for i=1,h do a(b.is_matcher(f[i]),c("assertion.internal.badargtype",{1,"none","matcher",type(f[i])}),g)end;return function(j)for k,l in ipairs(f)do if l(j)then return false end end;return true end end;local function m(e,f,g)local g=(g or 1)+1;local h=f.n;a(h>0,c("assertion.internal.argtolittle",{"any",1,tostring(h)}),g)for i=1,h do a(b.is_matcher(f[i]),c("assertion.internal.badargtype",{1,"any","matcher",type(f[i])}),g)end;return function(j)for k,l in ipairs(f)do if l(j)then return true end end;return false end end;local function n(e,f,g)local g=(g or 1)+1;local h=f.n;a(h>0,c("assertion.internal.argtolittle",{"all",1,tostring(h)}),g)for i=1,h do a(b.is_matcher(f[i]),c("assertion.internal.badargtype",{1,"all","matcher",type(f[i])}),g)end;return function(j)for k,l in ipairs(f)do if not l(j)then return false end end;return true end end;a:register("matcher","none_of",d)a:register("matcher","any_of",m)a:register("matcher","all_of",n)
+local assert = require('luassert.assert')
+local match = require ('luassert.match')
+local s = require('say')
+
+local function none(state, arguments, level)
+  local level = (level or 1) + 1
+  local argcnt = arguments.n
+  assert(argcnt > 0, s("assertion.internal.argtolittle", { "none", 1, tostring(argcnt) }), level)
+  for i = 1, argcnt do
+    assert(match.is_matcher(arguments[i]), s("assertion.internal.badargtype", { 1, "none", "matcher", type(arguments[i]) }), level)
+  end
+
+  return function(value)
+    for _, matcher in ipairs(arguments) do
+      if matcher(value) then
+        return false
+      end
+    end
+    return true
+  end
+end
+
+local function any(state, arguments, level)
+  local level = (level or 1) + 1
+  local argcnt = arguments.n
+  assert(argcnt > 0, s("assertion.internal.argtolittle", { "any", 1, tostring(argcnt) }), level)
+  for i = 1, argcnt do
+    assert(match.is_matcher(arguments[i]), s("assertion.internal.badargtype", { 1, "any", "matcher", type(arguments[i]) }), level)
+  end
+
+  return function(value)
+    for _, matcher in ipairs(arguments) do
+      if matcher(value) then
+        return true
+      end
+    end
+    return false
+  end
+end
+
+local function all(state, arguments, level)
+  local level = (level or 1) + 1
+  local argcnt = arguments.n
+  assert(argcnt > 0, s("assertion.internal.argtolittle", { "all", 1, tostring(argcnt) }), level)
+  for i = 1, argcnt do
+    assert(match.is_matcher(arguments[i]), s("assertion.internal.badargtype", { 1, "all", "matcher", type(arguments[i]) }), level)
+  end
+
+  return function(value)
+    for _, matcher in ipairs(arguments) do
+      if not matcher(value) then
+        return false
+      end
+    end
+    return true
+  end
+end
+
+assert:register("matcher", "none_of", none)
+assert:register("matcher", "any_of", any)
+assert:register("matcher", "all_of", all)

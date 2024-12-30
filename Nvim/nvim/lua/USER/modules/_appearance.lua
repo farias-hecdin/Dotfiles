@@ -12,8 +12,8 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- url = "https://github.com/echasnovski/mini.notify.git",
-    dir = D.plugin .. "mini.notify",
+    url = "https://github.com/echasnovski/mini.notify.git",
+    -- dir = D.plugin .. "mini.notify",
     cmd = "PomodoroStart",
     config = function()
       require('mini.notify').setup({
@@ -22,8 +22,8 @@ return {
     end
   },
   {
-    -- url = "https://github.com/echasnovski/mini.tabline.git",
-    dir = D.plugin .. "mini.tabline",
+    url = "https://github.com/echasnovski/mini.tabline.git",
+    -- dir = D.plugin .. "mini.tabline",
     event = "BufReadPre",
     opts = {
       show_icons = true,
@@ -31,8 +31,8 @@ return {
     }
   },
   {
-    -- url = "https://github.com/echasnovski/mini.starter.git",
-    dir = D.plugin .. "mini.starter",
+    url = "https://github.com/echasnovski/mini.starter.git",
+    -- dir = D.plugin .. "mini.starter",
     cond = function()
       local request, _ = pcall(require, 'which-key')
       if request then
@@ -62,7 +62,7 @@ return {
         "\n\nOptions" ..
         "\n [a] Builtin: actions" ..
         "\n [b] Recent files: current directory" ..
-        "\n [c] Recent files: general" .. "\n" .. "\n<C-c> Close this buffer",
+        "\n [c] Recent files: general\n" .. "\n<C-c> Close this buffer",
         footer = "<C-c> Close this buffer"
       })
     end
@@ -140,13 +140,13 @@ return {
     end
   },
   {
-    -- url = "https://github.com/kilavila/nvim-bufferlist.git",
-    dir = D.plugin .. "nvim-bufferlist",
+    url = "https://github.com/kilavila/nvim-bufferlist.git",
+    -- dir = D.plugin .. "nvim-bufferlist",
     cmd = {"BufferListOpen", "QuickNavOpen"},
   },
   {
-    -- url = "https://github.com/lucastavaresa/simpleIndentGuides.nvim.git",
-    dir = D.plugin .. "simpleIndentGuides.nvim",
+    url = "https://github.com/lucastavaresa/simpleIndentGuides.nvim.git",
+    -- dir = D.plugin .. "simpleIndentGuides.nvim",
     event = "BufReadPre",
     config = function()
       vim.opt.list = true
@@ -154,13 +154,13 @@ return {
     end
   },
   {
-    -- url = "https://github.com/echasnovski/mini.indentscope.git",
-    dir = D.plugin .. "mini.indentscope",
+    url = "https://github.com/echasnovski/mini.indentscope.git",
+    -- dir = D.plugin .. "mini.indentscope",
     event = "InsertEnter",
     config = function()
       require("mini.indentscope").setup {
         draw = {animation = require("mini.indentscope").gen_animation.none()},
-        symbol = "·"--"│"
+        symbol = "│"--"│"
       }
     end
   },

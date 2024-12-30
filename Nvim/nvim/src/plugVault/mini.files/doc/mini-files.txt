@@ -20,6 +20,7 @@ Features:
     - Filter/prefix/sort of file system entries.
     - Mappings used for common explorer actions.
     - UI options: whether to show preview of file/directory under cursor, etc.
+    - Bookmarks for quicker navigation.
 
 What it doesn't do:
 - Try to be replacement of system file explorer. It is mostly designed to
@@ -159,6 +160,10 @@ Available built-in actions (see "Details" for more information): >
  |-------------|------|------------------------------------------------|
  | Go out plus |  H   | Focus on parent directory plus extra action    |
  |-------------|------|------------------------------------------------|
+ | Go to mark  |  '   | Jump to bookmark (waits for single key id)     |
+ |-------------|------|------------------------------------------------|
+ | Set mark    |  m   | Set bookmark (waits for single key id)         |
+ |-------------|------|------------------------------------------------|
  | Reset       | <BS> | Reset current explorer                         |
  |-------------|------|------------------------------------------------|
  | Reveal cwd  |  @   | Reset current current working directory        |
@@ -183,6 +188,11 @@ Details:
 
 - "Go out plus" is regular "Go out" but trims right part of branch.
 
+- "Set mark" and "Go to mark" both wait for user to press a single character
+  of a bookmark id. Example: `ma` sets directory path of focused window as
+  bookmark "a"; `'a` jumps (sets as whole branch) to bookmark "a".
+  Special bookmark "'" always points to path before the latest bookmark jump.
+
 - "Reset" focuses only on "anchor" directory (the one used to open current
   explorer) and resets all stored directory cursor positions.
 
@@ -190,7 +200,7 @@ Details:
   If it is not an ancestor of the current branch, nothing is done.
 
 - "Show help" results into new window with helpful information about current
-  explorer. Press `q` to close it.
+  explorer (like buffer mappings and bookmarks). Press `q` to close it.
 
 - "Synchronize" parses user edits in directory buffers, applies them (after
   confirmation), and updates all directory buffers with the most relevant
@@ -226,11 +236,14 @@ General workflow:
   so you can navigate in and out of directory with modified buffer.
 
 - Execute |MiniFiles.synchronize()| (default key is `=`). This will prompt
-  confirmation dialog listing all file system actions it is about to perform.
-  READ IT CAREFULLY.
+  confirmation dialog listing all file system actions (per directory) it is
+  about to perform. READ IT CAREFULLY.
 
-- Confirm by pressing `y`/`<CR>` (applies edits and updates buffers) or
-  don't confirm by pressing `n`/`<Esc>` (updates buffers without applying edits).
+- Confirm by pressing `y` / `<CR>` (apply edits and update buffers) or
+  don't confirm by pressing `n` / `<Esc>` (update buffers without applying edits).
+
+Note: prefer small and not related steps with more frequent synchronization
+over single complex manipulation. There are (known) cases which won't work.
 
 # How does it work ~
 
@@ -244,6 +257,7 @@ DO NOT modify text to the left of entry name.
 
 During synchronization, actual text for entry name is compared to path index
 at that line (if present) to deduce which file system action to perform.
+Note that order of text manipulation steps does not affect performed actions.
 
 # Supported file system actions ~
 
@@ -327,8 +341,8 @@ UI events ~
 - `MiniFilesWindowOpen` - when new window is opened. Can be used to set
   window-local settings (like border, 'winblend', etc.)
 
-- `MiniFilesWindowUpdate` - when a window is updated. Triggers frequently,
-  for example, for every "go in" or "go out" action.
+- `MiniFilesWindowUpdate` - when a window is updated. Triggers VERY frequently.
+  At least after every cursor movement and "go in" / "go out" action.
 
 Callback for each UI event will receive `data` field (see |nvim_create_autocmd()|)
 with the following information:
@@ -354,8 +368,8 @@ Callback for each file action event will receive `data` field
 (see |nvim_create_autocmd()|) with the following information:
 
 - <action> - string with action name.
-- <from> - absolute path of entry before action (`nil` for "create" action).
-- <to> - absolute path of entry after action (`nil` for "delete" action).
+- <from> - full path of entry before action (`nil` for "create" action).
+- <to> - full path of entry after action (`nil` for permanent "delete" action).
 
 ------------------------------------------------------------------------------
                                                             *MiniFiles-examples*
@@ -371,7 +385,8 @@ Use a combination of |MiniFiles.open()| and |MiniFiles.close()|: >lua
 <
 # Customize windows ~
 
-Create an autocommand for `MiniFilesWindowOpen` event: >lua
+For most of the common customizations using `MiniFilesWindowOpen` event
+autocommand is the suggested approach: >lua
 
   vim.api.nvim_create_autocmd('User', {
     pattern = 'MiniFilesWindowOpen',
@@ -386,9 +401,32 @@ Create an autocommand for `MiniFilesWindowOpen` event: >lua
     end,
   })
 <
+However, some parts (like window title and height) of window config are later
+updated internally. Use `MiniFilesWindowUpdate` event for them: >lua
+
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'MiniFilesWindowUpdate',
+    callback = function(args)
+      local config = vim.api.nvim_win_get_config(args.data.win_id)
+
+      -- Ensure fixed height
+      config.height = 10
+
+      -- Ensure title padding
+      if config.title[#config.title][1] ~= ' ' then
+        table.insert(config.title, { ' ', 'NormalFloat' })
+      end
+      if config.title[1][1] ~= ' ' then
+        table.insert(config.title, 1, { ' ', 'NormalFloat' })
+      end
+
+      vim.api.nvim_win_set_config(args.data.win_id, config)
+    end,
+  })
+<
 # Customize icons ~
 
-Use different directory icon: >lua
+Use different directory icon (if you don't use |mini.icons|): >lua
 
   local my_prefix = function(fs_entry)
     if fs_entry.fs_type == 'directory' then
@@ -434,18 +472,18 @@ Create an autocommand for `MiniFilesBufferCreate` event which calls
 <
 # Create mappings to modify target window via split ~
 
-Combine |MiniFiles.get_target_window()| and |MiniFiles.set_target_window()|: >lua
+Combine |MiniFiles.get_explorer_state()| and |MiniFiles.set_target_window()|: >lua
 
   local map_split = function(buf_id, lhs, direction)
     local rhs = function()
       -- Make new window and set it as target
-      local new_target_window
-      vim.api.nvim_win_call(MiniFiles.get_target_window(), function()
+      local cur_target = MiniFiles.get_explorer_state().target_window
+      local new_target = vim.api.nvim_win_call(cur_target, function()
         vim.cmd(direction .. ' split')
-        new_target_window = vim.api.nvim_get_current_win()
+        return vim.api.nvim_get_current_win()
       end)
 
-      MiniFiles.set_target_window(new_target_window)
+      MiniFiles.set_target_window(new_target)
     end
 
     -- Adding `desc` will result into `show_help` entries
@@ -458,8 +496,8 @@ Combine |MiniFiles.get_target_window()| and |MiniFiles.set_target_window()|: >lu
     callback = function(args)
       local buf_id = args.data.buf_id
       -- Tweak keys to your liking
-      map_split(buf_id, 'gs', 'belowright horizontal')
-      map_split(buf_id, 'gv', 'belowright vertical')
+      map_split(buf_id, '<C-s>', 'belowright horizontal')
+      map_split(buf_id, '<C-v>', 'belowright vertical')
     end,
   })
 <
@@ -478,6 +516,22 @@ Use |MiniFiles.get_fs_entry()| together with |vim.fs.dirname()|: >lua
     pattern = 'MiniFilesBufferCreate',
     callback = function(args)
       vim.keymap.set('n', 'g~', files_set_cwd, { buffer = args.data.buf_id })
+    end,
+  })
+<
+# Set custom bookmarks ~
+
+Use |MiniFiles.set_bookmark()| inside `MiniFilesExplorerOpen` event: >lua
+
+  local set_mark = function(id, path, desc)
+    MiniFiles.set_bookmark(id, path, { desc = desc })
+  end
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'MiniFilesExplorerOpen',
+    callback = function()
+      set_mark('c', vim.fn.stdpath('config'), 'Config') -- path
+      set_mark('w', vim.fn.getcwd, 'Working directory') -- callable
+      set_mark('~', '~', 'Home directory')
     end,
   })
 <
@@ -521,6 +575,8 @@ Default values:
       go_in_plus  = 'L',
       go_out      = 'h',
       go_out_plus = 'H',
+      mark_goto   = "'",
+      mark_set    = 'm',
       reset       = '<BS>',
       reveal_cwd  = '@',
       show_help   = 'g?',
@@ -712,7 +768,7 @@ Depends on entry under cursor:
   Explorer is not closed after that.
 
 Parameters ~
-{opts} Options. Possible fields:
+{opts} `(table|nil)` Options. Possible fields:
   - <close_on_file> `(boolean)` - whether to close explorer after going
     inside a file. Powers the `go_in_plus` mapping.
     Default: `false`.
@@ -776,13 +832,34 @@ Return ~
 Returns `nil` if there is no proper file system entry path at the line.
 
 ------------------------------------------------------------------------------
+                                                *MiniFiles.get_explorer_state()*
+                        `MiniFiles.get_explorer_state`()
+Get state of active explorer
+
+Return ~
+`(table|nil)` Table with explorer state data or `nil` if no active explorer.
+  State data is a table with the following fields:
+  - <anchor> `(string)` - anchor directory path (see |MiniFiles.open()|).
+  - <bookmarks> `(table)` - map from bookmark id (single character) to its data:
+    table with <path> and <desc> fields (see |MiniFiles.set_bookmark()|).
+  - <branch> `(table)` - array of nested paths for currently opened branch.
+  - <depth_focus> `(number)` - an index in <branch> for currently focused path.
+  - <target_window> `(number)` - identifier of target window.
+  - <windows> `(table)` - array with data about currently opened windows.
+    Each element is a table with <win_id> (window identifier) and <path> (path
+    shown in the window) fields.
+
+See also ~
+- |MiniFiles.set_bookmark()|
+- |MiniFiles.set_branch()|
+- |MiniFiles.set_target_window()|
+
+------------------------------------------------------------------------------
                                                  *MiniFiles.get_target_window()*
                         `MiniFiles.get_target_window`()
 Get target window
 
-Return ~
-`(number|nil)` Window identifier inside which file will be opened or
-  `nil` if no explorer is opened.
+Deprecated. Use |MiniFiles.get_explorer_state()|.
 
 ------------------------------------------------------------------------------
                                                  *MiniFiles.set_target_window()*
@@ -791,6 +868,38 @@ Set target window
 
 Parameters ~
 {win_id} `(number)` Window identifier inside which file will be opened.
+
+------------------------------------------------------------------------------
+                                                        *MiniFiles.set_branch()*
+                    `MiniFiles.set_branch`({branch}, {opts})
+Set branch
+
+Set which paths to display. Preview (if enabled) is applied afterwards.
+
+Parameters ~
+{branch} `(table)` Array of strings representing actually present on disk paths.
+  Each consecutive pair should represent direct parent-child paths.
+  Should contain at least one directory path.
+  May end with file path (will be previwed).
+  Relative paths are resolved using |current-directory|.
+{opts} `(table|nil)` Options. Possible fields:
+  - <depth_focus> `(number)` - an index in `branch` for path to focus. Will
+    be normalized to fit inside `branch`. Default: index of deepest directory.
+
+See also ~
+|MiniFiles.get_explorer_state()|
+
+------------------------------------------------------------------------------
+                                                      *MiniFiles.set_bookmark()*
+                 `MiniFiles.set_bookmark`({id}, {path}, {opts})
+Set bookmark
+
+Parameters ~
+{id} `(string)` Single character bookmark id.
+{path} `(string|function)` Path of a present on disk directory to set as
+  a bookmark's path. If callable, should return such path.
+{opts} `(table|nil)` Options. Possible fields:
+  - <desc> `(string)` - bookmark description (used in help window).
 
 ------------------------------------------------------------------------------
                                                    *MiniFiles.get_latest_path()*

@@ -1,1 +1,339 @@
-local a=require"plenary.async_lib.async"local b=a.await;local c=a.async;local d=coroutine;local e=require("plenary.async_lib.structs").Deque;local f=vim.loop;local g={}g.sleep=a.wrap(function(h,i)local j=f.new_timer()f.timer_start(j,h,0,function()f.timer_stop(j)f.close(j)i()end)end,2)g.timeout=a.wrap(function(k,h,i)local l=false;local m=function(...)if not l then l=true;i(false,...)end end;vim.defer_fn(function()if not l then l=true;i(true)end end,h)a.run(k,m)end,3)g.timer=function(h)return c(function()b(g.sleep(h))end)end;g.id=c(function(...)return...end)g.yield_now=c(function()b(g.id())end)local n={}n.__index=n;function n.new()return setmetatable({handles={}},n)end;n.wait=a.wrap(function(self,i)table.insert(self.handles,i)end,2)function n:notify_all()if#self.handles==0 then return end;for o,i in ipairs(self.handles)do i()self.handles[o]=nil end end;function n:notify_one()if#self.handles==0 then return end;local p=math.random(#self.handles)self.handles[p]()table.remove(self.handles,p)end;g.Condvar=n;local q={}q.__index=q;function q.new(r)vim.validate{initial_permits={r,function(s)return s>0 end,"number greater than 0"}}return setmetatable({permits=r,handles={}},q)end;q.acquire=a.wrap(function(self,i)if self.permits>0 then self.permits=self.permits-1 else table.insert(self.handles,i)return end;local t={}t.forget=function(u)self.permits=self.permits+1;if self.permits>0 and#self.handles>0 then self.permits=self.permits-1;local i=table.remove(self.handles)i(u)end end;i(t)end,2)g.Semaphore=q;g.channel={}g.channel.oneshot=function()local v=nil;local w=nil;local x=false;local y=false;local z=function(...)if x then error"Oneshot channel can only send once"end;x=true;local A={...}if w then w(unpack(v or A))else v=A end end;local B=a.wrap(function(i)if y then error"Oneshot channel can only send one value!"end;if v then y=true;i(unpack(v))else w=i end end,1)return z,B end;g.channel.counter=function()local C=0;local D=n.new()local E={}function E:send()C=C+1;D:notify_all()end;local F={}F.recv=c(function()if C==0 then b(D:wait())end;C=C-1 end)F.last=c(function()if C==0 then b(D:wait())end;C=0 end)return E,F end;g.channel.mpsc=function()local G=e.new()local D=n.new()local E={}function E.send(...)G:pushleft{...}D:notify_all()end;local F={}F.recv=c(function()if G:is_empty()then b(D:wait())end;return unpack(G:popright())end)F.last=c(function()if G:is_empty()then b(D:wait())end;local v=G:popright()G:clear()return unpack(v)end)return E,F end;local H=function(I)return function(...)return pcall(I,...)end end;g.protected_non_leaf=c(function(k)return b(H(k))end)g.protected=c(function(k)local J,K=g.channel.oneshot()stat,ret=pcall(k,J)if stat==true then return stat,b(K())else return stat,ret end end)g.block_on=function(k,L)k=g.protected(k)local stat,ret;a.run(k,function(M,...)stat=M;ret={...}end)local function N()if stat==false then error("Blocking on future failed "..unpack(ret))end;return stat==true end;if not vim.wait(L or 2000,N,20,false)then error"Blocking on future timed out or was interrupted"end;return unpack(ret)end;g.will_block=c(function(k)return g.block_on(k)end)return g
+local a = require "plenary.async_lib.async"
+local await = a.await
+local async = a.async
+local co = coroutine
+local Deque = require("plenary.async_lib.structs").Deque
+local uv = vim.loop
+
+local M = {}
+
+---Sleep for milliseconds
+---@param ms number
+M.sleep = a.wrap(function(ms, callback)
+  local timer = uv.new_timer()
+  uv.timer_start(timer, ms, 0, function()
+    uv.timer_stop(timer)
+    uv.close(timer)
+    callback()
+  end)
+end, 2)
+
+---Takes a future and a millisecond as the timeout.
+---If the time is reached and the future hasn't completed yet, it will short circuit the future
+---NOTE: the future will still be running in libuv, we are just not waiting for it to complete
+---thats why you should call this on a leaf future only to avoid unexpected results
+---@param future Future
+---@param ms number
+M.timeout = a.wrap(function(future, ms, callback)
+  -- make sure that the callback isn't called twice, or else the coroutine can be dead
+  local done = false
+
+  local timeout_callback = function(...)
+    if not done then
+      done = true
+      callback(false, ...) -- false because it has run normally
+    end
+  end
+
+  vim.defer_fn(function()
+    if not done then
+      done = true
+      callback(true) -- true because it has timed out
+    end
+  end, ms)
+
+  a.run(future, timeout_callback)
+end, 3)
+
+---create an async function timer
+---@param ms number
+M.timer = function(ms)
+  return async(function()
+    await(M.sleep(ms))
+  end)
+end
+
+---id function that can be awaited
+---@param nil ...
+---@return ...
+M.id = async(function(...)
+  return ...
+end)
+
+---Running this function will yield now and do nothing else
+M.yield_now = async(function()
+  await(M.id())
+end)
+
+local Condvar = {}
+Condvar.__index = Condvar
+
+---@class Condvar
+---@return Condvar
+function Condvar.new()
+  return setmetatable({ handles = {} }, Condvar)
+end
+
+---`blocks` the thread until a notification is received
+Condvar.wait = a.wrap(function(self, callback)
+  -- not calling the callback will block the coroutine
+  table.insert(self.handles, callback)
+end, 2)
+
+---notify everyone that is waiting on this Condvar
+function Condvar:notify_all()
+  if #self.handles == 0 then
+    return
+  end
+
+  for i, callback in ipairs(self.handles) do
+    callback()
+    self.handles[i] = nil
+  end
+end
+
+---notify randomly one person that is waiting on this Condvar
+function Condvar:notify_one()
+  if #self.handles == 0 then
+    return
+  end
+
+  local idx = math.random(#self.handles)
+  self.handles[idx]()
+  table.remove(self.handles, idx)
+end
+
+M.Condvar = Condvar
+
+local Semaphore = {}
+Semaphore.__index = Semaphore
+
+---@class Semaphore
+---@param initial_permits number: the number of permits that it can give out
+---@return Semaphore
+function Semaphore.new(initial_permits)
+  vim.validate {
+    initial_permits = {
+      initial_permits,
+      function(n)
+        return n > 0
+      end,
+      "number greater than 0",
+    },
+  }
+
+  return setmetatable({ permits = initial_permits, handles = {} }, Semaphore)
+end
+
+---async function, blocks until a permit can be acquired
+---example:
+---local semaphore = Semaphore.new(1024)
+---local permit = await(semaphore:acquire())
+---permit:forget()
+---when a permit can be acquired returns it
+---call permit:forget() to forget the permit
+Semaphore.acquire = a.wrap(function(self, callback)
+  if self.permits > 0 then
+    self.permits = self.permits - 1
+  else
+    table.insert(self.handles, callback)
+    return
+  end
+
+  local permit = {}
+
+  permit.forget = function(self_permit)
+    self.permits = self.permits + 1
+
+    if self.permits > 0 and #self.handles > 0 then
+      self.permits = self.permits - 1
+      local callback = table.remove(self.handles)
+      callback(self_permit)
+    end
+  end
+
+  callback(permit)
+end, 2)
+
+M.Semaphore = Semaphore
+
+M.channel = {}
+
+---Creates a oneshot channel
+---returns a sender and receiver function
+---the sender is not async while the receiver is
+---@return function, function
+M.channel.oneshot = function()
+  local val = nil
+  local saved_callback = nil
+  local sent = false
+  local received = false
+
+  --- sender is not async
+  --- sends a value
+  local sender = function(...)
+    if sent then
+      error "Oneshot channel can only send once"
+    end
+
+    sent = true
+
+    local args = { ... }
+
+    if saved_callback then
+      saved_callback(unpack(val or args))
+    else
+      val = args
+    end
+  end
+
+  --- receiver is async
+  --- blocks until a value is received
+  local receiver = a.wrap(function(callback)
+    if received then
+      error "Oneshot channel can only send one value!"
+    end
+
+    if val then
+      received = true
+      callback(unpack(val))
+    else
+      saved_callback = callback
+    end
+  end, 1)
+
+  return sender, receiver
+end
+
+---A counter channel.
+---Basically a channel that you want to use only to notify and not to send any actual values.
+---@return function: sender
+---@return function: receiver
+M.channel.counter = function()
+  local counter = 0
+  local condvar = Condvar.new()
+
+  local Sender = {}
+
+  function Sender:send()
+    counter = counter + 1
+    condvar:notify_all()
+  end
+
+  local Receiver = {}
+
+  Receiver.recv = async(function()
+    if counter == 0 then
+      await(condvar:wait())
+    end
+    counter = counter - 1
+  end)
+
+  Receiver.last = async(function()
+    if counter == 0 then
+      await(condvar:wait())
+    end
+    counter = 0
+  end)
+
+  return Sender, Receiver
+end
+
+---A multiple producer single consumer channel
+---@return table
+---@return table
+M.channel.mpsc = function()
+  local deque = Deque.new()
+  local condvar = Condvar.new()
+
+  local Sender = {}
+
+  function Sender.send(...)
+    deque:pushleft { ... }
+    condvar:notify_all()
+  end
+
+  local Receiver = {}
+
+  Receiver.recv = async(function()
+    if deque:is_empty() then
+      await(condvar:wait())
+    end
+    return unpack(deque:popright())
+  end)
+
+  Receiver.last = async(function()
+    if deque:is_empty() then
+      await(condvar:wait())
+    end
+    local val = deque:popright()
+    deque:clear()
+    return unpack(val)
+  end)
+
+  return Sender, Receiver
+end
+
+local pcall_wrap = function(func)
+  return function(...)
+    return pcall(func, ...)
+  end
+end
+
+---Makes a future protected. It is like pcall but for futures.
+---Only works for non-leaf futures
+M.protected_non_leaf = async(function(future)
+  return await(pcall_wrap(future))
+end)
+
+---Makes a future protected. It is like pcall but for futures.
+---@param future Future
+---@return Future
+M.protected = async(function(future)
+  local tx, rx = M.channel.oneshot()
+
+  stat, ret = pcall(future, tx)
+
+  if stat == true then
+    return stat, await(rx())
+  else
+    return stat, ret
+  end
+end)
+
+---This will COMPLETELY block neovim
+---please just use a.run unless you have a very special usecase
+---for example, in plenary test_harness you must use this
+---@param future Future
+---@param timeout number: Stop blocking if the timeout was surpassed. Default 2000.
+M.block_on = function(future, timeout)
+  future = M.protected(future)
+
+  local stat, ret
+  a.run(future, function(_stat, ...)
+    stat = _stat
+    ret = { ... }
+  end)
+
+  local function check()
+    if stat == false then
+      error("Blocking on future failed " .. unpack(ret))
+    end
+    return stat == true
+  end
+
+  if not vim.wait(timeout or 2000, check, 20, false) then
+    error "Blocking on future timed out or was interrupted"
+  end
+
+  return unpack(ret)
+end
+
+---Returns a new future that WILL BLOCK
+---@param future Future
+---@return Future
+M.will_block = async(function(future)
+  return M.block_on(future)
+end)
+
+return M

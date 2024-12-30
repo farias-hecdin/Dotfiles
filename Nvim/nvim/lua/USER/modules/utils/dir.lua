@@ -19,4 +19,12 @@ D.notContainFiletype = function(extensions)
   return true
 end
 
+D.pluginExists = function(plugin)
+  local request, _ = pcall(require, plugin)
+  if request then
+    return true
+  end
+  return false
+end
+
 return D

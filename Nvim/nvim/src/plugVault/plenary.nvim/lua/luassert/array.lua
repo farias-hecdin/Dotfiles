@@ -1,5 +1,70 @@
-local a=require('luassert.assert')local b=require('say')local c="__array_state"local function d(e,f,g)a(f.n>0,"No array provided to the array-modifier")a(rawget(e,c)==nil,"Array already set")rawset(e,c,f[1])return e end;local function h(e,f,g)local i=f[1]local j=rawget(e,c)a(j~=nil,"No array set, please use the array modifier to set the array to validate")if i==nil then i=0;for k in pairs(j)do if type(k)=="number"and k>i and math.floor(k)==k then i=k end end end;a(type(i)=="number","expected array length to be of type 'number', got: "..tostring(i))local l;for k=1,i do if j[k]==nil then l=k;break end end;f[1]=l;f.n=l and 1 or 0;return l~=nil,{l}end;b:set("assertion.array_holes.positive",[[
+local assert = require('luassert.assert')
+local say = require('say')
+
+-- Example usage:
+-- local arr = { "one", "two", "three" }
+--
+-- assert.array(arr).has.no.holes()   -- checks the array to not contain holes --> passes
+-- assert.array(arr).has.no.holes(4)  -- sets explicit length to 4 --> fails
+--
+-- local first_hole = assert.array(arr).has.holes(4)     -- check array of size 4 to contain holes --> passes
+-- assert.equal(4, first_hole)        -- passes, as the index of the first hole is returned
+
+
+-- Unique key to store the object we operate on in the state object
+-- key must be unique, to make sure we do not have name collissions in the shared state object
+local ARRAY_STATE_KEY = "__array_state"
+
+-- The modifier, to store the object in our state
+local function array(state, args, level)
+  assert(args.n > 0, "No array provided to the array-modifier")
+  assert(rawget(state, ARRAY_STATE_KEY) == nil, "Array already set")
+  rawset(state, ARRAY_STATE_KEY, args[1])
+  return state
+end
+
+-- The actual assertion that operates on our object, stored via the modifier
+local function holes(state, args, level)
+  local length = args[1]
+  local arr = rawget(state, ARRAY_STATE_KEY) -- retrieve previously set object
+  -- only check against nil, metatable types are allowed
+  assert(arr ~= nil, "No array set, please use the array modifier to set the array to validate")
+  if length == nil then
+    length = 0
+    for i in pairs(arr) do
+      if type(i) == "number" and
+         i > length and
+         math.floor(i) == i then
+        length = i
+      end
+    end
+  end
+  assert(type(length) == "number", "expected array length to be of type 'number', got: "..tostring(length))
+  -- let's do the actual assertion
+  local missing
+  for i = 1, length do
+    if arr[i] == nil then
+      missing = i
+      break
+    end
+  end
+  -- format arguments for output strings;
+  args[1] = missing
+  args.n = missing and 1 or 0
+  return missing ~= nil, { missing } -- assert result + first missing index as return value
+end
+
+-- Register the proper assertion messages
+say:set("assertion.array_holes.positive", [[
 Expected array to have holes, but none was found.
-]])b:set("assertion.array_holes.negative",[[
+]])
+say:set("assertion.array_holes.negative", [[
 Expected array to not have holes, hole found at position: %s
-]])a:register("assertion","holes",h,"assertion.array_holes.positive","assertion.array_holes.negative")a:register("modifier","array",d)
+]])
+
+-- Register the assertion, and the modifier
+assert:register("assertion", "holes", holes,
+                  "assertion.array_holes.positive",
+                  "assertion.array_holes.negative")
+
+assert:register("modifier", "array", array)

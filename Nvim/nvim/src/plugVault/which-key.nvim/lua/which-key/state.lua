@@ -1,1 +1,384 @@
-local a=require("which-key.buf")local b=require("which-key.config")local c=require("which-key.tree")local d=require("which-key.triggers")local e=require("which-key.util")local f=vim.uv or vim.loop;local g={}g.state=nil;function g.safe(h)local i,j=unpack(vim.split(h,":",{plain=true}))if i=="c"then return false,"command-mode"elseif vim.fn.reg_recording()~=""then return false,"recording"elseif vim.fn.reg_executing()~=""then return false,"executing"end;local k=vim.fn.getcharstr(1)if k~=""then return false,"pending "..("%q"):format(vim.fn.strtrans(k))end;return true end;function g.setup()local l=vim.api.nvim_create_augroup("wk",{clear=true})if b.debug then vim.on_key(function(m,n)if n and#n>0 then n=vim.fn.keytrans(n)if not n:find("ScrollWheel")and not n:find("Mouse")then e.debug("on_key",n)end end end)end;vim.api.nvim_create_autocmd({"RecordingEnter","RecordingLeave"},{group=l,callback=function(o)e.debug(o.event)if o.event=="RecordingEnter"then a.clear({buf=o.buf,check=false})g.stop()else a.check()end end})local p=f.new_timer()vim.api.nvim_create_autocmd({"FocusLost","FocusGained"},{group=l,callback=function(o)if o.event=="FocusGained"then p:stop()elseif g.state then p:start(5000,0,function()vim.api.nvim_input("<esc>")end)end end})local q={}for r,s in pairs(b.modes.defer)do if s then q[e.norm(r)]=true end end;local function t()local u=e.keys(vim.api.nvim_get_mode().mode)return u[1]and q[u[1]]end;local v=e.cooldown()vim.api.nvim_create_autocmd("ModeChanged",{group=l,callback=function(o)e.debug("ModeChanged("..o.match..")")if v()then return end;local w,x=g.safe(o.match)if not w and o.match:find("o")then return end;local y=a.get()e.debug(w and"Safe(true)"or"Safe(false):"..x)if not w then v(true)g.stop()elseif y and e.xo()then if not g.state then g.start({defer=t()})end elseif not o.match:find("c")then g.stop()end end})vim.api.nvim_create_autocmd({"LspAttach","LspDetach"},{group=l,callback=function(o)e.trace("Event("..o.event..")")a.clear({buf=o.buf})e.trace()end})vim.api.nvim_create_autocmd({"BufReadPost","BufNew"},{group=l,callback=function(o)e.trace("Event("..o.event..")")a.clear({buf=o.buf})e.trace()end})vim.api.nvim_create_autocmd({"BufEnter"},{group=l,callback=function(o)e.trace("Event("..o.event..")")a.get()e.trace()end})a.check()end;function g.stop()if g.state==nil then return end;e.debug("state:stop")g.state=nil;vim.schedule(function()if not g.state then require("which-key.view").hide()end end)end;function g.check(z,n)local A=require("which-key.view")local B=n==nil and z.node or(z.node.children or{})[n]local C=f.hrtime()/1e6-z.started;local D=vim.o.timeout and C>vim.o.timeoutlen;if B then local E=c.is_group(B)local F=B.keymap and(B.keymap.nowait==1 or not D)local G=B.action~=nil;if E and not F and not G then e.debug("continue",B.keys,tostring(z.mode),B.plugin)return B end elseif n=="<Esc>"then if z.mode:xo()then e.exit()end;return elseif n=="<BS>"then return z.node.parent or z.mode.tree.root elseif A.valid()and n and n:lower()==b.keys.scroll_down then A.scroll(false)return z.node elseif A.valid()and n and n:lower()==b.keys.scroll_up then A.scroll(true)return z.node end;g.execute(z,n,B)end;function g.execute(z,n,B)d.suspend(z.mode)if B and B.action then return B.action()end;local H=vim.deepcopy(z.node.path)H[#H+1]=n;local I=table.concat(H)if not z.mode:xo()then if vim.v.count>0 then I=vim.v.count..I end;if vim.v.register~=e.reg()and z.mode.mode~="i"and z.mode.mode~="c"then I='"'..vim.v.register..I end end;e.debug("feedkeys",tostring(z.mode),I)local J=vim.api.nvim_replace_termcodes(I,true,true,true)vim.api.nvim_feedkeys(J,"mit",false)end;function g.step(z)vim.cmd.redraw()e.debug("getchar")local K,L=pcall(vim.fn.getcharstr)if not K then e.debug("nok",L)return nil,true end;local n=vim.fn.keytrans(L)e.debug("got",n)local B=g.check(z,n)if B==z.node then return g.step(z)end;return B,n=="<Esc>"end;function g.start(M)M=M or{}M.update=true;local y=a.get(M)M.update=nil;if not y then return false end;local B=y.tree:find(M.keys or{})if not B then return false end;local N=y.mode;local A=require("which-key.view")g.state={mode=y,node=B,filter=M,started=f.hrtime()/1e6-(M.waited or 0)}e.trace("State(start)",tostring(y),"Node("..B.keys..")",M)if not g.check(g.state)then return true end;local O=false;local P=M.defer~=true;while g.state do y=a.get(M)if not y or y.mode~=N then break end;if P then A.update(M)end;P=true;local Q,R=g.step(g.state)if Q and g.state then g.state.node=Q else O=R or false;break end end;if M.loop and not O then vim.api.nvim_feedkeys("","x",false)vim.schedule(function()g.start(M)end)else g.state=nil;A.hide()end;e.trace()return true end;function g.update()if not g.state then return end;local y=a.get()if not y or y.mode~=g.state.mode.mode then return end;local B=y.tree:find(g.state.node.path)if not B then return end;g.state.node=B;require("which-key.view").update({schedule=false})end;function g.delay(M)local S=M.delay or type(b.delay)=="function"and b.delay(M)or b.delay;if M.waited then S=S-M.waited end;return math.max(0,S)end;return g
+local Buf = require("which-key.buf")
+local Config = require("which-key.config")
+local Triggers = require("which-key.triggers")
+local Util = require("which-key.util")
+
+local uv = vim.uv or vim.loop
+
+local M = {}
+
+---@class wk.State
+---@field mode wk.Mode
+---@field node wk.Node
+---@field filter wk.Filter
+---@field started number
+---@field show boolean
+
+---@type wk.State?
+M.state = nil
+M.recursion = 0
+M.recursion_timer = uv.new_timer()
+
+---@return boolean safe, string? reason
+function M.safe(mode_change)
+  local old, _new = unpack(vim.split(mode_change, ":", { plain = true }))
+  if old == "c" then
+    return false, "command-mode"
+  elseif Util.in_macro() then
+    return false, "macro"
+  elseif mode_change:lower() == "v:v" then
+    return false, "visual-block"
+  end
+  local pending = vim.fn.getcharstr(1)
+  if pending ~= "" then
+    return false, "pending " .. ("%q"):format(vim.fn.strtrans(pending))
+  end
+  return true
+end
+
+function M.setup()
+  local group = vim.api.nvim_create_augroup("wk", { clear = true })
+
+  if Config.debug then
+    vim.on_key(function(_raw, key)
+      if key and #key > 0 then
+        key = vim.fn.keytrans(key)
+        if not key:find("ScrollWheel") and not key:find("Mouse") then
+          Util.debug("on_key", key)
+        end
+      end
+    end)
+  end
+
+  vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
+    group = group,
+    callback = function(ev)
+      Util.debug(ev.event)
+      if ev.event == "RecordingEnter" then
+        Buf.clear({ buf = ev.buf })
+        M.stop()
+      end
+    end,
+  })
+
+  local hide = uv.new_timer()
+  vim.api.nvim_create_autocmd({ "FocusLost", "FocusGained" }, {
+    group = group,
+    callback = function(ev)
+      if ev.event == "FocusGained" then
+        hide:stop()
+      elseif M.state then
+        hide:start(5000, 0, function()
+          vim.api.nvim_input("<esc>")
+        end)
+      end
+    end,
+  })
+
+  local function defer()
+    local mode = vim.api.nvim_get_mode().mode
+    local mode_keys = Util.keys(mode)
+    local ctx = {
+      operator = mode:find("o") and vim.v.operator or nil,
+      mode = mode_keys[1],
+    }
+    return Config.defer(ctx)
+  end
+
+  local cooldown = Util.cooldown()
+  -- this prevents restarting which-key in the same tick
+  vim.api.nvim_create_autocmd("ModeChanged", {
+    group = group,
+    callback = function(ev)
+      Util.trace("ModeChanged(" .. ev.match .. ")")
+      local mode = Buf.get()
+
+      if cooldown() then
+        Util.debug("cooldown")
+        Util.trace()
+        return
+      end
+
+      local safe, reason = M.safe(ev.match)
+      Util.debug(safe and "Safe(true)" or ("Unsafe(" .. reason .. ")"))
+      if not safe then
+        if mode then
+          Triggers.suspend(mode)
+        end
+        -- dont start when recording or when chars are pending
+        cooldown(true) -- cooldown till next tick
+        M.stop()
+        -- make sure the buffer mode exists
+      elseif mode and Util.xo() then
+        if Config.triggers.modes[mode.mode] and not M.state then
+          M.start({ defer = defer() })
+        end
+      elseif not ev.match:find("c") then
+        M.stop()
+      end
+      Util.trace()
+    end,
+  })
+
+  vim.api.nvim_create_autocmd({ "LspAttach", "LspDetach" }, {
+    group = group,
+    callback = function(ev)
+      Util.trace(ev.event .. "(" .. ev.buf .. ")")
+      Buf.clear({ buf = ev.buf })
+      Util.trace()
+    end,
+  })
+
+  vim.api.nvim_create_autocmd({ "BufReadPost", "BufNew" }, {
+    group = group,
+    callback = function(ev)
+      Util.trace(ev.event .. "(" .. ev.buf .. ")")
+      Buf.clear({ buf = ev.buf })
+      Util.trace()
+    end,
+  })
+
+  local current_buf = vim.api.nvim_get_current_buf()
+  vim.api.nvim_create_autocmd({ "BufEnter" }, {
+    group = group,
+    callback = function(ev)
+      current_buf = ev.buf ---@type number
+      Util.trace(ev.event .. "(" .. ev.buf .. ")")
+      Buf.get()
+      Util.trace()
+    end,
+  })
+
+  -- HACK: ModeChanged does not always trigger, so we need to manually
+  -- check for mode changes. This seems to be due to the usage of `:norm` in autocmds.
+  -- See https://github.com/folke/which-key.nvim/issues/787
+  local timer = uv.new_timer()
+  timer:start(0, 50, function()
+    local mode = Util.mapmode()
+    -- check if the mode exists for the current buffer
+    if Buf.bufs[current_buf] and Buf.bufs[current_buf].modes[mode] then
+      return
+    end
+    vim.schedule(Buf.get)
+  end)
+end
+
+function M.stop()
+  if M.state == nil then
+    return
+  end
+  Util.debug("state:stop")
+  M.state = nil
+  vim.schedule(function()
+    if not M.state then
+      require("which-key.view").hide()
+    end
+  end)
+end
+
+---@param state wk.State
+---@param key? string
+---@return wk.Node? node
+function M.check(state, key)
+  local View = require("which-key.view")
+  local node = key == nil and state.node or (key and state.node:find(key, { expand = true }))
+
+  local delta = uv.hrtime() / 1e6 - state.started
+  local timedout = vim.o.timeout and delta > vim.o.timeoutlen
+
+  if node then
+    -- NOTE: a node can be both a keymap and a group
+    -- when it's both, we honor timeoutlen and nowait to decide what to do
+    local has_children = node:count() > 0
+    local is_nowait = node.keymap and (node.keymap.nowait == 1 or not timedout)
+    local is_action = node.action ~= nil
+    if has_children and not is_nowait and not is_action then
+      Util.debug("continue", node.keys, tostring(state.mode), node.plugin)
+      return node
+    end
+  elseif key == "<Esc>" then
+    if state.mode:xo() then
+      Util.exit() -- cancel and exit if in xo mode
+    end
+    return
+  elseif key == "<BS>" then
+    return state.node.parent or state.mode.tree.root
+  elseif View.valid() and key == Config.keys.scroll_down then
+    View.scroll(false)
+    return state.node
+  elseif View.valid() and key == Config.keys.scroll_up then
+    View.scroll(true)
+    return state.node
+  end
+  M.execute(state, key, node)
+end
+
+---@param state wk.State
+---@param key? string
+---@param node? wk.Node
+---@return false|wk.Node?
+function M.execute(state, key, node)
+  Triggers.suspend(state.mode)
+
+  if node and node.action then
+    return node.action()
+  end
+
+  local keystr = node and node.keys or (state.node.keys .. (key or ""))
+  if not state.mode:xo() then
+    if vim.v.count > 0 and state.mode.mode ~= "i" and state.mode.mode ~= "c" then
+      keystr = vim.v.count .. keystr
+    end
+    if vim.v.register ~= Util.reg() and state.mode.mode ~= "i" and state.mode.mode ~= "c" then
+      keystr = '"' .. vim.v.register .. keystr
+    end
+  end
+  Util.debug("feedkeys", tostring(state.mode), keystr)
+  local feed = vim.api.nvim_replace_termcodes(keystr, true, true, true)
+  vim.api.nvim_feedkeys(feed, "mit", false)
+end
+
+---@param state wk.State
+---@return wk.Node? node, boolean? exit
+function M.step(state)
+  vim.schedule(function()
+    vim.cmd.redraw()
+    if vim.api.nvim__redraw then
+      vim.api.nvim__redraw({ cursor = true })
+    end
+  end)
+  Util.debug("getchar")
+  local ok, char = pcall(vim.fn.getcharstr)
+  if not ok then
+    Util.debug("nok", char)
+    return nil, true
+  end
+  local key = vim.fn.keytrans(char)
+  Util.debug("got", key)
+
+  local node = M.check(state, key)
+  if node == state.node then
+    return M.step(state) -- same node, so try again (scrolling)
+  end
+  return node, key == "<Esc>"
+end
+
+---@param opts? wk.Filter
+function M.start(opts)
+  Util.trace("State(start)", function()
+    local mode = opts and opts.mode or Util.mapmode()
+    local buf = opts and opts.buf or 0
+    local keys = opts and opts.keys or ""
+    return { "Mode(" .. mode .. ":" .. buf .. ") Node(" .. keys .. ")", opts }
+  end)
+
+  opts = opts or {}
+  opts.update = true
+  local mode = Buf.get(opts)
+  opts.update = nil
+  if not mode then
+    Util.debug("no mode")
+    Util.trace()
+    return false
+  end
+  local node = mode.tree:find(opts.keys or {}, { expand = true })
+  if not node then
+    Util.debug("no node")
+    Util.trace()
+    return false
+  end
+
+  local mapmode = mode.mode
+  M.recursion = M.recursion + 1
+  M.recursion_timer:start(500, 0, function()
+    M.recursion = 0
+  end)
+
+  if M.recursion > 50 then
+    Util.error({
+      "Recursion detected.",
+      "Are you manually loading which-key in a keymap?",
+      "Use `opts.triggers` instead.",
+      "Please check the docs.",
+    })
+    Util.debug("recursion detected. Aborting")
+    Util.trace()
+    return false
+  end
+
+  local View = require("which-key.view")
+
+  M.state = {
+    mode = mode,
+    node = node,
+    filter = opts,
+    started = uv.hrtime() / 1e6 - (opts.waited or 0),
+    show = opts.defer ~= true,
+  }
+
+  if not M.check(M.state) then
+    Util.debug("executed")
+    Util.trace()
+    return true
+  end
+
+  local exit = false
+
+  while M.state do
+    mode = Buf.get(opts)
+    if not mode or mode.mode ~= mapmode then
+      break
+    end
+    if M.state.show then
+      View.update(opts)
+    end
+    local child, _exit = M.step(M.state)
+    if child and M.state then
+      M.state.node = child
+      M.state.show = true
+    else
+      exit = _exit or false
+      break
+    end
+  end
+
+  if opts.loop and not exit then
+    -- NOTE: flush pending keys to prevent a trigger loop
+    vim.api.nvim_feedkeys("", "x", false)
+    vim.schedule(function()
+      M.start(opts)
+    end)
+  else
+    M.state = nil
+    View.hide()
+  end
+  Util.trace()
+  return true
+end
+
+function M.update()
+  if not M.state then
+    return
+  end
+  local mode = Buf.get()
+  if not mode or mode.mode ~= M.state.mode.mode then
+    return
+  end
+  local node = mode.tree:find(M.state.node.path)
+  if not node then
+    return
+  end
+  M.state.node = node
+  require("which-key.view").update({ schedule = false })
+end
+
+---@param opts {delay?:number, mode:string, keys:string, plugin?:string, waited?: number}
+function M.delay(opts)
+  local delay = opts.delay or type(Config.delay) == "function" and Config.delay(opts) or Config.delay --[[@as number]]
+  if opts.waited then
+    delay = delay - opts.waited
+  end
+  return math.max(0, delay)
+end
+
+return M

@@ -1,1 +1,103 @@
-local a=require("which-key.config")local b=require("which-key.util")local c={}c.__index=c;c.dups={}function c.new()local self=setmetatable({},c)self:clear()return self end;function c:clear()self.root={key="",path={},keys=""}end;function c.count(d)local e=d.children;return vim.tbl_count(e or{})end;function c.is_group(d)return d.plugin or c.count(d)>0 end;function c:add(f,g)if not a.filter(f)then return end;local h=b.keys(f.lhs,{norm=true})local d=self.root;local i={}for j,k in ipairs(h)do i[#i+1]=k;d.children=d.children or{}if not d.children[k]then d.children[k]={key=k,keys=d.keys..k,path=vim.list_extend({},i),parent=d,global=true}end;d=d.children[k]end;d.desc=f.desc or d.desc;d.plugin=d.plugin or f.plugin;d.global=not(f.buffer and f.buffer~=0)if g then if d.mapping and not f.preset and not d.mapping.preset then local l=f.mode..":"..d.keys;c.dups[l]=c.dups[l]or{}c.dups[l][f]=true;c.dups[l][d.mapping]=true end;d.mapping=f else d.keymap=f end;if d.plugin then local m=setmetatable(d,require("which-key.plugins").PluginNode)m._children=rawget(m,"children")m.children=nil end end;function c:del(d)if d==self.root then return self:clear()end;local n=d.parent;assert(n,"node has no parent")n.children[d.key]=nil;if not self:keep(n)then self:del(n)end end;function c:keep(d)if d.keymap and d.keymap.desc=="which_key_ignore"or d.mapping and d.mapping.hidden then return false end;return d.plugin or d.keymap or c.is_group(d)or d.mapping and not d.mapping.group end;function c:fix()self:walk(function(d)if not self:keep(d)then self:del(d)end end)end;function c:find(h)h=type(h)=="string"and b.keys(h)or h;local d=self.root;for j,k in ipairs(h)do d=(d.children or{})[k]if not d then return end end;return d end;function c:walk(o)local p={self.root}while#p>0 do local d=table.remove(p,1)if d==self.root or o(d)~=false and not d.plugin then for j,q in pairs(d.children or{})do p[#p+1]=q end end end end;return c
+local Config = require("which-key.config")
+local Node = require("which-key.node")
+local Util = require("which-key.util")
+
+---@class wk.Tree
+---@field root wk.Node
+local M = {}
+M.__index = M
+
+---@type table<string, table<wk.Mapping|wk.Keymap, true>>
+M.dups = {}
+
+function M.new()
+  local self = setmetatable({}, M)
+  self:clear()
+  return self
+end
+
+function M:clear()
+  self.root = Node.new()
+end
+
+---@param keymap wk.Mapping|wk.Keymap
+---@param virtual? boolean
+function M:add(keymap, virtual)
+  if not Config.filter(keymap) then
+    return
+  end
+  local keys = Util.keys(keymap.lhs, { norm = true })
+  local node = assert(self.root:find(keys, { create = true }))
+  node.plugin = node.plugin or keymap.plugin
+  if virtual then
+    ---@cast node wk.Node
+    if node.mapping and not keymap.preset and not node.mapping.preset then
+      local id = keymap.mode .. ":" .. node.keys
+      M.dups[id] = M.dups[id] or {}
+      M.dups[id][keymap] = true
+      M.dups[id][node.mapping] = true
+    end
+    if not (keymap.preset and node.keymap and node.keymap.desc) then
+      node.mapping = keymap --[[@as wk.Mapping]]
+    end
+  else
+    node.keymap = keymap
+  end
+end
+
+---@param node wk.Node
+function M:del(node)
+  if node == self.root then
+    return self:clear()
+  end
+  local parent = node.parent
+  assert(parent, "node has no parent")
+  parent._children[node.key] = nil
+  if not self:keep(parent) then
+    self:del(parent)
+  end
+end
+
+---@param node wk.Node
+function M:keep(node)
+  if node.hidden or (node.keymap and node.keymap.desc == "which_key_ignore") then
+    return false
+  end
+  return node:can_expand() or node.keymap or node:is_group() or (node.mapping and not node.group)
+end
+
+function M:fix()
+  self:walk(function(node)
+    if not self:keep(node) then
+      self:del(node)
+      return false
+    end
+  end)
+end
+
+---@param keys string|string[]
+---@param opts? { create?: boolean, expand?: boolean }
+---@return wk.Node?
+function M:find(keys, opts)
+  keys = type(keys) == "string" and Util.keys(keys) or keys
+  return self.root:find(keys, opts)
+end
+
+---@param fn fun(node: wk.Node):boolean?
+---@param opts? {expand?: boolean}
+function M:walk(fn, opts)
+  opts = opts or {}
+  ---@type wk.Node[]
+  local queue = { self.root }
+  while #queue > 0 do
+    local node = table.remove(queue, 1) ---@type wk.Node
+    if node == self.root or fn(node) ~= false then
+      local children = opts.expand and node:children() or node._children
+      for _, child in pairs(children) do
+        queue[#queue + 1] = child
+      end
+    end
+  end
+end
+
+return M

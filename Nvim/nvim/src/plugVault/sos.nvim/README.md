@@ -4,17 +4,17 @@ Never manually save/write a buffer again!
 
 This plugin is an autosaver for Neovim that automatically saves all of your changed buffers according to a predefined timeout value. Its main goals are:
 
-- to handle conditions/situations that `'autowriteall'` does not
-- to offer a complete, set-and-forget autosave/autowrite solution that saves your buffers for you when you want/need them saved
-- to offer at least some customization via options, as well as the ability to easily enable/disable
-- to be better or more correct than `CursorHold` autosavers and not depend on `CursorHold` if feasible
+- To handle conditions/situations that `'autowriteall'` does not
+- To offer a complete, set-and-forget autosave/autowrite solution that saves your buffers for you when you want/need them saved
+- To offer at least some customization via options, as well as the ability to easily enable/disable
+- To be better or more correct than `CursorHold` autosavers and not depend on `CursorHold` if feasible
 
 ### Additional Features
 
-- has its own independent timer, distinct from `'updatetime'`, which may be set to any value in ms
-- timer is only started/reset on buffer changes, not cursor movements or other irrelevant events
-- keeps buffers in sync with the filesystem by frequently running `:checktime` in the background for you (e.g. on `CTRL-Z` or suspend, resume, command, etc.)
-- intelligently ignores `'readonly'` and other such unwritable buffers/files (i.e. the writing of files with insufficient permissions must be attempted manually with `:w`)
+- Has its own independent timer, distinct from `'updatetime'`, which may be set to any value in ms
+- Timer is only started/reset on buffer changes, not cursor movements or other irrelevant events
+- Keeps buffers in sync with the filesystem by frequently running `:checktime` in the background for you (e.g. on `CTRL-Z` or suspend, resume, command, etc.)
+- Intelligently ignores `'readonly'` and other such unwritable buffers/files (i.e. the writing of files with insufficient permissions must be attempted manually with `:w`)
 
 For any questions, help with setup, or general help, you can try [discussions][q&a]. For issues, bugs, apparent bugs, or feature requests, feel free to [open an issue][issues] or [create a pull request][prs].
 
@@ -42,12 +42,12 @@ require("sos").setup {
     enabled = true,
 
     -- Time in ms after which `on_timer()` will be called. By default, `on_timer()`
-    -- is called 20 seconds after the last buffer change. Whenever an observed
+    -- is called 10 seconds after the last buffer change. Whenever an observed
     -- buffer changes, the global timer is started (or reset, if it was already
     -- started), and a countdown of `timeout` milliseconds begins. Further buffer
     -- changes will then debounce the timer. After firing, the timer is not
     -- started again until the next buffer change.
-    timeout = 20000,
+    timeout = 10000,
 
     -- Set, and manage, Vim's 'autowrite' option (see :h 'autowrite'). Allowing
     -- sos to "manage" the option makes it so that all autosaving functionality
@@ -167,7 +167,8 @@ If you have Neovim setup to format on save/write via autocmds, you may experienc
 
 TODO: provide (better) fix or suggestions, finish this section
 
-In the meantime, if you are having issues due to a format-on-save setup and until a better solution is discovered, you can try:
+In the meantime, if you are having issues due to a format-on-save setup, and until a better solution is discovered, you can try:
+
 - changing which autocmd/event triggers autoformatting (e.g. use `InsertLeave` instead)
 - disabling format-on-save altogether
 
@@ -179,4 +180,3 @@ In the meantime, if you are having issues due to a format-on-save setup and unti
 [prs]: /../../pulls
 [q&a]: /../../discussions/categories/q-a
 [undotree]: ../../../../mbbill/undotree
-[^1]: djdjdjdj

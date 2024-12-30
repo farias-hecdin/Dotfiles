@@ -12,7 +12,7 @@ return {
   {
     "https://github.com/nvim-treesitter/nvim-treesitter.git",
     -- commit = "65ef62092ef997d2ecf68ede01a0afbda17808c3",
-    pin = true,
+    -- pin = true,
     cond = D.notContainFiletype({"nim"}),
     event = {"BufReadPre", "BufNewFile"},
     cmd = {"TSUpdateSync", "TSUpdate", "TSInstall"},

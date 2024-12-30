@@ -1,1 +1,246 @@
-local a=require"plenary.path"local b=require"plenary.job"local c=require"plenary.functional"local d=require"plenary.log"local e=require"plenary.window.float"local f=require("plenary.nvim_meta").is_headless;local g=vim.fn.fnamemodify(debug.getinfo(1).source:match"@?(.*[/\\])",":p:h:h:h")local h={}local i=vim.schedule_wrap(function(j,...)for j,k in ipairs{...}do io.stdout:write(tostring(k))io.stdout:write"\n"end;vim.cmd[[mode]]end)local l=function(m)return vim.schedule_wrap(function(n,...)if not vim.api.nvim_buf_is_valid(n)then return end;for j,k in ipairs{...}do vim.api.nvim_chan_send(m,k.."\r\n")end end)end;function h.test_directory_command(o)local p=vim.split(o," ")local q=vim.fn.expand(table.remove(p,1))local r=assert(loadstring("return "..table.concat(p," ")))()return h.test_directory(q,r)end;local function s(t,r)local u=not r or not r.init or r.minimal or r.minimal_init;r=vim.tbl_deep_extend("force",{nvim_cmd=vim.v.progpath,winopts={winblend=3},sequential=false,keep_going=true,timeout=50000},r or{})vim.env.PLENARY_TEST_TIMEOUT=r.timeout;local v={}if not f then v=e.percentage_range_window(0.95,0.70,r.winopts)v.job_id=vim.api.nvim_open_term(v.bufnr,{})vim.api.nvim_buf_set_keymap(v.bufnr,"n","q",":q<CR>",{})vim.api.nvim_win_set_option(v.win_id,"winhl","Normal:Normal")vim.api.nvim_win_set_option(v.win_id,"conceallevel",3)vim.api.nvim_win_set_option(v.win_id,"concealcursor","n")if v.border_win_id then vim.api.nvim_win_set_option(v.border_win_id,"winhl","Normal:Normal")end;if v.bufnr then vim.api.nvim_buf_set_option(v.bufnr,"filetype","PlenaryTestPopup")end;vim.cmd"mode"end;local w=f and i or l(v.job_id)local x=#t;local y=false;local z=vim.tbl_map(function(A)local B={"--headless","-c","set rtp+=.,"..vim.fn.escape(g," ").." | runtime plugin/plenary.vim"}if u then table.insert(B,"--noplugin")if r.minimal_init then table.insert(B,"-u")table.insert(B,r.minimal_init)end elseif r.init~=nil then table.insert(B,"-u")table.insert(B,r.init)end;table.insert(B,"-c")table.insert(B,string.format('lua require("plenary.busted").run("%s")',A:absolute():gsub("\\","\\\\")))local C=b:new{command=r.nvim_cmd,args=B,on_stdout=function(j,D)if x==1 then w(v.bufnr,D)end end,on_stderr=function(j,D)if x==1 then w(v.bufnr,D)end end,on_exit=vim.schedule_wrap(function(E,j,j)if x~=1 then w(v.bufnr,unpack(E:stderr_result()))w(v.bufnr,unpack(E:result()))end;vim.cmd"mode"end)}C.nvim_busted_path=A.filename;return C end,t)d.debug"Running..."for F,G in ipairs(z)do w(v.bufnr,"Scheduling: "..G.nvim_busted_path)G:start()if r.sequential then d.debug("... Sequential wait for job number",F)if not b.join(G,r.timeout)then d.debug("... Timed out job number",F)y=true;pcall(function()G.handle:kill(15)end)else d.debug("... Completed job number",F,G.code,G.signal)y=y or G.code~=0 or G.signal~=0 end;if y and not r.keep_going then break end end end;if not f then return end;if not r.sequential then table.insert(z,r.timeout)d.debug"... Parallel wait"b.join(unpack(z))d.debug"... Completed jobs"table.remove(z,table.getn(z))y=c.any(function(j,k)return k.code~=0 end,z)end;vim.wait(100)if f then if y then return vim.cmd"1cq"end;return vim.cmd"0cq"end end;function h.test_directory(q,r)print"Starting..."q=q:gsub("\\","/")local t=h._find_files_to_run(q)if vim.fn.has"win32"==1 or vim.fn.has"win64"==1 then t=vim.tbl_map(function(A)return a:new(q,A.filename)end,t)end;s(t,r)end;function h.test_file(H)s{a:new(H)}end;function h._find_files_to_run(q)local I;if vim.fn.has"win32"==1 or vim.fn.has"win64"==1 then local J=vim.fn.executable"pwsh.exe"==1 and"pwsh"or"powershell"I=b:new{command=J,args={"-NoProfile","-Command",[[Get-ChildItem -Recurse -n -Filter "*_spec.lua"]]},cwd=q}else I=b:new{command="find",args={q,"-type","f","-name","*_spec.lua"}}end;return vim.tbl_map(a.new,I:sync(vim.env.PLENARY_TEST_TIMEOUT))end;function h._run_path(K,q)local t=h._find_files_to_run(q)local n=0;local L=0;for j,A in pairs(t)do print" "print("Loading Tests For: ",A:absolute(),"\n")local M,j=pcall(function()dofile(A:absolute())end)if not M then print"Failed to load file"end end;h:run(K,n,L)vim.cmd"qa!"return t end;return h
+local Path = require "plenary.path"
+local Job = require "plenary.job"
+
+local f = require "plenary.functional"
+local log = require "plenary.log"
+local win_float = require "plenary.window.float"
+
+local headless = require("plenary.nvim_meta").is_headless
+
+local plenary_dir = vim.fn.fnamemodify(debug.getinfo(1).source:match "@?(.*[/\\])", ":p:h:h:h")
+
+local harness = {}
+
+local print_output = vim.schedule_wrap(function(_, ...)
+  for _, v in ipairs { ... } do
+    io.stdout:write(tostring(v))
+    io.stdout:write "\n"
+  end
+
+  vim.cmd [[mode]]
+end)
+
+local get_nvim_output = function(job_id)
+  return vim.schedule_wrap(function(bufnr, ...)
+    if not vim.api.nvim_buf_is_valid(bufnr) then
+      return
+    end
+    for _, v in ipairs { ... } do
+      vim.api.nvim_chan_send(job_id, v .. "\r\n")
+    end
+  end)
+end
+
+function harness.test_directory_command(command)
+  local split_string = vim.split(command, " ")
+  local directory = vim.fn.expand(table.remove(split_string, 1))
+
+  local opts = assert(loadstring("return " .. table.concat(split_string, " ")))()
+
+  return harness.test_directory(directory, opts)
+end
+
+local function test_paths(paths, opts)
+  local minimal = not opts or not opts.init or opts.minimal or opts.minimal_init
+
+  opts = vim.tbl_deep_extend("force", {
+    nvim_cmd = vim.v.progpath,
+    winopts = { winblend = 3 },
+    sequential = false,
+    keep_going = true,
+    timeout = 50000,
+  }, opts or {})
+
+  vim.env.PLENARY_TEST_TIMEOUT = opts.timeout
+
+  local res = {}
+  if not headless then
+    res = win_float.percentage_range_window(0.95, 0.70, opts.winopts)
+
+    res.job_id = vim.api.nvim_open_term(res.bufnr, {})
+    vim.api.nvim_buf_set_keymap(res.bufnr, "n", "q", ":q<CR>", {})
+
+    vim.api.nvim_win_set_option(res.win_id, "winhl", "Normal:Normal")
+    vim.api.nvim_win_set_option(res.win_id, "conceallevel", 3)
+    vim.api.nvim_win_set_option(res.win_id, "concealcursor", "n")
+
+    if res.border_win_id then
+      vim.api.nvim_win_set_option(res.border_win_id, "winhl", "Normal:Normal")
+    end
+
+    if res.bufnr then
+      vim.api.nvim_buf_set_option(res.bufnr, "filetype", "PlenaryTestPopup")
+    end
+    vim.cmd "mode"
+  end
+
+  local outputter = headless and print_output or get_nvim_output(res.job_id)
+
+  local path_len = #paths
+  local failure = false
+
+  local jobs = vim.tbl_map(function(p)
+    local args = {
+      "--headless",
+      "-c",
+      "set rtp+=.," .. vim.fn.escape(plenary_dir, " ") .. " | runtime plugin/plenary.vim",
+    }
+
+    if minimal then
+      table.insert(args, "--noplugin")
+      if opts.minimal_init then
+        table.insert(args, "-u")
+        table.insert(args, opts.minimal_init)
+      end
+    elseif opts.init ~= nil then
+      table.insert(args, "-u")
+      table.insert(args, opts.init)
+    end
+
+    table.insert(args, "-c")
+    table.insert(args, string.format('lua require("plenary.busted").run("%s")', p:absolute():gsub("\\", "\\\\")))
+
+    local job = Job:new {
+      command = opts.nvim_cmd,
+      args = args,
+
+      -- Can be turned on to debug
+      on_stdout = function(_, data)
+        if path_len == 1 then
+          outputter(res.bufnr, data)
+        end
+      end,
+
+      on_stderr = function(_, data)
+        if path_len == 1 then
+          outputter(res.bufnr, data)
+        end
+      end,
+
+      on_exit = vim.schedule_wrap(function(j_self, _, _)
+        if path_len ~= 1 then
+          outputter(res.bufnr, unpack(j_self:stderr_result()))
+          outputter(res.bufnr, unpack(j_self:result()))
+        end
+
+        vim.cmd "mode"
+      end),
+    }
+    job.nvim_busted_path = p.filename
+    return job
+  end, paths)
+
+  log.debug "Running..."
+  for i, j in ipairs(jobs) do
+    outputter(res.bufnr, "Scheduling: " .. j.nvim_busted_path)
+    j:start()
+    if opts.sequential then
+      log.debug("... Sequential wait for job number", i)
+      if not Job.join(j, opts.timeout) then
+        log.debug("... Timed out job number", i)
+        failure = true
+        pcall(function()
+          j.handle:kill(15) -- SIGTERM
+        end)
+      else
+        log.debug("... Completed job number", i, j.code, j.signal)
+        failure = failure or j.code ~= 0 or j.signal ~= 0
+      end
+      if failure and not opts.keep_going then
+        break
+      end
+    end
+  end
+
+  -- TODO: Probably want to let people know when we've completed everything.
+  if not headless then
+    return
+  end
+
+  if not opts.sequential then
+    table.insert(jobs, opts.timeout)
+    log.debug "... Parallel wait"
+    Job.join(unpack(jobs))
+    log.debug "... Completed jobs"
+    table.remove(jobs, table.getn(jobs))
+    failure = f.any(function(_, v)
+      return v.code ~= 0
+    end, jobs)
+  end
+  vim.wait(100)
+
+  if headless then
+    if failure then
+      return vim.cmd "1cq"
+    end
+
+    return vim.cmd "0cq"
+  end
+end
+
+function harness.test_directory(directory, opts)
+  print "Starting..."
+  directory = directory:gsub("\\", "/")
+  local paths = harness._find_files_to_run(directory)
+
+  -- Paths work strangely on Windows, so lets have abs paths
+  if vim.fn.has "win32" == 1 or vim.fn.has "win64" == 1 then
+    paths = vim.tbl_map(function(p)
+      return Path:new(directory, p.filename)
+    end, paths)
+  end
+
+  test_paths(paths, opts)
+end
+
+function harness.test_file(filepath)
+  test_paths { Path:new(filepath) }
+end
+
+function harness._find_files_to_run(directory)
+  local finder
+  if vim.fn.has "win32" == 1 or vim.fn.has "win64" == 1 then
+    -- On windows use powershell Get-ChildItem instead
+    local cmd = vim.fn.executable "pwsh.exe" == 1 and "pwsh" or "powershell"
+    finder = Job:new {
+      command = cmd,
+      args = { "-NoProfile", "-Command", [[Get-ChildItem -Recurse -n -Filter "*_spec.lua"]] },
+      cwd = directory,
+    }
+  else
+    -- everywhere else use find
+    finder = Job:new {
+      command = "find",
+      args = { directory, "-type", "f", "-name", "*_spec.lua" },
+    }
+  end
+
+  return vim.tbl_map(Path.new, finder:sync(vim.env.PLENARY_TEST_TIMEOUT))
+end
+
+function harness._run_path(test_type, directory)
+  local paths = harness._find_files_to_run(directory)
+
+  local bufnr = 0
+  local win_id = 0
+
+  for _, p in pairs(paths) do
+    print " "
+    print("Loading Tests For: ", p:absolute(), "\n")
+
+    local ok, _ = pcall(function()
+      dofile(p:absolute())
+    end)
+
+    if not ok then
+      print "Failed to load file"
+    end
+  end
+
+  harness:run(test_type, bufnr, win_id)
+  vim.cmd "qa!"
+
+  return paths
+end
+
+return harness

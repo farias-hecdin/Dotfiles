@@ -1,1 +1,173 @@
-local a=require('luassert.assert')local b=require('luassert.state')local c=require('luassert.util')local d=require('say')local function e(f)return b.format_argument(f)or tostring(f)end;local function g(h,i,j)local k=i[1]return function(l)local m=l;for n,o in pairs(m)do for p,q in pairs(m)do if n~=p then if k and c.deepcompare(o,q,true)then return false else if o==q then return false end end end end end;return true end end;local function r(h,i,j)local j=(j or 1)+1;local s=i.n;a(s>1,d("assertion.internal.argtolittle",{"near",2,tostring(s)}),j)local t=tonumber(i[1])local u=tonumber(i[2])local v="number or object convertible to a number"a(t,d("assertion.internal.badargtype",{1,"near",v,e(i[1])}),j)a(u,d("assertion.internal.badargtype",{2,"near",v,e(i[2])}),j)return function(l)local w=tonumber(l)if not w then return false end;return w>=t-u and w<=t+u end end;local function x(h,i,j)local j=(j or 1)+1;local s=i.n;a(s>0,d("assertion.internal.argtolittle",{"matches",1,tostring(s)}),j)local y=i[1]local z=i[2]local A=i[3]a(type(y)=="string",d("assertion.internal.badargtype",{1,"matches","string",type(i[1])}),j)a(z==nil or tonumber(z),d("assertion.internal.badargtype",{2,"matches","number",type(i[2])}),j)return function(l)local B=type(l)local w=nil;if B=="string"or B=="number"or B=="table"and(getmetatable(l)or{}).__tostring then w=tostring(l)end;if not w then return false end;return w:find(y,z,A)~=nil end end;local function C(h,i,j)local j=(j or 1)+1;local s=i.n;a(s>0,d("assertion.internal.argtolittle",{"equals",1,tostring(s)}),j)return function(l)return l==i[1]end end;local function D(h,i,j)local j=(j or 1)+1;local s=i.n;a(s>0,d("assertion.internal.argtolittle",{"same",1,tostring(s)}),j)return function(l)if type(l)=='table'and type(i[1])=='table'then local E=c.deepcompare(l,i[1],true)return E end;return l==i[1]end end;local function F(h,i,j)local j=(j or 1)+1;local s=i.n;local G=type(i[1])local H=G=="table"or G=="function"or G=="thread"or G=="userdata"a(s>0,d("assertion.internal.argtolittle",{"ref",1,tostring(s)}),j)a(H,d("assertion.internal.badargtype",{1,"ref","object",G}),j)return function(l)return l==i[1]end end;local function I(h,i,j)return function(l)return l==true end end;local function J(h,i,j)return function(l)return l==false end end;local function K(h,i,j)return function(l)return l~=false and l~=nil end end;local function L(h,i,j)local M=K(h,i,j)return function(l)return not M(l)end end;local function N(h,i,j,O)return function(l)return type(l)==O end end;local function P(h,i,j)return N(h,i,j,"nil")end;local function Q(h,i,j)return N(h,i,j,"boolean")end;local function R(h,i,j)return N(h,i,j,"number")end;local function S(h,i,j)return N(h,i,j,"string")end;local function T(h,i,j)return N(h,i,j,"table")end;local function U(h,i,j)return N(h,i,j,"function")end;local function V(h,i,j)return N(h,i,j,"userdata")end;local function W(h,i,j)return N(h,i,j,"thread")end;a:register("matcher","true",I)a:register("matcher","false",J)a:register("matcher","nil",P)a:register("matcher","boolean",Q)a:register("matcher","number",R)a:register("matcher","string",S)a:register("matcher","table",T)a:register("matcher","function",U)a:register("matcher","userdata",V)a:register("matcher","thread",W)a:register("matcher","ref",F)a:register("matcher","same",D)a:register("matcher","matches",x)a:register("matcher","match",x)a:register("matcher","near",r)a:register("matcher","equals",C)a:register("matcher","equal",C)a:register("matcher","unique",g)a:register("matcher","truthy",K)a:register("matcher","falsy",L)
+-- module will return the list of matchers, and registers matchers with the main assert engine
+
+-- matchers take 1 parameters;
+-- 1) state
+-- 2) arguments list. The list has a member 'n' with the argument count to check for trailing nils
+-- 3) level The level of the error position relative to the called function
+-- returns; function (or callable object); a function that, given an argument, returns a boolean
+
+local assert = require('luassert.assert')
+local astate = require('luassert.state')
+local util = require('luassert.util')
+local s = require('say')
+
+local function format(val)
+  return astate.format_argument(val) or tostring(val)
+end
+
+local function unique(state, arguments, level)
+  local deep = arguments[1]
+  return function(value)
+    local list = value
+    for k,v in pairs(list) do
+      for k2, v2 in pairs(list) do
+        if k ~= k2 then
+          if deep and util.deepcompare(v, v2, true) then
+            return false
+          else
+            if v == v2 then
+              return false
+            end
+          end
+        end
+      end
+    end
+    return true
+  end
+end
+
+local function near(state, arguments, level)
+  local level = (level or 1) + 1
+  local argcnt = arguments.n
+  assert(argcnt > 1, s("assertion.internal.argtolittle", { "near", 2, tostring(argcnt) }), level)
+  local expected = tonumber(arguments[1])
+  local tolerance = tonumber(arguments[2])
+  local numbertype = "number or object convertible to a number"
+  assert(expected, s("assertion.internal.badargtype", { 1, "near", numbertype, format(arguments[1]) }), level)
+  assert(tolerance, s("assertion.internal.badargtype", { 2, "near", numbertype, format(arguments[2]) }), level)
+
+  return function(value)
+    local actual = tonumber(value)
+    if not actual then return false end
+    return (actual >= expected - tolerance and actual <= expected + tolerance)
+  end
+end
+
+local function matches(state, arguments, level)
+  local level = (level or 1) + 1
+  local argcnt = arguments.n
+  assert(argcnt > 0, s("assertion.internal.argtolittle", { "matches", 1, tostring(argcnt) }), level)
+  local pattern = arguments[1]
+  local init = arguments[2]
+  local plain = arguments[3]
+  assert(type(pattern) == "string", s("assertion.internal.badargtype", { 1, "matches", "string", type(arguments[1]) }), level)
+  assert(init == nil or tonumber(init), s("assertion.internal.badargtype", { 2, "matches", "number", type(arguments[2]) }), level)
+
+  return function(value)
+    local actualtype = type(value)
+    local actual = nil
+    if actualtype == "string" or actualtype == "number" or
+      actualtype == "table" and (getmetatable(value) or {}).__tostring then
+      actual = tostring(value)
+    end
+    if not actual then return false end
+    return (actual:find(pattern, init, plain) ~= nil)
+  end
+end
+
+local function equals(state, arguments, level)
+  local level = (level or 1) + 1
+  local argcnt = arguments.n
+  assert(argcnt > 0, s("assertion.internal.argtolittle", { "equals", 1, tostring(argcnt) }), level)
+  return function(value)
+    return value == arguments[1]
+  end
+end
+
+local function same(state, arguments, level)
+  local level = (level or 1) + 1
+  local argcnt = arguments.n
+  assert(argcnt > 0, s("assertion.internal.argtolittle", { "same", 1, tostring(argcnt) }), level)
+  return function(value)
+    if type(value) == 'table' and type(arguments[1]) == 'table' then
+      local result = util.deepcompare(value, arguments[1], true)
+      return result
+    end
+    return value == arguments[1]
+  end
+end
+
+local function ref(state, arguments, level)
+  local level = (level or 1) + 1
+  local argcnt = arguments.n
+  local argtype = type(arguments[1])
+  local isobject = (argtype == "table" or argtype == "function" or argtype == "thread" or argtype == "userdata")
+  assert(argcnt > 0, s("assertion.internal.argtolittle", { "ref", 1, tostring(argcnt) }), level)
+  assert(isobject, s("assertion.internal.badargtype", { 1, "ref", "object", argtype }), level)
+  return function(value)
+    return value == arguments[1]
+  end
+end
+
+local function is_true(state, arguments, level)
+  return function(value)
+    return value == true
+  end
+end
+
+local function is_false(state, arguments, level)
+  return function(value)
+    return value == false
+  end
+end
+
+local function truthy(state, arguments, level)
+  return function(value)
+    return value ~= false and value ~= nil
+  end
+end
+
+local function falsy(state, arguments, level)
+  local is_truthy = truthy(state, arguments, level)
+  return function(value)
+    return not is_truthy(value)
+  end
+end
+
+local function is_type(state, arguments, level, etype)
+  return function(value)
+    return type(value) == etype
+  end
+end
+
+local function is_nil(state, arguments, level)      return is_type(state, arguments, level, "nil")      end
+local function is_boolean(state, arguments, level)  return is_type(state, arguments, level, "boolean")  end
+local function is_number(state, arguments, level)   return is_type(state, arguments, level, "number")   end
+local function is_string(state, arguments, level)   return is_type(state, arguments, level, "string")   end
+local function is_table(state, arguments, level)    return is_type(state, arguments, level, "table")    end
+local function is_function(state, arguments, level) return is_type(state, arguments, level, "function") end
+local function is_userdata(state, arguments, level) return is_type(state, arguments, level, "userdata") end
+local function is_thread(state, arguments, level)   return is_type(state, arguments, level, "thread")   end
+
+assert:register("matcher", "true", is_true)
+assert:register("matcher", "false", is_false)
+
+assert:register("matcher", "nil", is_nil)
+assert:register("matcher", "boolean", is_boolean)
+assert:register("matcher", "number", is_number)
+assert:register("matcher", "string", is_string)
+assert:register("matcher", "table", is_table)
+assert:register("matcher", "function", is_function)
+assert:register("matcher", "userdata", is_userdata)
+assert:register("matcher", "thread", is_thread)
+
+assert:register("matcher", "ref", ref)
+assert:register("matcher", "same", same)
+assert:register("matcher", "matches", matches)
+assert:register("matcher", "match", matches)
+assert:register("matcher", "near", near)
+assert:register("matcher", "equals", equals)
+assert:register("matcher", "equal", equals)
+assert:register("matcher", "unique", unique)
+assert:register("matcher", "truthy", truthy)
+assert:register("matcher", "falsy", falsy)

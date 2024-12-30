@@ -8,6 +8,7 @@ MiniFiles.config	mini-files.txt	/*MiniFiles.config*
 MiniFiles.default_filter()	mini-files.txt	/*MiniFiles.default_filter()*
 MiniFiles.default_prefix()	mini-files.txt	/*MiniFiles.default_prefix()*
 MiniFiles.default_sort()	mini-files.txt	/*MiniFiles.default_sort()*
+MiniFiles.get_explorer_state()	mini-files.txt	/*MiniFiles.get_explorer_state()*
 MiniFiles.get_fs_entry()	mini-files.txt	/*MiniFiles.get_fs_entry()*
 MiniFiles.get_latest_path()	mini-files.txt	/*MiniFiles.get_latest_path()*
 MiniFiles.get_target_window()	mini-files.txt	/*MiniFiles.get_target_window()*
@@ -17,6 +18,8 @@ MiniFiles.open()	mini-files.txt	/*MiniFiles.open()*
 MiniFiles.refresh()	mini-files.txt	/*MiniFiles.refresh()*
 MiniFiles.reset()	mini-files.txt	/*MiniFiles.reset()*
 MiniFiles.reveal_cwd()	mini-files.txt	/*MiniFiles.reveal_cwd()*
+MiniFiles.set_bookmark()	mini-files.txt	/*MiniFiles.set_bookmark()*
+MiniFiles.set_branch()	mini-files.txt	/*MiniFiles.set_branch()*
 MiniFiles.set_target_window()	mini-files.txt	/*MiniFiles.set_target_window()*
 MiniFiles.setup()	mini-files.txt	/*MiniFiles.setup()*
 MiniFiles.show_help()	mini-files.txt	/*MiniFiles.show_help()*

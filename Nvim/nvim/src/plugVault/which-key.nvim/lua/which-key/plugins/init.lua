@@ -1,1 +1,48 @@
-local a=require("which-key.config")local b=require("which-key.util")local c={}c.plugins={}function c.setup()for d,e in pairs(a.plugins)do if not c.plugins[d]then if type(e)=="boolean"then e={enabled=e}end;e.enabled=e.enabled~=false;if e.enabled then c.plugins[d]=require("which-key.plugins."..d)c._setup(c.plugins[d],e)end end end end;function c._setup(f,e)if f.actions then for g,h in pairs(f.actions)do local i=h.trigger;local j=h.mode or"n"local k=h.label or f.name;a.add({i,desc=k,plugin=f.name,mode=j})end end;if f.setup then f.setup(e)end end;function c.cols(d)local f=c.plugins[d]assert(f,"plugin not found")local l={}vim.list_extend(l,f.cols or{})l[#l+1]={key="value",hl="WhichKeyValue",width=0.5}return l end;local m={}function m:__index(n)if n=="children"then assert(self.plugin,"node must be a plugin node")local f=c.plugins[self.plugin or""]assert(f,"plugin not found")b.debug(("Plugin(%q).expand"):format(self.plugin))local l={}for o,p in pairs(self._children or{})do l[o]=p end;for q,r in ipairs(f.expand())do local s=vim.list_extend({},self.path)s[#s+1]=r.key;r.path=s;r.parent=self;r.order=q;l[r.key]=r end;return l end end;c.PluginNode=m;return c
+local Config = require("which-key.config")
+local Util = require("which-key.util")
+
+local M = {}
+
+---@type table<string, wk.Plugin>
+M.plugins = {}
+
+function M.setup()
+  for name, opts in pairs(Config.plugins) do
+    -- only setup plugin if we didnt load it before
+    if not M.plugins[name] then
+      if type(opts) == "boolean" then
+        opts = { enabled = opts }
+      end
+      opts.enabled = opts.enabled ~= false
+      if opts.enabled then
+        M.plugins[name] = require("which-key.plugins." .. name)
+        M._setup(M.plugins[name], opts)
+      end
+    end
+  end
+end
+
+---@param plugin wk.Plugin
+function M._setup(plugin, opts)
+  if plugin.mappings then
+    Config.add(plugin.mappings)
+  end
+
+  if plugin.setup then
+    plugin.setup(opts)
+  end
+end
+
+---@param name string
+function M.cols(name)
+  local plugin = M.plugins[name]
+  assert(plugin, "plugin not found")
+  local ret = {} ---@type wk.Col[]
+  vim.list_extend(ret, plugin.cols or {})
+  ret[#ret + 1] = { key = "value", hl = "WhichKeyValue", width = 0.5 }
+  return ret
+end
+
+---@class wk.Node.plugin.item: wk.Node,wk.Plugin.item
+
+return M

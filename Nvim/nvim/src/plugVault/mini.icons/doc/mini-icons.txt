@@ -23,12 +23,26 @@ Features:
 - Mocking methods of 'nvim-tree/nvim-web-devicons' for better integrations
   with plugins outside 'mini.nvim'. See |MiniIcons.mock_nvim_web_devicons()|.
 
+- Tweaking built-in maps for "LSP kind" to include icons. In particular, this
+  makes |mini.completion| use icons in LSP step. See |MiniIcons.tweak_lsp_kind()|.
+
 Notes:
 
 - It is not a goal to become a collection of icons for as much use cases as
   possible. There are specific criteria for icon data to be included as
   built-in in each category (see |MiniIcons.get()|).
   The main supported category is "filetype".
+
+Recommendations for plugin authors using 'mini.icons' as a dependency:
+
+- Check if `_G.MiniIcons` table is present (which means that user explicitly
+  enabled 'mini.icons') and provide icons only if it is.
+
+- Use |MiniIcons.get()| function to get icon string and more data about it.
+
+- For file icons prefer using full path instead of relative or only basename.
+  It makes a difference if path matches pattern that uses parent directories.
+  The |MiniIcons.config| has an example of that.
 
 # Dependencies ~
 
@@ -107,7 +121,7 @@ See |MiniIcons.config| for `config` structure and default values.
           Using fallback results in a wider support and deeper integration
           with Neovim's filetype detection at the cost of occasional slower
           first call. The difference is reduced as much as is reasonable by
-          also having some manually tracked data tables for common cases.
+          preferring faster file extension resolution over filetype matching.
 
         - This module caches all its return values resulting in really fast
           next same argument calls, while 'nvim-web-devicons' doesn't do that.
@@ -120,12 +134,18 @@ See |MiniIcons.config| for `config` structure and default values.
           cases for "operating system", while this module has better eventual
           coverage for other cases.
 
-
         - This module supports "directory" and "lsp" categories.
 
         - 'nvim-web-devicons' covers "desktop environment" and "window
           management" categories. This modules does not include them due to
           relatively low demand.
+
+- 'onsails/lspkind.nvim':
+    - Provides icons only for `CompletionItemKind`, while this module also has
+      icons for `SymbolKind` and other non-LSP categories.
+    - Provides dedicated formatting function for 'hrsh7th/nvim-cmp' while this
+      module intentionally does not (adding icons should be straightforward
+      to manually implement while anything else is out of scope).
 
 # Highlight groups ~
 
@@ -177,6 +197,9 @@ Default values:
     filetype  = {},
     lsp       = {},
     os        = {},
+
+    -- Control which extensions will be considered during "file" resolution
+    use_file_extension = function(ext, file) return true end,
   }
 <
 # Style ~
@@ -231,6 +254,39 @@ Notes:
 - Use lower case names for categories which are matched ignoring case.
   See |MiniIcons.get()| for more details.
 
+# Using extension during file resolution ~
+
+`config.use_file_extension` is a function which can be used to control which
+extensions will be considered as a source of icon data during "file" category
+resolution (see |MiniIcons.get()| for more details).
+Default: function which always returns `true` (i.e. consider all extensions).
+
+Will be called once for the biggest suffix after dot found in the file name.
+The arguments will be `ext` (found extension; lowercase) and `file` (input for
+which icon is computed; as is). Should explicitly return `true` if `ext` is to
+be considered (i.e. call `MiniIcons.get('extension', ext)` and use its
+output if it is not default). Otherwise extension won't be even considered.
+
+The primary use case for this setting is to ensure that some extensions are
+ignored in order for resolution to reach |vim.filetype.match()| stage. This
+is needed if there is a set up filetype detection for files with recognizable
+extension and conflicting icons (which you want to use). Note: if problematic
+filetype detection involves only known in advance file names, prefer using
+`config.file` customization.
+
+Example: >lua
+
+  -- Built-in filetype detection recognizes files like "queries/.*%.scm"
+  -- as "query" filetype. However, without special setup, 'mini.icons' will
+  -- use "scm" extension to resolve as Scheme file. Here is a setup to ignore
+  -- "scm" extension and completely rely on `vim.filetype.match()` fallback.
+  require('mini.icons').setup({
+    -- Check last letters explicitly to account for dots in file name
+    use_file_extension = function(ext) return ext:sub(-3) ~= 'scm' end
+  })
+
+  -- Another common choices for extensions to ignore: "yml", "json", "txt".
+<
 ------------------------------------------------------------------------------
                                                                *MiniIcons.get()*
                       `MiniIcons.get`({category}, {name})
@@ -258,10 +314,6 @@ Notes:
 
 - Matching icon name for "file" and "directory" categories is done exactly
   and respecting case. Others are done ignoring case.
-
-- The recommended way to use this function in plugin is first checking if
-  `_G.MiniIcons` table is present (which means that user explicitly enabled
-  'mini.icons') and provide icons only if it is.
 
 Parameters ~
 {category} `(string)` Category name. Supported categories:
@@ -294,38 +346,40 @@ Parameters ~
   - `'extension'` - icon data for extension.
     Icon names:
       - <Input>: any string (without extra dot prefix).
-      - <Built-in>: popular extensions not tied to language/software (with
-        few notable exceptions) and without associated filetype; plus a set
-        of filetype associated extensions (for performance or better support).
+      - <Built-in>: popular extensions without associated filetype plus a set
+        for which filetype detection gives not good enough result.
 
     Icon data is attempted to be resolved in the following order:
-      - List of built-in and user configured extensions (for better
-        performance). Run `:=MiniIcons.list('extension')` to see them.
+      - List of user configured and built-in extensions (for better results).
+        Run `:=MiniIcons.list('extension')` to see them.
+        Used also if present as suffix after the dot (widest one preferred).
       - Filetype as a result of |vim.filetype.match()| with placeholder
-        file name. Uses output of corresponding "filetype" category.
+        file name. Uses icon data from "filetype" category.
 
     Examples: >lua
 
       -- All of these will result in the same output
       MiniIcons.get('extension', 'lua')
       MiniIcons.get('extension', 'LUA')
+      MiniIcons.get('extension', 'my.lua')
 <
   - `'file'` - icon data for file path.
     Icon names:
-      - <Input>: any string, but only basename is used. Works with not present
-        paths (no check is done).
+      - <Input>: any string. Works with not present paths (no check is done).
       - <Built-in>: popular file names not tied to language/software
-        (with few notable exceptions like Neovim, Git, etc.).
+        (with few notable exceptions like Neovim, Git, etc.) plus a set which
+        has recognizable extension but has special detectable filetype.
 
     Icon data is attempted to be resolved in the following order:
-      - List of built-in and user configured file names (to match exactly).
-        Run `:=MiniIcons.list('flle')` to see them.
-      - List of built-in and user configured extensions.
-        Run `:=MiniIcons.list('extension')` to see them.
-        This step also includes already cached extensions.
-        Uses output of corresponding "extension" category.
-      - Filetype as a result of |vim.filetype.match()|.
-        Uses output of corresponding "filetype" category.
+      - List of user configured and built-in file names (matched to basename
+        of the input exactly). Run `:=MiniIcons.list('flle')` to see them.
+      - Basename extension:
+          - Matched directly as `get('extension', ext)`, where `ext` is the
+            widest suffix after the dot.
+          - Considered only if `config.use_file_extension` returned `true`.
+          - Only recognizable extensions (i.e. not default fallback) are used.
+      - Filetype as a result of |vim.filetype.match()| with full input (not
+        basename) as `filename`. Uses icon data from "filetype" category.
 
     Examples: >lua
 
@@ -337,6 +391,9 @@ Parameters ~
       -- Results in different output
       MiniIcons.get('file', 'Init.lua')
       MiniIcons.get('file', 'init.LUA')
+
+      -- Respects full path input in `vim.filetype.match()`
+      MiniIcons.get('file', '.git/info/attributes')
 <
   - `'filetype'` - icon data for 'filetype' values.
     Icon names:
@@ -377,9 +434,9 @@ Parameters ~
   names which are explicitly supported for specific category.
 
 Return ~
-`([string,string,boolean])` Tuple of icon string, highlight group name it is
-  suggested to be highlighted with, and boolean indicating whether this icon
-  was returned as a result of fallback to default. Example: >lua
+`(...)` Tuple of icon string, highlight group name it is suggested to be
+  highlighted with, and boolean indicating whether this icon was returned
+  as a result of fallback to default. Example: >lua
 
   -- Results into `icon='󰢱'`, `hl='MiniIconsAzure'`, `is_default=false`
   local icon, hl, is_default = MiniIcons.get('file', 'file.lua')
@@ -419,6 +476,31 @@ Full example of usage: >lua
 <
 Works without installed 'nvim-web-devicons' and even with it installed (needs
 to be called after 'nvim-web-devicons' is set up).
+
+------------------------------------------------------------------------------
+                                                    *MiniIcons.tweak_lsp_kind()*
+                       `MiniIcons.tweak_lsp_kind`({mode})
+Tweak built-in LSP kind names
+
+Update in place appropriate maps in |vim.lsp.protocol| (`CompletionItemKind`
+and `SymbolKind`) by using icon strings from "lsp" category. Only "numeric
+id to kind name" part is updated (to preserve data from original map).
+
+Updating is done in one of these modes:
+- Append:  add icon after text.
+- Prepend: add icon before text (default).
+- Replace: use icon instead of text.
+
+Notes:
+- Makes |mini.completion| show icons, as it uses built-in protocol map.
+- Results in loading whole `vim.lsp` module, so might add significant amount
+  of time on startup. Call it lazily. For example, with |MiniDeps.later()|: >
+
+    require('mini.icons').setup()
+    MiniDeps.later(MiniIcons.tweak_lsp_kind)
+<
+Parameters ~
+{mode} `(string|nil)` One of "prepend" (default), "append", "replace".
 
 
  vim:tw=78:ts=8:noet:ft=help:norl:

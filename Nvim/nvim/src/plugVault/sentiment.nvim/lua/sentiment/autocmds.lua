@@ -1,1 +1,63 @@
-local a=require("sentiment.Autocmd")local b=require("sentiment.ui")local c={}local d=nil;local function e()if d==nil or not d:is_active()then return end;d:close()end;local f=a.new({name="renderer",desc="Render pair",events={"BufWinEnter","WinScrolled","ModeChanged","CursorMoved","CursorMovedI"},callback=function()e()d=b.render()end})local g=a.new({name="cleaner",desc="Cleanup timer",events={"VimLeavePre"},callback=function()e()end})function c.start_rendering()if f:exists()then return end;for h,i in ipairs(vim.api.nvim_list_wins())do d=b.render(i)end;f:create()end;function c.stop_rendering()if not f:exists()then return end;f:remove()e()for h,j in ipairs(vim.api.nvim_list_bufs())do b.clear(j)end end;function c.create_cleaner()g:create()end;return c
+local Autocmd = require("sentiment.Autocmd")
+local ui = require("sentiment.ui")
+
+local M = {}
+
+local timer = nil
+
+---Close `timer` safely.
+local function close_timer()
+  if timer == nil or not timer:is_active() then return end
+  timer:close()
+end
+
+local renderer = Autocmd.new({
+  name = "renderer",
+  desc = "Render pair",
+  events = {
+    "BufWinEnter",
+    "WinScrolled",
+    "ModeChanged",
+    "CursorMoved",
+    "CursorMovedI",
+  },
+  callback = function()
+    close_timer()
+    timer = ui.render()
+  end,
+})
+
+local cleaner = Autocmd.new({
+  name = "cleaner",
+  desc = "Cleanup timer",
+  events = { "VimLeavePre" },
+  callback = function() close_timer() end,
+})
+
+---Start rendering pairs.
+function M.start_rendering()
+  if renderer:exists() then return end
+
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    timer = ui.render(win)
+  end
+
+  renderer:create()
+end
+
+---Stop rendering pairs.
+function M.stop_rendering()
+  if not renderer:exists() then return end
+
+  renderer:remove()
+  close_timer()
+
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    ui.clear(buf)
+  end
+end
+
+---Clean `timer` on `VimLeavePre`
+function M.create_cleaner() cleaner:create() end
+
+return M

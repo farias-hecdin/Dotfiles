@@ -1,1 +1,15 @@
-local a={}a.traceback_error=function(b,c)local d=debug.traceback()d=d.."\n"..b;error(d,(c or 1)+1)end;a.info_error=function(b,e,c)local f=debug.getinfo(e)f=f.."\n"..b;error(f,(c or 1)+1)end;return a
+local M = {}
+
+M.traceback_error = function(s, level)
+  local traceback = debug.traceback()
+  traceback = traceback .. "\n" .. s
+  error(traceback, (level or 1) + 1)
+end
+
+M.info_error = function(s, func_info, level)
+  local info = debug.getinfo(func_info)
+  info = info .. "\n" .. s
+  error(info, (level or 1) + 1)
+end
+
+return M

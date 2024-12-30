@@ -1,1 +1,160 @@
-local a={}a.new=function(b)local self=setmetatable({},{__index=a})self.client=b;self.request_ids={}return self end;a.get_debug_name=function(self)return table.concat({'nvim_lsp',self.client.name},':')end;a.is_available=function(self)if self.client.is_stopped()then return false end;local c=vim.api.nvim_get_current_buf()local d=vim.lsp.get_clients~=nil and vim.lsp.get_clients or vim.lsp.get_active_clients;if vim.tbl_isempty(d({bufnr=c,id=self.client.id}))then return false end;if not self:_get(self.client.server_capabilities,{'completionProvider'})then return false end;return true end;a.get_position_encoding_kind=function(self)return self:_get(self.client.server_capabilities,{'positionEncoding'})or self.client.offset_encoding or'utf-16'end;a.get_trigger_characters=function(self)return self:_get(self.client.server_capabilities,{'completionProvider','triggerCharacters'})or{}end;a.get_keyword_pattern=function(self,e)local f;f=e.option or{}f=f[self.client.name]or{}return f.keyword_pattern or require('cmp').get_config().completion.keyword_pattern end;a.complete=function(self,e,g)local h=vim.lsp.util.make_position_params(0,self.client.offset_encoding)h.context={}h.context.triggerKind=e.completion_context.triggerKind;h.context.triggerCharacter=e.completion_context.triggerCharacter;self:_request('textDocument/completion',h,function(i,j)g(j)end)end;a.resolve=function(self,k,g)if self.client.is_stopped()then return g()end;if not self:_get(self.client.server_capabilities,{'completionProvider','resolveProvider'})then return g()end;self:_request('completionItem/resolve',k,function(i,j)g(j or k)end)end;a.execute=function(self,k,g)if self.client.is_stopped()then return g()end;if not k.command then return g()end;self:_request('workspace/executeCommand',k.command,function(i,i)g()end)end;a._get=function(i,l,m)local n=l;for i,o in ipairs(m)do n=n[o]if not n then return nil end end;return n end;a._request=function(self,p,e,g)if self.request_ids[p]~=nil then self.client.cancel_request(self.request_ids[p])self.request_ids[p]=nil end;local i,q;i,q=self.client.request(p,e,function(r,s,t)if self.request_ids[p]~=q then return end;self.request_ids[p]=nil;if r and r.code==-32801 then self:_request(p,e,g)return end;if p==s then g(r,t)else g(r,s)end end)self.request_ids[p]=q end;return a
+local source = {}
+
+source.new = function(client)
+  local self = setmetatable({}, { __index = source })
+  self.client = client
+  self.request_ids = {}
+  return self
+end
+
+---Get debug name.
+---@return string
+source.get_debug_name = function(self)
+  return table.concat({ 'nvim_lsp', self.client.name }, ':')
+end
+
+---Return the source is available.
+---@return boolean
+source.is_available = function(self)
+  -- client is stopped.
+  if self.client.is_stopped() then
+    return false
+  end
+
+  -- client is not attached to current buffer.
+  local bufnr = vim.api.nvim_get_current_buf()
+  local get_clients = (
+    vim.lsp.get_clients ~= nil and vim.lsp.get_clients -- nvim 0.10+
+    or vim.lsp.get_active_clients
+  )
+  if vim.tbl_isempty(get_clients({ bufnr = bufnr, id = self.client.id })) then
+    return false
+  end
+
+  -- client has no completion capability.
+  if not self:_get(self.client.server_capabilities, { 'completionProvider' }) then
+    return false
+  end
+  return true;
+end
+
+---Get LSP's PositionEncodingKind.
+---@return lsp.PositionEncodingKind
+source.get_position_encoding_kind = function(self)
+  return self:_get(self.client.server_capabilities, { 'positionEncoding' }) or self.client.offset_encoding or 'utf-16'
+end
+
+---Get triggerCharacters.
+---@return string[]
+source.get_trigger_characters = function(self)
+  return self:_get(self.client.server_capabilities, { 'completionProvider', 'triggerCharacters' }) or {}
+end
+
+---Get get_keyword_pattern.
+---@param params cmp.SourceApiParams
+---@return string
+source.get_keyword_pattern = function(self, params)
+  local option
+  option = params.option or {}
+  option = option[self.client.name] or {}
+  return option.keyword_pattern or require('cmp').get_config().completion.keyword_pattern
+end
+
+---Resolve LSP CompletionItem.
+---@param params cmp.SourceCompletionApiParams
+---@param callback function
+source.complete = function(self, params, callback)
+  local lsp_params = vim.lsp.util.make_position_params(0, self.client.offset_encoding)
+  lsp_params.context = {}
+  lsp_params.context.triggerKind = params.completion_context.triggerKind
+  lsp_params.context.triggerCharacter = params.completion_context.triggerCharacter
+  self:_request('textDocument/completion', lsp_params, function(_, response)
+    callback(response)
+  end)
+end
+
+---Resolve LSP CompletionItem.
+---@param completion_item lsp.CompletionItem
+---@param callback function
+source.resolve = function(self, completion_item, callback)
+  -- client is stopped.
+  if self.client.is_stopped() then
+    return callback()
+  end
+
+  -- client has no completion capability.
+  if not self:_get(self.client.server_capabilities, { 'completionProvider', 'resolveProvider' }) then
+    return callback()
+  end
+
+  self:_request('completionItem/resolve', completion_item, function(_, response)
+    callback(response or completion_item)
+  end)
+end
+
+---Execute LSP CompletionItem.
+---@param completion_item lsp.CompletionItem
+---@param callback function
+source.execute = function(self, completion_item, callback)
+  -- client is stopped.
+  if self.client.is_stopped() then
+    return callback()
+  end
+
+  -- completion_item has no command.
+  if not completion_item.command then
+    return callback()
+  end
+
+  self:_request('workspace/executeCommand', completion_item.command, function(_, _)
+    callback()
+  end)
+end
+
+---Get object path.
+---@param root table
+---@param paths string[]
+---@return any
+source._get = function(_, root, paths)
+  local c = root
+  for _, path in ipairs(paths) do
+    c = c[path]
+    if not c then
+      return nil
+    end
+  end
+  return c
+end
+
+---Send request to nvim-lsp servers with backward compatibility.
+---@param method string
+---@param params table
+---@param callback function
+source._request = function(self, method, params, callback)
+  if self.request_ids[method] ~= nil then
+    self.client.cancel_request(self.request_ids[method])
+    self.request_ids[method] = nil
+  end
+  local _, request_id
+  _, request_id = self.client.request(method, params, function(arg1, arg2, arg3)
+    if self.request_ids[method] ~= request_id then
+      return
+    end
+    self.request_ids[method] = nil
+
+    -- Text changed, retry
+    if arg1 and arg1.code == -32801 then
+      self:_request(method, params, callback)
+      return
+    end
+
+    if method == arg2 then
+      callback(arg1, arg3) -- old signature
+    else
+      callback(arg1, arg2) -- new signature
+    end
+  end)
+  self.request_ids[method] = request_id
+end
+
+return source

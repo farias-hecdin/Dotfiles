@@ -1,1 +1,31 @@
-local a={}local b=require('messages.utils').inspect;local c=require('messages.config').settings;a.open_float=function(d)local e=vim.split(d,'\n')local f=c.prepare_buffer(c.buffer_opts(e))local g=vim.fn.bufnr()vim.api.nvim_buf_set_lines(g,0,-1,true,e)vim.api.nvim_buf_set_name(g,c.buffer_name)vim.api.nvim_buf_set_option(g,'bufhidden','delete')c.post_open_float(f)return f end;a.capture_thing=function(...)a.open_float(b(...))end;a.capture_cmd=function(h)if h==''then h='messages'end;a.open_float(vim.api.nvim_exec(h,true))end;return a
+local M = {}
+
+local inspect = require('messages.utils').inspect
+local settings = require('messages.config').settings
+
+M.open_float = function(text)
+  local lines = vim.split(text, '\n')
+  local winnr = settings.prepare_buffer(settings.buffer_opts(lines))
+  local bufnr = vim.fn.bufnr()
+
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, lines)
+  vim.api.nvim_buf_set_name(bufnr, settings.buffer_name)
+  vim.api.nvim_buf_set_option(bufnr, 'bufhidden', 'delete')
+
+  settings.post_open_float(winnr)
+  return winnr
+end
+
+M.capture_thing = function(...)
+  M.open_float(inspect(...))
+end
+
+M.capture_cmd = function(cmd)
+  if cmd == '' then
+    cmd = 'messages'
+  end
+
+  M.open_float(vim.api.nvim_exec(cmd, true))
+end
+
+return M

@@ -5,8 +5,8 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- url = "https://github.com/navarasu/onedark.nvim.git",
-    dir = D.plugin .. "onedark.nvim",
+    url = "https://github.com/navarasu/onedark.nvim.git",
+    -- dir = D.plugin .. "onedark.nvim",
     lazy = false,
     priority = 1000,
     init = function()
@@ -90,6 +90,9 @@ return {
         MarkviewCode               = {bg = "#101010"},
         MarkviewInlineCode         = {bg = "#000000"},
         MarkviewHeadingIcon        = {fg = "#CCCCCC", fmt = "BOLD"},
+        MiniDiffSignAdd            = {fg = "#ffffff"},
+        MiniDiffSignChange         = {fg = "#00B7EB"},
+        MiniDiffSignDelete         = {fg = "#EF5350"},
       }
     }
   }

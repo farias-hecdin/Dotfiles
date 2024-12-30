@@ -56,10 +56,10 @@ return {
 
       if enable_lsp_servers then
         enable_lsp("css", {"cssls"})
-        enable_lsp("go", {"gopls"})
+        -- enable_lsp("go", {"gopls"})
         enable_lsp("html", {"emmet_ls"})
         -- enable_lsp("java", {"jdtls"})
-        enable_lsp("javascript", {"astro", "tsserver"})
+        enable_lsp("javascript", {"astro", "ts_ls"})
         enable_lsp("lua", {"lua_ls"})
         enable_lsp("php", {"phpactor"})
         -- enable_lsp("bash", {"bashls"})
@@ -118,7 +118,7 @@ return {
       -- Commands -------------------------------------------------------------
       local format_default = {
         severity_sort = true,
-        signs = true,
+        signs = false,
         underline = true,
         update_in_insert = false,
         virtual_lines = false,
@@ -128,16 +128,16 @@ return {
           focusable = false,
           border = "rounded",
         },
-        -- virtual_text = {
-        --   spacing = 3,
-        --   prefix = "󰓾",
-        --   format = function(_)
-        --     -- Only show the first line with virtualtext.
-        --     -- return string.gsub(diagnostic.message, '\n.*', '')
-        --     return ""
-        --   end,
-        -- }
-        virtual_text = false
+        virtual_text = {
+          spacing = 3,
+          prefix = "",
+          format = function(_)
+            -- Only show the first line with virtualtext.
+            -- return string.gsub(diagnostic.message, '\n.*', '')
+            return ""
+          end,
+        }
+        -- virtual_text = false
       }
       vim.diagnostic.config(format_default)
     end

@@ -1,7 +1,204 @@
-local a=require("plenary.path").path;local b={}b.strdisplaywidth=(function()local c=function(d,e)d=tostring(d)if vim.in_fast_event()then return#d-(e or 0)end;return vim.fn.strdisplaywidth(d,e)end;if jit and a.sep~=[[\]]then local f=require"ffi"f.cdef[[
+local path = require("plenary.path").path
+
+local M = {}
+
+M.strdisplaywidth = (function()
+  local fallback = function(str, col)
+    str = tostring(str)
+    if vim.in_fast_event() then
+      return #str - (col or 0)
+    end
+    return vim.fn.strdisplaywidth(str, col)
+  end
+
+  if jit and path.sep ~= [[\]] then
+    local ffi = require "ffi"
+    ffi.cdef [[
       typedef unsigned char char_u;
       int linetabsize_col(int startcol, char_u *s);
-    ]]local g=function(d,e)d=tostring(d)local h=e or 0;local i=f.new("char[?]",#d+1)f.copy(i,d)return f.C.linetabsize_col(h,i)-h end;local j=pcall(g,"hello")if j then return g else return c end else return c end end)()b.strcharpart=(function()local c=function(d,k,l)if vim.in_fast_event()then return d:sub(k+1,l)end;return vim.fn.strcharpart(d,k,l)end;if jit and a.sep~=[[\]]then local f=require"ffi"f.cdef[[
+    ]]
+
+    local ffi_func = function(str, col)
+      str = tostring(str)
+      local startcol = col or 0
+      local s = ffi.new("char[?]", #str + 1)
+      ffi.copy(s, str)
+      return ffi.C.linetabsize_col(startcol, s) - startcol
+    end
+
+    local ok = pcall(ffi_func, "hello")
+    if ok then
+      return ffi_func
+    else
+      return fallback
+    end
+  else
+    return fallback
+  end
+end)()
+
+M.strcharpart = (function()
+  local fallback = function(str, nchar, charlen)
+    if vim.in_fast_event() then
+      return str:sub(nchar + 1, charlen)
+    end
+    return vim.fn.strcharpart(str, nchar, charlen)
+  end
+
+  if jit and path.sep ~= [[\]] then
+    local ffi = require "ffi"
+    ffi.cdef [[
       typedef unsigned char char_u;
       int utf_ptr2len(const char_u *const p);
-    ]]local function m(d)local n=f.new("char[?]",#d+1)f.copy(n,d)return f.C.utf_ptr2len(n)end;local j=pcall(m,"🔭")if not j then return c end;return function(d,k,l)local o=0;if k>0 then while k>0 and o<#d do o=o+m(d:sub(o+1))k=k-1 end else o=k end;local p=0;if l then while l>0 and o+p<#d do local q=o+p;if q<0 then p=p+1 else p=p+m(d:sub(q+1))end;l=l-1 end else p=#d-o end;if o<0 then p=p+o;o=0 elseif o>#d then o=#d end;if p<0 then p=0 elseif o+p>#d then p=#d-o end;return d:sub(o+1,o+p)end else return c end end)()local r=function(d,p,s,t)if b.strdisplaywidth(d)<=p then return d end;local u=t>0 and 0 or d:len()local v=0;local w=""local x=b.strdisplaywidth(s)local y=function(z,A,B)if B>0 then return z..A else return A..z end end;while true do local C=b.strcharpart(d,u,1)v=v+b.strdisplaywidth(C)if v+x>p then w=y(w,s,t)break end;w=y(w,C,t)u=u+t end;return w end;b.truncate=function(d,p,s,t)d=tostring(d)s=s or"…"t=t or 1;if t~=0 then return r(d,p,s,t)else if b.strdisplaywidth(d)<=p then return d end;local D=math.floor((p+b.strdisplaywidth(s))/2)local E=r(d,D,s,1)local F=p-b.strdisplaywidth(E)+b.strdisplaywidth(s)local G=r(d,F,s,-1)return E..G:sub(s:len()+1)end end;b.align_str=function(H,I,J)local K=b.strdisplaywidth(H)return J and H.rep(" ",I-K)..H or H..H.rep(" ",I-K)end;b.dedent=function(d,L)local M;local N={}for O in d:gmatch"[^\n]*\n?"do if O~=""then local P,I;local Q=O:match"^[ \t]+"if Q then P=#Q;I=b.strdisplaywidth(Q)if not M or I<M then M=I end elseif O~="\n"then M=0 end;table.insert(N,{line=O,chars=P,width=I})end end;L=L or 0;local w={}for R,S in ipairs(N)do local O;if S.chars then local T=S.line:sub(S.chars+1)local U=S.width-M+L;O=(" "):rep(U)..T elseif S.line=="\n"then O="\n"else O=(" "):rep(L)..S.line end;table.insert(w,O)end;return table.concat(w)end;return b
+    ]]
+
+    local function utf_ptr2len(str)
+      local c_str = ffi.new("char[?]", #str + 1)
+      ffi.copy(c_str, str)
+      return ffi.C.utf_ptr2len(c_str)
+    end
+
+    local ok = pcall(utf_ptr2len, "🔭")
+    if not ok then
+      return fallback
+    end
+
+    return function(str, nchar, charlen)
+      local nbyte = 0
+      if nchar > 0 then
+        while nchar > 0 and nbyte < #str do
+          nbyte = nbyte + utf_ptr2len(str:sub(nbyte + 1))
+          nchar = nchar - 1
+        end
+      else
+        nbyte = nchar
+      end
+
+      local len = 0
+      if charlen then
+        while charlen > 0 and nbyte + len < #str do
+          local off = nbyte + len
+          if off < 0 then
+            len = len + 1
+          else
+            len = len + utf_ptr2len(str:sub(off + 1))
+          end
+          charlen = charlen - 1
+        end
+      else
+        len = #str - nbyte
+      end
+
+      if nbyte < 0 then
+        len = len + nbyte
+        nbyte = 0
+      elseif nbyte > #str then
+        nbyte = #str
+      end
+      if len < 0 then
+        len = 0
+      elseif nbyte + len > #str then
+        len = #str - nbyte
+      end
+
+      return str:sub(nbyte + 1, nbyte + len)
+    end
+  else
+    return fallback
+  end
+end)()
+
+local truncate = function(str, len, dots, direction)
+  if M.strdisplaywidth(str) <= len then
+    return str
+  end
+  local start = direction > 0 and 0 or str:len()
+  local current = 0
+  local result = ""
+  local len_of_dots = M.strdisplaywidth(dots)
+  local concat = function(a, b, dir)
+    if dir > 0 then
+      return a .. b
+    else
+      return b .. a
+    end
+  end
+  while true do
+    local part = M.strcharpart(str, start, 1)
+    current = current + M.strdisplaywidth(part)
+    if (current + len_of_dots) > len then
+      result = concat(result, dots, direction)
+      break
+    end
+    result = concat(result, part, direction)
+    start = start + direction
+  end
+  return result
+end
+
+M.truncate = function(str, len, dots, direction)
+  str = tostring(str) -- We need to make sure its an actually a string and not a number
+  dots = dots or "…"
+  direction = direction or 1
+  if direction ~= 0 then
+    return truncate(str, len, dots, direction)
+  else
+    if M.strdisplaywidth(str) <= len then
+      return str
+    end
+    local len1 = math.floor((len + M.strdisplaywidth(dots)) / 2)
+    local s1 = truncate(str, len1, dots, 1)
+    local len2 = len - M.strdisplaywidth(s1) + M.strdisplaywidth(dots)
+    local s2 = truncate(str, len2, dots, -1)
+    return s1 .. s2:sub(dots:len() + 1)
+  end
+end
+
+M.align_str = function(string, width, right_justify)
+  local str_len = M.strdisplaywidth(string)
+  return right_justify and string.rep(" ", width - str_len) .. string or string .. string.rep(" ", width - str_len)
+end
+
+M.dedent = function(str, leave_indent)
+  -- Check each line and detect the minimum indent.
+  local indent
+  local info = {}
+  for line in str:gmatch "[^\n]*\n?" do
+    -- It matches '' for the last line.
+    if line ~= "" then
+      local chars, width
+      local line_indent = line:match "^[ \t]+"
+      if line_indent then
+        chars = #line_indent
+        width = M.strdisplaywidth(line_indent)
+        if not indent or width < indent then
+          indent = width
+        end
+        -- Ignore empty lines
+      elseif line ~= "\n" then
+        indent = 0
+      end
+      table.insert(info, { line = line, chars = chars, width = width })
+    end
+  end
+
+  -- Build up the result
+  leave_indent = leave_indent or 0
+  local result = {}
+  for _, i in ipairs(info) do
+    local line
+    if i.chars then
+      local content = i.line:sub(i.chars + 1)
+      local indent_width = i.width - indent + leave_indent
+      line = (" "):rep(indent_width) .. content
+    elseif i.line == "\n" then
+      line = "\n"
+    else
+      line = (" "):rep(leave_indent) .. i.line
+    end
+    table.insert(result, line)
+  end
+  return table.concat(result)
+end
+
+return M

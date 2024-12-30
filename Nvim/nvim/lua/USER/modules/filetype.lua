@@ -18,51 +18,58 @@ return {
     ft = "nim",
   },
   {
-    url = "https://github.com/OXY2DEV/markview.nvim.git",
+    url = "https://github.com/OXY2DEV/markview.nvim",
     -- dir = D.plugin .. "markview.nvim",
+    pin = true,
+    commit = "ce94d8bc9a76c35fff2f4cc90bb28871dece58d6",
     ft = "markdown",
     opts = {
-      hybrid_modes = {"n"},
-      callbacks = {
-        on_enable = function (_, win)
-          vim.wo[win].conceallevel = 2;
-          vim.wo[win].concealcursor = "c";
-        end
-      },
+      modes = { "n" },
+      hybrid_modes = { "n" },
       code_blocks = {
-        icons = false,
+        enable = true,
+        -- icons = "mini",
+        style = "language",
         min_width = 80,
         pad_amount = 1,
         pad_char = " ",
-        language_direction = "right",
+        language_direction = "right"
       },
       headings = {
         enable = true,
         shift_width = 0,
-        heading_1 = {style = "icon", icon = "H1 ", hl = "", sign = "󰌖", icon_hl = "MarkviewHeadingIcon"},
-        heading_2 = {style = "icon", icon = "H2 ", hl = "", sign = "󰌖", icon_hl = "MarkviewHeadingIcon"},
-        heading_3 = {style = "icon", icon = "H3 ", hl = "", sign = "󰌖", icon_hl = "MarkviewHeadingIcon"},
-        heading_4 = {style = "icon", icon = "H4 ", hl = "", sign = "󰌖", icon_hl = "MarkviewHeadingIcon"},
-        heading_5 = {style = "icon", icon = "H5 ", hl = "", sign = "󰌖", icon_hl = "MarkviewHeadingIcon"},
-        heading_6 = {style = "icon", icon = "H6 ", hl = "", sign = "󰌖", icon_hl = "MarkviewHeadingIcon"},
+        heading_1 = {style = "icon", icon = "H1 ", hl = "", sign = "", icon_hl = "MarkviewHeadingIcon"},
+        heading_2 = {style = "icon", icon = "H2 ", hl = "", sign = "", icon_hl = "MarkviewHeadingIcon"},
+        heading_3 = {style = "icon", icon = "H3 ", hl = "", sign = "", icon_hl = "MarkviewHeadingIcon"},
+        heading_4 = {style = "icon", icon = "H4 ", hl = "", sign = "", icon_hl = "MarkviewHeadingIcon"},
+        heading_5 = {style = "icon", icon = "H5 ", hl = "", sign = "", icon_hl = "MarkviewHeadingIcon"},
+        heading_6 = {style = "icon", icon = "H6 ", hl = "", sign = "", icon_hl = "MarkviewHeadingIcon"},
       },
       checkboxes = {
         enable = true,
-        checked = {text = " "},
-        unchecked = {text = " "},
-        pending = {text = " "}
+        checked = {text = ""},
+        unchecked = {text = ""},
+        custom = {
+          {match_string = "-", text = " "},
+          {match_string = "?", text = " "},
+        },
+      },
+      horizontal_rules = {
+        enable = true,
+        parts = {
+          {type = "repeating", repeat_amount = 80, text = "~", hl = "Special"}
+        }
       },
       inline_codes = {enable = false},
-      links = {enable = false},
-      list_items = {enable = false},
-      tables = {enable = false}
+      links        = {enable = false},
+      list_items   = {enable = false},
+      tables       = {enable = false},
     }
   },
   {
-    -- url = "https://github.com/echasnovski/mini.hipatterns.git",
-    dir = D.plugin .. "mini.hipatterns",
+    url = "https://github.com/echasnovski/mini.hipatterns.git",
+    -- dir = D.plugin .. "mini.hipatterns",
     event = "InsertEnter",
-    ft = "css",
     cmd = "MiniHipatterns",
     config = function()
       local hipatterns = require("mini.hipatterns")
@@ -92,15 +99,13 @@ return {
           --[[
           -- Extra highlights
           -- @param , @returns and more
-          -- #THIS: or !THIS: or ¡THIS:
-          -- clog()
+          -- #THIS: or !THIS: or ¡THIS: or #___:
           ]]
           docs = {pattern = {"%s()@[%l-]+()%s"}, group = "MiniHipatternsDocs"},
           show = {pattern = {"^+%s().+()"}, group = "minihipatternshighlight"},
-          debug = {pattern = {"()clog()%("}, group = "MiniHipatternsDebug"},
-          color = {pattern = {"!()[%u%d%s_-]+:"}, group = "MiniHipatternsColor"},
-          color2 = {pattern = {"¡()[%u%d%s_-]+:"}, group = "MiniHipatternsColor2"},
-          color3 = {pattern = {"#()[%u%d%s_-]+:"}, group = "MiniHipatternsColor3"},
+          color1 = {pattern = {"%s*()![-%a%d_\\=\\.]+:"}, group = "MiniHipatternsColor"},
+          color2 = {pattern = {"%s*()¡[-%a%d_\\=\\.]+:"}, group = "MiniHipatternsColor2"},
+          color3 = {pattern = {"%s*()#[-%a%d_\\=\\.]+:"}, group = "MiniHipatternsColor3"},
           --[[
           -- Highlight color systems using that color
           -- hsl(200deg, 50%, 50%) or hsl(200, 50%, 50%) or hsl(200, 50, 50)
@@ -120,10 +125,10 @@ return {
             end
           },
           lch = {
-            pattern = "lch%(%d+%.?%d+%p? %d+%.?%d+ %d+%.?%d+%)",
+            pattern = "lch%(%d+%.?%d*%p? %d+%.?%d* %d+%.?%d*%)",
             group = function(_, match)
               local utils = require("USER.modules.utils.colors.lch")
-              local l, c, h = match:match("lch%((%d+%.?%d+)%p? (%d+%.?%d+) (%d+%.?%d+)%)")
+              local l, c, h = match:match("lch%((%d+%.?%d*)%p? (%d+%.?%d*) (%d+%.?%d*)%)")
               local color = utils.lchToHex(tonumber(l), tonumber(c), tonumber(h))
               return MiniHipatterns.compute_hex_color_group(color, "bg")
             end
@@ -154,12 +159,8 @@ return {
   {
     url = "https://github.com/farias-hecdin/CSSVarHighlight.git",
     -- dir = D.plugin .. "CSSVarHighlight",
-    cmd = "InsertEnter",
-    config = function()
-      require('CSSVarHighlight').setup({
-        variable_pattern = "%-%-[-_%w]*co%-[-_%w]*",
-      })
-    end,
+    ft = "css",
+    opts = {variable_pattern = "%-%-[-_%w]*co%-[-_%w]*"}
   },
   {
     url = "https://github.com/farias-hecdin/CSSVarViewer.git",
@@ -174,8 +175,8 @@ return {
     config = true
   },
   {
-    -- url = "https://github.com/jsongerber/nvim-px-to-rem.git",
-    dir = D.plugin .. "nvim-px-to-rem",
+    url = "https://github.com/jsongerber/nvim-px-to-rem.git",
+    -- dir = D.plugin .. "nvim-px-to-rem",
     cmd = {"PxToRemCursor", "PxToRemLine"},
     opts = {
       add_cmp_source = false,
@@ -183,15 +184,15 @@ return {
     }
   },
   {
-    -- url = "https://github.com/antonk52/markdowny.nvim.git",
-    dir = D.plugin .. "markdowny.nvim",
-    keys = {"<C-i>", "<C-l>", "<C-n>"},
+    url = "https://github.com/antonk52/markdowny.nvim.git",
+    -- dir = D.plugin .. "markdowny.nvim",
+    keys = {"<C-i>", "<C-l>", "<C-b>"},
     ft = "markdown",
     config = true
   },
   {
-    -- url = "https://github.com/tadmccorkle/markdown.nvim.git",
-    dir = D.plugin .. "markdown.nvim",
+    url = "https://github.com/tadmccorkle/markdown.nvim.git",
+    -- dir = D.plugin .. "markdown.nvim",
     ft = "markdown",
     opts = {
       toc = {

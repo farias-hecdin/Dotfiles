@@ -1,1 +1,3 @@
-require('luassert.matchers.core')require('luassert.matchers.composite')
+-- load basic machers
+require('luassert.matchers.core')
+require('luassert.matchers.composite')

@@ -1,1 +1,695 @@
-local a=coroutine;local b=require"plenary.functional"local c=require"plenary.compat"local d={}local e={}e.__index=e;function e:__call(f,g)return self.gen(f or self.param,g or self.state)end;function e:__tostring()return"<iterator>"end;local h=function(...)local i=select("#",...)if i>=3 then local j=select(i-2,...)if type(j)=="table"and getmetatable(j)==e and j.param==select(i-1,...)and j.state==select(i,...)then return i-2 end end;return i end;local k=function(l,...)if l==nil then return nil end;return...end;local m=function(n,l,...)if l==nil then return nil end;return l,n(...)end;local o=function(p,q)return nil end;local r=pairs{}local s=function(t,u)local v;u,v=r(t,u)return u,u,v end;local w=function(f,g)g=g+1;if g>#f then return nil end;local x=string.sub(f,g,g)return g,x end;local y=function(z,f,g)assert(z~=nil,"invalid iterator")if type(z)=="table"then local A=getmetatable(z)if A~=nil then if A==e then return z.gen,z.param,z.state end end;if c.islist(z)then return ipairs(z)else return s,z,nil end elseif type(z)=="function"then return z,f,g elseif type(z)=="string"then if#z==0 then return o,nil,nil end;return w,z,0 end;error(string.format('object %s of type "%s" is not iterable',z,type(z)))end;local function B(C,f,g)return setmetatable({gen=C,param=f,state=g},e)end;local D=function(self)return self.gen,self.param,self.state end;local E=function(z,f,g)return B(y(z,f,g))end;d.iter=E;d.wrap=B;d.unwrap=D;function e:for_each(F)local f,g=self.param,self.state;repeat g=m(F,self.gen(f,g))until g==nil end;function e:stateful()return B(a.wrap(function()self:for_each(function(...)a.yield(b.first(...),...)end)while true do a.yield()end end),nil,nil)end;local G=function(f,g)local H,I=f[1],f[2]g=g+I;if g>H then return nil end;return g,g end;local J=function(f,g)local H,I=f[1],f[2]g=g+I;if g<H then return nil end;return g,g end;local K=function(L,H,I)if I==nil then if H==nil then if L==0 then return o,nil,nil end;H=L;L=H>0 and 1 or-1 end;I=L<=H and 1 or-1 end;assert(type(L)=="number","start must be a number")assert(type(H)=="number","stop must be a number")assert(type(I)=="number","step must be a number")assert(I~=0,"step must not be zero")if I>0 then return B(G,{H,I},L-I)elseif I<0 then return B(J,{H,I},L-I)end end;d.range=K;local M=function(N,l)return l+1,unpack(N)end;local O=function(N,l)return l+1,N(l)end;local P=function(N,l)return l+1,N end;local Q=function(...)if select("#",...)<=1 then return B(P,select(1,...),0)else return B(M,{...},0)end end;d.duplicate=Q;local R=function(n)assert(type(n)=="function")return B(O,n,0)end;d.from_fun=R;local S=function()return B(P,0,0)end;d.zeros=S;local T=function()return B(P,1,0)end;d.ones=T;local U=function(N,V)return 0,math.random(N[1],N[2])end;local W=function(X,V)return 0,math.random()end;local Y=function(i,Z)if i==nil and Z==nil then return B(W,0,0)end;assert(type(i)=="number","invalid first arg to rands")if Z==nil then Z=i;i=0 else assert(type(Z)=="number","invalid second arg to rands")end;assert(i<Z,"empty interval")return B(U,{i,Z-1},0)end;d.rands=Y;local _=function(f,g)local a0,a1=f[1],f[2]local a2=#a0;if g>a2+1 then return end;local L,a3=string.find(a0,a1,g,true)if not L then L=a2+1;a3=a2+1 end;local a4=a0:sub(g,L-1)return a3+1,a4 end;local a5=function(a0,a1)return B(_,{a0,a1},1)end;d.split=a5;local a6=function(a0)return a5(a0," ")end;d.words=a6;local a7=function(a0)return a5(a0,"\n")end;d.lines=a7;local a8=function(f,g)local a9,N,n=f[1],f[2],f[3]return m(n,a9(N,g))end;function e:map(n)return B(a8,{self.gen,self.param,n},self.state)end;local aa;do local j=function(ab,l,...)if l==nil then return nil end;return{ab.gen,ab.param,l},...end;aa=function(g,l,...)if l==nil then return nil end;local ac=b.first(...)if getmetatable(ac)==e then local ab=(ac..B(g[1],g[2],l)):flatten()return j(ab,ab.gen(ab.param,ab.state))end;return{g[1],g[2],l},...end end;local ad=function(ae,g)if g==nil then return end;local a9,N,l=g[1],g[2],g[3]return aa(g,a9(N,l))end;function e:flatten()return B(ad,false,{self.gen,self.param,self.state})end;local af=function(n,a9,N,l,ag)while true do if l==nil or n(ag)then break end;l,ag=a9(N,l)end;return l,ag end;local ah;local ai=function(n,a9,N,l)return ah(n,a9,N,a9(N,l))end;ah=function(n,a9,N,l,...)if l==nil then return nil end;if n(...)then return l,...end;return ai(n,a9,N,l)end;local aj=function(n,a9,N,l,...)if select("#",...)<2 then return af(n,a9,N,l,...)else return ah(n,a9,N,l,...)end end;local ak=function(f,l)local a9,N,n=f[1],f[2],f[3]return aj(n,a9,N,a9(N,l))end;function e:filter(n)return B(ak,{self.gen,self.param,n},self.state)end;function e:enumerate()local al=0;return self:map(function(...)al=al+1;return al,...end)end;function e:any(n)local x;local g,f,C=self.state,self.param,self.gen;repeat g,x=m(n,C(f,g))until g==nil or x;return x end;function e:all(n)local x;local g,f,C=self.state,self.param,self.gen;repeat g,x=m(n,C(f,g))until g==nil or not x;return g==nil end;function e:find(am)local C,f,g=self.gen,self.param,self.state;if type(am)=="function"then return k(aj(am,C,f,C(f,g)))else for ae,x in C,f,g do if x==am then return x end end;return nil end end;function e:fold(an,n)local ao=an;local C,f,g=self.gen,self.param,self.state;for ae,x in C,f,g do ao=n(ao,x)end;return ao end;function e:tolist()local ap={}self:for_each(function(ag)table.insert(ap,ag)end)return ap end;function e:tolistn()local ap={}self:for_each(function(...)table.insert(ap,{...})end)return ap end;function e:tomap()local t={}self:for_each(function(u,v)t[u]=v end)return t end;local aq;local ar=function(f,g,l,...)if l==nil then local al=g[1]+1;if f[3*al-1]==nil then return nil end;l=f[3*al]return aq(f,{al,l})end;return{g[1],l},...end;aq=function(f,g)local al,l=g[1],g[2]local a9,N=f[3*al-2],f[3*al-1]return ar(f,g,a9(N,l))end;local as=function(...)local i=h(...)if i==0 then return B(o,nil,nil)end;local f={[3*i]=0}local a9,N,l;for al=1,i,1 do local at=select(al,...)a9,N,l=D(at)f[3*al-2]=a9;f[3*al-1]=N;f[3*al]=l end;return B(aq,f,{1,f[3]})end;e.chain=as;e.__concat=as;d.chain=as;local function au(f,g,av,...)if#av==#f/2 then return av,...end;local al=#av+1;local a9,N=f[2*al-1],f[2*al]local l,x=a9(N,g[al])if l==nil then return nil end;table.insert(av,l)return au(f,g,av,x,...)end;local aw=function(f,g)return au(f,g,{})end;local ax=function(...)local i=h(...)if i==0 then return B(o,nil,nil)end;local f={[2*i]=0}local g={[i]=0}local a9,N,l;for al=1,i,1 do local j=select(i-al+1,...)a9,N,l=y(j)f[2*al-1]=a9;f[2*al]=N;g[al]=l end;return B(aw,f,g)end;e.zip=ax;e.__div=ax;d.zip=ax;return d
+---@brief [[
+---An adaptation of luafun for neovim.
+---This library will use neovim specific functions.
+---Some documentation is the same as from luafun.
+---Some extra functions are present that are not in luafun
+---@brief ]]
+
+local co = coroutine
+local f = require "plenary.functional"
+local compat = require "plenary.compat"
+
+--------------------------------------------------------------------------------
+-- Tools
+--------------------------------------------------------------------------------
+
+local exports = {}
+
+---@class Iterator
+---@field gen function
+---@field param any
+---@field state any
+local Iterator = {}
+Iterator.__index = Iterator
+
+---Makes a for loop work
+---If not called without param or state, will just generate with the starting state
+---This is useful because the original luafun will also return param and state in addition to the iterator as a multival
+---This can cause problems because when using iterators as expressions the multivals can bleed
+---For example i.iter { 1, 2, i.iter { 3, 4 } } will not work because the inner iterator returns a multival thus
+---polluting the list with internal values.
+---So instead we do not return param and state as multivals when doing wrap
+---This causes the first loop iteration to call param and state with nil because we didn't return them as multivals
+---We have to use or to check for nil and default to interal starting state and param
+function Iterator:__call(param, state)
+  return self.gen(param or self.param, state or self.state)
+end
+
+function Iterator:__tostring()
+  return "<iterator>"
+end
+
+-- A special hack for zip/chain to skip last two state, if a wrapped iterator
+-- has been passed
+local numargs = function(...)
+  local n = select("#", ...)
+  if n >= 3 then
+    -- Fix last argument
+    local it = select(n - 2, ...)
+    if
+      type(it) == "table"
+      and getmetatable(it) == Iterator
+      and it.param == select(n - 1, ...)
+      and it.state == select(n, ...)
+    then
+      return n - 2
+    end
+  end
+  return n
+end
+
+local return_if_not_empty = function(state_x, ...)
+  if state_x == nil then
+    return nil
+  end
+  return ...
+end
+
+local call_if_not_empty = function(fun, state_x, ...)
+  if state_x == nil then
+    return nil
+  end
+  return state_x, fun(...)
+end
+
+--------------------------------------------------------------------------------
+-- Basic Functions
+--------------------------------------------------------------------------------
+local nil_gen = function(_param, _state)
+  return nil
+end
+
+local pairs_gen = pairs {}
+
+local map_gen = function(map, key)
+  local value
+  key, value = pairs_gen(map, key)
+  return key, key, value
+end
+
+local string_gen = function(param, state)
+  state = state + 1
+  if state > #param then
+    return nil
+  end
+  local r = string.sub(param, state, state)
+  return state, r
+end
+
+local rawiter = function(obj, param, state)
+  assert(obj ~= nil, "invalid iterator")
+
+  if type(obj) == "table" then
+    local mt = getmetatable(obj)
+
+    if mt ~= nil then
+      if mt == Iterator then
+        return obj.gen, obj.param, obj.state
+      end
+    end
+
+    if compat.islist(obj) then
+      return ipairs(obj)
+    else
+      -- hash
+      return map_gen, obj, nil
+    end
+  elseif type(obj) == "function" then
+    return obj, param, state
+  elseif type(obj) == "string" then
+    if #obj == 0 then
+      return nil_gen, nil, nil
+    end
+
+    return string_gen, obj, 0
+  end
+
+  error(string.format('object %s of type "%s" is not iterable', obj, type(obj)))
+end
+
+---Wraps the iterator triplet into a table to allow metamethods and calling with method form
+---Important! We do not return param and state as multivals like the original luafun
+---See the __call metamethod for more information
+---@param gen any
+---@param param any
+---@param state any
+---@return Iterator
+local function wrap(gen, param, state)
+  return setmetatable({
+    gen = gen,
+    param = param,
+    state = state,
+  }, Iterator)
+end
+
+---Unwrap an iterator metatable into the iterator triplet
+---@param self Iterator
+---@return any
+---@return any
+---@return any
+local unwrap = function(self)
+  return self.gen, self.param, self.state
+end
+
+---Create an iterator from an object
+---@param obj any
+---@param param any (optional)
+---@param state any (optional)
+---@return Iterator
+local iter = function(obj, param, state)
+  return wrap(rawiter(obj, param, state))
+end
+
+exports.iter = iter
+exports.wrap = wrap
+exports.unwrap = unwrap
+
+function Iterator:for_each(fn)
+  local param, state = self.param, self.state
+  repeat
+    state = call_if_not_empty(fn, self.gen(param, state))
+  until state == nil
+end
+
+function Iterator:stateful()
+  return wrap(
+    co.wrap(function()
+      self:for_each(function(...)
+        co.yield(f.first(...), ...)
+      end)
+
+      -- too make sure that we always return nil if there are no more
+      while true do
+        co.yield()
+      end
+    end),
+    nil,
+    nil
+  )
+end
+
+-- function Iterator:stateful()
+--   local gen, param, state = self.gen, self.param, self.state
+
+--   local function return_and_set_state(state_x, ...)
+--     state = state_x
+--     if state == nil then return end
+--     return state_x, ...
+--   end
+
+--   local stateful_gen = function()
+--     return return_and_set_state(gen(param, state))
+--   end
+
+--   return wrap(stateful_gen, false, false)
+-- end
+
+--------------------------------------------------------------------------------
+-- Generators
+--------------------------------------------------------------------------------
+local range_gen = function(param, state)
+  local stop, step = param[1], param[2]
+  state = state + step
+  if state > stop then
+    return nil
+  end
+  return state, state
+end
+
+local range_rev_gen = function(param, state)
+  local stop, step = param[1], param[2]
+  state = state + step
+  if state < stop then
+    return nil
+  end
+  return state, state
+end
+
+---Creates a range iterator
+---@param start number
+---@param stop number
+---@param step number
+---@return Iterator
+local range = function(start, stop, step)
+  if step == nil then
+    if stop == nil then
+      if start == 0 then
+        return nil_gen, nil, nil
+      end
+      stop = start
+      start = stop > 0 and 1 or -1
+    end
+    step = start <= stop and 1 or -1
+  end
+
+  assert(type(start) == "number", "start must be a number")
+  assert(type(stop) == "number", "stop must be a number")
+  assert(type(step) == "number", "step must be a number")
+  assert(step ~= 0, "step must not be zero")
+
+  if step > 0 then
+    return wrap(range_gen, { stop, step }, start - step)
+  elseif step < 0 then
+    return wrap(range_rev_gen, { stop, step }, start - step)
+  end
+end
+exports.range = range
+
+local duplicate_table_gen = function(param_x, state_x)
+  return state_x + 1, unpack(param_x)
+end
+
+local duplicate_fun_gen = function(param_x, state_x)
+  return state_x + 1, param_x(state_x)
+end
+
+local duplicate_gen = function(param_x, state_x)
+  return state_x + 1, param_x
+end
+
+---Creates an infinite iterator that will yield the arguments
+---If multiple arguments are passed, the args will be packed and unpacked
+---@param ...: the arguments to duplicate
+---@return Iterator
+local duplicate = function(...)
+  if select("#", ...) <= 1 then
+    return wrap(duplicate_gen, select(1, ...), 0)
+  else
+    return wrap(duplicate_table_gen, { ... }, 0)
+  end
+end
+exports.duplicate = duplicate
+
+---Creates an iterator from a function
+---NOTE: if the function is a closure and modifies state, the resulting iterator will not be stateless
+---@param fun function
+---@return Iterator
+local from_fun = function(fun)
+  assert(type(fun) == "function")
+  return wrap(duplicate_fun_gen, fun, 0)
+end
+exports.from_fun = from_fun
+
+---Creates an infinite iterator that will yield zeros.
+---This is an alias to calling duplicate(0)
+---@return Iterator
+local zeros = function()
+  return wrap(duplicate_gen, 0, 0)
+end
+exports.zeros = zeros
+
+---Creates an infinite iterator that will yield ones.
+---This is an alias to calling duplicate(1)
+---@return Iterator
+local ones = function()
+  return wrap(duplicate_gen, 1, 0)
+end
+exports.ones = ones
+
+local rands_gen = function(param_x, _state_x)
+  return 0, math.random(param_x[1], param_x[2])
+end
+
+local rands_nil_gen = function(_param_x, _state_x)
+  return 0, math.random()
+end
+
+---Creates an infinite iterator that will yield random values.
+---@param n number
+---@param m number
+---@return Iterator
+local rands = function(n, m)
+  if n == nil and m == nil then
+    return wrap(rands_nil_gen, 0, 0)
+  end
+  assert(type(n) == "number", "invalid first arg to rands")
+  if m == nil then
+    m = n
+    n = 0
+  else
+    assert(type(m) == "number", "invalid second arg to rands")
+  end
+  assert(n < m, "empty interval")
+  return wrap(rands_gen, { n, m - 1 }, 0)
+end
+exports.rands = rands
+
+local split_gen = function(param, state)
+  local input, sep = param[1], param[2]
+  local input_len = #input
+
+  if state > input_len + 1 then
+    return
+  end
+
+  local start, finish = string.find(input, sep, state, true)
+  if not start then
+    start = input_len + 1
+    finish = input_len + 1
+  end
+
+  local sub_str = input:sub(state, start - 1)
+
+  return finish + 1, sub_str
+end
+
+---Return an iterator of substrings separated by a string
+---@param input string: the string to split
+---@param sep string: the separator to find and split based on
+---@return Iterator
+local split = function(input, sep)
+  return wrap(split_gen, { input, sep }, 1)
+end
+exports.split = split
+
+---Splits a string based on a single space
+---An alias for split(input, " ")
+---@param input any
+---@return any
+local words = function(input)
+  return split(input, " ")
+end
+exports.words = words
+
+local lines = function(input)
+  -- TODO: platform specific linebreaks
+  return split(input, "\n")
+end
+exports.lines = lines
+
+--------------------------------------------------------------------------------
+-- Transformations
+--------------------------------------------------------------------------------
+local map_gen2 = function(param, state)
+  local gen_x, param_x, fun = param[1], param[2], param[3]
+  return call_if_not_empty(fun, gen_x(param_x, state))
+end
+
+---Iterator adapter that maps the previous iterator with a function
+---@param fun function: The function to map with. Will be called on each element
+---@return Iterator
+function Iterator:map(fun)
+  return wrap(map_gen2, { self.gen, self.param, fun }, self.state)
+end
+
+local flatten_gen1
+do
+  local it = function(new_iter, state_x, ...)
+    if state_x == nil then
+      return nil
+    end
+    return { new_iter.gen, new_iter.param, state_x }, ...
+  end
+
+  flatten_gen1 = function(state, state_x, ...)
+    if state_x == nil then
+      return nil
+    end
+
+    local first_arg = f.first(...)
+
+    -- experimental part
+    if getmetatable(first_arg) == Iterator then
+      -- attach the iterator to the rest
+      local new_iter = (first_arg .. wrap(state[1], state[2], state_x)):flatten()
+      -- advance the iterator by one
+      return it(new_iter, new_iter.gen(new_iter.param, new_iter.state))
+    end
+
+    return { state[1], state[2], state_x }, ...
+  end
+end
+
+local flatten_gen = function(_, state)
+  if state == nil then
+    return
+  end
+  local gen_x, param_x, state_x = state[1], state[2], state[3]
+  return flatten_gen1(state, gen_x(param_x, state_x))
+end
+
+---Iterator adapter that will recursivley flatten nested iterator structure
+---@return Iterator
+function Iterator:flatten()
+  return wrap(flatten_gen, false, { self.gen, self.param, self.state })
+end
+
+--------------------------------------------------------------------------------
+-- Filtering
+--------------------------------------------------------------------------------
+local filter1_gen = function(fun, gen_x, param_x, state_x, a)
+  while true do
+    if state_x == nil or fun(a) then
+      break
+    end
+    state_x, a = gen_x(param_x, state_x)
+  end
+  return state_x, a
+end
+
+-- call each other
+-- because we can't assign a vararg mutably in a while loop like filter1_gen
+-- so we have to use recursion in calling both of these functions
+local filterm_gen
+local filterm_gen_shrink = function(fun, gen_x, param_x, state_x)
+  return filterm_gen(fun, gen_x, param_x, gen_x(param_x, state_x))
+end
+
+filterm_gen = function(fun, gen_x, param_x, state_x, ...)
+  if state_x == nil then
+    return nil
+  end
+
+  if fun(...) then
+    return state_x, ...
+  end
+
+  return filterm_gen_shrink(fun, gen_x, param_x, state_x)
+end
+
+local filter_detect = function(fun, gen_x, param_x, state_x, ...)
+  if select("#", ...) < 2 then
+    return filter1_gen(fun, gen_x, param_x, state_x, ...)
+  else
+    return filterm_gen(fun, gen_x, param_x, state_x, ...)
+  end
+end
+
+local filter_gen = function(param, state_x)
+  local gen_x, param_x, fun = param[1], param[2], param[3]
+  return filter_detect(fun, gen_x, param_x, gen_x(param_x, state_x))
+end
+
+---Iterator adapter that will filter values
+---@param fun function: The function to filter values with. If the function returns true, the value will be kept.
+---@return Iterator
+function Iterator:filter(fun)
+  return wrap(filter_gen, { self.gen, self.param, fun }, self.state)
+end
+
+---Iterator adapter that will provide numbers from 1 to n as the first multival
+---@return Iterator
+function Iterator:enumerate()
+  local i = 0
+  return self:map(function(...)
+    i = i + 1
+    return i, ...
+  end)
+end
+
+--------------------------------------------------------------------------------
+-- Reducing
+--------------------------------------------------------------------------------
+
+---Returns true if any of the values in the iterator satisfy a predicate
+---@param fun function
+---@return boolean
+function Iterator:any(fun)
+  local r
+  local state, param, gen = self.state, self.param, self.gen
+  repeat
+    state, r = call_if_not_empty(fun, gen(param, state))
+  until state == nil or r
+  return r
+end
+
+---Returns true if all of the values in the iterator satisfy a predicate
+---@param fun function
+---@return boolean
+function Iterator:all(fun)
+  local r
+  local state, param, gen = self.state, self.param, self.gen
+  repeat
+    state, r = call_if_not_empty(fun, gen(param, state))
+  until state == nil or not r
+  return state == nil
+end
+
+---Finds a value that is equal to the provided value of satisfies a predicate.
+---@param val_or_fn any
+---@return any
+function Iterator:find(val_or_fn)
+  local gen, param, state = self.gen, self.param, self.state
+  if type(val_or_fn) == "function" then
+    return return_if_not_empty(filter_detect(val_or_fn, gen, param, gen(param, state)))
+  else
+    for _, r in gen, param, state do
+      if r == val_or_fn then
+        return r
+      end
+    end
+    return nil
+  end
+end
+
+---Folds an iterator into a single value using a function.
+---@param init any
+---@param fun fun(acc: any, val: any): any
+---@return any
+function Iterator:fold(init, fun)
+  local acc = init
+  local gen, param, state = self.gen, self.param, self.state
+  for _, r in gen, param, state do
+    acc = fun(acc, r)
+  end
+  return acc
+end
+
+---Turns an iterator into a list.
+---If the iterator yields multivals only the first multival will be used.
+---@return table
+function Iterator:tolist()
+  local list = {}
+  self:for_each(function(a)
+    table.insert(list, a)
+  end)
+  return list
+end
+
+---Turns an iterator into a list.
+---If the iterator yields multivals all multivals will be used and packed into a table.
+---@return table
+function Iterator:tolistn()
+  local list = {}
+  self:for_each(function(...)
+    table.insert(list, { ... })
+  end)
+  return list
+end
+
+---Turns an iterator into a map.
+---The first multival that the iterator yields will be the key.
+---The second multival that the iterator yields will be the value.
+---@return table
+function Iterator:tomap()
+  local map = {}
+  self:for_each(function(key, value)
+    map[key] = value
+  end)
+  return map
+end
+
+--------------------------------------------------------------------------------
+-- Compositions
+--------------------------------------------------------------------------------
+-- call each other
+local chain_gen_r1
+local chain_gen_r2 = function(param, state, state_x, ...)
+  if state_x == nil then
+    local i = state[1] + 1
+    if param[3 * i - 1] == nil then
+      return nil
+    end
+    state_x = param[3 * i]
+    return chain_gen_r1(param, { i, state_x })
+  end
+  return { state[1], state_x }, ...
+end
+
+chain_gen_r1 = function(param, state)
+  local i, state_x = state[1], state[2]
+  local gen_x, param_x = param[3 * i - 2], param[3 * i - 1]
+  return chain_gen_r2(param, state, gen_x(param_x, state_x))
+end
+
+---Make an iterator that returns elements from the first iterator until it is exhausted,
+---then proceeds to the next iterator,
+---until all of the iterators are exhausted.
+---Used for treating consecutive iterators as a single iterator.
+---Infinity iterators are supported, but are not recommended.
+---@param ...: the iterators to chain
+---@return Iterator
+local chain = function(...)
+  local n = numargs(...)
+
+  if n == 0 then
+    return wrap(nil_gen, nil, nil)
+  end
+
+  local param = { [3 * n] = 0 }
+
+  local gen_x, param_x, state_x
+  for i = 1, n, 1 do
+    local elem = select(i, ...)
+    gen_x, param_x, state_x = unwrap(elem)
+    param[3 * i - 2] = gen_x
+    param[3 * i - 1] = param_x
+    param[3 * i] = state_x
+  end
+
+  return wrap(chain_gen_r1, param, { 1, param[3] })
+end
+
+Iterator.chain = chain
+Iterator.__concat = chain
+exports.chain = chain
+
+local function zip_gen_r(param, state, state_new, ...)
+  if #state_new == #param / 2 then
+    return state_new, ...
+  end
+
+  local i = #state_new + 1
+  local gen_x, param_x = param[2 * i - 1], param[2 * i]
+  local state_x, r = gen_x(param_x, state[i])
+  if state_x == nil then
+    return nil
+  end
+  table.insert(state_new, state_x)
+  return zip_gen_r(param, state, state_new, r, ...)
+end
+
+local zip_gen = function(param, state)
+  return zip_gen_r(param, state, {})
+end
+
+---Return a new iterator where i-th return value contains the i-th element from each of the iterators.
+---The returned iterator is truncated in length to the length of the shortest iterator.
+---For multi-return iterators only the first variable is used.
+---@param ...: the iterators to zip
+---@return Iterator
+local zip = function(...)
+  local n = numargs(...)
+  if n == 0 then
+    return wrap(nil_gen, nil, nil)
+  end
+  local param = { [2 * n] = 0 }
+  local state = { [n] = 0 }
+
+  local gen_x, param_x, state_x
+  for i = 1, n, 1 do
+    local it = select(n - i + 1, ...)
+    gen_x, param_x, state_x = rawiter(it)
+    param[2 * i - 1] = gen_x
+    param[2 * i] = param_x
+    state[i] = state_x
+  end
+
+  return wrap(zip_gen, param, state)
+end
+
+Iterator.zip = zip
+Iterator.__div = zip
+exports.zip = zip
+
+return exports

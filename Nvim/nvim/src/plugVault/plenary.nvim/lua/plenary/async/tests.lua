@@ -1,1 +1,25 @@
-local a=require"plenary.async.util"local b={}b.describe=function(c,d)describe(c,d)end;b.it=function(c,d)it(c,a.will_block(d,tonumber(vim.env.PLENARY_TEST_TIMEOUT)))end;b.pending=function(d)pending(d)end;b.before_each=function(d)before_each(a.will_block(d))end;b.after_each=function(d)after_each(a.will_block(d))end;return b
+local util = require "plenary.async.util"
+
+local M = {}
+
+M.describe = function(s, async_func)
+  describe(s, async_func)
+end
+
+M.it = function(s, async_func)
+  it(s, util.will_block(async_func, tonumber(vim.env.PLENARY_TEST_TIMEOUT)))
+end
+
+M.pending = function(async_func)
+  pending(async_func)
+end
+
+M.before_each = function(async_func)
+  before_each(util.will_block(async_func))
+end
+
+M.after_each = function(async_func)
+  after_each(util.will_block(async_func))
+end
+
+return M

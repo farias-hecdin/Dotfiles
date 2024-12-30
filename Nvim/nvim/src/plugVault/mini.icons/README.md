@@ -40,9 +40,19 @@ If you want to help this project grow but don't know where to start, check out [
 
 - Mocking methods of 'nvim-tree/nvim-web-devicons' for better integrations with plugins outside 'mini.nvim'. See `:h MiniIcons.mock_nvim_web_devicons()`.
 
+- Tweaking built-in maps for "LSP kind" to include icons. In particular, this makes ['mini.completion'](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-completion.md) use icons in LSP step. See `:h MiniIcons.tweak_lsp_kind()`.
+
 Notes:
 
 - It is not a goal to become a collection of icons for as much use cases as possible. There are specific criteria for icon data to be included as built-in in each category (see `:h MiniIcons.get()`). The main supported category is "filetype".
+
+Recommendations for plugin authors using 'mini.icons' as a dependency:
+
+- Check if `_G.MiniIcons` table is present (which means that user explicitly enabled 'mini.icons') and provide icons only if it is.
+
+- Use `MiniIcons.get()` function to get icon string and more data about it.
+
+- For file icons prefer using full path instead of relative or only basename. It makes a difference if path matches pattern that uses parent directories. The `:h MiniIcons.config` has an example of that.
 
 ## Dependencies
 
@@ -61,11 +71,10 @@ If using terminal emulator and/or font with icon support is impossible, use `con
 
 This plugin can be installed as part of 'mini.nvim' library (**recommended**) or as a standalone Git repository.
 
-During beta-testing phase there is only one branch to install from:
-<!-- There are two branches to install from: -->
+There are two branches to install from:
 
 - `main` (default, **recommended**) will have latest development version of plugin. All changes since last stable release should be perceived as being in beta testing phase (meaning they already passed alpha-testing and are moderately settled).
-<!-- - `stable` will be updated only upon releases with code tested during public beta-testing phase in `main` branch. -->
+- `stable` will be updated only upon releases with code tested during public beta-testing phase in `main` branch.
 
 Here are code snippets for some common installation methods (use only one):
 
@@ -79,18 +88,17 @@ Here are code snippets for some common installation methods (use only one):
     </thead>
     <tbody>
         <tr>
-            <!-- <td rowspan=2>'mini.nvim' library</td> <td>Main</td> <td rowspan=2><i>Follow recommended 'mini.deps' installation</i></td> -->
-            <td rowspan=1>'mini.nvim' library</td> <td>Main</td> <td rowspan=1><i>Follow recommended 'mini.deps' installation</i></td>
+            <td rowspan=2>'mini.nvim' library</td> <td>Main</td> <td rowspan=2><i>Follow recommended 'mini.deps' installation</i></td>
         </tr>
-        <!-- <tr> -->
-        <!--     <td>Stable</td> -->
-        <!-- </tr> -->
         <tr>
-            <td rowspan=1>Standalone plugin</td> <td>Main</td> <td><code>add('echasnovski/mini.icons')</code></td>
+            <td>Stable</td>
         </tr>
-        <!-- <tr> -->
-        <!--     <td>Stable</td> <td><code>add({ source = 'echasnovski/mini.icons', checkout = 'stable' })</code></td> -->
-        <!-- </tr> -->
+        <tr>
+            <td rowspan=2>Standalone plugin</td> <td>Main</td> <td><code>add('echasnovski/mini.icons')</code></td>
+        </tr>
+        <tr>
+            <td>Stable</td> <td><code>add({ source = 'echasnovski/mini.icons', checkout = 'stable' })</code></td>
+        </tr>
     </tbody>
 </table>
 </details>
@@ -105,19 +113,17 @@ Here are code snippets for some common installation methods (use only one):
     </thead>
     <tbody>
         <tr>
-            <!-- <td rowspan=2>'mini.nvim' library</td> <td>Main</td> <td><code>{ 'echasnovski/mini.nvim', version = false },</code></td> -->
-            <td rowspan=1>'mini.nvim' library</td> <td>Main</td> <td><code>{ 'echasnovski/mini.nvim', version = false },</code></td>
+            <td rowspan=2>'mini.nvim' library</td> <td>Main</td> <td><code>{ 'echasnovski/mini.nvim', version = false },</code></td>
         </tr>
-        <!-- <tr> -->
-        <!--     <td>Stable</td> <td><code>{ 'echasnovski/mini.nvim', version = '*' },</code></td> -->
-        <!-- </tr> -->
         <tr>
-            <!-- <td rowspan=2>Standalone plugin</td> <td>Main</td> <td><code>{ 'echasnovski/mini.icons', version = false, main = 'mini.git' },</code></td> -->
-            <td rowspan=1>Standalone plugin</td> <td>Main</td> <td><code>{ 'echasnovski/mini.icons', version = false },</code></td>
+            <td>Stable</td> <td><code>{ 'echasnovski/mini.nvim', version = '*' },</code></td>
         </tr>
-        <!-- <tr> -->
-        <!--     <td>Stable</td> <td><code>{ 'echasnovski/mini.icons', version = '*', main = 'mini.git' },</code></td> -->
-        <!-- </tr> -->
+        <tr>
+            <td rowspan=2>Standalone plugin</td> <td>Main</td> <td><code>{ 'echasnovski/mini.icons', version = false },</code></td>
+        </tr>
+        <tr>
+            <td>Stable</td> <td><code>{ 'echasnovski/mini.icons', version = '*' },</code></td>
+        </tr>
     </tbody>
 </table>
 </details>
@@ -132,19 +138,17 @@ Here are code snippets for some common installation methods (use only one):
     </thead>
     <tbody>
         <tr>
-            <!-- <td rowspan=2>'mini.nvim' library</td> <td>Main</td> <td><code>Plug 'echasnovski/mini.nvim'</code></td> -->
-            <td rowspan=1>'mini.nvim' library</td> <td>Main</td> <td><code>Plug 'echasnovski/mini.nvim'</code></td>
+            <td rowspan=2>'mini.nvim' library</td> <td>Main</td> <td><code>Plug 'echasnovski/mini.nvim'</code></td>
         </tr>
-        <!-- <tr> -->
-        <!--     <td>Stable</td> <td><code>Plug 'echasnovski/mini.nvim', { 'branch': 'stable' }</code></td> -->
-        <!-- </tr> -->
         <tr>
-            <!-- <td rowspan=2>Standalone plugin</td> <td>Main</td> <td><code>Plug 'echasnovski/mini.icons'</code></td> -->
-            <td rowspan=1>Standalone plugin</td> <td>Main</td> <td><code>Plug 'echasnovski/mini.icons'</code></td>
+            <td>Stable</td> <td><code>Plug 'echasnovski/mini.nvim', { 'branch': 'stable' }</code></td>
         </tr>
-        <!-- <tr> -->
-        <!--     <td>Stable</td> <td><code>Plug 'echasnovski/mini.icons', { 'branch': 'stable' }</code></td> -->
-        <!-- </tr> -->
+        <tr>
+            <td rowspan=2>Standalone plugin</td> <td>Main</td> <td><code>Plug 'echasnovski/mini.icons'</code></td>
+        </tr>
+        <tr>
+            <td>Stable</td> <td><code>Plug 'echasnovski/mini.icons', { 'branch': 'stable' }</code></td>
+        </tr>
     </tbody>
 </table>
 </details>
@@ -172,9 +176,13 @@ Here are code snippets for some common installation methods (use only one):
   filetype  = {},
   lsp       = {},
   os        = {},
+
+  -- Control which extensions will be considered during "file" resolution
+  use_file_extension = function(ext, file) return true end,
 }
 ```
 
 ## Similar plugins
 
 - [nvim-tree/nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons)
+- [onsails/lspkind.nvim](https://github.com/onsails/lspkind.nvim)

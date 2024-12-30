@@ -15,8 +15,8 @@ return {
     config = false
   },
   {
-    -- url = "https://github.com/arnevm123/nvim-lint.git",
-    dir = D.plugin .. "nvim-lint",
+    url = "https://github.com/arnevm123/nvim-lint.git",
+    -- dir = D.plugin .. "nvim-lint",
     enabled = false,
     -- event = {"BufReadPre"},
     config = function()

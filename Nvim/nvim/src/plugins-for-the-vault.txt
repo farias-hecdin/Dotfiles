@@ -12,13 +12,14 @@ code_runner.nvim
 flatten.nvim
 focus.nvim
 markdown.nvim
-markdowny.nvim
+markview.nvim
 messages.nvim
 mini.align
 mini.diff
 mini.files
 mini.hipatterns
 mini.cursorword
+mini.indentscope
 mini.icons
 mini.jump2d
 mini.notify
@@ -42,5 +43,7 @@ simpleIndentGuides.nvim
 sos.nvim
 staline.nvim
 url-open
+vim-matchtag
 vim-vsnip
 which-key.nvim
+multicursor.nvim

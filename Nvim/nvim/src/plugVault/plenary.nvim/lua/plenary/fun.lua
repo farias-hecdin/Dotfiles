@@ -1,1 +1,23 @@
-local a={}a.bind=require("plenary.functional").partial;function a.arify(b,c)return function(...)if select("#",...)~=c then error(("Expected %s number of arguments"):format(c))end;b(...)end end;function a.create_wrapper(d)return function(e)return function(...)return d(e(...))end end end;return a
+local M = {}
+
+M.bind = require("plenary.functional").partial
+
+function M.arify(fn, argc)
+  return function(...)
+    if select("#", ...) ~= argc then
+      error(("Expected %s number of arguments"):format(argc))
+    end
+
+    fn(...)
+  end
+end
+
+function M.create_wrapper(map)
+  return function(to_wrap)
+    return function(...)
+      return map(to_wrap(...))
+    end
+  end
+end
+
+return M

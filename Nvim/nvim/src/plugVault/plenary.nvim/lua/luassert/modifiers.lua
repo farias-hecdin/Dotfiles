@@ -1,1 +1,19 @@
-local a=require('luassert.assert')local function b(c)return c end;local function d(c)c.mod=not c.mod;return c end;a:register("modifier","is",b)a:register("modifier","are",b)a:register("modifier","was",b)a:register("modifier","has",b)a:register("modifier","does",b)a:register("modifier","not",d)a:register("modifier","no",d)
+-- module will not return anything, only register assertions/modifiers with the main assert engine
+local assert = require('luassert.assert')
+
+local function is(state)
+  return state
+end
+
+local function is_not(state)
+  state.mod = not state.mod
+  return state
+end
+
+assert:register("modifier", "is", is)
+assert:register("modifier", "are", is)
+assert:register("modifier", "was", is)
+assert:register("modifier", "has", is)
+assert:register("modifier", "does", is)
+assert:register("modifier", "not", is_not)
+assert:register("modifier", "no", is_not)

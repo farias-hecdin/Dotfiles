@@ -1,1 +1,54 @@
-local a=require('focus.modules.utils')local b=vim.cmd;local c={}c.focus_enable=function()if not a.is_disabled()then return end;vim.g.focus_disable=false;require('focus').resize('autoresize')end;c.focus_disable=function()if a.is_disabled()then return end;vim.g.focus_disable=true;b('wincmd=')end;c.focus_toggle=function()if a.is_disabled()then c.focus_enable()return end;c.focus_disable()end;c.focus_maximise=function()require('focus').resize('maximise')end;c.focus_equalise=function()require('focus').resize('equalise')end;c.focus_autoresize=function()require('focus').resize('autoresize')end;c.focus_max_or_equal=function()local d=vim.fn.winwidth(vim.api.nvim_get_current_win())if d>vim.o.columns/2 then c.focus_equalise()else c.focus_maximise()end end;return c
+local utils = require('focus.modules.utils')
+local cmd = vim.cmd
+local M = {}
+
+M.focus_enable = function()
+    if not utils.is_disabled() then
+        return
+    end
+
+    vim.g.focus_disable = false
+    require('focus').resize('autoresize')
+end
+
+M.focus_disable = function()
+    if utils.is_disabled() then
+        return
+    end
+
+    vim.g.focus_disable = true
+    cmd('wincmd=')
+end
+
+M.focus_toggle = function()
+    if utils.is_disabled() then
+        M.focus_enable()
+
+        return
+    end
+
+    M.focus_disable()
+end
+
+M.focus_maximise = function()
+    require('focus').resize('maximise')
+end
+
+M.focus_equalise = function()
+    require('focus').resize('equalise')
+end
+
+M.focus_autoresize = function()
+    require('focus').resize('autoresize')
+end
+
+M.focus_max_or_equal = function()
+    local winwidth = vim.fn.winwidth(vim.api.nvim_get_current_win())
+    if winwidth > vim.o.columns / 2 then
+        M.focus_equalise()
+    else
+        M.focus_maximise()
+    end
+end
+
+return M

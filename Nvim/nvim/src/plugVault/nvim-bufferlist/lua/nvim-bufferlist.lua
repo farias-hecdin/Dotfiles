@@ -1,1 +1,166 @@
-local a=vim.api;local b,c;local function d(e)local f=a.nvim_win_get_width(0)local g=math.floor(f/2)-math.floor(string.len(e)/2)return string.rep(' ',g)..e end;local function h()b=a.nvim_create_buf(false,true)local i=a.nvim_create_buf(false,true)a.nvim_buf_set_option(b,'bufhidden','wipe')a.nvim_buf_set_option(b,'filetype','bufferlist')local f=a.nvim_get_option("columns")local j=a.nvim_get_option("lines")local k=math.ceil(j*0.5-4)local l=math.ceil(f*0.4)local m=math.ceil((j-k)/2-1)local n=math.ceil((f-l)/2)local o={style='minimal',relative='editor',width=l+2,height=k+2,row=m-1,col=n-1}local p={style='minimal',relative='editor',width=l,height=k,row=m,col=n}local q=' Buffer List 'local r={'╭'..q..string.rep('─',l-string.len(q))..'╮'}local s='│'..string.rep(' ',l)..'│'for t=1,k do table.insert(r,s)end;table.insert(r,'╰'..string.rep('─',l)..'╯')a.nvim_buf_set_lines(i,0,-1,false,r)local u=a.nvim_open_win(i,true,o)c=a.nvim_open_win(b,true,p)a.nvim_command('au BufWipeout <buffer> exe "silent bwipeout! "'..i)a.nvim_win_set_option(c,'cursorline',true)end;local function v()a.nvim_buf_set_option(b,'modifiable',true)local w=vim.fn.execute(':ls')local x={}for y in string.gmatch(w,'([^\r\n]*)')do if string.match(y,'%d+')then if string.match(y,'%d+.-(a).-".-"')=='a'and string.match(y,'"(.-)"')~='[No Name]'then y=string.match(y,'"(.-)"')table.insert(x,"> "..y)else y=string.match(y,'"(.-)"')table.insert(x,y)end end end;a.nvim_buf_set_lines(b,0,-1,false,x)a.nvim_buf_set_option(b,'modifiable',false)end;local function z()a.nvim_win_close(c,true)end;local function A()local B=a.nvim_get_current_line()if string.match(B,'^> ')then B=string.match(B,'^> (.-)$')end;local w=vim.fn.execute(':ls')for y in string.gmatch(w,'([^\r\n]*)')do if string.match(y,'%d+')and string.match(y,'"(.-)"')==B then if string.match(y,'%d+.-(a).-".-"')=='a'then z()a.nvim_command('bd')else a.nvim_command('bd '..string.match(y,'%d+'))v()end end end end;local function C()local B=a.nvim_get_current_line()local w=vim.fn.execute(':ls')for y in string.gmatch(w,'([^\r\n]*)')do if string.match(y,'%d+')and string.match(y,'"(.-)"')==B then z()a.nvim_command('b '..string.match(y,'%d+'))end end end;local function D()local E=math.max(4,a.nvim_win_get_cursor(c)[1]-1)a.nvim_win_set_cursor(c,{E,0})end;local function F()local G={['<esc>']='close_window()',['<cr>']='go_to_buffer()',l='go_to_buffer()',h='close_buffer()',d='close_buffer()',q='close_window()'}for H,I in pairs(G)do a.nvim_buf_set_keymap(b,'n',H,':lua require"nvim-bufferlist".'..I..'<cr>',{nowait=true,noremap=true,silent=true})end;local J={'a','b','c','e','f','g','i','n','o','p','r','s','t','u','v','w','x','y','z'}for t,I in ipairs(J)do a.nvim_buf_set_keymap(b,'n',I,'',{nowait=true,noremap=true,silent=true})a.nvim_buf_set_keymap(b,'n',I:upper(),'',{nowait=true,noremap=true,silent=true})a.nvim_buf_set_keymap(b,'n','<c-'..I..'>','',{nowait=true,noremap=true,silent=true})end end;local function K()h()v()F()a.nvim_win_set_cursor(c,{1,0})end;return{bufferlist=K,update_view=v,go_to_buffer=C,close_buffer=A,move_cursor=D,close_window=z}
+local api = vim.api
+local buf, win
+
+local function center(str)
+  local width = api.nvim_win_get_width(0)
+  local shift = math.floor(width / 2) - math.floor(string.len(str) / 2)
+  return string.rep(' ', shift) .. str
+end
+
+local function open_window()
+  buf = api.nvim_create_buf(false, true)
+  local border_buf = api.nvim_create_buf(false, true)
+
+  api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+  api.nvim_buf_set_option(buf, 'filetype', 'bufferlist')
+
+  local width = api.nvim_get_option("columns")
+  local height = api.nvim_get_option("lines")
+
+  local win_height = math.ceil(height * 0.5 - 4)
+  local win_width = math.ceil(width * 0.4)
+  local row = math.ceil((height - win_height) / 2 - 1)
+  local col = math.ceil((width - win_width) / 2)
+
+  local border_opts = {
+    style = 'minimal',
+    relative = 'editor',
+    width = win_width + 2,
+    height = win_height + 2,
+    row = row - 1,
+    col = col - 1
+  }
+
+  local opts = {
+    style = 'minimal',
+    relative = 'editor',
+    width = win_width,
+    height = win_height,
+    row = row,
+    col = col
+  }
+
+  local border_title = ' Buffer List '
+  local border_lines = { '╭' .. border_title .. string.rep('─', win_width - string.len(border_title)) .. '╮' }
+  local middle_line = '│' .. string.rep(' ', win_width) .. '│'
+  for _ = 1, win_height do
+    table.insert(border_lines, middle_line)
+  end
+  table.insert(border_lines, '╰' .. string.rep('─', win_width) .. '╯')
+  api.nvim_buf_set_lines(border_buf, 0, -1, false, border_lines)
+
+  local border_win = api.nvim_open_win(border_buf, true, border_opts)
+  win = api.nvim_open_win(buf, true, opts)
+  api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout! "' .. border_buf)
+
+  api.nvim_win_set_option(win, 'cursorline', true)
+end
+
+local function update_view()
+  api.nvim_buf_set_option(buf, 'modifiable', true)
+
+  local ls = vim.fn.execute(':ls')
+  local result = {}
+
+  for buffer in string.gmatch(ls, '([^\r\n]*)') do
+    if string.match(buffer, '%d+') then
+      if string.match(buffer, '%d+.-(a).-".-"') == 'a' and string.match(buffer, '"(.-)"') ~= '[No Name]' then
+        buffer = string.match(buffer, '"(.-)"')
+        table.insert(result, "> " .. buffer)
+      else
+        buffer = string.match(buffer, '"(.-)"')
+        table.insert(result, buffer)
+      end
+    end
+  end
+
+  api.nvim_buf_set_lines(buf, 0, -1, false, result)
+  api.nvim_buf_set_option(buf, 'modifiable', false)
+end
+
+local function close_window()
+  api.nvim_win_close(win, true)
+end
+
+local function close_buffer()
+  local selected_line = api.nvim_get_current_line()
+
+  if string.match(selected_line, '^> ') then
+    selected_line = string.match(selected_line, '^> (.-)$')
+  end
+
+  local ls = vim.fn.execute(':ls')
+
+  for buffer in string.gmatch(ls, '([^\r\n]*)') do
+    if string.match(buffer, '%d+') and string.match(buffer, '"(.-)"') == selected_line then
+      if string.match(buffer, '%d+.-(a).-".-"') == 'a' then
+        close_window()
+        api.nvim_command('bd')
+      else
+        api.nvim_command('bd ' .. string.match(buffer, '%d+'))
+        update_view()
+      end
+    end
+  end
+end
+
+local function go_to_buffer()
+  local selected_line = api.nvim_get_current_line()
+
+  local ls = vim.fn.execute(':ls')
+
+  for buffer in string.gmatch(ls, '([^\r\n]*)') do
+    if string.match(buffer, '%d+') and string.match(buffer, '"(.-)"') == selected_line then
+      close_window()
+      api.nvim_command('b ' .. string.match(buffer, '%d+'))
+    end
+  end
+end
+
+local function move_cursor()
+  local new_pos = math.max(4, api.nvim_win_get_cursor(win)[1] - 1)
+  api.nvim_win_set_cursor(win, { new_pos, 0 })
+end
+
+local function set_mappings()
+  local mappings = {
+    ['<esc>'] = 'close_window()',
+    ['<cr>'] = 'go_to_buffer()',
+    l = 'go_to_buffer()',
+    h = 'close_buffer()',
+    d = 'close_buffer()',
+    q = 'close_window()',
+  }
+
+  for k, v in pairs(mappings) do
+    api.nvim_buf_set_keymap(buf, 'n', k, ':lua require"nvim-bufferlist".' .. v .. '<cr>', {
+      nowait = true, noremap = true, silent = true
+    })
+  end
+
+  local other_chars = {
+    'a', 'b', 'c', 'e', 'f', 'g', 'i', 'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+  }
+
+  for _, v in ipairs(other_chars) do
+    api.nvim_buf_set_keymap(buf, 'n', v, '', { nowait = true, noremap = true, silent = true })
+    api.nvim_buf_set_keymap(buf, 'n', v:upper(), '', { nowait = true, noremap = true, silent = true })
+    api.nvim_buf_set_keymap(buf, 'n', '<c-' .. v .. '>', '', { nowait = true, noremap = true, silent = true })
+  end
+end
+
+local function bufferlist()
+  open_window()
+  update_view()
+  set_mappings()
+  api.nvim_win_set_cursor(win, { 1, 0 })
+end
+
+return {
+  bufferlist = bufferlist,
+  update_view = update_view,
+  go_to_buffer = go_to_buffer,
+  close_buffer = close_buffer,
+  move_cursor = move_cursor,
+  close_window = close_window
+}

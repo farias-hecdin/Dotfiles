@@ -1,1 +1,79 @@
-local a=require'luassert.namespaces'local b=require'luassert.util'local c={__call=function(self,d)return self.callback(d)==self.mod end}local e={__call=function(self,...)local f=b.extract_keys("matcher",self.tokens)self.tokens={}local g;for h,i in ipairs(f)do g=a.matcher[i]or g end;if g then for h,i in ipairs(f)do if a.modifier[i]then a.modifier[i].callback(self)end end;local j=b.make_arglist(...)local k=g.callback(self,j,b.errorlevel())return setmetatable({name=g.name,mod=self.mod,callback=k,arguments=j},c)else local j=b.make_arglist(...)for h,i in ipairs(f)do if a.modifier[i]then a.modifier[i].callback(self,j,b.errorlevel())end end end;return self end,__index=function(self,i)for l in i:lower():gmatch('[^_]+')do table.insert(self.tokens,l)end;return self end}local m={_=setmetatable({mod=true,callback=function()return true end},c),state=function()return setmetatable({mod=true,tokens={}},e)end,is_matcher=function(n)return type(n)=="table"and getmetatable(n)==c end,is_ref_matcher=function(n)local o=type(n)=="table"and getmetatable(n)==c;return o and n.name=="ref"end}local p={__index=function(self,i)return rawget(self,i)or self.state()[i]end}return setmetatable(m,p)
+local namespace = require 'luassert.namespaces'
+local util = require 'luassert.util'
+
+local matcher_mt = {
+  __call = function(self, value)
+    return self.callback(value) == self.mod
+  end,
+}
+
+local state_mt = {
+  __call = function(self, ...)
+    local keys = util.extract_keys("matcher", self.tokens)
+    self.tokens = {}
+
+    local matcher
+
+    for _, key in ipairs(keys) do
+      matcher = namespace.matcher[key] or matcher
+    end
+
+    if matcher then
+      for _, key in ipairs(keys) do
+        if namespace.modifier[key] then
+          namespace.modifier[key].callback(self)
+        end
+      end
+
+      local arguments = util.make_arglist(...)
+      local matches = matcher.callback(self, arguments, util.errorlevel())
+      return setmetatable({
+        name = matcher.name,
+        mod = self.mod,
+        callback = matches,
+        arguments = arguments,
+      }, matcher_mt)
+    else
+      local arguments = util.make_arglist(...)
+
+      for _, key in ipairs(keys) do
+        if namespace.modifier[key] then
+          namespace.modifier[key].callback(self, arguments, util.errorlevel())
+        end
+      end
+    end
+
+    return self
+  end,
+
+  __index = function(self, key)
+    for token in key:lower():gmatch('[^_]+') do
+      table.insert(self.tokens, token)
+    end
+
+    return self
+  end
+}
+
+local match = {
+  _ = setmetatable({mod=true, callback=function() return true end}, matcher_mt),
+
+  state = function() return setmetatable({mod=true, tokens={}}, state_mt) end,
+
+  is_matcher = function(object)
+    return type(object) == "table" and getmetatable(object) == matcher_mt
+  end,
+
+  is_ref_matcher = function(object)
+    local ismatcher = (type(object) == "table" and getmetatable(object) == matcher_mt)
+    return ismatcher and object.name == "ref"
+  end,
+}
+
+local mt = {
+  __index = function(self, key)
+    return rawget(self, key) or self.state()[key]
+  end,
+}
+
+return setmetatable(match, mt)

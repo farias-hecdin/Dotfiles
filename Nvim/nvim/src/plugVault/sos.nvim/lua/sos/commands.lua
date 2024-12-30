@@ -1,1 +1,128 @@
-local a=vim.api;local b={action=true}local function c(d)return setmetatable(d,{__call=function(e,...)return e.action(...)end})end;local function f(g)local h={}for i,j in pairs(g)do if b[i]==nil then h[i]=j end end;return h end;local function k(l,h)h=h or{}for i,j in pairs(l)do if type(j)=="table"and j.action then h[i]=c(j)a.nvim_create_user_command(i,j.action,f(j))else k(j,h)end end;return h end;return k{SosEnable={desc="Enable sos autosaver",action=function()require("sos").setup{enabled=true}end},SosDisable={desc="Disable sos autosaver",action=function()require("sos").setup{enabled=false}end},SosToggle={desc="Toggle sos autosaver",action=function()require("sos").setup{enabled=not require("sos.config").enabled}end}}
+local errmsg = require('sos.util').errmsg
+local api = vim.api
+local extkeys = { [1] = true }
+local M = {}
+
+-- TODO: types
+
+---@class (exact) sos.Command: vim.api.keyset.user_command
+---@field [1] string|function
+
+local function Command(def)
+  return setmetatable(def, {
+    __call = function(self, ...) return self[1](...) end,
+  })
+end
+
+local function filter_extkeys(tbl)
+  local ret = {}
+
+  for k, v in pairs(tbl) do
+    if extkeys[k] == nil then ret[k] = v end
+  end
+
+  return ret
+end
+
+---@generic T: table<string, sos.Command>
+---@param cmds T
+---@return T
+local function Commands(cmds)
+  local ret = {}
+
+  for k, v in pairs(cmds) do
+    ret[k] = Command(v)
+    api.nvim_create_user_command(k, v[1], filter_extkeys(v))
+  end
+
+  return ret
+end
+
+---Verifies and resolves a single buffer from a command invocation. 0 or 1
+---buffer may be specified (with current buffer as fallback) via argument or
+---range (i.e. bufnr as the range). Accepts bufnr, bufname, bufname pattern, or
+---shorthand (e.g. `%`). Attempts to follow the semantics of the builtin
+---`:[N]buffer [bufname]` command in terms of resolving the specified buffer.
+---@param info table
+---@return integer? bufnr # bufnr or nil if specified buffer is invalid
+function M.resolve_bufspec(info)
+  if #info.fargs > 1 then return errmsg 'only 1 argument is allowed' end
+  local buf
+
+  if info.range > 0 then
+    -- Here we either have range and int arg, or just range. No way to
+    -- decipher between the two. `count` is rightmost of the two on cmdline.
+    buf = info.count
+
+    if #info.fargs > 0 then
+      return errmsg 'only 1 arg or count is allowed, got both'
+    elseif info.range > 1 then
+      return errmsg 'only 1 arg or count is allowed, got 2-part range'
+    elseif buf < 1 or not api.nvim_buf_is_valid(buf) then
+      return errmsg('invalid bufnr: ' .. buf)
+    end
+  else
+    local arg = info.fargs[1]
+
+    -- Use `[$]` for `$`, otherwise we'll get highest bufnr.
+    if arg == '$' then
+      buf = vim.fn.bufnr '^[$]$'
+      buf = buf > 0 and buf or vim.fn.bufnr '*[$]*'
+    else
+      buf = vim.fn.bufnr(arg or '')
+    end
+
+    if buf < 1 then
+      return errmsg 'argument matched none or multiple buffers'
+    end
+  end
+
+  return buf
+end
+
+return setmetatable(
+  Commands {
+    SosEnable = {
+      desc = 'Enable sos autosaver',
+      nargs = 0,
+      force = true,
+      function() require('sos').enable(true) end,
+    },
+
+    SosDisable = {
+      desc = 'Disable sos autosaver',
+      nargs = 0,
+      force = true,
+      function() require('sos').disable(true) end,
+    },
+
+    SosToggle = {
+      desc = 'Toggle sos autosaver',
+      nargs = 0,
+      force = true,
+      function()
+        if require('sos.config').enabled then
+          require('sos').disable(true)
+        else
+          require('sos').enable(true)
+        end
+      end,
+    },
+
+    SosBufToggle = {
+      desc = 'Toggle autosaver for buffer (default: current buffer)',
+      nargs = '?',
+      count = -1,
+      addr = 'buffers',
+      complete = 'buffer',
+      force = true,
+      function(info)
+        local buf = M.resolve_bufspec(info)
+        if buf then require('sos').toggle_buf(buf, true) end
+      end,
+    },
+  },
+  {
+    __index = M,
+  }
+)

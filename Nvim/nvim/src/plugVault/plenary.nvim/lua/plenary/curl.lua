@@ -1,1 +1,349 @@
-local a,b={},{}local c=require"plenary.functional"local d=require"plenary.job"local e=require"plenary.path"local f=require"plenary.compat"a.url_encode=function(g)if type(g)~="number"then g=g:gsub("\r?\n","\r\n")g=g:gsub("([^%w%-%.%_%~ ])",function(h)return string.format("%%%02X",h:byte())end)g=g:gsub(" ","+")return g else return g end end;a.kv_to_list=function(i,j,k)return f.flatten(c.kv_map(function(l)return{j,l[1]..k..l[2]}end,i))end;a.kv_to_str=function(i,k,m)return c.join(c.kv_map(function(l)return l[1]..m..a.url_encode(l[2])end,i),k)end;a.gen_dump_path=function()local n;local o=string.gsub("xxxx4xxx","[xy]",function(p)local q=p=="x"and math.random(0,0xf)or math.random(0,0xb)return string.format("%x",q)end)if e.path.sep=="\\"then n=string.format("%s\\AppData\\Local\\Temp\\plenary_curl_%s.headers",os.getenv"USERPROFILE",o)else local r=os.getenv"XDG_RUNTIME_DIR"or"/tmp"n=r.."/plenary_curl_"..o..".headers"end;return{"-D",n}end;b.headers=function(s)if not s then return end;local t=function(g)return string.gsub(" "..g,"%W%l",string.upper):sub(2)end;return a.kv_to_list((function()local u={}for v,q in pairs(s)do u[t(v:gsub("_","%-"))]=q end;return u end)(),"-H",": ")end;b.data_body=function(s)if not s then return end;return a.kv_to_list(s,"-d","=")end;b.raw_body=function(w)if not w then return end;if type(w)=="table"then return b.data_body(w)else return{"--data-raw",w}end end;b.form=function(s)if not s then return end;return a.kv_to_list(s,"-F","=")end;b.curl_query=function(s)if not s then return end;return a.kv_to_str(s,"&","=")end;b.method=function(x)if not x then return end;if x~="head"then return{"-X",string.upper(x)}else return{"-I"}end end;b.file=function(y)if not y then return end;return{"-d","@"..e.expand(e.new(y))}end;b.auth=function(w)if not w then return end;return{"-u",type(w)=="table"and a.kv_to_str(w,nil,":")or w}end;b.url=function(w,z)if not w then return end;z=b.curl_query(z)if type(w)=="string"then return z and w.."?"..z or w elseif type(w)=="table"then error"Low level URL definition is not supported."end end;b.accept_header=function(x)if not x then return end;return{"-H","Accept: "..x}end;b.http_version=function(x)if not x then return end;if x=="HTTP/0.9"or x=="HTTP/1.0"or x=="HTTP/1.1"or x=="HTTP/2"or x=="HTTP/3"then x=x:lower()x=x:gsub("/","")return{"--"..x}else error"Unknown HTTP version."end end;b.request=function(A)if A.body then local B=A.body;local C=function()local D,E=pcall(e.is_file,e.new(B))return D and E end;A.body=nil;if type(B)=="table"then A.data=B elseif C()then A.in_file=B elseif type(B)=="string"then A.raw_body=B end end;local E={"-sSL",A.dump}local F=function(q)if q then table.insert(E,q)end end;if A.insecure then table.insert(E,"--insecure")end;if A.proxy then table.insert(E,{"--proxy",A.proxy})end;if A.compressed then table.insert(E,"--compressed")end;F(b.method(A.method))F(b.headers(A.headers))F(b.accept_header(A.accept))F(b.raw_body(A.raw_body))F(b.data_body(A.data))F(b.form(A.form))F(b.file(A.in_file))F(b.auth(A.auth))F(b.http_version(A.http_version))F(A.raw)if A.output then table.insert(E,{"-o",A.output})end;table.insert(E,b.url(A.url,A.query))return f.flatten(E),A end;b.response=function(G,H,I)local J=e.readlines(H)local D=tonumber(string.match(J[1],"([%w+]%d+)"))local K=c.join(G,"\n")vim.loop.fs_unlink(H)table.remove(J,1)return{status=D,headers=J,body=K,exit=I}end;local L=function(M)local N={}local O,A=b.request(vim.tbl_extend("force",{compressed=package.config:sub(1,1)~="\\",dry_run=false,dump=a.gen_dump_path()},M))if A.dry_run then return O end;local P={command=vim.g.plenary_curl_bin_path or"curl",args=O}if A.stream then P.on_stdout=A.stream end;P.on_exit=function(Q,I)if I~=0 then local R=vim.inspect(Q:stderr_result())local S=string.format("%s %s - curl error exit_code=%s stderr=%s",A.method,A.url,I,R)if A.on_error then return A.on_error{message=S,stderr=R,exit=I}else error(S)end end;local T=b.response(Q:result(),A.dump[2],I)if A.callback then return A.callback(T)else N=T end end;local U=d:new(P)if A.callback or A.stream then U:start()return U else local V=A.timeout or 10000;U:sync(V)return N end end;return(function()local W={}local X=function(Y)return function(Z,A)A=A or{}if type(Z)=="table"then A=Z;W.method=Y else W.url=Z;W.method=Y end;A=Y=="request"and A or vim.tbl_extend("keep",A,W)return L(A)end end;return{get=X"get",post=X"post",put=X"put",head=X"head",patch=X"patch",delete=X"delete",request=X"request"}end)()
+--[[
+Curl Wrapper
+
+all curl methods accepts
+
+  url          = "The url to make the request to.", (string)
+  query        = "url query, append after the url", (table)
+  body         = "The request body" (string/filepath/table)
+  auth         = "Basic request auth, 'user:pass', or {"user", "pass"}" (string/array)
+  form         = "request form" (table)
+  raw          = "any additonal curl args, it must be an array/list." (array)
+  dry_run      = "whether to return the args to be ran through curl." (boolean)
+  output       = "where to download something." (filepath)
+  timeout      = "request timeout in mseconds" (number)
+  http_version = "HTTP version to use: 'HTTP/0.9', 'HTTP/1.0', 'HTTP/1.1', 'HTTP/2', or 'HTTP/3'" (string)
+  proxy        = "[protocol://]host[:port] Use this proxy" (string)
+  insecure     = "Allow insecure server connections" (boolean)
+
+and returns table:
+
+  exit    = "The shell process exit code." (number)
+  status  = "The https response status." (number)
+  headers = "The https response headers." (array)
+  body    = "The http response body." (string)
+
+see test/plenary/curl_spec.lua for examples.
+
+author = github.com/tami5
+]]
+--
+
+local util, parse = {}, {}
+
+-- Helpers --------------------------------------------------
+-------------------------------------------------------------
+local F = require "plenary.functional"
+local J = require "plenary.job"
+local P = require "plenary.path"
+local compat = require "plenary.compat"
+
+-- Utils ----------------------------------------------------
+-------------------------------------------------------------
+
+util.url_encode = function(str)
+  if type(str) ~= "number" then
+    str = str:gsub("\r?\n", "\r\n")
+    str = str:gsub("([^%w%-%.%_%~ ])", function(c)
+      return string.format("%%%02X", c:byte())
+    end)
+    str = str:gsub(" ", "+")
+    return str
+  else
+    return str
+  end
+end
+
+util.kv_to_list = function(kv, prefix, sep)
+  return compat.flatten(F.kv_map(function(kvp)
+    return { prefix, kvp[1] .. sep .. kvp[2] }
+  end, kv))
+end
+
+util.kv_to_str = function(kv, sep, kvsep)
+  return F.join(
+    F.kv_map(function(kvp)
+      return kvp[1] .. kvsep .. util.url_encode(kvp[2])
+    end, kv),
+    sep
+  )
+end
+
+util.gen_dump_path = function()
+  local path
+  local id = string.gsub("xxxx4xxx", "[xy]", function(l)
+    local v = (l == "x") and math.random(0, 0xf) or math.random(0, 0xb)
+    return string.format("%x", v)
+  end)
+  if P.path.sep == "\\" then
+    path = string.format("%s\\AppData\\Local\\Temp\\plenary_curl_%s.headers", os.getenv "USERPROFILE", id)
+  else
+    local temp_dir = os.getenv "XDG_RUNTIME_DIR" or "/tmp"
+    path = temp_dir .. "/plenary_curl_" .. id .. ".headers"
+  end
+  return { "-D", path }
+end
+
+-- Parsers ----------------------------------------------------
+---------------------------------------------------------------
+
+parse.headers = function(t)
+  if not t then
+    return
+  end
+  local upper = function(str)
+    return string.gsub(" " .. str, "%W%l", string.upper):sub(2)
+  end
+  return util.kv_to_list(
+    (function()
+      local normilzed = {}
+      for k, v in pairs(t) do
+        normilzed[upper(k:gsub("_", "%-"))] = v
+      end
+      return normilzed
+    end)(),
+    "-H",
+    ": "
+  )
+end
+
+parse.data_body = function(t)
+  if not t then
+    return
+  end
+  return util.kv_to_list(t, "-d", "=")
+end
+
+parse.raw_body = function(xs)
+  if not xs then
+    return
+  end
+  if type(xs) == "table" then
+    return parse.data_body(xs)
+  else
+    return { "--data-raw", xs }
+  end
+end
+
+parse.form = function(t)
+  if not t then
+    return
+  end
+  return util.kv_to_list(t, "-F", "=")
+end
+
+parse.curl_query = function(t)
+  if not t then
+    return
+  end
+  return util.kv_to_str(t, "&", "=")
+end
+
+parse.method = function(s)
+  if not s then
+    return
+  end
+  if s ~= "head" then
+    return { "-X", string.upper(s) }
+  else
+    return { "-I" }
+  end
+end
+
+parse.file = function(p)
+  if not p then
+    return
+  end
+  return { "-d", "@" .. P.expand(P.new(p)) }
+end
+
+parse.auth = function(xs)
+  if not xs then
+    return
+  end
+  return { "-u", type(xs) == "table" and util.kv_to_str(xs, nil, ":") or xs }
+end
+
+parse.url = function(xs, q)
+  if not xs then
+    return
+  end
+  q = parse.curl_query(q)
+  if type(xs) == "string" then
+    return q and xs .. "?" .. q or xs
+  elseif type(xs) == "table" then
+    error "Low level URL definition is not supported."
+  end
+end
+
+parse.accept_header = function(s)
+  if not s then
+    return
+  end
+  return { "-H", "Accept: " .. s }
+end
+
+parse.http_version = function(s)
+  if not s then
+    return
+  end
+  if s == "HTTP/0.9" or s == "HTTP/1.0" or s == "HTTP/1.1" or s == "HTTP/2" or s == "HTTP/3" then
+    s = s:lower()
+    s = s:gsub("/", "")
+    return { "--" .. s }
+  else
+    error "Unknown HTTP version."
+  end
+end
+
+-- Parse Request -------------------------------------------
+------------------------------------------------------------
+parse.request = function(opts)
+  if opts.body then
+    local b = opts.body
+    local silent_is_file = function()
+      local status, result = pcall(P.is_file, P.new(b))
+      return status and result
+    end
+    opts.body = nil
+    if type(b) == "table" then
+      opts.data = b
+    elseif silent_is_file() then
+      opts.in_file = b
+    elseif type(b) == "string" then
+      opts.raw_body = b
+    end
+  end
+  local result = { "-sSL", opts.dump }
+  local append = function(v)
+    if v then
+      table.insert(result, v)
+    end
+  end
+
+  if opts.insecure then
+    table.insert(result, "--insecure")
+  end
+  if opts.proxy then
+    table.insert(result, { "--proxy", opts.proxy })
+  end
+  if opts.compressed then
+    table.insert(result, "--compressed")
+  end
+  append(parse.method(opts.method))
+  append(parse.headers(opts.headers))
+  append(parse.accept_header(opts.accept))
+  append(parse.raw_body(opts.raw_body))
+  append(parse.data_body(opts.data))
+  append(parse.form(opts.form))
+  append(parse.file(opts.in_file))
+  append(parse.auth(opts.auth))
+  append(parse.http_version(opts.http_version))
+  append(opts.raw)
+  if opts.output then
+    table.insert(result, { "-o", opts.output })
+  end
+  table.insert(result, parse.url(opts.url, opts.query))
+  return compat.flatten(result), opts
+end
+
+-- Parse response ------------------------------------------
+------------------------------------------------------------
+parse.response = function(lines, dump_path, code)
+  local headers = P.readlines(dump_path)
+  local status = tonumber(string.match(headers[1], "([%w+]%d+)"))
+  local body = F.join(lines, "\n")
+
+  vim.loop.fs_unlink(dump_path)
+  table.remove(headers, 1)
+
+  return {
+    status = status,
+    headers = headers,
+    body = body,
+    exit = code,
+  }
+end
+
+local request = function(specs)
+  local response = {}
+  local args, opts = parse.request(vim.tbl_extend("force", {
+    compressed = package.config:sub(1, 1) ~= "\\",
+    dry_run = false,
+    dump = util.gen_dump_path(),
+  }, specs))
+
+  if opts.dry_run then
+    return args
+  end
+
+  local job_opts = {
+    command = vim.g.plenary_curl_bin_path or "curl",
+    args = args,
+  }
+
+  if opts.stream then
+    job_opts.on_stdout = opts.stream
+  end
+
+  job_opts.on_exit = function(j, code)
+    if code ~= 0 then
+      local stderr = vim.inspect(j:stderr_result())
+      local message = string.format("%s %s - curl error exit_code=%s stderr=%s", opts.method, opts.url, code, stderr)
+      if opts.on_error then
+        return opts.on_error {
+          message = message,
+          stderr = stderr,
+          exit = code,
+        }
+      else
+        error(message)
+      end
+    end
+    local output = parse.response(j:result(), opts.dump[2], code)
+    if opts.callback then
+      return opts.callback(output)
+    else
+      response = output
+    end
+  end
+  local job = J:new(job_opts)
+
+  if opts.callback or opts.stream then
+    job:start()
+    return job
+  else
+    local timeout = opts.timeout or 10000
+    job:sync(timeout)
+    return response
+  end
+end
+
+-- Main ----------------------------------------------------
+------------------------------------------------------------
+return (function()
+  local spec = {}
+  local partial = function(method)
+    return function(url, opts)
+      opts = opts or {}
+      if type(url) == "table" then
+        opts = url
+        spec.method = method
+      else
+        spec.url = url
+        spec.method = method
+      end
+      opts = method == "request" and opts or (vim.tbl_extend("keep", opts, spec))
+      return request(opts)
+    end
+  end
+  return {
+    get = partial "get",
+    post = partial "post",
+    put = partial "put",
+    head = partial "head",
+    patch = partial "patch",
+    delete = partial "delete",
+    request = partial "request",
+  }
+end)()

@@ -1,1 +1,24 @@
-local a={}a.clip_val=function(b,c,d)if c<b then c=b end;if c>d then c=d end;return c end;a.inspect=function(...)local e={}for f=1,select('#',...)do local g=select(f,...)table.insert(e,vim.inspect(g))end;return table.concat(e,', ')end;return a
+local M = {}
+
+M.clip_val = function(min, val, max)
+  if val < min then
+    val = min
+  end
+  if val > max then
+    val = max
+  end
+  return val
+end
+
+-- Mostly the same as vim.pretty_print but returns text
+M.inspect = function(...)
+  local objects = {}
+  for i = 1, select('#', ...) do
+    local v = select(i, ...)
+    table.insert(objects, vim.inspect(v))
+  end
+
+  return table.concat(objects, ', ')
+end
+
+return M

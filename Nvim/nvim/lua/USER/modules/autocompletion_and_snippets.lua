@@ -11,34 +11,38 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    -- url = "https://github.com/hrsh7th/cmp-cmdline.git",
-    dir = D.plugin .. "cmp-cmdline",
+    url = "https://github.com/hrsh7th/cmp-emoji.git",
+    ft = {"markdown"}
+  },
+  {
+    url = "https://github.com/hrsh7th/cmp-cmdline.git",
+    -- dir = D.plugin .. "cmp-cmdline",
     keys = {mode = "n", ":", desc = "Command mode"}
   },
   {
-    -- url = "https://github.com/hrsh7th/cmp-path.git",
-    dir = D.plugin .. "cmp-path",
+    url = "https://github.com/hrsh7th/cmp-path.git",
+    -- dir = D.plugin .. "cmp-path",
     event = "InsertEnter",
     keys = {mode = "n", ":", desc = "Command mode"}
   },
   {
-    -- url = "https://github.com/hrsh7th/cmp-buffer.git",
-    dir = D.plugin .. "cmp-buffer",
+    url = "https://github.com/hrsh7th/cmp-buffer.git",
+    -- dir = D.plugin .. "cmp-buffer",
     event = "InsertEnter"
   },
   {
-    -- url = "https://github.com/hrsh7th/cmp-nvim-lsp.git",
-    dir = D.plugin .. "cmp-nvim-lsp",
+    url = "https://github.com/hrsh7th/cmp-nvim-lsp.git",
+    -- dir = D.plugin .. "cmp-nvim-lsp",
     event = "InsertEnter"
   },
   {
-    -- url = "https://github.com/hrsh7th/cmp-vsnip.git",
-    dir = D.plugin .. "cmp-vsnip",
+    url = "https://github.com/hrsh7th/cmp-vsnip.git",
+    -- dir = D.plugin .. "cmp-vsnip",
     event = "InsertEnter"
   },
   {
-    -- url = "https://github.com/hrsh7th/vim-vsnip.git",
-    dir = D.plugin .. "vim-vsnip",
+    url = "https://github.com/hrsh7th/vim-vsnip.git",
+    -- dir = D.plugin .. "vim-vsnip",
     event = "InsertEnter"
   },
   {
@@ -94,6 +98,11 @@ return {
             {"i", "s"})
         }),
         sources = cmp.config.sources({
+          {
+            name = 'emoji',
+            max_item_count = 9,
+            priority = 50
+          },
           {
             name = "nvim_lsp",
             max_item_count = 9,
