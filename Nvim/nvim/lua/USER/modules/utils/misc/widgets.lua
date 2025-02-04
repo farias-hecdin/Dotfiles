@@ -6,15 +6,18 @@ local round = function(number, decimals)
   return math.floor(number * power + 0.5) / power
 end
 
+
 -- Print the current time
 W.time = function()
   return format("  %s ", os.date("%I:%M%p"))
 end
 
+
 -- Print current date
 W.date = function()
   return format("󰸗 %s", os.date("%v"))
 end
+
 
 -- Count the total number of words and characters
 W.word_and_character_counter = function(enable_wip)
@@ -48,7 +51,9 @@ W.word_and_character_counter = function(enable_wip)
   end
 end
 
+
 -- 3rd party ------------------------------------------------------------------
+
 
 -- Print startup time with Lazy.nvim
 W.startuptime_lazy = function()
@@ -56,6 +61,7 @@ W.startuptime_lazy = function()
   local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
   return format("󰓅 %sms", tostring(ms))
 end
+
 
 -- Lint progress for statusline
 W.lint_progress = function()

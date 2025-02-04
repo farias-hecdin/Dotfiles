@@ -1,6 +1,15 @@
 local M = {}
+-- Thanks to: https://stackoverflow.com/a/75850608/22265190
 
--- thanks to: https://stackoverflow.com/a/75850608/22265190
+local function adjustColor(color)
+  if color > 0.0031308 then
+    return 1.055 * color^0.416666667 - 0.055  -- 1/2.4
+  else
+    return 12.92 * color
+  end
+end
+
+
 function M.lchToHex(l, c, h)
   local a = math.floor(c * math.cos(math.rad(h)) + 0.5)
   local b = math.floor(c * math.sin(math.rad(h)) + 0.5)
@@ -23,14 +32,6 @@ function M.lchToHex(l, c, h)
   local G = -x * 0.9689 + y * 1.8758 + z * 0.0415
   local B = x * 0.0557 - y * 0.2040 + z * 1.0570
 
-  local function adjustColor(color)
-    if color > 0.0031308 then
-      return 1.055 * color^0.416666667 - 0.055  -- 1/2.4
-    else
-      return 12.92 * color
-    end
-  end
-
   R = adjustColor(R)
   G = adjustColor(G)
   B = adjustColor(B)
@@ -43,4 +44,3 @@ function M.lchToHex(l, c, h)
 end
 
 return M
-

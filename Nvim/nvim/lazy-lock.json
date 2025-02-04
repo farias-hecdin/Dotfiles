@@ -3,6 +3,7 @@
   "CSSVarHighlight": { "branch": "main", "commit": "df12358131e4a5f905488e247d2e999415f25c15" },
   "CSSVarViewer": { "branch": "main", "commit": "6716e8634ba402cb9d0fa0cf98122ba724a6aed7" },
   "Comment.nvim": { "branch": "master", "commit": "e30b7f2008e52442154b66f7c519bfd2f1e32acb" },
+  "LinkRef": { "branch": "main", "commit": "1d4e6448da49ca62fa7f80ed8a94c5aadb494d31" },
   "NimTinyHighlight": { "branch": "master", "commit": "d09227dd39d352b4efac604160b28d8dece413c0" },
   "bufdelete.nvim": { "branch": "master", "commit": "f6bcea78afb3060b198125256f897040538bcb81" },
   "cmp-buffer": { "branch": "main", "commit": "3022dbc9166796b644a841a02de8dd1cc1d311fa" },

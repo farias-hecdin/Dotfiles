@@ -102,15 +102,15 @@ return {
           branch_symbol = " "
         },
         mode_colors = {
-          ["c"] = "#FFFFFF",
-          ["n"] = "#2BBB4F",
-          ["i"] = "#FFFF00",
-          ["v"] = "#0091EA",
-          ["V"] = "#90CAF9",
+          ["c"]  = "#FFFFFF",
+          ["n"]  = "#2BBB4F",
+          ["i"]  = "#FFFF00",
+          ["v"]  = "#0091EA",
+          ["V"]  = "#90CAF9",
           [""] = "#BA68C8",
-          ["r"] = "#F06292",
-          ["R"] = "#CC5500",
-          ["t"] = "#FFA000"
+          ["r"]  = "#F06292",
+          ["R"]  = "#CC5500",
+          ["t"]  = "#FFA000"
         },
         mode_icons = {
           ["c"]  = " CO",
@@ -128,9 +128,9 @@ return {
         },
         lsp_symbols = {
           Error = " ",
-          Info = " ",
-          Warn = " ",
-          Hint = " "
+          Info  = " ",
+          Warn  = " ",
+          Hint  = " "
         },
         special_table = {
           help = {"Help", " "},
@@ -150,7 +150,7 @@ return {
     event = "BufReadPre",
     config = function()
       vim.opt.list = true
-      require("simpleIndentGuides").setup("·", " ") --"│", "·"
+      require("simpleIndentGuides").setup("·", " ") -- "│", "·"
     end
   },
   {
@@ -160,7 +160,7 @@ return {
     config = function()
       require("mini.indentscope").setup {
         draw = {animation = require("mini.indentscope").gen_animation.none()},
-        symbol = "│"--"│"
+        symbol = "│"
       }
     end
   },

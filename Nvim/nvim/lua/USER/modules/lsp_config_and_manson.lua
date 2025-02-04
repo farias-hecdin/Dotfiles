@@ -6,6 +6,10 @@ local D = require('USER.modules.utils.dir')
 -- * mason-lspconfig.nvim
 -- * nvim-lspconfig
 
+local function enable_lsp(lang, servers)
+  require("USER.modules.lsp." .. lang).lsp(servers)
+end
+
 return {
   {
     "https://github.com/williamboman/mason.nvim.git",
@@ -50,26 +54,27 @@ return {
         lsp_zero.default_keymaps({buffer = bufnr})
       end)
 
-      local function enable_lsp(lang, servers)
-        require("USER.modules.lsp." .. lang).lsp(servers)
-      end
+      local lsp_servers = {
+        -- css = {"cssls"},
+        html = {"emmet_ls"},
+        javascript = {"astro", "ts_ls"},
+        lua = {"lua_ls"},
+        php = {"phpactor"},
+        -- go = {"gopls"},
+        -- java = {"jdtls"},
+        -- bash = {"bashls"},
+        -- nim = {"nimlangserver"},
+        -- zig = {"zls"},
+      }
 
       if enable_lsp_servers then
-        enable_lsp("css", {"cssls"})
-        -- enable_lsp("go", {"gopls"})
-        enable_lsp("html", {"emmet_ls"})
-        -- enable_lsp("java", {"jdtls"})
-        enable_lsp("javascript", {"astro", "ts_ls"})
-        enable_lsp("lua", {"lua_ls"})
-        enable_lsp("php", {"phpactor"})
-        -- enable_lsp("bash", {"bashls"})
-        -- enable_lsp("nim", {"nimlangserver"})
-        -- enable_lsp("zig", {"zls"})
+        for lang, servers in pairs(lsp_servers) do
+          enable_lsp(lang, servers)
+        end
       end
 
       -- Lsp-config -----------------------------------------------------------
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      -- add a border to `:LspInfo` window
       require("lspconfig.ui.windows").default_options.border = "rounded"
       -- thanks to: https://www.reddit.com/r/neovim/comments/161tv8l/lsp_has_gotten_very_slow
       capabilities.textDocument.completion.completionItem.snippetSupport = true

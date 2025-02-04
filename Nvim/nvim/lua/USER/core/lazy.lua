@@ -12,6 +12,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.runtimepath:prepend(lazypath)
 
+
 -- Plugin setup
 require("lazy").setup("USER.modules", {
   defaults = {lazy = true},

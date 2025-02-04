@@ -41,9 +41,10 @@ return {
       },
       highlights = {
         ["@comment"]               = {fg = "#007272"},
-        ["@label"]                 = {bg = "#222222", fg  = "#888888", fmt = "ITALIC"},
+        ["@label"]                 = {bg = "#222222", fg = "#888888", fmt = "ITALIC"},
         ["@text.strong"]           = {fg = "#D0D0D0"},
         ["@markup.strong"]         = {fg = "#EEEEEE", fmt = "NONE"},
+        ["@markup.h4"]             = {fg = "#007272", fmt = "NONE"},
         CmpItemAbbrMatch           = {fg = "#0074D9", fmt = "BOLD"},
         ColorColumn                = {bg = "#330000"},
         Comment                    = {fg = "#007272"},
@@ -69,7 +70,7 @@ return {
         MiniHipatternsColor        = {fg = "#FFDC00", fmt = "BOLD"},
         MiniHipatternsColor2       = {fg = "#FFFFFF", fmt = "BOLD"},
         MiniHipatternsColor3       = {fg = "#0074D9", fmt = "BOLD"},
-        MiniHipatternsDebug        = {fg = "#FFFFFF", bg = "#940000", fmt = "BOLD"},
+        MiniHipatternsDebug        = {fg = "#FFFFFF", bg  = "#940000", fmt = "BOLD"},
         MiniHipatternsHighlight    = {bg = "#1c1c1c", fg  = "#00ffff"},
         MiniIndentscopeSymbol      = {bg = "#000000", fg  = "#666666"},
         MiniJump2dSpot             = {fg = "#FFF000", fmt = "NONE"},
@@ -93,6 +94,7 @@ return {
         MiniDiffSignAdd            = {fg = "#ffffff"},
         MiniDiffSignChange         = {fg = "#00B7EB"},
         MiniDiffSignDelete         = {fg = "#EF5350"},
+        MarkviewCheckboxProgress   = {fg = "#00B7EB"}
       }
     }
   }

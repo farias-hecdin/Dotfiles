@@ -6,6 +6,7 @@ D.plugin = "~/.config/nvim/src/plugVault/"
 -- Path to $HOME
 D.home = "/data/data/com.termux/files/home/"
 
+
 -- Useful for disable plugins
 D.notContainFiletype = function(extensions)
   local file = vim.fn.expand("%")
@@ -18,6 +19,7 @@ D.notContainFiletype = function(extensions)
   end
   return true
 end
+
 
 D.pluginExists = function(plugin)
   local request, _ = pcall(require, plugin)

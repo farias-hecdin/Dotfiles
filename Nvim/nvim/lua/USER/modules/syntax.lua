@@ -51,10 +51,4 @@ return {
       })
     end
   },
-  {
-    url = "https://github.com/nvim-treesitter/playground.git",
-    -- dir = D.plugin .. "playground",
-    keys = {"<leader>Pc", "<leader>Pt"},
-    cond = D.notContainFiletype({"nim"}),
-  }
 }
