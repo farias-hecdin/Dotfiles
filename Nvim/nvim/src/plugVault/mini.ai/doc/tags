@@ -1,0 +1,16 @@
+MiniAi	mini-ai.txt	/*MiniAi*
+MiniAi-algorithm	mini-ai.txt	/*MiniAi-algorithm*
+MiniAi-glossary	mini-ai.txt	/*MiniAi-glossary*
+MiniAi-textobject-builtin	mini-ai.txt	/*MiniAi-textobject-builtin*
+MiniAi-textobject-specification	mini-ai.txt	/*MiniAi-textobject-specification*
+MiniAi.config	mini-ai.txt	/*MiniAi.config*
+MiniAi.find_textobject()	mini-ai.txt	/*MiniAi.find_textobject()*
+MiniAi.gen_spec	mini-ai.txt	/*MiniAi.gen_spec*
+MiniAi.gen_spec.argument()	mini-ai.txt	/*MiniAi.gen_spec.argument()*
+MiniAi.gen_spec.function_call()	mini-ai.txt	/*MiniAi.gen_spec.function_call()*
+MiniAi.gen_spec.pair()	mini-ai.txt	/*MiniAi.gen_spec.pair()*
+MiniAi.gen_spec.treesitter()	mini-ai.txt	/*MiniAi.gen_spec.treesitter()*
+MiniAi.move_cursor()	mini-ai.txt	/*MiniAi.move_cursor()*
+MiniAi.select_textobject()	mini-ai.txt	/*MiniAi.select_textobject()*
+MiniAi.setup()	mini-ai.txt	/*MiniAi.setup()*
+mini.ai	mini-ai.txt	/*mini.ai*

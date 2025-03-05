@@ -6,11 +6,11 @@ local D = require("USER.modules.utils.dir")
 
 return {
   {
-    "https://github.com/virchau13/tree-sitter-astro.git",
+    "virchau13/tree-sitter-astro",
     ft = "astro",
   },
   {
-    "https://github.com/nvim-treesitter/nvim-treesitter.git",
+    "nvim-treesitter/nvim-treesitter",
     -- commit = "65ef62092ef997d2ecf68ede01a0afbda17808c3",
     -- pin = true,
     cond = D.notContainFiletype({"nim"}),
@@ -25,7 +25,7 @@ return {
         highlight = {enable = true},
         autotag = {enable = false},
         indent = {
-          enable = false,
+          enable = true,
           disable = {"python", "shell"}
         },
         ensure_installed = {

@@ -11,7 +11,6 @@ MiniFiles.default_sort()	mini-files.txt	/*MiniFiles.default_sort()*
 MiniFiles.get_explorer_state()	mini-files.txt	/*MiniFiles.get_explorer_state()*
 MiniFiles.get_fs_entry()	mini-files.txt	/*MiniFiles.get_fs_entry()*
 MiniFiles.get_latest_path()	mini-files.txt	/*MiniFiles.get_latest_path()*
-MiniFiles.get_target_window()	mini-files.txt	/*MiniFiles.get_target_window()*
 MiniFiles.go_in()	mini-files.txt	/*MiniFiles.go_in()*
 MiniFiles.go_out()	mini-files.txt	/*MiniFiles.go_out()*
 MiniFiles.open()	mini-files.txt	/*MiniFiles.open()*

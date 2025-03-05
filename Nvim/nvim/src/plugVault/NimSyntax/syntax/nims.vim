@@ -1,0 +1,3 @@
+" Remember: Uncomment ...
+"runtime nim.vim
+" And only modify specifics for nimscript

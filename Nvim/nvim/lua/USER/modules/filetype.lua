@@ -12,22 +12,22 @@ local D = require("USER.modules.utils.dir")
 -- * nvim-px-to-rem
 
 return {
-  -- {
-  --   url = "https://github.com/farias-hecdin/LinkRef.git",
-  --   -- dir = D.plugin .. "LinkRef",
-  --   ft = "markdown",
-  --   opts = {
-  --     id_length = 2,
-  --   },
-  -- },
   {
-    url = "https://github.com/farias-hecdin/NimTinyHighlight.git",
-    -- dir = D.plugin .. "NimTinyHighlight",
+    -- url = "https://github.com/farias-hecdin/LinkRef.git",
+    dir = D.plugin .. "LinkRef",
+    ft = "markdown",
+    opts = {
+      id_length = 2,
+    },
+  },
+  {
+    -- url = "https://github.com/farias-hecdin/NimSyntax.git",
+    dir = D.plugin .. "NimSyntax",
     ft = "nim",
   },
   {
-    url = "https://github.com/OXY2DEV/markview.nvim",
-    -- dir = D.plugin .. "markview.nvim",
+    -- url = "https://github.com/OXY2DEV/markview.nvim",
+    dir = D.plugin .. "markview.nvim",
     pin = true,
     commit = "ce94d8bc9a76c35fff2f4cc90bb28871dece58d6",
     ft = "markdown",
@@ -55,11 +55,12 @@ return {
       },
       checkboxes = {
         enable = true,
-        checked = {text = " "},
-        unchecked = {text = " "},
-        pending = {text = " "},
+        checked   = {text = " "},
+        unchecked = {text = " "},
+        pending   = {text = " "},
         custom = {
           {match = "h", text = "󰒲 ", hl = "MarkviewCheckboxProgress"},
+          {match = "l", text = " ", hl = "MarkviewCheckboxLater"},
        },
       },
       horizontal_rules = {
@@ -76,26 +77,26 @@ return {
     }
   },
   {
-    url = "https://github.com/farias-hecdin/CSSVarHighlight.git",
-    -- dir = D.plugin .. "CSSVarHighlight",
+    -- url = "https://github.com/farias-hecdin/CSSVarHighlight.git",
+    dir = D.plugin .. "CSSVarHighlight",
     ft = "css",
     opts = {variable_pattern = "%-%-[-_%w]*co%-[-_%w]*"}
   },
   {
-    url = "https://github.com/farias-hecdin/CSSVarViewer.git",
-    -- dir = D.plugin .. "CSSVarViewer",
+    -- url = "https://github.com/farias-hecdin/CSSVarViewer.git",
+    dir = D.plugin .. "CSSVarViewer",
     ft = "css",
     config = true
   },
   {
-    url = "https://github.com/farias-hecdin/CSSColorConverter.git",
-    -- dir = D.plugin .. "CSSColorConverter",
+    -- url = "https://github.com/farias-hecdin/CSSColorConverter.git",
+    dir = D.plugin .. "CSSColorConverter",
     ft = "css",
     config = true
   },
   {
-    url = "https://github.com/jsongerber/nvim-px-to-rem.git",
-    -- dir = D.plugin .. "nvim-px-to-rem",
+    -- url = "https://github.com/jsongerber/nvim-px-to-rem.git",
+    dir = D.plugin .. "nvim-px-to-rem",
     cmd = {"PxToRemCursor", "PxToRemLine"},
     opts = {
       add_cmp_source = false,
@@ -103,15 +104,15 @@ return {
     }
   },
   {
-    url = "https://github.com/antonk52/markdowny.nvim.git",
-    -- dir = D.plugin .. "markdowny.nvim",
+    -- url = "https://github.com/antonk52/markdowny.nvim.git",
+    dir = D.plugin .. "markdowny.nvim",
     keys = {"<C-i>", "<C-l>", "<C-b>"},
     ft = "markdown",
     config = true
   },
   {
-    url = "https://github.com/tadmccorkle/markdown.nvim.git",
-    -- dir = D.plugin .. "markdown.nvim",
+    -- url = "https://github.com/tadmccorkle/markdown.nvim.git",
+    dir = D.plugin .. "markdown.nvim",
     ft = "markdown",
     opts = {
       toc = {
@@ -121,13 +122,12 @@ return {
     }
   },
   {
-    url = "https://github.com/echasnovski/mini.hipatterns.git",
-    -- dir = D.plugin .. "mini.hipatterns",
+    -- url = "https://github.com/echasnovski/mini.hipatterns.git",
+    dir = D.plugin .. "mini.hipatterns",
     event = "InsertEnter",
     cmd = "MiniHipatterns",
     config = function()
       local hipatterns = require("mini.hipatterns")
-
       hipatterns.setup({
         highlighters = {
           bug = {
@@ -151,23 +151,23 @@ return {
             group = "MiniHipatternsPerf"
           },
           --[[
-          -- Extra highlights
-          -- @param , @returns and more
-          -- #THIS: or !THIS: or ¡THIS: or #___:
+             Extra highlights
+             @param , @returns and more
+             #This: or !This: or ¡This: or !T h i s: or #___:
           ]]
-          docs = {pattern = {"%s()@[%l-]+()%s"}, group = "MiniHipatternsDocs"},
-          show = {pattern = {"^+%s().+()"}, group = "minihipatternshighlight"},
-          color1 = {pattern = {"%s*()![-%a%d_\\=\\.]+:"}, group = "MiniHipatternsColor"},
-          color2 = {pattern = {"%s*()¡[-%a%d_\\=\\.]+:"}, group = "MiniHipatternsColor2"},
-          color3 = {pattern = {"%s*()#[-%a%d_\\=\\.]+:"}, group = "MiniHipatternsColor3"},
+          docs = {pattern = {"@[%l-]+"}, group = "MiniHipatternsDocs"},
+          show = {pattern = {"^%+.+"}, group = "minihipatternshighlight"},
+          color1 = {pattern = {"![%w%_%-%.][%w%s%_%-%.]+[%w%_%-%.]:"}, group = "MiniHipatternsColor"},
+          color2 = {pattern = {"¡[%w%_%-%.][%w%s%_%-%.]+[%w%_%-%.]:"}, group = "MiniHipatternsColor2"},
+          color3 = {pattern = {"#[%w%_%-%.][%w%s%_%-%.]+[%w%_%-%.]:"}, group = "MiniHipatternsColor3"},
           --[[
-          -- Highlight color systems using that color
-          -- colour38
-          -- #4095BF
-          -- rgb(64, 149, 191)
-          -- hsl(200deg, 50%, 50%) or hsl(200, 50%, 50%) or hsl(200, 50, 50)
-          -- lch(58.36% 31.79 271.95)
-          -- oklch(63.57% 0.1027 233.17)
+             Highlight color systems using that color
+             colour38
+             #4095BF
+             rgb(64, 149, 191)
+             hsl(200deg, 50%, 50%) or hsl(200, 50%, 50%) or hsl(200, 50, 50)
+             lch(58.36% 31.79 271.95)
+             oklch(63.57% 0.1027 233.17)
           ]]
           hex = hipatterns.gen_highlighter.hex_color(),
           hsl = {

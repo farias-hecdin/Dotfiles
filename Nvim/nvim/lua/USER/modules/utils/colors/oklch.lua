@@ -8,8 +8,9 @@ end
 
 
 function M.oklch_to_rgb(L, C, H)
+  L = L / 100
   -- Conversión de OKLCH a OKLab
-  local hue_rad = math.rad(H) / 100
+  local hue_rad = math.rad(H)
   local a = C * math.cos(hue_rad)
   local b = C * math.sin(hue_rad)
 

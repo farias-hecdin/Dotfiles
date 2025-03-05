@@ -7,7 +7,7 @@ local augroup = 'sos-autosaver'
 function M.clear() api.nvim_create_augroup(augroup, { clear = true }) end
 
 ---Update defined autocmds according to `cfg`
----@param cfg sos.Config
+---@param cfg sos.config.opts
 ---@return nil
 function M.refresh(cfg)
   api.nvim_create_augroup(augroup, { clear = true })
@@ -28,7 +28,7 @@ function M.refresh(cfg)
     pattern = '*',
     once = true,
     nested = false,
-    command = [[silent call v:lua.require'sos.commands'.SosDisable()]],
+    callback = function() require('sos').disable(false) end,
   })
 
   if cfg.save_on_bufleave then

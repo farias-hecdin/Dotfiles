@@ -390,7 +390,7 @@ MiniIcons.config = {
 ---
 ---     Icon data is attempted to be resolved in the following order:
 ---       - List of user configured and built-in file names (matched to basename
----         of the input exactly). Run `:=MiniIcons.list('flle')` to see them.
+---         of the input exactly). Run `:=MiniIcons.list('file')` to see them.
 ---       - Basename extension:
 ---           - Matched directly as `get('extension', ext)`, where `ext` is the
 ---             widest suffix after the dot.
@@ -623,6 +623,7 @@ MiniIcons.mock_nvim_web_devicons = function()
   else
     package.loaded[modname] = M
   end
+  vim.g.nvim_web_devicons = 1
 end
 
 --- Tweak built-in LSP kind names
@@ -695,6 +696,10 @@ H.default_icons = {
 -- Directory icons. Keys are some popular *language-agnostic* directory
 -- basenames. Use only "folder-shaped" glyphs while prefering `nf-md-folder-*`
 -- classes (unless glyph is designed specifically for the directory name)
+-- Common sets:
+-- - Use `MiniIconsOrange` for typical HOME directories.
+-- - Use green '󱁽' for Neovim runtime directories (if name isn't too general).
+-- - Use `MiniIconsRed` only for 'mini.nvim' directory.
 --stylua: ignore
 H.directory_icons = {
   ['.cache']    = { glyph = '󰪺', hl = 'MiniIconsCyan'   },
@@ -721,29 +726,48 @@ H.directory_icons = {
   Users         = { glyph = '󰉌', hl = 'MiniIconsOrange' },
   Videos        = { glyph = '󱞊', hl = 'MiniIconsOrange' },
   Volumes       = { glyph = '󰉓', hl = 'MiniIconsOrange' },
+  autoload      = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
   bin           = { glyph = '󱧺', hl = 'MiniIconsYellow' },
   build         = { glyph = '󱧼', hl = 'MiniIconsGrey'   },
   boot          = { glyph = '󰴋', hl = 'MiniIconsYellow' },
+  colors        = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
+  compiler      = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
   dev           = { glyph = '󱧼', hl = 'MiniIconsYellow' },
   doc           = { glyph = '󱂷', hl = 'MiniIconsPurple' },
   docs          = { glyph = '󱂷', hl = 'MiniIconsPurple' },
   etc           = { glyph = '󱁿', hl = 'MiniIconsYellow' },
+  ftdetect      = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
+  ftplugin      = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
   home          = { glyph = '󱂵', hl = 'MiniIconsYellow' },
+  indent        = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
+  keymap        = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
+  lang          = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
   lib           = { glyph = '󰲂', hl = 'MiniIconsYellow' },
+  lsp           = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
+  lua           = { glyph = '󰉋', hl = 'MiniIconsBlue'   },
   media         = { glyph = '󱧺', hl = 'MiniIconsYellow' },
   mnt           = { glyph = '󰉓', hl = 'MiniIconsYellow' },
   ['mini.nvim'] = { glyph = '󰚝', hl = 'MiniIconsRed'    },
   node_modules  = { glyph = '', hl = 'MiniIconsGreen'  },
   nvim          = { glyph = '󰉋', hl = 'MiniIconsGreen'  },
   opt           = { glyph = '󰉗', hl = 'MiniIconsYellow' },
+  pack          = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
+  parser        = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
+  plugin        = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
   proc          = { glyph = '󰢬', hl = 'MiniIconsYellow' },
+  queries       = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
+  rplugin       = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
   root          = { glyph = '󰷌', hl = 'MiniIconsYellow' },
   sbin          = { glyph = '󱧺', hl = 'MiniIconsYellow' },
+  spell         = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
   src           = { glyph = '󰴉', hl = 'MiniIconsPurple' },
   srv           = { glyph = '󱋣', hl = 'MiniIconsYellow' },
+  snippets      = { glyph = '󱁽', hl = 'MiniIconsYellow' },
+  syntax        = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
   tmp           = { glyph = '󰪺', hl = 'MiniIconsYellow' },
   test          = { glyph = '󱞊', hl = 'MiniIconsBlue'   },
   tests         = { glyph = '󱞊', hl = 'MiniIconsBlue'   },
+  tutor         = { glyph = '󱁽', hl = 'MiniIconsGreen'  },
   usr           = { glyph = '󰉌', hl = 'MiniIconsYellow' },
   var           = { glyph = '󱋣', hl = 'MiniIconsYellow' },
 }
@@ -831,6 +855,8 @@ H.extension_icons = {
   xlt  = { glyph = '󱎏', hl = 'MiniIconsGreen'  },
   xltm = { glyph = '󱎏', hl = 'MiniIconsGreen'  },
   xltx = { glyph = '󱎏', hl = 'MiniIconsGreen'  },
+
+  ['code-snippets'] = 'json',
 }
 
 -- File icons
@@ -900,7 +926,10 @@ H.file_icons = {
   ['constraints.txt']     = 'requirements',
   ['requirements.txt']    = 'requirements',
   ['robots.txt']          = 'robots',
-  ['tclsh.rc']            = 'tcl'
+  ['tclsh.rc']            = 'tcl',
+
+  -- Supported by `vim.filetype.match` but result in confusing glyph
+  ['.prettierignore'] = { glyph = '', hl = 'MiniIconsOrange' },
 }
 
 -- Filetype icons. Keys are filetypes explicitly supported by Neovim core
@@ -909,10 +938,11 @@ H.file_icons = {
 -- Rough process of how glyphs and icons are chosen:
 -- - Try to balance usage of highlight groups.
 -- - Prefer using the following Nerd Fonts classes (from best to worst):
---     - `nf-md-*` (UTF codes seem to be more thought through). It is also
---       correctly has double width in Kitty.
+--     - `nf-md-*` (UTF codes seem to be more thought through). It also has
+--       correct double width in Kitty.
 --     - `nf-dev-*` (more supported devicons).
 --     - `nf-seti-*` (more up to date extensions).
+--     - `nf-custom-*` (niche Nerd Fonts only glyphs).
 -- - If filetype is present in 'nvim-web-devicons', use highlight group with
 --   most similar hue (based on OKLCH color space with equally spaced grid as
 --   in 'mini.hues' and chroma=3 for grey cutoff; adjust manually if needed).
@@ -1202,6 +1232,7 @@ H.filetype_icons = {
   gnash                  = { glyph = '󰒓', hl = 'MiniIconsGreen'  },
   gnuplot                = { glyph = '󰺒', hl = 'MiniIconsPurple' },
   go                     = { glyph = '󰟓', hl = 'MiniIconsAzure'  },
+  goaccess               = { glyph = '󰫴', hl = 'MiniIconsPurple' },
   godoc                  = { glyph = '󰟓', hl = 'MiniIconsOrange' },
   gomod                  = { glyph = '󰟓', hl = 'MiniIconsAzure'  },
   gosum                  = { glyph = '󰟓', hl = 'MiniIconsCyan'   },
@@ -1251,6 +1282,7 @@ H.filetype_icons = {
   htmlm4                 = { glyph = '󰌝', hl = 'MiniIconsRed'    },
   htmlos                 = { glyph = '󰌝', hl = 'MiniIconsAzure'  },
   httest                 = { glyph = '󰫵', hl = 'MiniIconsGrey'   },
+  http                   = { glyph = '󰌷', hl = 'MiniIconsOrange' },
   hurl                   = { glyph = '󰫵', hl = 'MiniIconsGreen'  },
   hyprlang               = { glyph = '', hl = 'MiniIconsCyan'   },
   i3config               = { glyph = '󰒓', hl = 'MiniIconsOrange' },
@@ -1260,6 +1292,7 @@ H.filetype_icons = {
   icon                   = { glyph = '󰫶', hl = 'MiniIconsGreen'  },
   idl                    = { glyph = '󰫶', hl = 'MiniIconsRed'    },
   idlang                 = { glyph = '󱗿', hl = 'MiniIconsAzure'  },
+  idris2                 = { glyph = '󰫶', hl = 'MiniIconsGrey'   },
   indent                 = { glyph = '󰉶', hl = 'MiniIconsGreen'  },
   inform                 = { glyph = '󰫶', hl = 'MiniIconsOrange' },
   initex                 = { glyph = '', hl = 'MiniIconsGreen'  },
@@ -1267,6 +1300,7 @@ H.filetype_icons = {
   inittab                = { glyph = '󰫶', hl = 'MiniIconsBlue'   },
   inko                   = { glyph = '󱗆', hl = 'MiniIconsGreen'  },
   ipfilter               = { glyph = '󰒓', hl = 'MiniIconsAzure'  },
+  ipkg                   = { glyph = '󰫶', hl = 'MiniIconsGrey'   },
   ishd                   = { glyph = '󰫶', hl = 'MiniIconsYellow' },
   iss                    = { glyph = '󰏗', hl = 'MiniIconsBlue'   },
   ist                    = { glyph = '󰫶', hl = 'MiniIconsCyan'   },
@@ -1282,6 +1316,7 @@ H.filetype_icons = {
   javascriptreact        = { glyph = '', hl = 'MiniIconsAzure'  },
   jess                   = { glyph = '󰫷', hl = 'MiniIconsPurple' },
   jgraph                 = { glyph = '󰫷', hl = 'MiniIconsGrey'   },
+  jinja                  = { glyph = '', hl = 'MiniIconsRed'    },
   jj                     = { glyph = '󱨎', hl = 'MiniIconsYellow' },
   jovial                 = { glyph = '󰫷', hl = 'MiniIconsGrey'   },
   jproperties            = { glyph = '󰬷', hl = 'MiniIconsGreen'  },
@@ -1311,11 +1346,14 @@ H.filetype_icons = {
   ldif                   = { glyph = '󰫹', hl = 'MiniIconsPurple' },
   lean                   = { glyph = '󱎦', hl = 'MiniIconsPurple' },
   ledger                 = { glyph = '󱪹', hl = 'MiniIconsBlue'   },
+  leo                    = { glyph = '󰪂', hl = 'MiniIconsYellow' },
   less                   = { glyph = '󰌜', hl = 'MiniIconsPurple' },
   lex                    = { glyph = '󰫹', hl = 'MiniIconsOrange' },
+  lf                     = { glyph = '󰫹', hl = 'MiniIconsPurple' },
   lftp                   = { glyph = '󰒓', hl = 'MiniIconsYellow' },
   lhaskell               = { glyph = '', hl = 'MiniIconsPurple' },
   libao                  = { glyph = '󰒓', hl = 'MiniIconsGrey'   },
+  lidris2                = { glyph = '󰫹', hl = 'MiniIconsPurple' },
   lifelines              = { glyph = '󰫹', hl = 'MiniIconsCyan'   },
   lilo                   = { glyph = '󰒓', hl = 'MiniIconsAzure'  },
   lilypond               = { glyph = '󱎦', hl = 'MiniIconsOrange' },
@@ -1370,6 +1408,7 @@ H.filetype_icons = {
   mgp                    = { glyph = '󰫺', hl = 'MiniIconsAzure'  },
   mib                    = { glyph = '󰫺', hl = 'MiniIconsCyan'   },
   mix                    = { glyph = '󰫺', hl = 'MiniIconsRed'    },
+  mlir                   = { glyph = '󰫺', hl = 'MiniIconsGreen'  },
   mma                    = { glyph = '󰘨', hl = 'MiniIconsAzure'  },
   mmix                   = { glyph = '󰫺', hl = 'MiniIconsRed'    },
   mmp                    = { glyph = '󰫺', hl = 'MiniIconsGrey'   },
@@ -1403,6 +1442,7 @@ H.filetype_icons = {
   nastran                = { glyph = '󰫻', hl = 'MiniIconsRed'    },
   natural                = { glyph = '󰫻', hl = 'MiniIconsBlue'   },
   ncf                    = { glyph = '󰫻', hl = 'MiniIconsYellow' },
+  neomuttlog             = { glyph = '󰷐', hl = 'MiniIconsBlue'   },
   neomuttrc              = { glyph = '󰒓', hl = 'MiniIconsGreen'  },
   netrc                  = { glyph = '󰒓', hl = 'MiniIconsRed'    },
   netrw                  = { glyph = '󰙅', hl = 'MiniIconsBlue'   },
@@ -1410,7 +1450,7 @@ H.filetype_icons = {
   nim                    = { glyph = '', hl = 'MiniIconsYellow' },
   ninja                  = { glyph = '󰝴', hl = 'MiniIconsGrey'   },
   nix                    = { glyph = '󱄅', hl = 'MiniIconsAzure'  },
-  norg                   = { glyph = '󰫻', hl = 'MiniIconsBlue'   },
+  norg                   = { glyph = '', hl = 'MiniIconsBlue'   },
   nqc                    = { glyph = '󱊈', hl = 'MiniIconsYellow' },
   nroff                  = { glyph = '󰫻', hl = 'MiniIconsCyan'   },
   nsis                   = { glyph = '󰫻', hl = 'MiniIconsAzure'  },
@@ -1551,6 +1591,7 @@ H.filetype_icons = {
   ruby                   = { glyph = '󰴭', hl = 'MiniIconsRed'    },
   rust                   = { glyph = '󱘗', hl = 'MiniIconsOrange' },
   sage                   = { glyph = '󰘨', hl = 'MiniIconsPurple' },
+  salt                   = { glyph = '󰬀', hl = 'MiniIconsCyan'   },
   samba                  = { glyph = '󰒓', hl = 'MiniIconsGreen'  },
   sas                    = { glyph = '󰱐', hl = 'MiniIconsAzure'  },
   sass                   = { glyph = '󰟬', hl = 'MiniIconsRed'    },
@@ -1641,10 +1682,12 @@ H.filetype_icons = {
   stylus                 = { glyph = '󰴒', hl = 'MiniIconsGrey'   },
   sudoers                = { glyph = '󰒓', hl = 'MiniIconsGrey'   },
   supercollider          = { glyph = '󰆦', hl = 'MiniIconsGrey'   },
+  superhtml              = { glyph = '󰌝', hl = 'MiniIconsPurple' },
   surface                = { glyph = '󰬀', hl = 'MiniIconsRed'    },
   svelte                 = { glyph = '', hl = 'MiniIconsOrange' },
   svg                    = { glyph = '󰜡', hl = 'MiniIconsYellow' },
   svn                    = { glyph = '󰜘', hl = 'MiniIconsOrange' },
+  sway                   = { glyph = '󰬀', hl = 'MiniIconsCyan'   },
   swayconfig             = { glyph = '󰒓', hl = 'MiniIconsPurple' },
   swift                  = { glyph = '󰛥', hl = 'MiniIconsOrange' },
   swiftgyb               = { glyph = '󰛥', hl = 'MiniIconsYellow' },
@@ -1786,6 +1829,8 @@ H.filetype_icons = {
   z8a                    = { glyph = '', hl = 'MiniIconsGrey'   },
   zathurarc              = { glyph = '󰒓', hl = 'MiniIconsRed'    },
   zig                    = { glyph = '', hl = 'MiniIconsOrange' },
+  ziggy                  = { glyph = '󰬇', hl = 'MiniIconsBlue'   },
+  ziggy_schema           = { glyph = '󰬇', hl = 'MiniIconsAzure'  },
   zimbu                  = { glyph = '󰬇', hl = 'MiniIconsGreen'  },
   zimbutempl             = { glyph = '󰬇', hl = 'MiniIconsOrange' },
   zip                    = { glyph = '󰗄', hl = 'MiniIconsGreen'  },
@@ -1795,7 +1840,6 @@ H.filetype_icons = {
 
   -- Popular filetype which require user configuration
   helm                    = { glyph = '󰠳', hl = 'MiniIconsBlue'   },
-  http                    = { glyph = '󰌷', hl = 'MiniIconsOrange' },
   ['yaml.ansible']        = { glyph = '󱂚', hl = 'MiniIconsGrey'   },
   ['yaml.docker-compose'] = { glyph = '󰡨', hl = 'MiniIconsYellow' },
 
@@ -1913,22 +1957,18 @@ H.os_icons = {
 -- Helper functionality =======================================================
 -- Settings -------------------------------------------------------------------
 H.setup_config = function(config)
-  -- General idea: if some table elements are not present in user-supplied
-  -- `config`, take them from default config
-  vim.validate({ config = { config, 'table', true } })
+  H.check_type('config', config, 'table', true)
   config = vim.tbl_deep_extend('force', vim.deepcopy(H.default_config), config or {})
 
-  vim.validate({
-    style = { config.style, 'string' },
-    default = { config.default, 'table' },
-    directory = { config.directory, 'table' },
-    extension = { config.extension, 'table' },
-    file = { config.file, 'table' },
-    filetype = { config.filetype, 'table' },
-    lsp = { config.lsp, 'table' },
-    os = { config.os, 'table' },
-    use_file_extension = { config.use_file_extension, 'function' },
-  })
+  H.check_type('style', config.style, 'string')
+  H.check_type('default', config.default, 'table')
+  H.check_type('directory', config.directory, 'table')
+  H.check_type('extension', config.extension, 'table')
+  H.check_type('file', config.file, 'table')
+  H.check_type('filetype', config.filetype, 'table')
+  H.check_type('lsp', config.lsp, 'table')
+  H.check_type('os', config.os, 'table')
+  H.check_type('use_file_extension', config.use_file_extension, 'function')
 
   return config
 end
@@ -2107,7 +2147,12 @@ H.filetype_match = function(filename)
 end
 
 -- Utilities ------------------------------------------------------------------
-H.error = function(msg) error(string.format('(mini.icons) %s', msg), 0) end
+H.error = function(msg) error('(mini.icons) ' .. msg, 0) end
+
+H.check_type = function(name, val, ref, allow_nil)
+  if type(val) == ref or (ref == 'callable' and vim.is_callable(val)) or (allow_nil and val == nil) then return end
+  H.error(string.format('`%s` should be %s, not %s', name, ref, type(val)))
+end
 
 H.notify = function(msg, level_name) vim.notify('(mini.icons) ' .. msg, vim.log.levels[level_name]) end
 

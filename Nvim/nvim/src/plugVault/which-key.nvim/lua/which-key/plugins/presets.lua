@@ -119,6 +119,10 @@ M.windows = {
   { "<c-w>w", desc = "Switch windows" },
   { "<c-w>x", desc = "Swap current with next" },
   { "<c-w>|", desc = "Max out the width" },
+  { "<c-w>H", desc = "Move window to far left" },
+  { "<c-w>J", desc = "Move window to far bottom" },
+  { "<c-w>K", desc = "Move window to far top" },
+  { "<c-w>L", desc = "Move window to far right" },
 }
 
 M.z = {
@@ -176,6 +180,8 @@ M.nav = {
 M.g = {
   preset = true,
   { "g%", desc = "Cycle backwards through results" },
+  { "g,", desc = "Go to [count] newer position in change list" },
+  { "g;", desc = "Go to [count] older position in change list" },
   { "gN", desc = "Search backwards and select" },
   { "gT", desc = "Go to previous tab page" },
   { "gf", desc = "Go to file under cursor" },

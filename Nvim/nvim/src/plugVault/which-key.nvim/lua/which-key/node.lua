@@ -24,6 +24,17 @@ function M.new(parent, key)
   return self
 end
 
+function M:has_nowait_ancestor()
+  local node = self
+  while node do
+    if node.keymap and node.keymap.nowait then
+      return true
+    end
+    node = node.parent
+  end
+  return false
+end
+
 function M:is_local()
   if self.path[1] == Util.norm("<localleader>") then
     return true
@@ -80,7 +91,7 @@ function M:inspect(depth)
 end
 
 function M:count()
-  return #self:children()
+  return not self:can_expand() and vim.tbl_count(self._children) or #self:children()
 end
 
 function M:is_group()
@@ -96,7 +107,7 @@ function M:is_plugin()
 end
 
 function M:can_expand()
-  return self.plugin or self:is_proxy() or (self.mapping and self.mapping.expand)
+  return self.plugin or (self.mapping and (self.mapping.proxy or self.mapping.expand))
 end
 
 ---@return wk.Node[]

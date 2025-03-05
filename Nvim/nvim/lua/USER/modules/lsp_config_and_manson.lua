@@ -12,7 +12,7 @@ end
 
 return {
   {
-    "https://github.com/williamboman/mason.nvim.git",
+    "williamboman/mason.nvim",
     cmd = "Mason",
     build = ":MasonUpdate",
     ft = {"java"},
@@ -42,7 +42,7 @@ return {
     end
   },
   {
-    "https://github.com/neovim/nvim-lspconfig.git",
+    "neovim/nvim-lspconfig",
     cond = D.notContainFiletype({"nim", "md"}),
     cmd = "LspInfo",
     event = {"BufReadPre", "BufNewFile"},
@@ -57,7 +57,7 @@ return {
       local lsp_servers = {
         -- css = {"cssls"},
         html = {"emmet_ls"},
-        javascript = {"astro", "ts_ls"},
+        javascript = {"ts_ls"},
         lua = {"lua_ls"},
         php = {"phpactor"},
         -- go = {"gopls"},

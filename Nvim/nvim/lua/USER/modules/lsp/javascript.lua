@@ -11,18 +11,11 @@ M.lsp = function(servers)
     end
 
     -- Install with: pnpm i -g typescript-language-server
-    if server == "tsserver" then
-      lspconfig["tsserver"].setup({
+    if server == "ts_ls" then
+      lspconfig["ts_ls"].setup({
         init_options = { hostInfo = 'neovim' },
         cmd = { 'typescript-language-server', '--stdio' },
-        filetypes = {
-          'javascript',
-          'javascriptreact',
-          'javascript.jsx',
-          'typescript',
-          'typescriptreact',
-          'typescript.tsx',
-        },
+        filetypes = {'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx'},
         root_dir = util.root_pattern('tsconfig.json', 'jsconfig.json', 'package.json', '.git'),
         single_file_support = true,
       })

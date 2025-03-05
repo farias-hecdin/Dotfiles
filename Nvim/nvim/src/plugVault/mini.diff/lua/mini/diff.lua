@@ -680,7 +680,8 @@ MiniDiff.gen_source.save = function()
 
     local set_ref = function()
       if vim.bo[buf_id].modified then return end
-      MiniDiff.set_ref_text(buf_id, vim.api.nvim_buf_get_lines(buf_id, 0, -1, false))
+      local lines = vim.api.nvim_buf_get_lines(buf_id, 0, -1, false)
+      MiniDiff.set_ref_text(buf_id, table.concat(lines, '\n') .. '\n')
     end
 
     -- Autocommand are more efficient than file watcher as it doesn't read disk
@@ -906,45 +907,36 @@ if H.vimdiff_supports_linematch then H.worddiff_opts.linematch = 0 end
 -- Helper functionality =======================================================
 -- Settings -------------------------------------------------------------------
 H.setup_config = function(config)
-  -- General idea: if some table elements are not present in user-supplied
-  -- `config`, take them from default config
-  vim.validate({ config = { config, 'table', true } })
+  H.check_type('config', config, 'table', true)
   config = vim.tbl_deep_extend('force', vim.deepcopy(H.default_config), config or {})
 
-  vim.validate({
-    view = { config.view, 'table' },
-    source = { config.source, 'table', true },
-    delay = { config.delay, 'table' },
-    mappings = { config.mappings, 'table' },
-    options = { config.options, 'table' },
-  })
+  H.check_type('view', config.view, 'table')
+  H.check_type('view.style', config.view.style, 'string')
+  H.check_type('view.signs', config.view.signs, 'table')
+  H.check_type('view.signs.add', config.view.signs.add, 'string')
+  H.check_type('view.signs.change', config.view.signs.change, 'string')
+  H.check_type('view.signs.delete', config.view.signs.delete, 'string')
+  H.check_type('view.priority', config.view.priority, 'number')
 
-  vim.validate({
-    ['view.style'] = { config.view.style, 'string' },
-    ['view.signs'] = { config.view.signs, 'table' },
-    ['view.priority'] = { config.view.priority, 'number' },
+  H.check_type('source', config.source, 'table', true)
 
-    ['delay.text_change'] = { config.delay.text_change, 'number' },
+  H.check_type('delay', config.delay, 'table')
+  H.check_type('delay.text_change', config.delay.text_change, 'number')
 
-    ['mappings.apply'] = { config.mappings.apply, 'string' },
-    ['mappings.reset'] = { config.mappings.reset, 'string' },
-    ['mappings.textobject'] = { config.mappings.textobject, 'string' },
-    ['mappings.goto_first'] = { config.mappings.goto_first, 'string' },
-    ['mappings.goto_prev'] = { config.mappings.goto_prev, 'string' },
-    ['mappings.goto_next'] = { config.mappings.goto_next, 'string' },
-    ['mappings.goto_last'] = { config.mappings.goto_last, 'string' },
+  H.check_type('mappings', config.mappings, 'table')
+  H.check_type('mappings.apply', config.mappings.apply, 'string')
+  H.check_type('mappings.reset', config.mappings.reset, 'string')
+  H.check_type('mappings.textobject', config.mappings.textobject, 'string')
+  H.check_type('mappings.goto_first', config.mappings.goto_first, 'string')
+  H.check_type('mappings.goto_prev', config.mappings.goto_prev, 'string')
+  H.check_type('mappings.goto_next', config.mappings.goto_next, 'string')
+  H.check_type('mappings.goto_last', config.mappings.goto_last, 'string')
 
-    ['options.algorithm'] = { config.options.algorithm, 'string' },
-    ['options.indent_heuristic'] = { config.options.indent_heuristic, 'boolean' },
-    ['options.linematch'] = { config.options.linematch, 'number' },
-    ['options.wrap_goto'] = { config.options.wrap_goto, 'boolean' },
-  })
-
-  vim.validate({
-    ['view.signs.add'] = { config.view.signs.add, 'string' },
-    ['view.signs.change'] = { config.view.signs.change, 'string' },
-    ['view.signs.delete'] = { config.view.signs.delete, 'string' },
-  })
+  H.check_type('options', config.options, 'table')
+  H.check_type('options.algorithm', config.options.algorithm, 'string')
+  H.check_type('options.indent_heuristic', config.options.indent_heuristic, 'boolean')
+  H.check_type('options.linematch', config.options.linematch, 'number')
+  H.check_type('options.wrap_goto', config.options.wrap_goto, 'boolean')
 
   return config
 end
@@ -1158,16 +1150,25 @@ H.set_decoration_provider = function(ns_id_viz, ns_id_overlay)
     local buf_cache = H.cache[buf_id]
     if buf_cache == nil then return false end
 
+    local viz_lines, overlay_lines = buf_cache.viz_lines, buf_cache.overlay_lines
     if buf_cache.needs_clear then
       H.clear_all_diff(buf_id)
-      buf_cache.needs_clear = false
+      buf_cache.needs_clear, buf_cache.dummy_extmark = false, nil
+      -- Ensure that sign column is visible even if hunks are outside of window
+      -- view (matters with `signcolumn=auto`)
+      if buf_cache.config.view.style == 'sign' and not vim.tbl_isempty(viz_lines) then
+        local dummy_opts = { sign_text = '  ', priority = 0, right_gravity = false }
+        dummy_opts.sign_hl_group, dummy_opts.cursorline_hl_group = 'SignColumn', 'CursorLineSign'
+        buf_cache.dummy_extmark = vim.api.nvim_buf_set_extmark(buf_id, ns_id_viz, 0, 0, dummy_opts)
+      end
     end
 
-    local viz_lines, overlay_lines = buf_cache.viz_lines, buf_cache.overlay_lines
+    local has_viz_extmarks = false
     for i = top + 1, bottom + 1 do
       if viz_lines[i] ~= nil then
         H.set_extmark(buf_id, ns_id_viz, i - 1, 0, viz_lines[i])
         viz_lines[i] = nil
+        has_viz_extmarks = true
       end
       if overlay_lines[i] ~= nil then
         -- Allow several overlays at one line (like for "delete" and "change")
@@ -1176,6 +1177,13 @@ H.set_decoration_provider = function(ns_id_viz, ns_id_overlay)
         end
         overlay_lines[i] = nil
       end
+    end
+
+    -- Make sure to clear dummy extmark when it is not needed (otherwise it
+    -- affects signcolumn for cases like `yes:2` and `auto:2`)
+    if buf_cache.dummy_extmark ~= nil and has_viz_extmarks then
+      vim.api.nvim_buf_del_extmark(buf_id, ns_id_viz, buf_cache.dummy_extmark)
+      buf_cache.dummy_extmark = nil
     end
   end
   vim.api.nvim_set_decoration_provider(ns_id_viz, { on_win = on_win })
@@ -1572,12 +1580,18 @@ H.export_qf = function(opts)
   buffers = vim.tbl_filter(vim.api.nvim_buf_is_valid, buffers)
   table.sort(buffers)
 
+  local type_text = { add = 'Add', change = 'Change', delete = 'Delete' }
+
   local res = {}
   for _, buf_id in ipairs(buffers) do
     local filename = vim.api.nvim_buf_get_name(buf_id)
+    local buf_lines = vim.api.nvim_buf_get_lines(buf_id, 0, -1, false)
     for _, h in ipairs(H.cache[buf_id].hunks) do
-      local entry = { bufnr = buf_id, filename = filename, type = h.type:sub(1, 1):upper() }
+      local text = type_text[h.type]
+      local entry = { bufnr = buf_id, filename = filename, type = text:sub(1, 1), text = text }
       entry.lnum, entry.end_lnum = H.get_hunk_buf_range(h)
+      -- Make 'add' and 'change' hunks represent actual buffer regions
+      entry.col, entry.end_col = 1, h.type == 'delete' and 1 or buf_lines[entry.end_lnum]:len() + 1
       table.insert(res, entry)
     end
   end
@@ -1597,6 +1611,10 @@ H.git_start_watching_index = function(buf_id, path)
   -- If path is not in Git, disable buffer but make sure that it will not try
   -- to re-attach until buffer is properly disabled
   local on_not_in_git = vim.schedule_wrap(function()
+    if not vim.api.nvim_buf_is_valid(buf_id) then
+      H.cache[buf_id] = nil
+      return
+    end
     MiniDiff.disable(buf_id)
     H.git_cache[buf_id] = {}
   end)
@@ -1756,7 +1774,12 @@ H.git_invalidate_cache = function(cache)
 end
 
 -- Utilities ------------------------------------------------------------------
-H.error = function(msg) error(string.format('(mini.diff) %s', msg), 0) end
+H.error = function(msg) error('(mini.diff) ' .. msg, 0) end
+
+H.check_type = function(name, val, ref, allow_nil)
+  if type(val) == ref or (ref == 'callable' and vim.is_callable(val)) or (allow_nil and val == nil) then return end
+  H.error(string.format('`%s` should be %s, not %s', name, ref, type(val)))
+end
 
 H.notify = function(msg, level_name) vim.notify('(mini.diff) ' .. msg, vim.log.levels[level_name]) end
 

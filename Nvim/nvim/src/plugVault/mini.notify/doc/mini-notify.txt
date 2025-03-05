@@ -43,6 +43,7 @@ You can override runtime config settings locally to buffer inside
 # Highlight groups ~
 
 * `MiniNotifyBorder` - window border.
+* `MiniNotifyLspProgress` - notifications from built-in LSP progress report.
 * `MiniNotifyNormal` - basic foreground/background highlighting.
 * `MiniNotifyTitle` - window title.
 
@@ -67,6 +68,7 @@ Notification is a table with the following keys:
 - <level> `(string)` - notification level as key of |vim.log.levels|.
   Like "ERROR", "WARN", "INFO", etc.
 - <hl_group> `(string)` - highlight group with which notification is shown.
+- <data> `(table)` - extra data to store in notification (like `source`, etc.).
 - <ts_add> `(number)` - timestamp of when notification is added.
 - <ts_update> `(number)` - timestamp of the latest notification update.
 - <ts_remove> `(number|nil)` - timestamp of when notification is removed.
@@ -79,6 +81,9 @@ Notes:
                                                             *MiniNotify.setup()*
                           `MiniNotify.setup`({config})
 Module setup
+
+This will also clean the history. Use `MiniNotify.setup(MiniNotify.config)` to
+force clean history while preserving the config.
 
 Parameters ~
 {config} `(table|nil)` Module config table. See |MiniNotify.config|.
@@ -112,6 +117,9 @@ Default values:
     lsp_progress = {
       -- Whether to enable showing
       enable = true,
+
+      -- Notification level
+      level = 'INFO',
 
       -- Duration (in ms) of how long last message should be shown
       duration_last = 1000,
@@ -150,8 +158,11 @@ Example: >lua
 
   require('mini.notify').setup({
     content = {
-      -- Use notification message as is
-      format = function(notif) return notif.msg end,
+      -- Use notification message as is for LSP progress
+      format = function(notif)
+        if notif.data.source == 'lsp_progress' then return notif.msg end
+        return MiniNotify.default_format(notif)
+      end,
 
       -- Show more recent notifications first
       sort = function(notif_arr)
@@ -167,8 +178,8 @@ Example: >lua
 # LSP progress ~
 
 `config.lsp_progress` defines automated notifications for LSP progress.
-It is implemented as a single updating notification with all information
-about the progress.
+It is implemented as a single updating notification per progress with all
+information about it.
 Setting up is done inside |MiniNotify.setup()| via |vim.schedule()|'ed setting
 of |lsp-handler| for "$/progress" method.
 
@@ -177,13 +188,21 @@ be shown in notifications. Can be disabled in current session.
 Default: `true`. Note: Should be `true` during |MiniNotify.setup()| call to be able
 to enable it in current session.
 
+`lsp_progress.level` is a level to be used in |MiniNotify.add()|.
+Default: `'INFO'`.
+
 `lsp_progress.duration_last` is a number of milliseconds for the last progress
 report to be shown on screen before removing it.
 Default: 1000.
 
 Notes:
 - This respects previously set handler by saving and calling it.
-- Overrding "$/progress" method of `vim.lsp.handlers` disables notifications.
+- Overriding "$/progress" method of `vim.lsp.handlers` disables notifications.
+- All LSP progress notifications set the following fields in `data`:
+    - <source> is `"lsp_progress"`.
+    - <client_name> is set to client's name (provided by client or inferred).
+    - <context> is the latest LSP request context (`ctx` arg of |lsp-handler|).
+    - <response> is the latest LSP response (`result` arg of |lsp-handler|).
 
 # Window ~
 
@@ -208,6 +227,15 @@ which show notifications in the upper right corner with upper limit on width:
 Should be a number between 0 (not included) and 1.
 Default: 0.382.
 
+Example for showing notifications in bottom right corner: >lua
+
+  local win_config = function()
+    local has_statusline = vim.o.laststatus > 0
+    local pad = vim.o.cmdheight + (has_statusline and 1 or 0)
+    return { anchor = 'SE', col = vim.o.columns, row = vim.o.lines - pad }
+  end
+  require('mini.notify').setup({ window = { config = win_config } })
+<
 `window.winblend` defines 'winblend' value for notification window.
 Default: 25.
 
@@ -216,10 +244,11 @@ Default: 25.
                         `MiniNotify.make_notify`({opts})
 Make vim.notify wrapper
 
-Calling this function creates an implementation of |vim.notify()| powered
-by this module. General idea is that notification is shown right away (as
-soon as safely possible, see |vim.schedule()|) and removed after a configurable
-amount of time.
+Calling this function creates an implementation of |vim.notify()| powered by
+this module. General idea is to show notification as soon as safely possible
+(see |vim.schedule_wrap()|) and remove it after a configurable amount of time.
+
+All notifications set `source = "vim.notify"` in their `data` field.
 
 Examples: >lua
 
@@ -252,7 +281,7 @@ Parameters ~
 <
 ------------------------------------------------------------------------------
                                                               *MiniNotify.add()*
-                  `MiniNotify.add`({msg}, {level}, {hl_group})
+              `MiniNotify.add`({msg}, {level}, {hl_group}, {data})
 Add notification
 
 Add notification to history. It is considered "active" and is shown.
@@ -269,22 +298,26 @@ Parameters ~
   Default: `'INFO'`.
 {hl_group} `(string|nil)` Notification highlight group.
   Default: `'MiniNotifyNormal'`.
+{data} `(table|nil)` Extra data to store in the notification.
+  Default: `{}`.
 
 Return ~
 `(number)` Notification identifier.
 
 ------------------------------------------------------------------------------
                                                            *MiniNotify.update()*
-                     `MiniNotify.update`({id}, {new_data})
+                        `MiniNotify.update`({id}, {new})
 Update active notification
 
-Modify data of active notification.
+Modify contents of active notification.
 
 Parameters ~
 {id} `(number)` Identifier of currently active notification as returned
   by |MiniNotify.add()|.
-{new_data} `(table)` Table with data to update. Keys should be as non-timestamp
-  fields of |MiniNotify-specification| and values - new notification values.
+{new} `(table)` Table with contents to update. Keys should be as non-timestamp
+  fields of |MiniNotify-specification| and values - new content values.
+  If present, field `data` is updated as is. Use |MiniNotify.get()| together
+  with |vim.tbl_deep_extend()| to change only part of it.
 
 ------------------------------------------------------------------------------
                                                            *MiniNotify.remove()*
@@ -310,13 +343,15 @@ Hide all active notifications and stop showing window (if shown).
                              `MiniNotify.refresh`()
 Refresh notification window
 
-Make notification window show relevant data:
+Make notification window show relevant information:
 - Create an array of active notifications (see |MiniNotify-specification|).
 - Apply `config.content.sort` to an array. If output has zero notifications,
   make notification window to not show.
 - Apply `config.content.format` to each element of notification array and
   update its message.
 - Construct content from notifications and show them in a window.
+
+Note: effects are delayed if inside fast event (|vim.in_fast_event()|).
 
 ------------------------------------------------------------------------------
                                                               *MiniNotify.get()*

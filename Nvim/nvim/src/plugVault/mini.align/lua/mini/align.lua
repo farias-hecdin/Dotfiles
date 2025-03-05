@@ -339,6 +339,18 @@
 ---     aa,  bb
 ---     aaa, bbb
 --- <
+--- <|> Split by "|" character, trim whitespace, merge with single space.
+---
+---     Before: >
+---     |a|b|
+---     |aa|bb|
+---     |aaa    |    bbb   |
+--- <
+---     After typing `|`: >
+---     | a   | b   |
+---     | aa  | bb  |
+---     | aaa | bbb |
+--- <
 --- < > (Space bar) Squash consecutive whitespace into single single space (accept
 ---     possible indentation) and split by `%s+` pattern (keeps indentation).
 ---
@@ -608,6 +620,13 @@ MiniAlign.config = {
       opts.merge_delimiter = ' '
     end,
     --minidoc_replace_end
+    --minidoc_replace_start ['|'] = --<function: enhanced setup for '|'>,
+    ['|'] = function(steps, opts)
+      opts.split_pattern = '|'
+      table.insert(steps.pre_justify, MiniAlign.gen_step.trim())
+      opts.merge_delimiter = ' '
+    end,
+    --minidoc_replace_end
     --minidoc_replace_start [' '] = --<function: enhanced setup for ' '>,
     [' '] = function(steps, opts)
       table.insert(
@@ -643,6 +662,8 @@ MiniAlign.config = {
   },
 
   -- Whether to disable showing non-error feedback
+  -- This also affects (purely informational) helper messages shown after
+  -- idle time if user input is required.
   silent = false,
 }
 --minidoc_afterlines_end
@@ -736,11 +757,11 @@ MiniAlign.align_user = function(mode)
   local steps_are_from_cache = H.cache.steps ~= nil
   H.cache.region = nil
 
-  -- Track if lines were actually set to properly undo during preview
-  local lines_were_set = false
+  -- Track if lines were actually changed to properly undo during preview
+  local lines_were_changed = false
 
   -- Make initial process
-  lines_were_set = H.process_current_region(lines_were_set, mode, opts, steps)
+  lines_were_changed = H.process_current_region(lines_were_changed, mode, opts, steps)
 
   -- Make early return:
   -- - If cache is present (enables dot-repeat).
@@ -757,7 +778,7 @@ MiniAlign.align_user = function(mode)
     -- Stop in case user supplied inappropriate modifier id (abort)
     -- Also stop in case of too many iterations (guard from infinite cycle)
     if id == nil or n_iter > 1000 then
-      if lines_were_set then H.undo() end
+      if lines_were_changed then H.undo() end
       if n_iter > 1000 then H.echo({ { 'Too many modifiers typed.', 'WarningMsg' } }, true) end
       break
     end
@@ -788,8 +809,8 @@ MiniAlign.align_user = function(mode)
     steps = H.normalize_steps(steps, opts)
 
     -- Process region while tracking if lines were set at least once
-    local lines_now_set = H.process_current_region(lines_were_set, mode, opts, steps)
-    lines_were_set = lines_were_set or lines_now_set
+    local lines_now_changed = H.process_current_region(lines_were_changed, mode, opts, steps)
+    lines_were_changed = lines_were_changed or lines_now_changed
 
     -- Stop in "no preview" mode right after `split` is defined
     if not with_preview and opts.split_pattern ~= '' then break end
@@ -1120,7 +1141,7 @@ MiniAlign.gen_step.default_merge = function() return MiniAlign.new_step('merge',
 ---   evaluated in manually created context (some specific variables being set).
 --- - Compute boolean mask for parts by applying predicate to each element of
 ---   2d array with special variables set to specific values (see next section).
---- - Group parts with compted mask. See `group()` method of parts in
+--- - Group parts with computed mask. See `group()` method of parts in
 ---   |MiniAlign.as_parts()|.
 ---
 --- Special variables which can be used in expression:
@@ -1295,23 +1316,21 @@ H.indent_functions = {
 -- Helper functionality =======================================================
 -- Settings -------------------------------------------------------------------
 H.setup_config = function(config)
-  -- General idea: if some table elements are not present in user-supplied
-  -- `config`, take them from default config
-  vim.validate({ config = { config, 'table', true } })
+  H.check_type('config', config, 'table', true)
   config = vim.tbl_deep_extend('force', vim.deepcopy(H.default_config), config or {})
 
-  vim.validate({
-    mappings = { config.mappings, 'table' },
-    modifiers = { config.modifiers, H.is_valid_modifiers },
-    steps = { config.steps, H.is_valid_steps },
-    options = { config.options, 'table' },
-    silent = { config.silent, 'boolean' },
-  })
+  H.check_type('mappings', config.mappings, 'table')
+  H.check_type('mappings.start', config.mappings.start, 'string')
+  H.check_type('mappings.start_with_preview', config.mappings.start_with_preview, 'string')
 
-  vim.validate({
-    ['mappings.start'] = { config.mappings.start, 'string' },
-    ['mappings.start_with_preview'] = { config.mappings.start_with_preview, 'string' },
-  })
+  H.check_type('modifiers', config.modifiers, 'table')
+  for k, v in pairs(config.modifiers) do
+    if not vim.is_callable(v) then H.error(string.format('`modifiers[%s]` should be callable.', vim.inspect(k))) end
+  end
+
+  H.validate_steps(config.steps, 'steps')
+  H.check_type('options', config.options, 'table')
+  H.check_type('silent', config.silent, 'boolean')
 
   return config
 end
@@ -1595,19 +1614,6 @@ H.default_action_merge = function(parts, opts)
 end
 
 -- Work with modifiers --------------------------------------------------------
-H.is_valid_modifiers = function(x, x_name)
-  x_name = x_name or 'config.modifiers'
-
-  if type(x) ~= 'table' then return false, string.format('`%s` should be table.', x_name) end
-  for k, v in pairs(x) do
-    if not vim.is_callable(v) then
-      return false, string.format('`%s[%s]` should be callable.', x_name, vim.inspect(k))
-    end
-  end
-
-  return true
-end
-
 H.make_filter_action = function(expr)
   if expr == nil then return nil end
   if expr == '' then expr = 'true' end
@@ -1646,12 +1652,12 @@ end
 -- Work with regions ----------------------------------------------------------
 ---@return boolean Whether some lines were actually set.
 ---@private
-H.process_current_region = function(lines_were_set, mode, opts, steps)
+H.process_current_region = function(lines_were_changed, mode, opts, steps)
   -- Cache current options and steps for dot-repeat
   H.cache.opts, H.cache.steps = opts, steps
 
   -- Undo previously set lines
-  if lines_were_set then H.undo() end
+  if lines_were_changed then H.undo() end
 
   -- Get current region. NOTE: use cached value to ensure that the same region
   -- is processed during preview. Otherwise there might be problems with
@@ -1679,7 +1685,7 @@ H.process_current_region = function(lines_were_set, mode, opts, steps)
   vim.cmd('redraw')
 
   -- Confirm that lines were actually set
-  return true
+  return table.concat(strings) ~= table.concat(strings_aligned)
 end
 
 H.get_current_region = function()
@@ -1713,16 +1719,19 @@ H.region_get_text = function(region, mode)
   if mode == 'line' then return H.get_lines(from.line - 1, to.line) end
 
   if mode == 'block' then
-    -- Use virtual columns to respect multibyte characters
+    -- Use virtual columns to respect multibyte/wide/composing characters
     local left_virtcol, right_virtcol = H.region_virtcols(region)
-    local n_cols = right_virtcol - left_virtcol + 1
 
-    return vim.tbl_map(
-      -- `strcharpart()` returns empty string for out of bounds span, so no
-      -- need for extra columns check
-      function(l) return vim.fn.strcharpart(l, left_virtcol - 1, n_cols) end,
-      H.get_lines(from.line - 1, to.line)
-    )
+    local res, lines = {}, H.get_lines(from.line - 1, to.line)
+    for i, l in ipairs(lines) do
+      local lnum = from.line + i - 1
+      local left_col = H.virtcol2col(lnum, left_virtcol)
+      local right_col = H.virtcol2col(lnum, right_virtcol)
+      right_col = right_col + H.str_utf_end(l, right_col)
+
+      table.insert(res, l:sub(left_col, right_col))
+    end
+    return res
   end
 end
 
@@ -1746,24 +1755,18 @@ H.region_set_text = function(region, mode, text)
 
     -- Use virtual columns to respect multibyte characters
     local left_virtcol, right_virtcol = H.region_virtcols(region)
+
     local lines = H.get_lines(from.line - 1, to.line)
     for i, l in ipairs(lines) do
-      -- Use zero-based indexes
-      local line_num = from.line + i - 2
+      local lnum = from.line + i - 1
+      local left_col = H.virtcol2col(lnum, left_virtcol)
+      local right_col = H.virtcol2col(lnum, right_virtcol)
+      right_col = right_col + H.str_utf_end(l, right_col)
 
-      local n_virtcols = vim.fn.virtcol({ line_num + 1, '$' }) - 1
-      -- Don't set text if all region is past end of line
-      if left_virtcol <= n_virtcols then
-        -- Make sure to not go past the line end
-        local line_left_col, line_right_col = left_virtcol, math.min(right_virtcol, n_virtcols)
-
-        -- Convert back to byte columns (columns are end-exclusive)
-        local start_col, end_col = vim.fn.byteidx(l, line_left_col - 1), vim.fn.byteidx(l, line_right_col)
-        start_col, end_col = math.max(start_col, 0), math.max(end_col, 0)
-
-        -- vim.api.nvim_buf_set_text(0, line_num, start_col, line_num, end_col, { text[i] })
-        H.set_text(line_num, start_col, line_num, end_col, { text[i] })
-      end
+      -- Adjust columns to not go outside of line
+      -- TODO: Remove after compatibility with Neovim=0.9 is dropped
+      left_col, right_col = math.max(left_col - 1, 0), math.min(right_col, l:len())
+      H.set_text(lnum - 1, left_col, lnum - 1, right_col, { text[i] })
     end
   end
 end
@@ -1914,6 +1917,13 @@ H.set_lines = function(start_row, end_row, replacement)
 end
 
 -- Utilities ------------------------------------------------------------------
+H.error = function(msg) error('(mini.align) ' .. msg, 0) end
+
+H.check_type = function(name, val, ref, allow_nil)
+  if type(val) == ref or (ref == 'callable' and vim.is_callable(val)) or (allow_nil and val == nil) then return end
+  H.error(string.format('`%s` should be %s, not %s', name, ref, type(val)))
+end
+
 H.echo = function(msg, add_to_history)
   if H.get_config().silent then return end
 
@@ -1939,8 +1949,6 @@ end
 H.unecho = function()
   if H.cache.msg_shown then vim.cmd([[echo '' | redraw]]) end
 end
-
-H.error = function(msg) error(string.format('(mini.align) %s', msg), 0) end
 
 H.map = function(mode, lhs, rhs, opts)
   if lhs == '' then return end
@@ -2004,6 +2012,21 @@ H.string_find = function(s, pattern, init)
   if pattern == '' then return nil end
 
   return string.find(s, pattern, init)
+end
+
+H.virtcol2col = function(lnum, col) return vim.fn.virtcol2col(0, lnum, col) end
+if vim.fn.has('nvim-0.10') == 0 then
+  -- Neovim<0.10 has `virtcol2col` returning cell's last column instead of
+  -- cell's first column in Neovim>=0.10
+  H.virtcol2col = function(lnum, col)
+    if vim.fn.virtcol2col(0, lnum, col) == 0 then return 0 end
+    return vim.fn.virtcol2col(0, lnum, col - 1) + 1
+  end
+end
+
+H.str_utf_end = function(s, n) return n >= s:len() and 0 or vim.str_utf_end(s, n) end
+if vim.fn.has('nvim-0.10') == 0 then
+  H.str_utf_end = function(s, n) return n >= s:len() and 0 or (vim.str_byteindex(s, vim.str_utfindex(s, n)) - n) end
 end
 
 H.is_any_point_inside_any_span = function(points, spans)

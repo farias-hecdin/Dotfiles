@@ -16,7 +16,8 @@ Features:
 
 - Built-in pickers (see |MiniPick.builtin|):
     - Files.
-    - Pattern match (for fixed pattern and with live feedback).
+    - Pattern match (for fixed pattern or with live feedback; both allow
+      file filtering via glob patterns).
     - Buffers.
     - Help tags.
     - CLI output.
@@ -138,6 +139,7 @@ Events ~
 To allow user customization and integration of external tools, certain |User|
 autocommand events are triggered under common circumstances:
 
+- `MiniPickMatch` - just after updating query matches or setting items.
 - `MiniPickStart` - just after picker has started.
 - `MiniPickStop` - just before picker is stopped.
 
@@ -228,7 +230,8 @@ want to just use provided pickers.
 `source.items` defines items to choose from. It should be one of the following:
 - Array of objects which can have different types. Any type is allowed.
 - `nil`. Picker waits for explicit |MiniPick.set_picker_items()| call.
-- Callable returning any of the previous types. Will be called once on start.
+- Callable returning any of the previous types. Will be called once on start
+  with source's `cwd` set as |current-directory|.
 
                                                 *MiniPick-source.items-stritems*
 Matching is done for items array based on the string representation of its
@@ -301,6 +304,9 @@ picker operates. It should point to a valid actually present directory path.
 This is a part of source to allow persistent way to use relative paths,
 i.e. not depend on current directory being constant after picker start.
 It also makes the |MiniPick.builtin.resume()| picker more robust.
+
+It will be set as local |current-directory| (|:lcd|) of picker's main window
+to allow simpler code for "in window" functions (choose/preview/custom/etc.).
 
 Default value is |current-directory|.
 
@@ -643,8 +649,8 @@ Common configuration examples ~
 
   -- Centered on screen
   local win_config = function()
-    height = math.floor(0.618 * vim.o.lines)
-    width = math.floor(0.618 * vim.o.columns)
+    local height = math.floor(0.618 * vim.o.lines)
+    local width = math.floor(0.618 * vim.o.columns)
     return {
       anchor = 'NW', height = height, width = width,
       row = math.floor(0.5 * (vim.o.lines - height)),
@@ -833,6 +839,7 @@ Notes:
 - If there is currently an active picker, it is properly stopped and new one
   is started "soon" in the main event-loop (see |vim.schedule()|).
 - Current window at the moment of this function call is treated as "target".
+  It will be set back as current after |MiniPick.stop()|.
   See |MiniPick.get_picker_state()| and |MiniPick.set_picker_target_window()|.
 
 Parameters ~
@@ -1005,9 +1012,9 @@ Parameters ~
 Default choose
 
 Choose item. Logic follows the rules in |MiniPick-source.items-common|:
-- File and directory are called with |:edit| in the target window, possibly
-  followed by setting cursor at the start of line/position/region.
-- Buffer is set as current in target window.
+- File uses |bufadd()| and sets cursor at the start of line/position/region.
+- Buffer is set as current in target window and sets cursor similarly.
+- Directory is called with |:edit| in the target window.
 - Others have the output of |vim.inspect()| printed in Command line.
 
 Implements default value for |MiniPick-source.choose|.
@@ -1035,14 +1042,15 @@ Parameters ~
 
 ------------------------------------------------------------------------------
                                                           *MiniPick.ui_select()*
-               `MiniPick.ui_select`({items}, {opts}, {on_choice})
+        `MiniPick.ui_select`({items}, {opts}, {on_choice}, {start_opts})
 Select rewrite
 
 Function which can be used to directly override |vim.ui.select()| to use
 'mini.pick' for any "select" type of tasks.
 
-Implements the required by `vim.ui.select()` signature. Plus allows extra
-`opts.preview_item` to serve as preview.
+Implements required by `vim.ui.select()` signature, with some differencies:
+- Allows `opts.preview_item` that returns an array of lines for item preview.
+- Allows fourth `start_opts` argument to customize |MiniPick.start()| call.
 
 Notes:
 - `on_choice` is called when target window is current.
@@ -1050,6 +1058,12 @@ Notes:
 Usage ~
 >lua
   vim.ui.select = MiniPick.ui_select
+
+  -- Customize with fourth argument inside a function wrapper
+  vim.ui.select = function(items, opts, on_choice)
+    local start_opts = { window = { config = { width = vim.o.columns } } }
+    return MiniPick.ui_select(items, opts, on_choice, start_opts)
+  end
 <
 ------------------------------------------------------------------------------
                                                               *MiniPick.builtin*
@@ -1095,6 +1109,10 @@ Parameters ~
     Default: whichever tool is present, trying in that same order.
   - <pattern> `(string)` - string pattern to search. If not given, asks user
     interactively with |input()|.
+  - <globs> `(table)` - array of string glob patterns to restrict search to
+    matching files. Supported only by "rg" and "git" tools, respects their
+    specific glob syntax and effects. Default: `{}` (no restriction).
+    Example: `{ '*.lua', 'lua/**' }` for Lua files and files in "lua" directory.
 {opts} `(table|nil)` Options forwarded to |MiniPick.start()|.
 
 ------------------------------------------------------------------------------
@@ -1104,7 +1122,7 @@ Pick from pattern matches with live feedback
 
 Perform pattern matching treating prompt as pattern. Gives live feedback on
 which matches are found. Use |MiniPick-actions-refine| to revert to regular
-matching.
+matching. Use `<C-o>` to restrict search to files matching glob patterns.
 Tries to use one of the CLI tools to create items (see |MiniPick-cli-tools|):
 `rg`, `git`. If none is present, error is thrown (for performance reasons).
 
@@ -1115,6 +1133,11 @@ Parameters ~
   Possible fields:
   - <tool> `(string)` - which tool to use. One of "rg", "git".
     Default: whichever tool is present, trying in that same order.
+  - <globs> `(table)` - array of string glob patterns to restrict search to
+    matching files. Supported only by "rg" and "git" tools, respects their
+    specific glob syntax and effects. Default: `{}` (no restriction).
+    Example: `{ '*.lua', 'lua/**' }` for Lua files and files in "lua" directory.
+    Use `<C-o>` custom mapping to add glob to the array.
 {opts} `(table|nil)` Options forwarded to |MiniPick.start()|.
 
 ------------------------------------------------------------------------------
@@ -1123,12 +1146,16 @@ Parameters ~
 Pick from help tags
 
 Notes:
-- On choose executes |:help| command with appropriate modifier
-  (|:horizontal|, |:vertical|, |:tab|) due to the effect of custom mappings.
+- On choose directly executes |:help| command with appropriate modifier
+  (none, |:vertical|, |:tab|). This is done through custom mappings named
+  `show_help_in_{split,vsplit,tab}`. Not `choose_in_{split,vsplit,tab}` because
+  there is no split guarantee (like if there is already help window opened).
 
 Parameters ~
 {local_opts} `(table|nil)` Options defining behavior of this particular picker.
-  Not used at the moment.
+  Possible fields:
+  - <default_split> `(string)` - direction of a split for `choose` action.
+    One of "horizontal", "vertical", "tab". Default: "horizontal".
 {opts} `(table|nil)` Options forwarded to |MiniPick.start()|.
 
 ------------------------------------------------------------------------------
@@ -1185,7 +1212,8 @@ Resume latest picker
 Picker registry
 
 Place for users and extensions to manage pickers with their commonly used
-global options. By default contains all |MiniPick.builtin| entries.
+local options. By default contains all |MiniPick.builtin| pickers.
+All entries should accept only a single `local_opts` table argument.
 
 Serves as a source for |:Pick| command.
 
@@ -1330,6 +1358,7 @@ Parameters ~
     Will be called with array of lines as input, should return array of items.
     Default: removes trailing empty lines and uses rest as string items.
   - <spawn_opts> `(table)` - `options` for |uv.spawn|, except `args` and `stdio` fields.
+    Note: relative `cwd` path is resolved against active picker's `cwd`.
   - <set_items_opts> `(table)` - table forwarded to |MiniPick.set_picker_items()|.
 
 See also ~

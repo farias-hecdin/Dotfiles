@@ -407,13 +407,10 @@
 ---       -- Ensure fixed height
 ---       config.height = 10
 ---
----       -- Ensure title padding
----       if config.title[#config.title][1] ~= ' ' then
----         table.insert(config.title, { ' ', 'NormalFloat' })
----       end
----       if config.title[1][1] ~= ' ' then
----         table.insert(config.title, 1, { ' ', 'NormalFloat' })
----       end
+---       -- Ensure no title padding
+---       local n = #config.title
+---       config.title[1][1] = config.title[1][1]:gsub('^ ', '')
+---       config.title[n][1] = config.title[n][1]:gsub(' $', '')
 ---
 ---       vim.api.nvim_win_set_config(args.data.win_id, config)
 ---     end,
@@ -479,6 +476,10 @@
 ---       end)
 ---
 ---       MiniFiles.set_target_window(new_target)
+---
+---       -- This intentionally doesn't act on file under cursor in favor of
+---       -- explicit "go in" action (`l` / `L`). To immediately open file,
+---       -- add appropriate `MiniFiles.go_in()` call instead of this comment.
 ---     end
 ---
 ---     -- Adding `desc` will result into `show_help` entries
@@ -493,24 +494,38 @@
 ---       -- Tweak keys to your liking
 ---       map_split(buf_id, '<C-s>', 'belowright horizontal')
 ---       map_split(buf_id, '<C-v>', 'belowright vertical')
+---       map_split(buf_id, '<C-t>', 'tab')
 ---     end,
 ---   })
 --- <
---- # Create mapping to set current working directory ~
+--- # Create mappings which use data from entry under cursor ~
 ---
---- Use |MiniFiles.get_fs_entry()| together with |vim.fs.dirname()|: >lua
+--- Use |MiniFiles.get_fs_entry()|: >lua
 ---
----   local files_set_cwd = function(path)
----     -- Works only if cursor is on the valid file system entry
----     local cur_entry_path = MiniFiles.get_fs_entry().path
----     local cur_directory = vim.fs.dirname(cur_entry_path)
----     vim.fn.chdir(cur_directory)
+---   -- Set focused directory as current working directory
+---   local set_cwd = function()
+---     local path = (MiniFiles.get_fs_entry() or {}).path
+---     if path == nil then return vim.notify('Cursor is not on valid entry') end
+---     vim.fn.chdir(vim.fs.dirname(path))
 ---   end
+---
+---   -- Yank in register full path of entry under cursor
+---   local yank_path = function()
+---     local path = (MiniFiles.get_fs_entry() or {}).path
+---     if path == nil then return vim.notify('Cursor is not on valid entry') end
+---     vim.fn.setreg(vim.v.register, path)
+---   end
+---
+---   -- Open path with system default handler (useful for non-text files)
+---   local ui_open = function() vim.ui.open(MiniFiles.get_fs_entry().path) end
 ---
 ---   vim.api.nvim_create_autocmd('User', {
 ---     pattern = 'MiniFilesBufferCreate',
 ---     callback = function(args)
----       vim.keymap.set('n', 'g~', files_set_cwd, { buffer = args.data.buf_id })
+---       local b = args.data.buf_id
+---       vim.keymap.set('n', 'g~', set_cwd,   { buffer = b, desc = 'Set cwd' })
+---       vim.keymap.set('n', 'gX', ui_open,   { buffer = b, desc = 'OS open' })
+---       vim.keymap.set('n', 'gy', yank_path, { buffer = b, desc = 'Yank path' })
 ---     end,
 ---   })
 --- <
@@ -628,8 +643,8 @@ end
 --- # Options ~
 ---
 --- `options.use_as_default_explorer` is a boolean indicating whether this module
---- should be used as a default file explorer for editing directories (instead of
---- |netrw| by default).
+--- will be used as a default file explorer to edit directory (instead of |netrw|).
+--- Note: to work with directory in |arglist|, do not lazy load this module.
 ---
 --- `options.permanent_delete` is a boolean indicating whether to perform
 --- permanent delete or move into special trash directory.
@@ -794,7 +809,7 @@ MiniFiles.refresh = function(opts)
   local force_update = #vim.tbl_keys(content_opts) > 0
 
   -- Confirm refresh if there is modified buffer
-  if force_update then force_update = H.explorer_confirm_modified(explorer, 'buffer updates') end
+  if force_update then force_update = H.explorer_ignore_pending_fs_actions(explorer, 'Update buffers') end
 
   -- Respect explorer local options supplied inside its `open()` call but give
   -- current `opts` higher precedence
@@ -807,17 +822,26 @@ end
 ---
 --- - Parse user edits in directory buffers.
 --- - Convert edits to file system actions and apply them after confirmation.
+---   Choosing "No" skips application while "Cancel" stops synchronization.
 --- - Update all directory buffers with the most relevant file system information.
 ---   Can be used without user edits to account for external file system changes.
+---
+---@return boolean Whether synchronization was done.
 MiniFiles.synchronize = function()
   local explorer = H.explorer_get()
   if explorer == nil then return end
 
   -- Parse and apply file system operations
   local fs_actions = H.explorer_compute_fs_actions(explorer)
-  if fs_actions ~= nil and H.fs_actions_confirm(fs_actions) then H.fs_actions_apply(fs_actions) end
+  if fs_actions ~= nil then
+    local msg = table.concat(H.fs_actions_to_lines(fs_actions), '\n')
+    local confirm_res = vim.fn.confirm(msg, '&Yes\n&No\n&Cancel', 1, 'Question')
+    if confirm_res == 3 then return false end
+    if confirm_res == 1 then H.fs_actions_apply(fs_actions) end
+  end
 
   H.explorer_refresh(explorer, { force_update = true })
+  return true
 end
 
 --- Reset explorer
@@ -853,7 +877,7 @@ MiniFiles.close = function()
   pcall(vim.loop.timer_stop, H.timers.focus)
 
   -- Confirm close if there is modified buffer
-  if not H.explorer_confirm_modified(explorer, 'close') then return false end
+  if not H.explorer_ignore_pending_fs_actions(explorer, 'Close') then return false end
 
   -- Trigger appropriate event
   H.trigger_event('MiniFilesExplorerClose')
@@ -1054,19 +1078,6 @@ MiniFiles.get_explorer_state = function()
   }
 end
 
---- Get target window
----
---- Deprecated. Use |MiniFiles.get_explorer_state()|.
-MiniFiles.get_target_window = function()
-  -- TODO: remove after 'mini.nvim' 0.14 release
-  H.notify(
-    "`get_target_window()` is soft deprecated (currently works but will be removed after next 'mini.nvim' release)."
-      .. ' Use `get_explorer_state().target_window` instead. Sorry for the inconvenience.',
-    'WARN'
-  )
-  return (MiniFiles.get_explorer_state() or {}).target_window
-end
-
 --- Set target window
 ---
 ---@param win_id number Window identifier inside which file will be opened.
@@ -1262,46 +1273,39 @@ H.is_windows = vim.loop.os_uname().sysname == 'Windows_NT'
 -- Helper functionality =======================================================
 -- Settings -------------------------------------------------------------------
 H.setup_config = function(config)
-  -- General idea: if some table elements are not present in user-supplied
-  -- `config`, take them from default config
-  vim.validate({ config = { config, 'table', true } })
+  H.check_type('config', config, 'table', true)
   config = vim.tbl_deep_extend('force', vim.deepcopy(H.default_config), config or {})
 
-  vim.validate({
-    content = { config.content, 'table' },
-    mappings = { config.mappings, 'table' },
-    options = { config.options, 'table' },
-    windows = { config.windows, 'table' },
-  })
+  H.check_type('content', config.content, 'table')
+  H.check_type('content.filter', config.content.filter, 'function', true)
+  H.check_type('content.prefix', config.content.prefix, 'function', true)
+  H.check_type('content.sort', config.content.sort, 'function', true)
 
-  vim.validate({
-    ['content.filter'] = { config.content.filter, 'function', true },
-    ['content.prefix'] = { config.content.prefix, 'function', true },
-    ['content.sort'] = { config.content.sort, 'function', true },
+  H.check_type('mappings', config.mappings, 'table')
+  H.check_type('mappings.close', config.mappings.close, 'string')
+  H.check_type('mappings.go_in', config.mappings.go_in, 'string')
+  H.check_type('mappings.go_in_plus', config.mappings.go_in_plus, 'string')
+  H.check_type('mappings.go_out', config.mappings.go_out, 'string')
+  H.check_type('mappings.go_out_plus', config.mappings.go_out_plus, 'string')
+  H.check_type('mappings.mark_goto', config.mappings.mark_goto, 'string')
+  H.check_type('mappings.mark_set', config.mappings.mark_set, 'string')
+  H.check_type('mappings.reset', config.mappings.reset, 'string')
+  H.check_type('mappings.reveal_cwd', config.mappings.reveal_cwd, 'string')
+  H.check_type('mappings.show_help', config.mappings.show_help, 'string')
+  H.check_type('mappings.synchronize', config.mappings.synchronize, 'string')
+  H.check_type('mappings.trim_left', config.mappings.trim_left, 'string')
+  H.check_type('mappings.trim_right', config.mappings.trim_right, 'string')
 
-    ['mappings.close'] = { config.mappings.close, 'string' },
-    ['mappings.go_in'] = { config.mappings.go_in, 'string' },
-    ['mappings.go_in_plus'] = { config.mappings.go_in_plus, 'string' },
-    ['mappings.go_out'] = { config.mappings.go_out, 'string' },
-    ['mappings.go_out_plus'] = { config.mappings.go_out_plus, 'string' },
-    ['mappings.mark_goto'] = { config.mappings.mark_goto, 'string' },
-    ['mappings.mark_set'] = { config.mappings.mark_set, 'string' },
-    ['mappings.reset'] = { config.mappings.reset, 'string' },
-    ['mappings.reveal_cwd'] = { config.mappings.reveal_cwd, 'string' },
-    ['mappings.show_help'] = { config.mappings.show_help, 'string' },
-    ['mappings.synchronize'] = { config.mappings.synchronize, 'string' },
-    ['mappings.trim_left'] = { config.mappings.trim_left, 'string' },
-    ['mappings.trim_right'] = { config.mappings.trim_right, 'string' },
+  H.check_type('options', config.options, 'table')
+  H.check_type('options.use_as_default_explorer', config.options.use_as_default_explorer, 'boolean')
+  H.check_type('options.permanent_delete', config.options.permanent_delete, 'boolean')
 
-    ['options.use_as_default_explorer'] = { config.options.use_as_default_explorer, 'boolean' },
-    ['options.permanent_delete'] = { config.options.permanent_delete, 'boolean' },
-
-    ['windows.max_number'] = { config.windows.max_number, 'number' },
-    ['windows.preview'] = { config.windows.preview, 'boolean' },
-    ['windows.width_focus'] = { config.windows.width_focus, 'number' },
-    ['windows.width_nofocus'] = { config.windows.width_nofocus, 'number' },
-    ['windows.width_preview'] = { config.windows.width_preview, 'number' },
-  })
+  H.check_type('windows', config.windows, 'table')
+  H.check_type('windows.max_number', config.windows.max_number, 'number')
+  H.check_type('windows.preview', config.windows.preview, 'boolean')
+  H.check_type('windows.width_focus', config.windows.width_focus, 'number')
+  H.check_type('windows.width_nofocus', config.windows.width_nofocus, 'number')
+  H.check_type('windows.width_preview', config.windows.width_preview, 'number')
 
   return config
 end
@@ -1479,8 +1483,11 @@ H.explorer_refresh = function(explorer, opts)
 
   -- Unregister windows from showed buffers, as they might get outdated
   for _, win_id in ipairs(explorer.windows) do
-    local buf_id = vim.api.nvim_win_get_buf(win_id)
-    H.opened_buffers[buf_id].win_id = nil
+    -- NOTE: window can be invalid if it was showing buffer that was deleted
+    if H.is_valid_win(win_id) then
+      local buf_id = vim.api.nvim_win_get_buf(win_id)
+      H.opened_buffers[buf_id].win_id = nil
+    end
   end
 
   -- Compute depth range which is possible to show in current window
@@ -1538,7 +1545,8 @@ H.explorer_normalize = function(explorer)
   explorer.branch = norm_branch
   explorer.depth_focus = math.min(math.max(explorer.depth_focus, 1), cur_max_depth)
 
-  -- Close all unnecessary windows
+  -- Close all guaranteed to be unnecessary windows. NOTE: some windows might
+  -- still get outdated later if branch is too deep to fit into Neovim's width.
   for i = cur_max_depth + 1, #explorer.windows do
     H.window_close(explorer.windows[i])
     explorer.windows[i] = nil
@@ -1750,6 +1758,7 @@ H.explorer_refresh_depth_window = function(explorer, depth, win_count, win_col)
     -- Use shortened full path in left most window
     title = win_count == 1 and H.fs_shorten_path(H.fs_full_path(path)) or H.fs_get_basename(path),
   }
+  config.title = ' ' .. H.escape_newline(config.title) .. ' '
 
   -- Prepare and register window
   local win_id = windows[win_count]
@@ -1781,42 +1790,18 @@ H.explorer_get_path_depth = function(explorer, path)
   end
 end
 
-H.explorer_confirm_modified = function(explorer, action_name)
-  local has_modified = false
-  for _, view in pairs(explorer.views) do
-    if H.is_modified_buffer(view.buf_id) then has_modified = true end
-  end
+H.explorer_ignore_pending_fs_actions = function(explorer, action_name)
+  -- Exit if nothing to ignore
+  if H.explorer_compute_fs_actions(explorer) == nil then return true end
 
-  -- Exit if nothing to confirm
-  if not has_modified then return true end
-
-  local msg = string.format('There is at least one modified buffer\n\nConfirm %s without synchronization?', action_name)
+  local msg = string.format('There are pending file system actions\n\n%s without synchronization?', action_name)
   local confirm_res = vim.fn.confirm(msg, '&Yes\n&No', 1, 'Question')
   return confirm_res == 1
 end
 
 H.explorer_open_file = function(explorer, path)
   explorer = H.explorer_ensure_target_window(explorer)
-
-  -- Try to use already created buffer, if present. This avoids not needed
-  -- `:edit` call and avoids some problems with auto-root from 'mini.misc'.
-  path = H.fs_normalize_path(path)
-  local path_buf_id
-  for _, buf_id in ipairs(vim.api.nvim_list_bufs()) do
-    local is_same_name = H.fs_normalize_path(vim.api.nvim_buf_get_name(buf_id)) == path
-    local is_target = H.is_valid_buf(buf_id) and vim.bo[buf_id].buflisted and is_same_name
-    if is_target then path_buf_id = buf_id end
-  end
-
-  if path_buf_id ~= nil then
-    vim.api.nvim_win_set_buf(explorer.target_window, path_buf_id)
-  else
-    -- Use relative path for a better initial view in `:buffers`
-    local path_norm = vim.fn.fnameescape(vim.fn.fnamemodify(path, ':.'))
-    -- Use `pcall()` to avoid possible `:edit` errors, like present swap file
-    pcall(vim.fn.win_execute, explorer.target_window, 'edit ' .. path_norm)
-  end
-
+  H.edit(path, explorer.target_window)
   return explorer
 end
 
@@ -1925,7 +1910,7 @@ H.explorer_show_help = function(explorer, explorer_buf_id, explorer_win_id)
   config.col = 0
   config.width = max_line_width
   config.height = #lines
-  config.title = vim.fn.has('nvim-0.9') == 1 and [['mini.files' help]] or nil
+  config.title = vim.fn.has('nvim-0.9') == 1 and " 'mini.files' help " or nil
   config.zindex = config.zindex + 1
   config.style = 'minimal'
 
@@ -2253,8 +2238,8 @@ H.buffer_update_directory = function(buf_id, path, opts, is_preview)
     if i <= n_computed_prefixes then
       prefix, hl = prefix_fun(entry)
     end
-    prefix, hl = prefix or '', hl or ''
-    table.insert(lines, string.format(line_format, H.path_index[entry.path], prefix, entry.name))
+    prefix, hl, name = prefix or '', hl or '', H.escape_newline(entry.name)
+    table.insert(lines, string.format(line_format, H.path_index[entry.path], prefix, name))
     table.insert(icon_hl, hl)
     table.insert(name_hl, entry.fs_type == 'directory' and 'MiniFilesDirectory' or 'MiniFilesFile')
   end
@@ -2335,7 +2320,7 @@ H.buffer_compute_fs_diff = function(buf_id)
     local path_to = H.fs_child_path(path, name_to) .. (vim.endswith(name_to, '/') and '/' or '')
 
     -- Ignore blank lines and already synced entries (even several user-copied)
-    if l:find('^%s*$') == nil and path_from ~= path_to then
+    if l:find('^%s*$') == nil and H.escape_newline(path_from) ~= H.escape_newline(path_to) then
       table.insert(res, { from = path_from, to = path_to, dir = path })
     elseif path_id ~= nil then
       present_path_ids[path_id] = true
@@ -2440,21 +2425,13 @@ H.window_update = function(win_id, config)
   config.height = config.height ~= nil and math.min(config.height, max_height) or nil
   config.width = config.width ~= nil and math.min(config.width, vim.o.columns) or nil
 
-  -- Ensure proper title on Neovim>=0.9 (as they are not supported earlier)
-  if vim.fn.has('nvim-0.9') == 1 and config.title ~= nil then
-    -- Show only tail if title is too long
-    local title_string, width = config.title, config.width
-    local title_chars = vim.fn.strcharlen(title_string)
-    if width < title_chars then
-      title_string = '…' .. vim.fn.strcharpart(title_string, title_chars - width + 1, width - 1)
-    end
-    config.title = title_string
-    -- Preserve some config values
-    local win_config = vim.api.nvim_win_get_config(win_id)
-    config.border, config.title_pos = win_config.border, win_config.title_pos
-  else
-    config.title = nil
-  end
+  -- Ensure proper title
+  if type(config.title) == 'string' then config.title = H.fit_to_width(config.title, config.width) end
+  if vim.fn.has('nvim-0.9') == 0 then config.title = nil end
+
+  -- Preserve some config values
+  local win_config = vim.api.nvim_win_get_config(win_id)
+  config.border, config.title_pos = win_config.border, win_config.title_pos
 
   -- Update config
   config.relative = 'editor'
@@ -2462,9 +2439,6 @@ H.window_update = function(win_id, config)
 
   -- Reset basic highlighting (removes possible "focused" highlight group)
   H.window_update_highlight(win_id, 'FloatTitle', 'MiniFilesTitle')
-
-  -- Make sure that 'cursorline' is not overridden by `config.style`
-  vim.wo[win_id].cursorline = true
 
   -- Make sure proper `conceallevel` (can be not the case with 'noice.nvim')
   vim.wo[win_id].conceallevel = 3
@@ -2493,17 +2467,16 @@ end
 
 H.window_set_view = function(win_id, view)
   -- Set buffer
-  local buf_id = view.buf_id
+  local buf_id, buf_data = view.buf_id, H.opened_buffers[view.buf_id]
   H.win_set_buf(win_id, buf_id)
   -- - Update buffer register. No need to update previous buffer data, as it
   --   should already be invalidated.
-  H.opened_buffers[buf_id].win_id = win_id
+  buf_data.win_id = win_id
 
-  -- Set cursor
+  -- Set cursor (if defined), visible only in directories
   pcall(H.window_set_cursor, win_id, view.cursor)
-
-  -- Set 'cursorline' here also because changing buffer might have removed it
-  vim.wo[win_id].cursorline = true
+  -- NOTE: set 'cursorline' here because changing buffer might remove it
+  vim.wo[win_id].cursorline = H.fs_get_type(buf_data.path) == 'directory'
 
   -- Update border highlight based on buffer status
   H.window_update_border_hl(win_id)
@@ -2655,12 +2628,6 @@ H.fs_get_type = function(path)
 end
 
 -- File system actions --------------------------------------------------------
-H.fs_actions_confirm = function(fs_actions)
-  local msg = table.concat(H.fs_actions_to_lines(fs_actions), '\n')
-  local confirm_res = vim.fn.confirm(msg, '&Yes\n&No', 1, 'Question')
-  return confirm_res == 1
-end
-
 H.fs_actions_to_lines = function(fs_actions)
   -- Gather actions per source directory
   local short = H.fs_shorten_path
@@ -2685,7 +2652,7 @@ H.fs_actions_to_lines = function(fs_actions)
 
     -- Add to per directory lines
     local dir_actions = actions_per_dir[dir] or {}
-    table.insert(dir_actions, '  ' .. l)
+    table.insert(dir_actions, '  ' .. H.escape_newline(l))
     actions_per_dir[dir] = dir_actions
   end
 
@@ -2805,7 +2772,9 @@ H.rename_loaded_buffer = function(buf_id, from, to)
   -- Use `gsub('^' ...)` to also take into account directory renames
   local new_name = cur_name:gsub('^' .. vim.pesc(from), to)
   if cur_name == new_name then return end
-  vim.api.nvim_buf_set_name(buf_id, new_name)
+
+  -- Rename buffer using relative form (for nicer `:buffers` output)
+  vim.api.nvim_buf_set_name(buf_id, vim.fn.fnamemodify(new_name, ':.'))
 
   -- Force write to avoid the 'overwrite existing file' error message on write
   -- for normal files
@@ -2863,7 +2832,12 @@ H.validate_branch = function(x)
 end
 
 -- Utilities ------------------------------------------------------------------
-H.error = function(msg) error(string.format('(mini.files) %s', msg), 0) end
+H.error = function(msg) error('(mini.files) ' .. msg, 0) end
+
+H.check_type = function(name, val, ref, allow_nil)
+  if type(val) == ref or (ref == 'callable' and vim.is_callable(val)) or (allow_nil and val == nil) then return end
+  H.error(string.format('`%s` should be %s, not %s', name, ref, type(val)))
+end
 
 H.notify = function(msg, level_name) vim.notify('(mini.files) ' .. msg, vim.log.levels[level_name]) end
 
@@ -2873,11 +2847,29 @@ H.map = function(mode, lhs, rhs, opts)
   vim.keymap.set(mode, lhs, rhs, opts)
 end
 
+H.edit = function(path, win_id)
+  if type(path) ~= 'string' then return end
+  local b = vim.api.nvim_win_get_buf(win_id or 0)
+  local try_mimic_buf_reuse = (vim.fn.bufname(b) == '' and vim.bo[b].buftype ~= 'quickfix' and not vim.bo[b].modified)
+    and (#vim.fn.win_findbuf(b) == 1 and vim.deep_equal(vim.fn.getbufline(b, 1, '$'), { '' }))
+  local buf_id = vim.fn.bufadd(vim.fn.fnamemodify(path, ':.'))
+  -- Showing in window also loads. Use `pcall` to not error with swap messages.
+  pcall(vim.api.nvim_win_set_buf, win_id or 0, buf_id)
+  vim.bo[buf_id].buflisted = true
+  if try_mimic_buf_reuse then pcall(vim.api.nvim_buf_delete, b, { unload = false }) end
+  return buf_id
+end
+
 H.trigger_event = function(event_name, data) vim.api.nvim_exec_autocmds('User', { pattern = event_name, data = data }) end
 
 H.is_valid_buf = function(buf_id) return type(buf_id) == 'number' and vim.api.nvim_buf_is_valid(buf_id) end
 
 H.is_valid_win = function(win_id) return type(win_id) == 'number' and vim.api.nvim_win_is_valid(win_id) end
+
+H.fit_to_width = function(text, width)
+  local t_width = vim.fn.strchars(text)
+  return t_width <= width and text or ('…' .. vim.fn.strcharpart(text, t_width - width + 1, width - 1))
+end
 
 H.get_bufline = function(buf_id, line) return vim.api.nvim_buf_get_lines(buf_id, line - 1, line, false)[1] end
 
@@ -2907,6 +2899,8 @@ H.getcharstr = function()
   if not ok or char == '\27' or char == '' then return end
   return char
 end
+
+H.escape_newline = function(x) return ((x or ''):gsub('\n', '<NL>')) end
 
 -- TODO: Remove after compatibility with Neovim=0.9 is dropped
 H.islist = vim.fn.has('nvim-0.10') == 1 and vim.islist or vim.tbl_islist

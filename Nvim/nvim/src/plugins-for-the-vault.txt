@@ -2,6 +2,8 @@ CSSColorConverter
 CSSVarHighlight
 CSSVarViewer
 Comment.nvim
+LinkRef
+NimSyntax
 bufdelete.nvim
 cmp-buffer
 cmp-cmdline
@@ -12,15 +14,17 @@ code_runner.nvim
 flatten.nvim
 focus.nvim
 markdown.nvim
+markdowny.nvim
 markview.nvim
 messages.nvim
+mini.ai
 mini.align
+mini.cursorword
 mini.diff
 mini.files
 mini.hipatterns
-mini.cursorword
-mini.indentscope
 mini.icons
+mini.indentscope
 mini.jump2d
 mini.notify
 mini.pick
@@ -28,8 +32,7 @@ mini.splitjoin
 mini.starter
 mini.surround
 mini.tabline
-multiple-cursors.nvim
-nim.nvim
+multicursor.nvim
 nnn.nvim
 nvim-bufferlist
 nvim-px-to-rem
@@ -46,4 +49,3 @@ url-open
 vim-matchtag
 vim-vsnip
 which-key.nvim
-multicursor.nvim

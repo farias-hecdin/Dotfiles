@@ -1,67 +1,94 @@
 local M = {}
 
-local config = require("flatten").config
-
+local waiting = false
 local host
-
-local function is_windows()
-  return string.sub(package["config"], 1, 1) == "\\"
-end
 
 local function sanitize(path)
   return path:gsub("\\", "/")
 end
 
-function M.exec_on_host(call, opts)
-  return vim.rpcrequest(host, "nvim_exec_lua", call, opts or {})
-end
-
-function M.maybe_block(block)
+local function maybe_block(block)
   if not block then
     vim.cmd.qa({ bang = true })
   end
-  vim.fn.chanclose(host)
-  while true do
-    vim.cmd.sleep(1)
+  waiting = true
+  local res, ctx = vim.wait(0X7FFFFFFF, function()
+    return waiting == false
+      or vim.api.nvim_get_chan_info(host) == vim.empty_dict()
+  end, 200, false)
+  if res then
+    vim.cmd.qa({ bang = true })
+  elseif ctx == -2 then
+    vim.notify(
+      "Waiting interrupted by user",
+      vim.log.levels.WARN,
+      { title = "flatten.nvim" }
+    )
   end
 end
 
-local function send_files(files, stdin)
-  if #files < 1 and #stdin < 1 then
+local function send_files(files, stdin, quickfix)
+  if #files < 1 and #stdin < 1 and #quickfix < 1 then
     return
   end
+  local config = require("flatten").config
 
   local force_block = vim.g.flatten_wait ~= nil
-    or config.callbacks.should_block(vim.v.argv)
+    or config.hooks.should_block(vim.v.argv)
 
   local server = vim.fn.fnameescape(vim.v.servername)
-  local cwd = vim.fn.fnameescape(vim.fn.getcwd(-1, -1) --[[@as string]])
-  if is_windows() then
+  local cwd = vim.fn.fnameescape(vim.fn.getcwd(-1, -1))
+  if jit.os == "Windows" then
     server = sanitize(server)
     cwd = sanitize(cwd)
   end
 
-  local call = string.format(
-    [[return require('flatten.core').edit_files(%s)]],
-    vim.inspect({
-      files = files,
-      response_pipe = server,
-      guest_cwd = cwd,
-      stdin = stdin,
-      argv = vim.v.argv,
-      force_block = force_block,
-    })
-  )
+  local args = {
+    files = files,
+    response_pipe = server,
+    guest_cwd = cwd,
+    stdin = stdin,
+    quickfix = quickfix,
+    argv = vim.v.argv,
+    force_block = force_block,
+  }
+
+  if config.hooks.guest_data then
+    args.data = config.hooks.guest_data()
+  end
 
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     vim.api.nvim_buf_delete(buf, { force = true })
   end
-  local block = M.exec_on_host(call) or force_block
-  M.maybe_block(block)
+
+  local block = require("flatten.rpc").exec_on_host(host, function(opts)
+    return require("flatten.core").edit_files(opts)
+  end, { args }, true) or force_block
+
+  maybe_block(block)
 end
 
-function M.sockconnect(host_pipe)
-  return pcall(vim.fn.sockconnect, "pipe", host_pipe, { rpc = true })
+local function send_commands()
+  local server = vim.fn.fnameescape(vim.v.servername)
+  local cwd = vim.fn.fnameescape(vim.fn.getcwd(-1, -1))
+  if jit.os == "Windows" then
+    server = sanitize(server)
+    cwd = sanitize(cwd)
+  end
+
+  require("flatten.rpc").exec_on_host(host, function(args)
+    return require("flatten.core").run_commands(args)
+  end, {
+    {
+      response_pipe = server,
+      guest_cwd = cwd,
+      argv = vim.v.argv,
+    },
+  }, true)
+end
+
+function M.unblock()
+  waiting = false
 end
 
 function M.init(host_pipe)
@@ -69,15 +96,16 @@ function M.init(host_pipe)
   if type(host_pipe) == "number" then
     host = host_pipe
   else
-    local ok
-    ok, host = M.sockconnect(host_pipe)
-    -- Return on connection error
+    local ok, chan = require("flatten.rpc").connect(host_pipe)
     if not ok then
       return
     end
+    host = chan
   end
 
-  if config.callbacks.should_nest and config.callbacks.should_nest(host) then
+  local config = require("flatten").config
+
+  if config.hooks.should_nest and config.hooks.should_nest(host) then
     return
   end
 
@@ -97,56 +125,81 @@ function M.init(host_pipe)
     pattern = "*",
     once = true,
     callback = function()
-      local function filter_map(tbl, f)
-        local result = {}
-        for _, v in ipairs(tbl) do
-          local r = f(v)
-          if r ~= nil then
-            table.insert(result, r)
+      files = vim
+        .iter(vim.api.nvim_list_bufs())
+        :filter(function(buf)
+          local buftype = vim.bo[buf].buftype
+          if buftype ~= "" then
+            return false
           end
-        end
-        return result
-      end
-      files = filter_map(vim.api.nvim_list_bufs(), function(buffer)
-        if not vim.api.nvim_buf_is_valid(buffer) then
-          return
-        end
-        ---@diagnostic disable-next-line: deprecated
-        local buftype = vim.api.nvim_buf_get_option(buffer, "buftype")
-        if buftype ~= "" and buftype ~= "acwrite" then
-          return
-        end
-        local name = vim.api.nvim_buf_get_name(buffer)
-        ---@diagnostic disable-next-line: deprecated
-        if name ~= "" and vim.api.nvim_buf_get_option(buffer, "buflisted") then
-          return name
-        end
-      end)
+
+          return true
+        end)
+        :map(function(buf)
+          return vim.api.nvim_buf_get_name(buf)
+        end)
+        :filter(function(name)
+          return name ~= ""
+        end)
+        :totable()
       nfiles = #files
+
+      local quickfix = vim.iter(vim.api.nvim_list_bufs()):find(function(buf)
+        return vim.bo[buf].filetype == "quickfix"
+      end)
 
       -- No arguments, user is probably opening a nested session intentionally
       -- Or only piping input from stdin
-      if nfiles < 1 then
+      if nfiles < 1 and not quickfix then
         local should_nest, should_block = config.nest_if_no_args, false
 
-        if config.callbacks.no_files then
-          local result = M.exec_on_host(
-            "return require'flatten'.config.callbacks.no_files()"
+        if config.hooks.no_files then
+          local result = require("flatten.rpc").exec_on_host(
+            host,
+            function(argv)
+              return require("flatten").config.hooks.no_files({
+                argv = argv,
+              })
+            end,
+            { vim.v.argv },
+            true
           )
           if type(result) == "boolean" then
             should_nest = result
           elseif type(result) == "table" then
-            should_nest = result.nest_if_no_args
-            should_block = result.should_block
+            should_nest = result.nest
+            should_block = result.block
           end
         end
         if should_nest == true then
           return
         end
-        M.maybe_block(should_block)
+        send_commands()
+        maybe_block(should_block)
       end
 
-      send_files(files, {})
+      quickfix = vim
+        .iter(vim.fn.getqflist())
+        :map(function(old)
+          return {
+            filename = vim.api.nvim_buf_get_name(old.bufnr),
+            module = old.module,
+            lnum = old.lnum,
+            end_lnum = old.end_lnum,
+            col = old.col,
+            end_col = old.end_col,
+            vcol = old.vcol,
+            nr = old.nr,
+            text = old.text,
+            pattern = old.pattern,
+            type = old.type,
+            valid = old.valid,
+            user_data = old.user_data,
+          }
+        end)
+        :totable()
+
+      send_files(files, {}, quickfix)
     end,
   })
 end
