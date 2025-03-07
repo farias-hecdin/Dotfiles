@@ -77,14 +77,14 @@ return {
 
       require('staline').setup({
         sections = {
-          left = {"-mode", "file_size", counter, "branch"},
-          mid = {startuptime},
+          left = {"-mode"},
+          mid = {""},
           right = {"diagnostics", "lsp_name", " ", "-line_column"}
         },
         inactive_sections = {
           left = {""},
-          mid = {"file_name"},
-          right = {""}
+          mid = {""},
+          right = {"file_name"}
         },
         defaults = {
           expand_null_ls = false,
@@ -98,7 +98,7 @@ return {
           font_active = "none",
           mod_symbol = "",
           lsp_client_symbol = "󰭳 ",
-          lsp_client_character_length = 12,
+          lsp_client_character_length = 1,
           branch_symbol = " "
         },
         mode_colors = {
