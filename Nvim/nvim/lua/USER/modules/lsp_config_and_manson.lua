@@ -55,16 +55,15 @@ return {
       end)
 
       local lsp_servers = {
-        -- css = {"cssls"},
+        css = {"cssls"},
         html = {"emmet_ls"},
         javascript = {"ts_ls"},
         lua = {"lua_ls"},
-        php = {"phpactor"},
+        -- php = {"phpactor"},
         -- go = {"gopls"},
         -- java = {"jdtls"},
         -- bash = {"bashls"},
         -- nim = {"nimlangserver"},
-        -- zig = {"zls"},
       }
 
       if enable_lsp_servers then
@@ -148,3 +147,4 @@ return {
     end
   }
 }
+

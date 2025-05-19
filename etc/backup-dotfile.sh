@@ -12,7 +12,7 @@ cyan="\e[36m"
 end="\e[0m"
 
 # --- Directories ---
-folder="Hecdin/_Git/"
+folder="Git/"
 # nvim
 nvim_target="${HOME}/${folder}Dotfiles/Nvim/nvim/"
 nvim_data="${HOME}/.config/nvim/"

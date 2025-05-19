@@ -77,7 +77,7 @@ return {
 
       require('staline').setup({
         sections = {
-          left = {"-mode"},
+          left = {"-mode", " ", counter},
           mid = {""},
           right = {"diagnostics", "lsp_name", " ", "-line_column"}
         },

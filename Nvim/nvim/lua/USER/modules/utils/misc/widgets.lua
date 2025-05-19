@@ -1,6 +1,7 @@
 local W = {}
 local format = string.format
 
+-- Round floating numbers
 local round = function(number, decimals)
   local power = 10 ^ decimals
   return math.floor(number * power + 0.5) / power
@@ -9,7 +10,7 @@ end
 
 -- Print the current time
 W.time = function()
-  return format("  %s ", os.date("%I:%M%p"))
+  return format(" %s", os.date("%I:%M%p"))
 end
 
 
@@ -20,8 +21,9 @@ end
 
 
 -- Count the total number of words and characters
+local WPM = 162.3
+
 W.word_and_character_counter = function(enable_wip)
-  local WPM = 162.3
   local wc = vim.api.nvim_eval("wordcount()")
   local wc_words = wc["visual_words"]
   local wc_chars = wc["visual_chars"]
@@ -73,12 +75,12 @@ W.lint_progress = function()
   local procs = lint.get_running_procs()
   local string = ""
   if #procs == 0 then
-    return " OK "
+    return " OK"
   end
   for _, proc in ipairs(procs) do
     string = string .. proc .. " ,"
   end
-  return " Loading... "
+  return " Loading..."
 end
 
 return W

@@ -134,12 +134,12 @@ return {
         },
         formatting = {
           fields = {"abbr", "menu", "kind"},
-          format = function(entry, vim_item)
-            local vim_kind = vim_item.kind
-            vim_item.kind = (icons[vim_kind] or "") .. " " .. vim_kind .. " "
-            vim_item.dup = ({vsnip = 0, nvim_lsp = 0, nvim_lua = 0})[entry.source.name] or 0
-            return vim_item
-          end
+          -- format = function(entry, vim_item)
+          --   local vim_kind = vim_item.kind
+          --   vim_item.kind = (icons[vim_kind] or "") .. " " .. vim_kind .. " "
+          --   vim_item.dup = ({vsnip = 0, nvim_lsp = 0, nvim_lua = 0})[entry.source.name] or 0
+          --   return vim_item
+          -- end
         }
       })
 

@@ -94,8 +94,9 @@ return {
         MiniDiffSignAdd            = {fg = "#ffffff"},
         MiniDiffSignChange         = {fg = "#00B7EB"},
         MiniDiffSignDelete         = {fg = "#EF5350"},
-        MarkviewCheckboxProgress   = {fg = "#00B7EB"},
+        MarkviewCheckboxIgnored    = {fg = "#00B7EB"},
         MarkviewCheckboxLater      = {fg = "#FFDC00"},
+        MarkviewCheckboxCompleted  = {fg = "#FFF77F"},
       }
     }
   }
