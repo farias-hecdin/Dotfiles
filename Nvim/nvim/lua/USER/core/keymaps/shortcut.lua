@@ -69,4 +69,3 @@ map("i", "^co", "* {outline: 1px dashed blue;}", {desc = "* {outline: … }"})
 -- Php --------------------------------
 map("i", "^pb", "<?php<CR>?><left><left>", {desc = "<?php _?>"})
 map("i", "^pi", "<?_?><left><left>", {desc = "<?_?>"})
-

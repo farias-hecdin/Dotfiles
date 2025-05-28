@@ -1,67 +1,41 @@
 local D = require("USER.modules.utils.dir")
 
--- SUMMARY
--- * plenary.nvim
--- * mini.icons
--- * code_runner
--- * url-open
--- * flatten.nvim
--- * messages.nvim
-
 return {
+  -- * plenary ----------------------------------------------------------------
   {
     -- url = "https://github.com/nvim-lua/plenary.nvim.git",
     dir = D.plugin .. "plenary.nvim",
   },
+  -- * mini-icons -------------------------------------------------------------
   {
     -- url = 'https://github.com/echasnovski/mini.icons.git',
     dir = D.plugin .. "mini.icons",
     event = 'VeryLazy',
-    config = function()
-      require('mini.icons').setup({
-        file = {
-          ['init.lua'] = {glyph = '󰢱'},
-        },
-        extension = {
-          ['astro'] = {glyph = '', hl = 'MiniIconsOrange'},
-          ['yaml'] = {glyph = '󰦪', hl = ''}
-        },
-      })
-    end
+    opts = {
+      file = {
+        ['init.lua'] = {glyph = '󰢱'},
+      },
+      extension = {
+        ['astro'] = {glyph = '', hl = 'MiniIconsOrange'},
+        ['yaml'] = {glyph = '󰦪', hl = ''}
+      },
+    }
   },
+  -- * url-open ---------------------------------------------------------------
   {
-    -- url = "https://github.com/sontungexpt/url-open.git",
+    -- url = "https://github.com/farias-hecdin/url-open.git",
     dir = D.plugin .. "url-open",
     cmd = "URLOpenUnderCursor",
-    config = function()
-      require("url-open").setup({
+    opts = {
         extra_patterns = {
           {
             pattern = '"(github%.com/[^"]+)"',
             prefix = "https://pkg.go.dev/"
           },
         },
-      })
-    end
-  },
-  {
-    -- url = "https://github.com/CRAG666/code_runner.nvim.git",
-    dir = D.plugin .. "code_runner.nvim",
-    cmd = {"RunCode", "RunFile", "RunFile", "RunProject", "RunClose", "CRFiletype", "CRProjects"},
-    opts =  {
-      term = {size = 45},
-      filetype = {
-        go = "go run",
-        java = {"cd $dir &&", "javac $fileName &&", "java $fileNameWithoutExt &&", "rm -rf *.class"},
-        lua = "luajit",
-        nim = "nim compile --run -d:release --hints:off",
-        php = "php",
-        python = "python3 -u",
-        sh = "bash",
-        typescript = "deno run",
       }
-    }
   },
+  -- * flatten-nvim -----------------------------------------------------------
   {
     -- url = "https://github.com/willothy/flatten.nvim.git",
     dir = D.plugin .. "flatten.nvim",
@@ -69,6 +43,7 @@ return {
     lazy = false,
     priority = 1001
   },
+  -- * messages ---------------------------------------------------------------
   {
     -- url = "https://github.com/AckslD/messages.nvim.git",
     dir = D.plugin .. "messages.nvim",
@@ -80,7 +55,7 @@ return {
           local buf = vim.api.nvim_create_buf(false, true)
           return vim.api.nvim_open_win(buf, true, opts)
         end,
-        buffer_opts = function(lines)
+        buffer_opts = function(_)
           local ui = vim.api.nvim_list_uis()
           local gheight = ui[1].height
           local gwidth = ui[1].width
@@ -100,5 +75,5 @@ return {
         -- end
       })
     end
-  },
+  }
 }

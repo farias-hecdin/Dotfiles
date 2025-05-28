@@ -1,10 +1,7 @@
 local D = require("USER.modules.utils.dir")
 
--- SUMMARY
--- * mini.diff
--- * which-key.nvim
-
 return {
+  -- * mini-diff --------------------------------------------------------------
   {
     -- url = 'https://github.com/echasnovski/mini.diff.git',
     dir = D.plugin .. "mini.diff",
@@ -19,7 +16,6 @@ return {
         },
         source = nil,
         delay = {text_change = 1000},
-        -- Module mappings. Use `""` to disable one.
         mappings = {
           apply = 'gh',
           reset = 'gH',
@@ -37,8 +33,8 @@ return {
       })
 
       -- Use Mini in normal mode only for an active buffer --------------
-      local augroup = vim.api.nvim_create_augroup -- Create/get autocommand group
-      local autocmd = vim.api.nvim_create_autocmd -- Create autocommand
+      local augroup = vim.api.nvim_create_augroup
+      local autocmd = vim.api.nvim_create_autocmd
       local difftoggle = augroup("difftoggle", {clear = true})
       local comm = "lua MiniDiff.toggle()"
 
@@ -46,6 +42,7 @@ return {
       autocmd({"InsertEnter"}, {group = difftoggle, pattern = "*", callback = function() vim.cmd(comm) end})
     end
   },
+  -- * which-key --------------------------------------------------------------
   {
     -- url = "https://github.com/folke/which-key.nvim.git",
     dir = D.plugin .. "which-key.nvim",
@@ -116,117 +113,117 @@ return {
         sort = {"case"}, -- default: {"local", "order", "group", "alphanum", "mod"},
         expand = 0, -- expand groups when <= n mappings
         -- expand = function(node)
-          --   return not node.desc -- expand all nodes without a description
-          -- end,
-          ---@type table<string, ({[1]:string, [2]:string}|fun(str:string):string)[]>
-          replace = {
-            key = {
-              function(key)
-                return require("which-key.view").format(key)
-              end,
-              -- { "<Space>", "SPC" },
-            },
-            desc = {
-              { "<Plug>%((.*)%)", "%1" },
-              { "^%+", "" },
-              { "<[cC]md>", "" },
-              { "<[cC][rR]>", "" },
-              { "<[sS]ilent>", "" },
-              { "^lua%s+", "" },
-              { "^call%s+", "" },
-              { "^:%s*", "" },
-            },
+        --   return not node.desc -- expand all nodes without a description
+        -- end,
+        ---@type table<string, ({[1]:string, [2]:string}|fun(str:string):string)[]>
+        replace = {
+          key = {
+            function(key)
+              return require("which-key.view").format(key)
+            end,
+            -- { "<Space>", "SPC" },
           },
-          icons = {
-            breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
-            separator = "", -- symbol used between a key and it's label
-            group = "+ ", -- symbol prepended to a group
-            ellipsis = "…",
-            --- See `lua/which-key/icons.lua` for more details
-            --- Set to `false` to disable keymap icons
-            rules = false,
-            -- use the highlights from mini.icons
-            -- When `false`, it will use `WhichKeyIcon` instead
-            colors = true,
-            keys = {
-              Up = " ",
-              Down = " ",
-              Left = " ",
-              Right = " ",
-              C = "󰘴 ",
-              M = "󰘵 ",
-              S = "󰘶 ",
-              CR = "󰌑 ",
-              Esc = "󱊷 ",
-              ScrollWheelDown = "󱕐 ",
-              ScrollWheelUp = "󱕑 ",
-              NL = "󰌑 ",
-              BS = "⌫",
-              Space = "󱁐 ",
-              Tab = "󰌒 ",
-              F1 = "󱊫",
-              F2 = "󱊬",
-              F3 = "󱊭",
-              F4 = "󱊮",
-              F5 = "󱊯",
-              F6 = "󱊰",
-              F7 = "󱊱",
-              F8 = "󱊲",
-              F9 = "󱊳",
-              F10 = "󱊴",
-              F11 = "󱊵",
-              F12 = "󱊶",
-            },
+          desc = {
+            { "<Plug>%((.*)%)", "%1" },
+            { "^%+", "" },
+            { "<[cC]md>", "" },
+            { "<[cC][rR]>", "" },
+            { "<[sS]ilent>", "" },
+            { "^lua%s+", "" },
+            { "^call%s+", "" },
+            { "^:%s*", "" },
           },
-          show_help = true, -- show a help message in the command line for using WhichKey
-          show_keys = true, -- show the currently pressed key and its label as a message in the command line
-          -- Which-key automatically sets up triggers for your mappings.
-          -- But you can disable this and setup the triggers yourself.
-          -- Be aware, that triggers are not needed for visual and operator pending mode.
-          -- triggers = true, -- automatically setup triggers
-          disable = {
-            -- disable WhichKey for certain buf types and file types.
-            ft = {},
-            bt = {},
+        },
+        icons = {
+          breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
+          separator = "", -- symbol used between a key and it's label
+          group = "+ ", -- symbol prepended to a group
+          ellipsis = "…",
+          --- See `lua/which-key/icons.lua` for more details
+          --- Set to `false` to disable keymap icons
+          rules = false,
+          -- use the highlights from mini.icons
+          -- When `false`, it will use `WhichKeyIcon` instead
+          colors = true,
+          keys = {
+            Up = " ",
+            Down = " ",
+            Left = " ",
+            Right = " ",
+            C = "󰘴 ",
+            M = "󰘵 ",
+            S = "󰘶 ",
+            CR = "󰌑 ",
+            Esc = "󱊷 ",
+            ScrollWheelDown = "󱕐 ",
+            ScrollWheelUp = "󱕑 ",
+            NL = "󰌑 ",
+            BS = "⌫",
+            Space = "󱁐 ",
+            Tab = "󰌒 ",
+            F1 = "󱊫",
+            F2 = "󱊬",
+            F3 = "󱊭",
+            F4 = "󱊮",
+            F5 = "󱊯",
+            F6 = "󱊰",
+            F7 = "󱊱",
+            F8 = "󱊲",
+            F9 = "󱊳",
+            F10 = "󱊴",
+            F11 = "󱊵",
+            F12 = "󱊶",
           },
-          debug = false, -- enable wk.log in the current directory
-        })
+        },
+        show_help = true, -- show a help message in the command line for using WhichKey
+        show_keys = true, -- show the currently pressed key and its label as a message in the command line
+        -- Which-key automatically sets up triggers for your mappings.
+        -- But you can disable this and setup the triggers yourself.
+        -- Be aware, that triggers are not needed for visual and operator pending mode.
+        -- triggers = true, -- automatically setup triggers
+        disable = {
+          -- disable WhichKey for certain buf types and file types.
+          ft = {},
+          bt = {},
+        },
+        debug = false, -- enable wk.log in the current directory
+      })
 
-        -- Register keymaps ---------------------------------------------------
-        wk.add({
-          {
-            mode = {"n"},
-            {"<leader>.", group = "Move"},
-            {"<leader>C", group = "Cmp"},
-            {"<leader>F!", group = "Forced"},
-            {"<leader>P", group = "TSPlayground"},
-            {"<leader>M", group = "Markdown"},
-            {"<leader>T", group = "Treesitter"},
-            {"<leader>b", group = "Buffer"},
-            {"<leader>c", group = "Color tools"},
-            {"<leader>e", group = "Explorer"},
-            {"<leader>f", group = "Fuzzy Finder"},
-            {"<leader>g", group = "Git"},
-            {"<leader>l", group = "LSP"},
-            {"<leader>m", group = "Select/Marks"},
-            {"<leader>n", group = "Number"},
-            {"<leader>p", group = "Paste"},
-            {"<leader>s", group = "Split/Window"},
-            {"<leader>t", group = "Tabs"},
-            {"<leader>w", group = "Wrap"},
-            {"<leader>F", group = "File"},
-            {"gd", group = "LSP"},
-            {"gz", group = "Surround"},
-            {"z", group = "Fold/Cursor"},
-          },
-          {
-            mode = {"v"},
-            {",", group = "Jump/LSP/Move"},
-            {"<leader>.", group = "Tabs/move"},
-            {"<leader>m", group = "Select"},
-            {"<leader>c", group = "Color tools"},
-          }
-        })
-      end
-    }
+      -- Register keymaps ---------------------------------------------------
+      wk.add({
+        {
+          mode = {"n"},
+          {"<leader>.", group = "Move"},
+          {"<leader>C", group = "Cmp"},
+          {"<leader>F!", group = "Forced"},
+          {"<leader>P", group = "TSPlayground"},
+          {"<leader>M", group = "Markdown"},
+          {"<leader>T", group = "Treesitter"},
+          {"<leader>b", group = "Buffer"},
+          {"<leader>c", group = "Color tools"},
+          {"<leader>e", group = "Explorer"},
+          {"<leader>f", group = "Fuzzy Finder"},
+          {"<leader>g", group = "Git"},
+          {"<leader>l", group = "LSP"},
+          {"<leader>m", group = "Select/Marks"},
+          {"<leader>n", group = "Number"},
+          {"<leader>p", group = "Paste"},
+          {"<leader>s", group = "Split/Window"},
+          {"<leader>t", group = "Tabs"},
+          {"<leader>w", group = "Wrap"},
+          {"<leader>F", group = "File"},
+          {"gd", group = "LSP"},
+          {"gz", group = "Surround"},
+          {"z", group = "Fold/Cursor"},
+        },
+        {
+          mode = {"v"},
+          {",", group = "Jump/LSP/Move"},
+          {"<leader>.", group = "Tabs/move"},
+          {"<leader>m", group = "Select"},
+          {"<leader>c", group = "Color tools"},
+        }
+      })
+    end
   }
+}

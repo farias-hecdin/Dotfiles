@@ -1,37 +1,34 @@
 local D = require("USER.modules.utils.dir")
 
--- SUMMARY
--- * CSSColorConverter
--- * CSSVarHighlight
--- * CSSVarViewer
--- * NimTinyHighlight
--- * mini.hipatterns
--- * nvim-px-to-rem
-
 return {
+  -- * NimSyntax --------------------------------------------------------------
   {
     -- url = "https://github.com/farias-hecdin/NimSyntax.git",
     dir = D.plugin .. "NimSyntax",
     ft = "nim",
   },
+  -- * CSSVarHighlight --------------------------------------------------------
   {
     -- url = "https://github.com/farias-hecdin/CSSVarHighlight.git",
     dir = D.plugin .. "CSSVarHighlight",
     ft = "css",
     opts = {variable_pattern = "%-%-[-_%w]*co%-[-_%w]*"}
   },
+  -- * CSSVarViewer -----------------------------------------------------------
   {
     -- url = "https://github.com/farias-hecdin/CSSVarViewer.git",
     dir = D.plugin .. "CSSVarViewer",
     ft = "css",
     config = true
   },
+  -- * CSSColorConverter ------------------------------------------------------
   {
     -- url = "https://github.com/farias-hecdin/CSSColorConverter.git",
     dir = D.plugin .. "CSSColorConverter",
     ft = "css",
     config = true
   },
+  -- * nvim-px-to-rem ---------------------------------------------------------
   {
     -- url = "https://github.com/jsongerber/nvim-px-to-rem.git",
     dir = D.plugin .. "nvim-px-to-rem",
@@ -41,6 +38,7 @@ return {
       disable_keymaps = true
     }
   },
+  -- * mini-hipatterns --------------------------------------------------------
   {
     -- url = "https://github.com/echasnovski/mini.hipatterns.git",
     dir = D.plugin .. "mini.hipatterns",
@@ -75,7 +73,7 @@ return {
              @param , @returns and more
              #This: or !This: or ¡This: or !T h i s: or #___:
           ]]
-          docs = {pattern = {"@[%l-]+"}, group = "MiniHipatternsDocs"},
+          docs = {pattern = {"%s@[%l-]+"}, group = "MiniHipatternsDocs"},
           show = {pattern = {"^%+.+"}, group = "minihipatternshighlight"},
           color1 = {pattern = {"![%w%_%-%.][%w%s%_%-%.]+[%w%_%-%.]:"}, group = "MiniHipatternsColor"},
           color2 = {pattern = {"¡[%w%_%-%.][%w%s%_%-%.]+[%w%_%-%.]:"}, group = "MiniHipatternsColor2"},
@@ -139,5 +137,5 @@ return {
         }
       })
     end
-  },
+  }
 }

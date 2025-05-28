@@ -1,14 +1,7 @@
 local D = require("USER.modules.utils.dir")
 
--- SUMMARY
--- * nvim-treesitter
--- * tree-sitter-astro
-
 return {
-  {
-    "virchau13/tree-sitter-astro",
-    ft = "astro",
-  },
+  -- * nvim-treesitter --------------------------------------------------------
   {
     "nvim-treesitter/nvim-treesitter",
     -- commit = "65ef62092ef997d2ecf68ede01a0afbda17808c3",
@@ -29,26 +22,18 @@ return {
           disable = {"python", "shell"}
         },
         ensure_installed = {
-          -- "astro",
-          -- "bash",
-          "css",
-          -- "go",
-          "html",
-          -- "java",
-          -- "kotlin",
-          "javascript",
+          "html", "css",
+          "javascript", "typescript", "tsx", "astro",
           "lua",
-          "markdown",
-          "markdown_inline",
-          -- "php",
-          -- "python",
+          "markdown", "markdown_inline",
+          -- "go",
+          -- "bash",
+          -- "kotlin",
           -- "sql",
-          "tsx",
-          "typescript",
-          -- "zig",
+          -- zig
         },
         auto_install = false
       })
     end
-  },
+  }
 }

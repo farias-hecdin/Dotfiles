@@ -1,26 +1,8 @@
 local W = require("USER.modules.utils.misc.widgets")
 local D = require("USER.modules.utils.dir")
 
--- SUMMARY
--- * mini.notify
--- * mini.tabline
--- * mini.starter
--- * mini.indentscope
--- * staline.nvim
--- * simpleIndentGuides.nvim
--- * nvim-bufferlist
-
 return {
-  {
-    -- url = "https://github.com/echasnovski/mini.notify.git",
-    dir = D.plugin .. "mini.notify",
-    cmd = "PomodoroStart",
-    config = function()
-      require('mini.notify').setup({
-        lsp_progress = {enable = false}
-      })
-    end
-  },
+  -- * mini.tabline -----------------------------------------------------------
   {
     -- url = "https://github.com/echasnovski/mini.tabline.git",
     dir = D.plugin .. "mini.tabline",
@@ -30,6 +12,7 @@ return {
       tabpage_section = "right"
     }
   },
+  -- * mini.starter -----------------------------------------------------------
   {
     -- url = "https://github.com/echasnovski/mini.starter.git",
     dir = D.plugin .. "mini.starter",
@@ -68,8 +51,8 @@ return {
     end
   },
   {
-    -- url = "https://github.com/farias-hecdin/staline.nvim.git",
-    dir = D.plugin .. "staline.nvim",
+    url = "https://github.com/farias-hecdin/staline.nvim.git",
+    -- dir = D.plugin .. "staline.nvim",
     event = "BufReadPre",
     config = function()
       local counter = {'Staline', function() return W.word_and_character_counter(false) end}
@@ -78,7 +61,7 @@ return {
       require('staline').setup({
         sections = {
           left = {"-mode", " ", counter},
-          mid = {""},
+          mid = {startuptime},
           right = {"diagnostics", "lsp_name", " ", "-line_column"}
         },
         inactive_sections = {
@@ -98,7 +81,7 @@ return {
           font_active = "none",
           mod_symbol = "",
           lsp_client_symbol = "󰭳 ",
-          lsp_client_character_length = 1,
+          lsp_client_character_length = 0,
           branch_symbol = " "
         },
         mode_colors = {
@@ -139,11 +122,13 @@ return {
       })
     end
   },
+  -- * nvim-bufferlist --------------------------------------------------------
   {
     -- url = "https://github.com/kilavila/nvim-bufferlist.git",
     dir = D.plugin .. "nvim-bufferlist",
     cmd = {"BufferListOpen", "QuickNavOpen"},
   },
+  -- * simpleIndentGuides -----------------------------------------------------
   {
     -- url = "https://github.com/lucastavaresa/simpleIndentGuides.nvim.git",
     dir = D.plugin .. "simpleIndentGuides.nvim",
@@ -153,6 +138,7 @@ return {
       require("simpleIndentGuides").setup("·", " ") -- "│", "·"
     end
   },
+  -- * mini.indentscope -------------------------------------------------------
   {
     -- url = "https://github.com/echasnovski/mini.indentscope.git",
     dir = D.plugin .. "mini.indentscope",
@@ -163,5 +149,5 @@ return {
         symbol = "·"
       }
     end
-  },
+  }
 }

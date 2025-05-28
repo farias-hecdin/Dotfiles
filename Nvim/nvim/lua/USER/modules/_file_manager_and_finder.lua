@@ -1,11 +1,7 @@
 local D = require("USER.modules.utils.dir")
 
--- SUMMARY
--- * mini.files
--- * mini.pick
--- * nnn.nvim
-
 return {
+  -- * mini-files -------------------------------------------------------------
   {
     -- url = "https://github.com/echasnovski/mini.files.git",
     dir = D.plugin .. "mini.files",
@@ -39,6 +35,7 @@ return {
       }
     }
   },
+  -- * nnn-nvim ---------------------------------------------------------------
   {
     -- url = "https://github.com/luukvbaal/nnn.nvim.git",
     dir = D.plugin .. "nnn.nvim",
@@ -71,6 +68,7 @@ return {
       offset = false
     }
   },
+  -- * mini-pick --------------------------------------------------------------
   {
     -- url = "https://github.com/echasnovski/mini.pick.git",
     dir = D.plugin .. "mini.pick",

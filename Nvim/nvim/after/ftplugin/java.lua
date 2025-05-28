@@ -6,6 +6,7 @@ vim.opt_local.shiftwidth = x
 vim.opt_local.softtabstop = x
 vim.opt_local.tabstop = x
 
+
 -- Setup plugins --------------------------------------------------------------
 
 -- MiniNotify
@@ -19,6 +20,7 @@ miniNotify.setup({
     enable = false
   }
 })
+
 
 -- Jstls
 local jdtls_ok, jdtls = pcall(require, "jdtls")

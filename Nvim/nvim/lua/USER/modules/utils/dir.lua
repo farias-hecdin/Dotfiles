@@ -1,10 +1,10 @@
 local D = {}
 
--- Path to the plugin-vault
-D.plugin = "~/.config/nvim/src/plugVault/"
-
 -- Path to $HOME
 D.home = "/data/data/com.termux/files/home/"
+
+-- Path to the plugin-vault
+D.plugin = "~/.config/nvim/src/plugVault/"
 
 
 -- Useful for disable plugins

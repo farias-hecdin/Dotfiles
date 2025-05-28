@@ -31,16 +31,16 @@ alias ds="dua i"
 alias ed="nvim"
 alias fz="fzf -e"
 alias lg="lazygit"
-alias tr="tree -C"
+alias tree="tree -C"
 alias zi="z -I ."
 
 alias Fd="fd -H"
 alias Ls="ls -a -F -h --color=always -v --time-style=long-iso"
-alias Cd='f_cdToDir .'
+alias Cd='fn_cdToDir .'
 alias Ed="nvim --noplugin"
 
 # Git
-alias Git-ssh-prefix='f_addSshPrefix'
+alias Git-ssh-prefix='fn_addSshPrefix'
 alias Git-compress="git gc --aggressive --prune=now"
 alias Git-add="git add"
 alias Git-merge="git merge --no-ff"
@@ -102,13 +102,12 @@ alias Nim-build-min="nim c -d:release --opt:speed --passC:-flto --passL:-flto --
 alias Js-server="five-server"
 alias Postcss-opts="pnpm postcss --no-map --replace src/**/*.css --config ./opts/postcss.config.cjs"
 
-alias Pnpm-add-base="pnpm i -D modern-normalize eruda"
-alias Pnpm-add-extra="pnpm i -D @svgr/core @svgr/plugin-jsx"
-alias Pnpm-add-icons="pnpm i -D unplugin-auto-import unplugin-icons @iconify-json/material-symbols"
-alias Pnpm-add-postcss="pnpm i -D postcss autoprefixer postcss-cli postcss-nested postcss-sorting"
+alias Pnpm-i-base="pnpm i -D modern-normalize eruda"
+alias Pnpm-i-extra="pnpm i -D @svgr/core @svgr/plugin-jsx"
+alias Pnpm-i-icons="pnpm i -D unplugin-auto-import unplugin-icons @iconify-json/material-symbols"
+alias Pnpm-i-postcss="pnpm i -D postcss autoprefixer postcss-cli postcss-nested postcss-sorting"
 
-alias Prettier="prettier --write '**/*.{html,css,js,ts,jsx,json}'"
-alias Prettier-all="prettier --write '**/*.{html,css,scss,js,ts,jsx,vue,json,astro}'"
+alias Prettier="prettier --write '**/*.{html,css,scss,js,ts,jsx,vue,json,astro}'"
 
 # Clean
 alias Clean-apt="apt autoremove && pkg clean"
@@ -125,8 +124,8 @@ alias Del="pkg uninstall"
 alias Search="pkg search"
 alias Installed="pkg list-installed"
 alias Update-list-package="pkg update"
-alias Upgrade="pkg update && pkg upgrade"
+alias Upgrade-now="pkg update && pkg upgrade"
 alias Upgradable="apt list --upgradable"
 
 # Ssh
-alias load-ssh="f_loadSSH"
+alias load-ssh="fn_loadSSH"

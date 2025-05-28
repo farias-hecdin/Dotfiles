@@ -1,46 +1,38 @@
 local D = require("USER.modules.utils.dir")
 
--- SUMMARY
--- * cmp-buffer
--- * cmp-cmdline
--- * cmp-nvim-lsp
--- * cmp-path
--- * cmp-vsnip
--- * nvim-cmp
--- * vim-vsnip
-
 return {
+  -- * cmp-cmdline ------------------------------------------------------------
   {
     -- url = "https://github.com/hrsh7th/cmp-cmdline.git",
     dir = D.plugin .. "cmp-cmdline",
     keys = {mode = "n", ":", desc = "Command mode"}
   },
+  -- * cmp-path ---------------------------------------------------------------
   {
     -- url = "https://github.com/hrsh7th/cmp-path.git",
     dir = D.plugin .. "cmp-path",
     event = "InsertEnter",
     keys = {mode = "n", ":", desc = "Command mode"}
   },
+  -- * cmp-buffer -------------------------------------------------------------
   {
     -- url = "https://github.com/hrsh7th/cmp-buffer.git",
     dir = D.plugin .. "cmp-buffer",
     event = "InsertEnter"
   },
-  {
-    -- url = "https://github.com/hrsh7th/cmp-nvim-lsp.git",
-    dir = D.plugin .. "cmp-nvim-lsp",
-    event = "InsertEnter"
-  },
+  -- * cmp-vsnip --------------------------------------------------------------
   {
     -- url = "https://github.com/hrsh7th/cmp-vsnip.git",
     dir = D.plugin .. "cmp-vsnip",
     event = "InsertEnter"
   },
+  -- * vim-vsnip --------------------------------------------------------------
   {
     -- url = "https://github.com/hrsh7th/vim-vsnip.git",
     dir = D.plugin .. "vim-vsnip",
     event = "InsertEnter"
   },
+  -- * nvim-cmp ---------------------------------------------------------------
   {
     -- "https://github.com/hrsh7th/nvim-cmp.git",
     'yioneko/nvim-cmp',
@@ -134,16 +126,16 @@ return {
         },
         formatting = {
           fields = {"abbr", "menu", "kind"},
-          -- format = function(entry, vim_item)
-          --   local vim_kind = vim_item.kind
-          --   vim_item.kind = (icons[vim_kind] or "") .. " " .. vim_kind .. " "
-          --   vim_item.dup = ({vsnip = 0, nvim_lsp = 0, nvim_lua = 0})[entry.source.name] or 0
-          --   return vim_item
-          -- end
+          format = function(entry, vim_item)
+            local vim_kind = vim_item.kind
+            vim_item.kind = (icons[vim_kind] or "") .. " " .. vim_kind .. " "
+            vim_item.dup = ({vsnip = 0, nvim_lsp = 0, nvim_lua = 0})[entry.source.name] or 0
+            return vim_item
+          end
         }
       })
 
-      -- ":" cmdline setup ----------------------------------------------------
+      -- ":" cmdline setup
       cmp.setup.cmdline(":", {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({

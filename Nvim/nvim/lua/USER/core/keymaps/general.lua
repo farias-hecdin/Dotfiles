@@ -19,6 +19,7 @@ end
 -- * command mode  = "c",
 
 map("v", "<leader>xx", ":CSSVarViewerPaste<CR>", { noremap = true })
+
 -- Other
 map("n", "<leader>@", function() load_current_buffer() end, {desc = "Load current buffer"})
 map("n", "<leader>$", ":Messages messages<cr>", {desc = "Show message log"})

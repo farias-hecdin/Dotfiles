@@ -1,17 +1,12 @@
 local D = require("USER.modules.utils.dir")
 
--- SUMMARY
--- * onedark.nvim
-
 return {
+  -- * onedark.nvim -----------------------------------------------------------
   {
     -- url = "https://github.com/navarasu/onedark.nvim.git",
     dir = D.plugin .. "onedark.nvim",
     lazy = false,
     priority = 1000,
-    init = function()
-      vim.cmd([[colorscheme onedark]])
-    end,
     opts =  {
       style = "darker",
       code_style = {},
@@ -98,6 +93,9 @@ return {
         MarkviewCheckboxLater      = {fg = "#FFDC00"},
         MarkviewCheckboxCompleted  = {fg = "#FFF77F"},
       }
-    }
+    },
+    init = function()
+      vim.cmd([[colorscheme onedark]])
+    end,
   }
 }

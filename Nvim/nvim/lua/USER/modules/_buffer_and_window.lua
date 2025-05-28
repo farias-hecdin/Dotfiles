@@ -1,24 +1,21 @@
 local D = require("USER.modules.utils.dir")
 
--- SUMMARY
--- * bufdelete.nvim
--- * focus.nvim
--- * nvim-window
--- * sos.nvim
-
 return {
+  -- * focus.nvim -------------------------------------------------------------
   {
     -- url = "https://github.com/beauwilliams/focus.nvim.git",
     dir = D.plugin .. "focus.nvim",
     event = {"BufReadPost", "BufNewFile"},
     config = true
   },
+  -- * bufdelete.nvim ---------------------------------------------------------
   {
     -- url = "https://github.com/famiu/bufdelete.nvim.git",
     dir = D.plugin .. "bufdelete.nvim",
     cmd = "Bdelete",
     keys = "<leader>sx"
   },
+  -- * sos.nvim ---------------------------------------------------------------
   {
     -- url = "https://github.com/tmillr/sos.nvim.git",
     dir = D.plugin .. "sos.nvim",
@@ -32,6 +29,7 @@ return {
       save_on_focuslost = true
     }
   },
+  -- * nvim-window ------------------------------------------------------------
   {
     -- url = "https://github.com/yorickpeterse/nvim-window.git",
     dir = D.plugin .. "nvim-window",

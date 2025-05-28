@@ -1,19 +1,25 @@
 local D = require("USER.modules.utils.dir")
 
--- SUMMARY
--- * markview.nvim
--- * markdown.nvim
--- * markdowny.nvim
-
 return {
+  -- * md-table-tidy ----------------------------------------------------------
   {
-    -- url = "https://github.com/farias-hecdin/LinkRef.git",
-    dir = D.plugin .. "LinkRef",
+    "timantipov/md-table-tidy.nvim",
+    ft = "markdown",
+    opts = {
+      padding = 1,        -- number of spaces for cell padding
+      key = "<leader>tt", -- key for command :TableTidy<CR>
+    }
+  },
+  -- * LinkRef ----------------------------------------------------------------
+  {
+    url = "https://github.com/farias-hecdin/LinkRef.git",
+    -- dir = D.plugin .. "LinkRef",
     ft = "markdown",
     opts = {
       id_length = 2,
     },
   },
+  -- * markdowny --------------------------------------------------------------
   {
     -- url = "https://github.com/antonk52/markdowny.nvim.git",
     dir = D.plugin .. "markdowny.nvim",
@@ -21,6 +27,7 @@ return {
     ft = "markdown",
     config = true
   },
+  -- * markdown-nvim ----------------------------------------------------------
   {
     -- url = "https://github.com/tadmccorkle/markdown.nvim.git",
     dir = D.plugin .. "markdown.nvim",
@@ -29,6 +36,7 @@ return {
       toc = {omit_heading = "toc omit heading", omit_section = "toc omit section"},
     }
   },
+  -- * markview ---------------------------------------------------------------
   {
     -- url = "https://github.com/OXY2DEV/markview.nvim",
     dir = D.plugin .. "markview.nvim",
@@ -65,7 +73,7 @@ return {
           {match = "C", text = " ", hl = "MarkviewCheckboxCompleted"},
           {match = "I", text = "󰒲 ", hl = "MarkviewCheckboxIgnored"},
           {match = "L", text = " ", hl = "MarkviewCheckboxLater"},
-       },
+        },
       },
       horizontal_rules = {
         enable = true,
@@ -78,5 +86,5 @@ return {
       list_items   = {enable = false},
       latex       =  {enable = false},
     }
-  },
+  }
 }

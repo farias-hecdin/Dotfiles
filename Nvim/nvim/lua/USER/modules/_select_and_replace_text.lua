@@ -1,22 +1,15 @@
 local D = require("USER.modules.utils.dir")
 
--- SUMMARY
--- * multicursor.nvim
--- * mini.surround
--- * mini.align
--- * search-replace.nvim
-
 return {
+  -- * multicursor ------------------------------------------------------------
   {
     -- url = "https://github.com/jake-stewart/multicursor.nvim.git",
     dir = D.plugin .. "multicursor.nvim",
     keys = {"<C-Down>", "<C-Up>", "<C-j>", "<C-k>", "<C-h>"},
     config = function()
       local mc = require("multicursor-nvim")
-
       mc.setup()
 
-      -- use MultiCursorCursor and MultiCursorVisual to customize
       -- additional cursors appearance
       vim.cmd.hi("link", "MultiCursorCursor", "Cursor")
       vim.cmd.hi("link", "MultiCursorVisual", "Visual")
@@ -36,18 +29,16 @@ return {
       --   vim.keymap.set("n", "<c-n>", function() mc.addCursor("*") end)
       -- jump to the next word under cursor but do not add a cursor
       --   vim.keymap.set("n", "<c-s>", function() mc.skipCursor("*") end)
-
       -- rotate the main cursor
       vim.keymap.set({"n", "v"}, "<c-left>", mc.nextCursor)
       vim.keymap.set({"n", "v"}, "<c-right>", mc.prevCursor)
-
       -- delete the main cursor
       vim.keymap.set({"n", "v"}, "<c-x>", mc.deleteCursor)
-
       -- add and remove cursors with control + left click
       -- vim.keymap.set("n", "<c-leftmouse>", mc.handleMouse)
     end,
   },
+  -- * mini-surround ----------------------------------------------------------
   {
     -- url = "https://github.com/echasnovski/mini.surround.git",
     dir = D.plugin .. "mini.surround",
@@ -75,6 +66,7 @@ return {
       silent = false
     }
   },
+  -- * mini-align -------------------------------------------------------------
   {
     -- url = "https://github.com/echasnovski/mini.align.git",
     dir = D.plugin .. "mini.align",
@@ -84,6 +76,7 @@ return {
     },
     config = true
   },
+  -- * search-replace ---------------------------------------------------------
   {
     -- url = "https://github.com/roobert/search-replace.nvim.git",
     dir = D.plugin .. "search-replace.nvim",
