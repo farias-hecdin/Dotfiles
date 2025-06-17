@@ -80,12 +80,12 @@ return {
           color3 = {pattern = {"#[%w%_%-%.][%w%s%_%-%.]+[%w%_%-%.]:"}, group = "MiniHipatternsColor3"},
           --[[
              Highlight color systems using that color
-             colour38
-             #4095BF
-             rgb(64, 149, 191)
-             hsl(200deg, 50%, 50%) or hsl(200, 50%, 50%) or hsl(200, 50, 50)
-             lch(58.36% 31.79 271.95)
-             oklch(63.57% 0.1027 233.17)
+             * colour38
+             * #4095BF
+             * rgb(64, 149, 191)
+             * hsl(200deg, 50%, 50%) or hsl(200, 50%, 50%) or hsl(200, 50, 50)
+             * lch(58.36% 31.79 271.95)
+             * oklch(63.57% 0.1027 233.17)
           ]]
           hex = hipatterns.gen_highlighter.hex_color(),
           hsl = {

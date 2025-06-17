@@ -21,4 +21,3 @@ require("USER.core.keymaps.general")
 require("USER.core.keymaps.shortcut")
 require("USER.core.commands.user")
 require("USER.core.abbrev")
-

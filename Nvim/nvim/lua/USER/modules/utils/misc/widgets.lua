@@ -25,62 +25,42 @@ local WPM = 162.3
 
 W.word_and_character_counter = function(enable_wip)
   local wc = vim.api.nvim_eval("wordcount()")
-  local wc_words = wc["visual_words"]
-  local wc_chars = wc["visual_chars"]
+  local words = wc.visual_words or wc.words
+  local chars = wc.visual_chars
 
-  local function dm2ms(decimalMin)
-    local min = math.floor(decimalMin)
-    local seg = (decimalMin - min) * 60
-    return min, math.floor(seg + 0.5)
-  end
-  local function calc_wpm()
-    local res = (wc_words / WPM)
-    local min, seg = dm2ms(round(res, 2))
-    if seg < 10 then
-      return min ..".0"..seg
-    else
-      return min .."."..seg
-    end
+  if not chars then
+    return (" %s"):format(words)
   end
 
-  if wc_chars and not enable_wip then
-    return format(" %s:(󰾹 %s)", wc_words, wc_chars)
-  elseif wc_chars and enable_wip then
-    local wpm = tostring(calc_wpm())
-    return format(" %s:(󰚜 %s 󰾹 %s)", wc_words, wpm, wc_chars)
-  else
-    return format(" %s", wc["words"])
+  local function format_wpm()
+    local total_seconds = math.floor((words / WPM) * 60 + 0.5)
+    return ("%d.%02d"):format(total_seconds / 60, total_seconds % 60)
   end
+
+  return enable_wip
+    and (" %s:(󰚜 %s 󰾹 %s)"):format(words, format_wpm(), chars)
+    or (" %s:(󰾹 %s)"):format(words, chars)
 end
 
 
 -- 3rd party ------------------------------------------------------------------
 
 
--- Print startup time with Lazy.nvim
+-- Print startup time (ms) with Lazy.nvim
 W.startuptime_lazy = function()
   local stats = require("lazy").stats()
-  local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-  return format("󰓅 %sms", tostring(ms))
+  local seconds = stats.startuptime / 1000
+  return ("󰓅 %.2fs"):format(seconds)
 end
 
 
 -- Lint progress for statusline
 W.lint_progress = function()
   local ok, lint = pcall(require, "lint")
-  if not ok then
-    return ""
-  end
+  if not ok then return "" end
 
   local procs = lint.get_running_procs()
-  local string = ""
-  if #procs == 0 then
-    return " OK"
-  end
-  for _, proc in ipairs(procs) do
-    string = string .. proc .. " ,"
-  end
-  return " Loading..."
+  return #procs == 0 and " OK" or " Wait…"
 end
 
 return W

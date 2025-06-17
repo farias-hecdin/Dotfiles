@@ -43,7 +43,6 @@ return {
       capabilities.textDocument.completion.completionItem.snippetSupport = true
       capabilities.textDocument.foldingRange = {dynamicRegistration = false, lineFoldingOnly = true}
 
-
       -- Keybinding
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
