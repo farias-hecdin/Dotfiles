@@ -1,166 +1,159 @@
--- Define autocommands with Lua APIs (See: h:api-autocmd, h:augroup)
-local augroup = vim.api.nvim_create_augroup -- Create/get autocommand group
-local autocmd = vim.api.nvim_create_autocmd -- Create autocommand
+local augroup = vim.api.nvim_create_augroup
+local autocmd = vim.api.nvim_create_autocmd
 
+-- Use relative numbers in normal mode only for an active buffer
+local number_toggle = augroup("NumberToggle", { clear = true })
 
--- Use relative numbers in normal mode only for an active buffer --------------
-local number_toggle = augroup("numbertoggle", {clear = true})
-
-autocmd({"BufEnter", "FocusGained", "InsertLeave"}, {
+autocmd({ "BufEnter", "FocusGained", "InsertLeave" }, {
   group = number_toggle,
-  pattern = "*",
-  command = "set relativenumber nofoldenable"
-})
-autocmd({"BufLeave", "FocusLost", "InsertEnter"}, {
-  group = number_toggle,
-  pattern = "*",
-  command = "set norelativenumber nofoldenable"
-})
-
-
--- Start terminal in insert mode ----------------------------------------------
-local buf_check = augroup("bufcheck", {clear = true})
-
-autocmd("TermOpen", {
-  pattern = "*",
-  command = "startinsert | set winfixheight",
-  group = buf_check
-})
-
-
--- Remove unwanted spaces -----------------------------------------------------
-autocmd("InsertLeave", {
-  pattern = "*",
-  command = [[%s/\s\+$//e]]
-})
-
-
--- Don't auto commenting new lines --------------------------------------------
-autocmd("BufEnter", {
-  pattern = "*",
-  command = "set fo-=c fo-=r fo-=o"
-})
-
-
--- Workaround -----------------------------------------------------------------
-autocmd({"BufEnter", "BufAdd", "BufNew", "BufNewFile", "BufWinEnter"}, {
-  group = augroup("TS_FOLD_WORKAROUND", {}),
   callback = function()
-    vim.opt.foldmethod = "expr"
-    vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-  end
-})
-
-
--- See `:help vim.highlight.on_yank()` ----------------------------------------
-local highlight_group = augroup("YankHighlight", {clear = true})
-
-autocmd("TextYankPost", {
-  callback = function()
-    vim.highlight.on_yank()
+    vim.opt_local.relativenumber = true
+    vim.opt_local.foldenable = false
   end,
-  pattern = "*",
-  group = highlight_group
+})
+
+autocmd({ "BufLeave", "FocusLost", "InsertEnter" }, {
+  group = number_toggle,
+  callback = function()
+    vim.opt_local.relativenumber = false
+    vim.opt_local.foldenable = false
+  end,
 })
 
 
--- Check if we need to reload the file when it changed ------------------------
+-- Start terminal in insert mode
+autocmd("TermOpen", {
+  group = augroup("TermBehavior", { clear = true }),
+  callback = function()
+    vim.cmd.startinsert()
+    vim.opt_local.winfixheight = true
+  end,
+})
+
+
+-- Remove unwanted trailing spaces (Moved to BufWritePre to avoid disrupting typing)
+autocmd("BufWritePre", {
+  group = augroup("TrimWhiteSpace", { clear = true }),
+  desc = "Remove trailing whitespace on save",
+  callback = function()
+    local view = vim.fn.winsaveview()
+    vim.cmd("keepjumps keeppatterns %s/\\s\\+$//e")
+    vim.fn.winrestview(view)
+  end,
+})
+
+
+-- Don't auto-comment new lines
+autocmd("BufEnter", {
+  group = augroup("DisableAutoComment", { clear = true }),
+  callback = function()
+    vim.opt_local.formatoptions:remove({ "c", "r", "o" })
+  end,
+})
+
+
+-- Treesitter Fold Workaround
+autocmd({ "BufEnter", "BufAdd", "BufNew", "BufNewFile", "BufWinEnter" }, {
+  group = augroup("TS_FOLD_WORKAROUND", { clear = true }),
+  callback = function()
+    vim.opt_local.foldmethod = "expr"
+    -- Use the modern Neovim 0.10+ foldexpr if available, else fallback
+    if vim.fn.has("nvim-0.10") == 1 then
+      vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    else
+      vim.opt_local.foldexpr = "nvim_treesitter#foldexpr()"
+    end
+  end,
+})
+
+
+-- Highlight on yank
+autocmd("TextYankPost", {
+  group = augroup("YankHighlight", { clear = true }),
+  desc = "Highlight copied text",
+  callback = function()
+    vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
+  end,
+})
+
+
+-- Check if we need to reload the file when it changed outside Neovim
 autocmd("FocusGained", {
-  command = "checktime"
+  group = augroup("CheckTime", { clear = true }),
+  callback = function()
+    vim.cmd.checktime()
+  end,
 })
 
 
--- Windows to close -----------------------------------------------------------
+-- Close specific windows with 'q'
 autocmd("FileType", {
+  group = augroup("CloseWithQ", { clear = true }),
   pattern = {
-    "OverseerForm",
-    "OverseerList",
-    "floggraph",
-    "fugitive",
-    "git",
-    "help",
-    "lspinfo",
-    "man",
-    "neotest-output",
-    "neotest-summary",
-    "qf",
-    "query",
-    "spectre_panel",
-    "startuptime",
-    "toggleterm",
-    "tsplayground",
-    "vim"
+    "OverseerForm", "OverseerList", "floggraph", "fugitive", "git",
+    "help", "lspinfo", "man", "neotest-output", "neotest-summary",
+    "qf", "query", "spectre_panel", "startuptime", "toggleterm",
+    "tsplayground", "vim"
   },
   callback = function(event)
     vim.bo[event.buf].buflisted = false
-    vim.keymap.set("n", "q", "<cmd>close<cr>", {buffer = event.buf, silent = true})
-  end
+    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true, desc = "Close window" })
+  end,
 })
 
 
--- Show cursor line only in active window -------------------------------------
-autocmd({"InsertLeave", "WinEnter"}, {
+-- Show cursor line only in active window
+local cursorline_grp = augroup("CursorLineToggle", { clear = true })
+
+autocmd({ "InsertLeave", "WinEnter" }, {
+  group = cursorline_grp,
   callback = function()
-    local ok, cl = pcall(vim.api.nvim_win_get_var, 0, "auto-cursorline")
-    if ok and cl then
+    if vim.w.auto_cursorline then
       vim.wo.cursorline = true
-      vim.api.nvim_win_del_var(0, "auto-cursorline")
+      vim.w.auto_cursorline = nil
     end
-  end
+  end,
 })
-autocmd({"InsertEnter", "WinLeave"}, {
+
+autocmd({ "InsertEnter", "WinLeave" }, {
+  group = cursorline_grp,
   callback = function()
-    local cl = vim.wo.cursorline
-    if cl then
-      vim.api.nvim_win_set_var(0, "auto-cursorline", cl)
+    if vim.wo.cursorline then
+      vim.w.auto_cursorline = true
       vim.wo.cursorline = false
     end
-  end
+  end,
 })
 
 
--- Change cursor highlight ----------------------------------------------------
-autocmd("TermEnter", {
-  command = "hi TermCursor guifg=#FFA000 guibg=NONE",
-})
+-- Active or deactivate UI elements in Insert Mode (Colorcolumn & Conceallevel)
+local insert_ui_grp = augroup("InsertModeUI", { clear = true })
 
-
--- Active or desactive colorcolumn --------------------------------------------
-local color_column = augroup("colorcolumn", {clear = true})
-
-autocmd({"InsertEnter"}, {
-  pattern = "*",
-  command = "set colorcolumn=80",
-  group = color_column
-})
-autocmd({"InsertLeave"}, {
-  pattern = "*",
-  command = "set colorcolumn=0",
-  group = color_column
-})
-
-
--- Disable the concealing in insertMode ---------------------------------------
-local conceal_level = augroup("conceallevel", {clear = true})
-
-autocmd({"InsertEnter"}, {
-  pattern = "*",
-  group = conceal_level,
-  command = "set conceallevel=0",
-})
-autocmd({"InsertLeave"}, {
-  pattern = "*",
-  group = conceal_level,
-  command = "set conceallevel=3",
-})
-
-
--- Disable semantic highlights ------------------------------------------------
-autocmd('ColorScheme', {
-  desc = 'Clear LSP highlight groups',
+autocmd("InsertEnter", {
+  group = insert_ui_grp,
   callback = function()
-    for _, group in ipairs(vim.fn.getcompletion('@lsp', 'highlight')) do
+    vim.opt_local.colorcolumn = "80"
+    vim.opt_local.conceallevel = 0
+  end,
+})
+
+autocmd("InsertLeave", {
+  group = insert_ui_grp,
+  callback = function()
+    vim.opt_local.colorcolumn = "0"
+    vim.opt_local.conceallevel = 3
+  end,
+})
+
+
+-- Disable semantic highlights from LSP
+autocmd("ColorScheme", {
+  group = augroup("ClearLSPHighlights", { clear = true }),
+  desc = "Clear LSP semantic highlight groups",
+  callback = function()
+    for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
       vim.api.nvim_set_hl(0, group, {})
     end
-  end
+  end,
 })
+

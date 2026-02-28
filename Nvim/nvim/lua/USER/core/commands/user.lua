@@ -1,71 +1,68 @@
-local usercmd = vim.api.nvim_create_user_command -- Create usercommand
+local usercmd = vim.api.nvim_create_user_command
 
-local simpleUserCmd = function(options, func)
-  usercmd(options.desc, func, options)
+-- Helper: simplified user command creation
+local function create_cmd(command_name, func, opts)
+  usercmd(command_name, func, opts or {})
 end
 
 
--- Generals -------------------------------------------------------------------
-simpleUserCmd({desc = "WindowNvim"},
-  function() require("nvim-window").pick() end)
+-- General --------------------------------------------------------------------
 
-
--- Mini -----------------------------------------------------------------------
-simpleUserCmd({desc = "MiniHipatterns", nargs = 0, bang = true, bar = true},
-  function() require("mini.hipatterns").toggle() end)
-
-simpleUserCmd({desc = "MiniStarter", nargs = 0, bang = true, bar = true},
-  function() require("mini.starter").open() end)
-
-simpleUserCmd({desc = "MiniDiffToggle", nargs = 0, bang = true},
-  function() require("mini.diff").toggle() end)
-
-simpleUserCmd({desc = "MiniFilesOpenHere", nargs = 0, bang = true, bar = true},
-  function() require("mini.files").open(vim.api.nvim_buf_get_name(0), false) end)
-
-simpleUserCmd({desc = "MiniPickGrep", nargs = 0, bang = false, bar = false},
-  function() require("mini.pick").builtin.grep_live() end)
-
-simpleUserCmd({desc = "MiniPickFiles", nargs = 0, bang = true, bar = true},
-  function() require("mini.pick").builtin.files() end)
-
-simpleUserCmd({desc = "MiniFiles", nargs = 0, bang = true, bar = true},
-  function() require("mini.files").open() end)
-
-simpleUserCmd({desc = "MiniNotifyHistory", nargs = 0, bang = true, bar = true},
-  function() require("mini.notify").show_history() end)
-
-simpleUserCmd({desc = "MiniDiffOnly", nargs = 1}, function(args)
-  local enable = tonumber(args.fargs[1]) or 0
-  vim.cmd("MiniDiffToggle")
-
-  local isEnabled = enable > 0
-  vim.cmd(isEnabled and "LspDiagnosticDisable" or "LspDiagnosticEnable")
-  print(string.format("[MiniDiffOnly] %s", isEnabled and "On" or "Off"))
+create_cmd("WindowNvim", function()
+  require("nvim-window").pick()
 end)
 
 
+-- Mini.nvim ------------------------------------------------------------------
+
+-- Simple commands that just call a single function
+local mini_commands = {
+  { name = "MiniHipatterns",    fn = function() require("mini.hipatterns").toggle() end },
+  { name = "MiniStarter",       fn = function() require("mini.starter").open() end },
+  { name = "MiniDiffToggle",    fn = function() require("mini.diff").toggle() end },
+  { name = "MiniPickGrep",      fn = function() require("mini.pick").builtin.grep_live() end },
+  { name = "MiniPickFiles",     fn = function() require("mini.pick").builtin.files() end },
+  { name = "MiniFiles",         fn = function() require("mini.files").open() end },
+  { name = "MiniNotifyHistory", fn = function() require("mini.notify").show_history() end },
+  { name = "MiniFilesOpenHere", fn = function() require("mini.files").open(vim.api.nvim_buf_get_name(0), false)end },
+}
+
+for _, cmd in ipairs(mini_commands) do
+  create_cmd(cmd.name, cmd.fn, { bang = true })
+end
+
+-- MiniDiffOnly (takes 1 argument: 0 = off, 1 = on)
+create_cmd("MiniDiffOnly", function(args)
+  local enable = (tonumber(args.fargs[1]) or 0) > 0
+  vim.cmd("MiniDiffToggle")
+  vim.cmd(enable and "LspDiagnosticDisable" or "LspDiagnosticEnable")
+  vim.notify(("[MiniDiffOnly] %s"):format(enable and "On" or "Off"))
+end, { nargs = 1 })
+
+
 -- Treesitter -----------------------------------------------------------------
-simpleUserCmd({desc = "TSHighlightEnable", bang = true},
-  function() vim.cmd("TSBufEnable highlight") end)
 
-simpleUserCmd({desc = "TSHighlightDisable", bang = true},
-  function() vim.cmd("TSBufDisable highlight") end)
+local ts_commands = {
+  TSHighlightEnable  = "TSBufEnable highlight",
+  TSHighlightDisable = "TSBufDisable highlight",
+}
 
-
--- Lsp diagnostic (thanks to: https://github.com/neovim/neovim/issues/13324#issuecomment-1592038788)
-simpleUserCmd({desc = "LspDiagnosticDisable", bang = true},
-  function(args) vim.diagnostic.disable(args.buf) end)
-
-simpleUserCmd({desc = "LspDiagnosticEnable", bang = true},
-  function(args) vim.diagnostic.enable(args.buf) end)
+for name, cmd_str in pairs(ts_commands) do
+  create_cmd(name, function() vim.cmd(cmd_str) end, { bang = true })
+end
 
 
--- Remove extra spaces --------------------------------------------------------
-simpleUserCmd({desc = "RemoveExtraSpaces", bang = true},
-  function()
-    local res = vim.fn.input("Are you sure? (y/n): ")
-    if res == "y" then
-      vim.cmd("%s/\\s\\{2,}/ /ge")
-    end
-  end)
+-- LSP Diagnostics ------------------------------------------------------------
+-- Thanks to: https://github.com/neovim/neovim/issues/13324#issuecomment-1592038788
+
+create_cmd("LspDiagnosticDisable", function(args) vim.diagnostic.disable(args.buf) end, { bang = true })
+create_cmd("LspDiagnosticEnable",  function(args) vim.diagnostic.enable(args.buf) end,  { bang = true })
+
+-- Utilities ------------------------------------------------------------------
+
+create_cmd("RemoveExtraSpaces", function()
+  if vim.fn.input("Are you sure? (y/n): ") == "y" then
+    vim.cmd([[%s/\s\{2,}/ /ge]])
+  end
+end, { bang = true })
+

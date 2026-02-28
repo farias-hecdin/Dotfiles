@@ -1,17 +1,24 @@
+-- Command-line abbreviations
 -- Thanks to: https://github.com/NormTurtle/Windots/blob/main/vi/init.lua
-local cmd = vim.cmd
 
--- Group 1
-cmd("cnoreabbrev q1  q!")
-cmd("cnoreabbrev qa1 qa!")
+local abbreviations = {
+  -- Force-quit shortcuts
+  { "q1",  "q!" },
+  { "qa1", "qa!" },
 
--- Group 2 (built-in)
-cmd("cnoreabbrev nw set numberwidth=4")
-cmd("cnoreabbrev mk mark")
-cmd("cnoreabbrev st sort")
-cmd("cnoreabbrev cc colorcolumn")
+  -- Built-in commands
+  { "nw", "set numberwidth=4" },
+  { "mk", "mark" },
+  { "st", "sort" },
+  { "cc", "colorcolumn" },
 
--- Group 3 (third-party)
-cmd("cnoreabbrev Mn MiniNotifyHistory")
-cmd("cnoreabbrev Tc MDToc")
-cmd("cnoreabbrev Ps PomodoroStart")
+  -- Third-party plugins
+  { "Mn", "MiniNotifyHistory" },
+  { "Tc", "MDToc" },
+  { "Ps", "PomodoroStart" },
+}
+
+for _, abbr in ipairs(abbreviations) do
+  vim.cmd.cnoreabbrev(abbr[1] .. " " .. abbr[2])
+end
+

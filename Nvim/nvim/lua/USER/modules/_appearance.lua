@@ -81,7 +81,7 @@ return {
           font_active = "none",
           mod_symbol = "",
           lsp_client_symbol = "󰭳 ",
-          lsp_client_character_length = false,
+          lsp_client_character_length = 1,
           branch_symbol = " "
         },
         mode_colors = {

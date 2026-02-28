@@ -68,7 +68,8 @@ M.setup_active_servers = function(activation_map, plugin, capabilities)
         less = { validate = true },
       },
     },
-    ts_ls = { -- Considera usar 'typescript-language-server' o 'tsserver'
+    -- Considera usar 'typescript-language-server' o 'tsserver'
+    ts_ls = {
       init_options = { hostInfo = 'neovim' },
       cmd = { 'typescript-language-server', '--stdio' },
       filetypes = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx' },
