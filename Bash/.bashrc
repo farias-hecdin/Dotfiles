@@ -47,12 +47,12 @@ __build_prompt() {
         [[ -z "$branch" ]] && branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
 
         # Comprobar si hay cambios sin confirmar (Dirty/Clean)
-        local status_icon="${WHITE}✓${RESET}" # Limpio
+        local status_icon="${WHITE} ${RESET}" # Limpio
         if [[ -n $(git status --porcelain 2>/dev/null) ]]; then
-            status_icon="${RED}✗${RESET}" # Modificado
+            status_icon="${RED}${RESET}" # Modificado
         fi
 
-        GIT_LINE="\n ${YELLOW} ${branch} ${status_icon}"
+        GIT_LINE="\n ${YELLOW}${branch} ${status_icon}"
     fi
 
     # 5. LÓGICA DE RPROMPT (Simulación del prompt derecho de Zsh para el código de salida)
@@ -66,7 +66,7 @@ __build_prompt() {
 
     # 6. CONSTRUIR EL PS1 FINAL
     # \u = usuario, \h = host, \w = ruta
-    PS1="${RIGHT_PROMPT} ${USER_HOST}\n󰉋 ${DIR}${GIT_LINE}\n╰─${PR_PROMPT} "
+    PS1="\n${RIGHT_PROMPT} ${USER_HOST}\n󰉋 ${DIR}${GIT_LINE}\n╰─${PR_PROMPT} "
 }
 
 # Ejecutar la función __build_prompt cada vez que se va a mostrar una nueva línea
