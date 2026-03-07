@@ -35,7 +35,7 @@ function run() {
   ZSH_THEME_GIT_PROMPT_PREFIX="%F{yellow} "
   ZSH_THEME_GIT_PROMPT_SUFFIX="%f"
   PROMPT="╭─ $USER_HOST $DIR $GIT_BRANCH $GIT_STATUS
-╰─$PR_PROMPT "
+╰─>$PR_PROMPT "
 }
 
 run

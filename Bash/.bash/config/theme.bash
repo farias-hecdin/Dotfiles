@@ -1,7 +1,3 @@
-# ============================================================================
-# PROMPT PERSONALIZADO PARA BASH (Sin Oh My Zsh)
-# ============================================================================
-
 # Limita la longitud de las rutas largas (ej. convierte /a/b/c/d en .../c/d)
 PROMPT_DIRTRIM=3
 
@@ -65,7 +61,6 @@ __build_prompt() {
     fi
 
     # 6. CONSTRUIR EL PS1 FINAL
-    # \u = usuario, \h = host, \w = ruta
     PS1="\n${RIGHT_PROMPT} ${USER_HOST}\n󰉋 ${DIR}${GIT_LINE}\n╰─${PR_PROMPT} "
 }
 
