@@ -1,16 +1,6 @@
 local D = require("USER.modules.utils.dir")
 
 return {
-  {
-    'arnamak/stay-centered.nvim',
-    lazy = false,
-  },
-  -- * quick-scope ------------------------------------------------------------
-  -- {
-  --   url = 'https://github.com/unblevable/quick-scope',
-  --   -- dir = D.plugin .. "quick-scope",
-  --   event = "InsertEnter",
-  -- },
   -- * sentiment-nvim ---------------------------------------------------------
   {
     -- url = "https://github.com/utilyre/sentiment.nvim.git",
@@ -43,3 +33,4 @@ return {
     }
   }
 }
+

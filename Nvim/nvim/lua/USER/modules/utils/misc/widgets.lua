@@ -38,8 +38,8 @@ W.word_and_character_counter = function(enable_wip)
   end
 
   return enable_wip
-    and (" %s:(󰚜 %s 󰾹 %s)"):format(words, format_wpm(), chars)
-    or (" %s:(󰾹 %s)"):format(words, chars)
+    and (" %s 󰚜 %s 󰾹 %s"):format(words, format_wpm(), chars)
+    or (" %s 󰾹 %s"):format(words, chars)
 end
 
 

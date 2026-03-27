@@ -68,4 +68,5 @@ export NNN_PLUG="j:autojump;"
 
 # other
 export PATH="$LOCAL_SHARE/luatiny:$PATH"
+export PATH="$LOCAL_SHARE/XMLmin:$PATH"
 

@@ -1,13 +1,12 @@
 local M = {}
 
-M.setup_active_servers = function(activation_map, plugin, capabilities)
-  local lspconfig = plugin
+M.setup_active_servers = function(activation_map, lspconfig, capabilities)
   local util = lspconfig.util
 
   local servers_setup = {
-    -- !Install with: pnpm i -g @astrojs/language-server OR :MasonInstall astro
+    -- !Install with: pnpm i -g @astrojs/language-server
     astro = {
-      capabilities = capabilities, -- Asegúrate que 'capabilities' esté definido
+      capabilities = capabilities,
       cmd = { 'astro-ls', '--stdio' },
       filetypes = { 'astro' },
       root_dir = util.root_pattern('package.json', 'tsconfig.json', 'jsconfig.json', '.git'),
@@ -17,11 +16,13 @@ M.setup_active_servers = function(activation_map, plugin, capabilities)
     },
     -- !Install with: pnpm i -g bash-language-server
     bashls = {
+      capabilities = capabilities,
       cmd = { 'bash-language-server', 'start' },
       filetypes = { 'bash', 'sh', 'zsh' },
     },
     -- !Install with: pkg install lua-language-server
     lua_ls = {
+      capabilities = capabilities,
       cmd = { 'lua-language-server' },
       filetypes = { 'lua' },
       settings = {
@@ -34,32 +35,34 @@ M.setup_active_servers = function(activation_map, plugin, capabilities)
           },
           completion = { callSnippet = "Replace" },
           telemetry = { enable = false },
-          workspace = { checkThirdParty = false }
-        }
-      }
+          workspace = { checkThirdParty = false },
+        },
+      },
     },
     -- !Install with: pnpm i -g emmet-ls
     emmet_ls = {
-      filetypes = {"astro", "html", "javascript", "javascriptreact", "php", "svelte", "typescriptreact", "vue"},
+      capabilities = capabilities,
+      filetypes = { "astro", "html", "javascript", "javascriptreact", "php", "svelte", "typescriptreact", "vue" },
       init_options = {
         showAbbreviationSuggestions = true,
         showExpandedAbbreviation = "always",
         html = {
           options = {
-            ["bem.enabled"] = true
-          }
-        }
-      }
+            ["bem.enabled"] = true,
+          },
+        },
+      },
     },
     -- !Install with: go install golang.org/x/tools/gopls@latest
     gopls = {
-      capabilities = capabilities, -- Asegúrate que 'capabilities' esté definido
+      capabilities = capabilities,
       cmd = { "/data/data/com.termux/files/home/" .. "go/bin/gopls", "serve" },
       root_dir = util.root_pattern("go.work", "go.mod", ".git"),
-      filetypes = { "go", "gomod", "gowork", "gotmpl" }
+      filetypes = { "go", "gomod", "gowork", "gotmpl" },
     },
     -- !Install with: pnpm i -g vscode-langservers-extracted
     cssls = {
+      capabilities = capabilities,
       cmd = { 'vscode-css-language-server', '--stdio' },
       filetypes = { 'css', 'scss', 'less' },
       settings = {
@@ -68,8 +71,9 @@ M.setup_active_servers = function(activation_map, plugin, capabilities)
         less = { validate = true },
       },
     },
-    -- Considera usar 'typescript-language-server' o 'tsserver'
+    -- !Install with: pnpm i -g typescript-language-server typescript
     ts_ls = {
+      capabilities = capabilities,
       init_options = { hostInfo = 'neovim' },
       cmd = { 'typescript-language-server', '--stdio' },
       filetypes = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx' },
@@ -79,11 +83,17 @@ M.setup_active_servers = function(activation_map, plugin, capabilities)
   }
 
   for _, server_names_list in pairs(activation_map) do
-    for _, server_name_to_setup in ipairs(server_names_list) do
-      local server_config_data = servers_setup[server_name_to_setup]
-      lspconfig[server_name_to_setup].setup(server_config_data)
+    for _, server_name in ipairs(server_names_list) do
+      local config = servers_setup[server_name]
+      if config then
+        lspconfig[server_name].setup(config)
+      else
+        -- Si no hay config personalizada, al menos pasar capabilities
+        lspconfig[server_name].setup({ capabilities = capabilities })
+      end
     end
   end
 end
 
 return M
+
