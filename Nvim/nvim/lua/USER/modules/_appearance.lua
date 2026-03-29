@@ -51,17 +51,17 @@ return {
     end
   },
   {
-    url = "https://github.com/farias-hecdin/staline.nvim.git",
-    -- dir = D.plugin .. "staline.nvim",
+    -- url = "https://github.com/farias-hecdin/staline.nvim.git",
+    dir = D.plugin .. "staline.nvim",
     event = "BufReadPre",
     config = function()
-      local counter = {'Staline', function() return W.word_and_character_counter(false) end}
+      local counter = {'Staline', function() return W.word_and_character_counter(true) end}
       local startuptime = {'Staline', function() return W.startuptime_lazy() end}
 
       require('staline').setup({
         sections = {
           left = {"-mode", " ", counter},
-          mid = {startuptime},
+          mid = {},
           right = {"diagnostics", "lsp_name", " ", "-line_column"}
         },
         inactive_sections = {

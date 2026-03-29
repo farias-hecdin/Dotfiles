@@ -102,7 +102,8 @@ local lsp_client_name = function()
         if string.len(display_name) > name_max_length then
             display_name = string.sub(display_name, 1, name_max_length) .. "…"
         end
-        return the_symbol .. #clients .. ":(" .. display_name .. ")"
+        -- return the_symbol .. #clients .. ":(" .. display_name .. ")"
+        return the_symbol .. #clients
     else
         return the_symbol .. clients_name
     end

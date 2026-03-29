@@ -45,6 +45,7 @@ opt.sidescrolloff  = 999                    -- Keep cursor centered horizontally
 opt.signcolumn     = "no"                   -- Hide sign column
 opt.smartcase      = true                   -- Case-sensitive if uppercase used
 opt.smartindent    = true                   -- Auto-indent new lines intelligently
+opt.smoothscroll   = true                   -- Desplazamiento gradual dentro de líneas largas
 opt.spell          = false                  -- Disable spell check
 opt.splitbelow     = true                   -- Horizontal splits go below
 opt.splitright     = true                   -- Vertical splits go right

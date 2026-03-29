@@ -21,26 +21,18 @@ end
 
 
 -- Count the total number of words and characters
-local WPM = 162.3
-
-W.word_and_character_counter = function(enable_wip)
+W.word_and_character_counter = function()
   local wc = vim.api.nvim_eval("wordcount()")
-  local words = wc.visual_words or wc.words
   local chars = wc.visual_chars
+  local words = wc.visual_words or wc.words
+  local tokens = math.ceil(words / 4)
 
   if not chars then
     return (" %s"):format(words)
   end
-
-  local function format_wpm()
-    local total_seconds = math.floor((words / WPM) * 60 + 0.5)
-    return ("%d.%02d"):format(total_seconds / 60, total_seconds % 60)
-  end
-
-  return enable_wip
-    and (" %s 󰚜 %s 󰾹 %s"):format(words, format_wpm(), chars)
-    or (" %s 󰾹 %s"):format(words, chars)
+  return (" %s 󰾹 %s 󰚩 %s"):format(words, chars, tokens)
 end
+
 
 
 -- 3rd party ------------------------------------------------------------------
@@ -62,5 +54,6 @@ W.lint_progress = function()
   local procs = lint.get_running_procs()
   return #procs == 0 and " OK" or " Wait…"
 end
+
 
 return W

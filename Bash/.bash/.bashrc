@@ -66,6 +66,11 @@ export PATH="$PNPM_HOME:$PATH"
 export NNN_PLUG="j:autojump;"
 # nnn end
 
+# golang
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+# golang end
+
 # other
 export PATH="$LOCAL_SHARE/luatiny:$PATH"
 export PATH="$LOCAL_SHARE/XMLmin:$PATH"
