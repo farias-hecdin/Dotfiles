@@ -57,11 +57,6 @@ LOCAL_SHARE="/data/data/com.termux/files/home/.local/share"
 export FZF_DEFAULT_OPTS="--height 90% --layout=reverse --border"
 # fzf end
 
-# pnpm
-export PNPM_HOME="/data/data/com.termux/files/home/.local/share/pnpm"
-export PATH="$PNPM_HOME:$PATH"
-# pnpm end
-
 # nnn
 export NNN_PLUG="j:autojump;"
 # nnn end
@@ -73,5 +68,6 @@ export PATH=$PATH:$GOPATH/bin
 
 # other
 export PATH="$LOCAL_SHARE/luatiny:$PATH"
-export PATH="$LOCAL_SHARE/XMLmin:$PATH"
+export PATH="$LOCAL_SHARE/Mp3red:$PATH"
+export PATH="$LOCAL_SHARE/lare:$PATH"
 

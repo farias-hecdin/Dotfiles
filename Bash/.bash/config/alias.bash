@@ -1,6 +1,7 @@
 ### Distro --------------------------------------------------------------------
 
 alias os="proot-distro login"
+alias os-source="cd ~/../usr/var/lib/proot-distro/installed-rootfs"
 
 ### APP CONFIGURATION ---------------------------------------------------------
 

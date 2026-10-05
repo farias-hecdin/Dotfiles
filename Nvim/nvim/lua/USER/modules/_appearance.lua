@@ -12,45 +12,8 @@ return {
       tabpage_section = "right"
     }
   },
-  -- * mini.starter -----------------------------------------------------------
   {
-    -- url = "https://github.com/echasnovski/mini.starter.git",
-    dir = D.plugin .. "mini.starter",
-    cond = function()
-      local request, _ = pcall(require, 'which-key')
-      if request then
-        return true
-      end
-    end,
-    config = function()
-      local starter = require("mini.starter")
-      require("mini.starter").setup({
-        autoopen = false,
-        items = {
-          {action = "bdelete", name = "Back to the editor.", section = "Builtin (actions)"},
-          {action = "qall", name = "Quit Neovim", section = "Builtin (actions)"},
-          {action = "enew", name = "Create a new buffer", section = "Builtin (actions)"},
-          {action = "NnnPicker %:p:h", name = "Open the file manager", section = "Builtin (actions)"},
-          starter.sections.recent_files(20, true),
-          starter.sections.recent_files(40, false)
-        },
-        content_hooks = {
-          starter.gen_hook.adding_bullet(),
-          starter.gen_hook.indexing("section"),
-          starter.gen_hook.padding(6, 1)
-        },
-        header = W.date() ..
-        "  " ..
-        W.time() ..
-        "\n\nOptions" ..
-        "\n [a] Builtin: actions" ..
-        "\n [b] Recent files: current directory" ..
-        "\n [c] Recent files: general\n" .. "\n<C-c> Close this buffer",
-        footer = "<C-c> Close this buffer"
-      })
-    end
-  },
-  {
+    -- !Change:
     -- url = "https://github.com/farias-hecdin/staline.nvim.git",
     dir = D.plugin .. "staline.nvim",
     event = "BufReadPre",

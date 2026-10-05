@@ -14,12 +14,7 @@ local SYM_WARN = COLOR_YELLOW .. "⚠" .. COLOR_RESET
 local BOLD = "\27[1m"
 local UNBOLD = "\27[22m"
 
-local unwanted_files = {
-  "*.jpeg", "*.log", "*.css", "*.gif", "*.html", "*.jpg", "*.mp4", "*.png", "*.toml", "*.yml", "*.md",
-  ".gitignore", ".editorconfig", ".gitattributes", ".luacheckrc", ".luarc.json", ".npmrc",
-  ".pre-commit-config.yaml", ".themisrc", ".vimrc", "CHANGELOG.md", "TODO.md", "CONTRIBUTING.md",
-  "Makefile", ".styluaignore", ".rockspec", ".lua-format"
-}
+local unwanted_files = {"*.jpeg", "*.log", "*.css", "*.gif", "*.html", "*.jpg", "*.mp4", "*.png", ".gitignore", ".editorconfig", ".gitattributes", ".luacheckrc", ".luarc.json", ".npmrc", ".pre-commit-config.yaml", ".themisrc", ".vimrc", "CHANGELOG.md", "TODO.md", "CONTRIBUTING.md", "Makefile", ".styluaignore", ".rockspec", ".lua-format"}
 
 local unwanted_folders = {".git", ".github", "_test", "test", "tests"}
 

@@ -1,0 +1,75 @@
+---
+// Frontmatter: se ejecuta en el servidor en tiempo de build
+export interface Props {
+  title: string;
+  description?: string;
+  showHero?: boolean;
+}
+
+const { title, description = "Página por defecto", showHero = true } = Astro.props;
+
+const navItems = [
+  { label: "Inicio", href: "/" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contacto", href: "/contacto" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            class={currentPath === item.href ? "active" : ""}
+            aria-current={currentPath === item.href ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+    </header>
+
+    {showHero && (
+      <section class="hero">
+        <h1>{title}</h1>
+        <p>{description}</p>
+        <slot name="hero-cta" />
+      </section>
+    )}
+
+    <main>
+      <slot />
+    </main>
+
+    <!-- Componente interactivo hidratado en el cliente -->
+    <Counter client:load initial={0} />
+
+    <footer>
+      <p>Renderizado el {new Date().toLocaleDateString("es-ES")}</p>
+    </footer>
+
+    <style>
+      .hero {
+        padding: 4rem 1rem;
+        text-align: center;
+        background: linear-gradient(135deg, #1e1b4b, #312e81);
+        color: white;
+      }
+      nav a.active {
+        color: #818cf8;
+        font-weight: 600;
+      }
+    </style>
+  </body>
+</html>

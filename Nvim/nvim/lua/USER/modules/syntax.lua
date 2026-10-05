@@ -1,26 +1,10 @@
-local D = require("USER.modules.utils.dir")
-
 return {
-  -- * nvim-treesitter --------------------------------------------------------
+  -- * tree-sitter-manager --------------------------------------------------------
   {
-    "nvim-treesitter/nvim-treesitter",
-    -- commit = "65ef62092ef997d2ecf68ede01a0afbda17808c3",
-    -- pin = true,
-    cond = D.notContainFiletype({"nim"}),
-    event = {"BufReadPre", "BufNewFile"},
-    cmd = {"TSUpdateSync", "TSUpdate", "TSInstall"},
-    init = function(plugin)
-      require("lazy.core.loader").add_to_rtp(plugin)
-      require("nvim-treesitter.query_predicates")
-    end,
+    "romus204/tree-sitter-manager.nvim",
+    lazy = false,
     config = function()
-      require("nvim-treesitter.configs").setup({
-        highlight = {enable = true},
-        autotag = {enable = false},
-        indent = {
-          enable = true,
-          disable = {"python", "shell"}
-        },
+      require("tree-sitter-manager").setup({
         ensure_installed = {
           "html", "css",
           "javascript", "typescript", "tsx", "astro",
@@ -32,7 +16,11 @@ return {
           -- "sql",
           -- zig
         },
-        auto_install = false
+        -- auto_install = false, -- if enabled, install missing parsers when editing a new file
+        -- highlight = true, -- treesitter highlighting is enabled by default
+        -- languages = {}, -- override or add new parser sources
+        -- parser_dir = vim.fn.stdpath("data") .. "/site/parser",
+        -- query_dir = vim.fn.stdpath("data") .. "/site/queries",
       })
     end
   }

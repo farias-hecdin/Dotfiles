@@ -5,7 +5,7 @@ return {
   -- * nvim-lspconfig ---------------------------------------------------------
   {
     "neovim/nvim-lspconfig",
-    cond = D.notContainFiletype({ "nim", "md" }),
+    cond = D.notContainFiletype({ "nim", "markdown" }),
     cmd = "LspInfo",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { "hrsh7th/cmp-nvim-lsp" },

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Ejemplo de marcado semántico HTML5" />
+    <title>Dashboard — Ejemplo</title>
+    <link rel="stylesheet" href="example.css" />
+    <script type="module" src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav aria-label="Principal">
+        <a href="/" class="logo">MiApp</a>
+        <ul role="list">
+          <li><a href="/dashboard">Dashboard</a></li>
+          <li><a href="/settings">Ajustes</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h1>Resumen del sistema</h1>
+
+      <section class="stats" aria-labelledby="stats-heading">
+        <h2 id="stats-heading">Estadísticas</h2>
+        <div class="grid">
+          <article class="card" data-animate="true">
+            <h3>Usuarios</h3>
+            <p class="metric">1,240</p>
+            <progress value="74" max="100">74%</progress>
+          </article>
+          <article class="card" data-animate="true">
+            <h3>Ingresos</h3>
+            <p class="metric">$<data value="45200">45,200</data></p>
+          </article>
+        </div>
+      </section>
+
+      <dialog id="modal">
+        <form method="dialog">
+          <p>¿Confirmar acción?</p>
+          <button value="confirm">Sí</button>
+          <button value="cancel">Cancelar</button>
+        </form>
+      </dialog>
+    </main>
+
+    <footer>
+      <small>© 2026 MiApp. Todos los derechos reservados.</small>
+    </footer>
+  </body>
+</html>
+

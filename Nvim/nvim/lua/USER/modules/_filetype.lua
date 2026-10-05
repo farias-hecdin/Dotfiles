@@ -22,27 +22,18 @@ return {
     config = true
   },
   -- * CSSColorConverter ------------------------------------------------------
-  {
-    -- url = "https://github.com/farias-hecdin/CSSColorConverter.git",
-    dir = D.plugin .. "CSSColorConverter",
-    ft = "css",
-    config = true
-  },
-  -- * nvim-px-to-rem ---------------------------------------------------------
-  {
-    -- url = "https://github.com/jsongerber/nvim-px-to-rem.git",
-    dir = D.plugin .. "nvim-px-to-rem",
-    cmd = {"PxToRemCursor", "PxToRemLine"},
-    opts = {
-      add_cmp_source = false,
-      disable_keymaps = true
-    }
-  },
+  -- {
+  --   -- url = "https://github.com/farias-hecdin/CSSColorConverter.git",
+  --   dir = D.plugin .. "CSSColorConverter",
+  --   ft = "css",
+  --   config = true
+  -- },
   -- * mini-hipatterns --------------------------------------------------------
   {
     -- url = "https://github.com/echasnovski/mini.hipatterns.git",
     dir = D.plugin .. "mini.hipatterns",
     event = "InsertEnter",
+    ft = "css",
     cmd = "MiniHipatterns",
     config = function()
       local hipatterns = require("mini.hipatterns")

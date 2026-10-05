@@ -4,128 +4,156 @@ local fos = require('CSSVarHighlight.file_ops')
 local cvr = require('CSSVarHighlight.convert_color')
 local gdt = require('CSSVarHighlight.get_data')
 
+local AUGROUP = vim.api.nvim_create_augroup("CSSVarHighlight", { clear = true })
+
+-- Tracking state for the currently configured target file.
+local g_state = {
+  fname = nil, -- e.g. "main.css" (nil until the command runs at least once)
+  fdir = nil,  -- explicit directory override (nil = search upwards from cwd)
+  depth = nil,
+  fpath = nil, -- resolved path once found; nil while unresolved
+}
+
 local g_colorsFromFile = {}
-local g_lastFile, g_lastDir = nil, nil
-local g_isPluginInitialized, g_showLog = false, true
+local g_pluginReady = false -- true once at least one successful load happened
+local g_lastFname = nil     -- used only to avoid noisy "reloaded" spam
+
+--- Lazily requires 'mini.hipatterns', printing a single clear warning if
+-- it isn't installed. Cached lookups are basically free (require caches
+-- modules internally), this just centralizes the error message.
+local function get_hipatterns()
+  local ok, plugin = pcall(require, "mini.hipatterns")
+  if not ok then
+    vim.print("[CSSVarHighlight] The 'mini.hipatterns' plugin was not found.")
+    return nil
+  end
+  return plugin
+end
 
 M.setup = function(options)
-  -- Merge the user-provided options with the default options
   cfg.options = vim.tbl_deep_extend("keep", options or {}, cfg.options)
-  -- Enable keymap if they are not disableds
+
   if not cfg.options.disable_keymaps then
-    local keymaps_opts = {buffer = 0, silent = true}
     vim.api.nvim_create_autocmd('FileType', {
+      group = AUGROUP,
       desc = 'CSSVarHighlight keymaps',
       pattern = 'css',
       callback = function()
-        vim.keymap.set('n', '<leader>ch', ":CSSVarHighlight<CR>", keymaps_opts)
+        vim.keymap.set('n', '<leader>ch', ":CSSVarHighlight<CR>", { buffer = 0, silent = true })
       end,
     })
   end
+
+  -- Reload only when the TRACKED file is saved, not any *.css file.
+  -- Comparing against the resolved path avoids re-walking directories and
+  -- re-parsing on every unrelated CSS write.
+  vim.api.nvim_create_autocmd("BufWritePost", {
+    group = AUGROUP,
+    pattern = "*.css",
+    callback = function(args)
+      if not g_state.fname then return end -- tracking not started yet
+
+      vim.schedule(function()
+        local saved_path = vim.fn.fnamemodify(args.file, ":p")
+        local tracked_path = g_state.fpath and vim.fn.fnamemodify(g_state.fpath, ":p")
+        local saved_matches_tracked_name =
+          vim.fn.fnamemodify(args.file, ":t") == vim.fn.fnamemodify(g_state.fname, ":t")
+
+        if tracked_path == saved_path then
+          M.get_colors_from_file(g_state.depth, g_state.fname, g_state.fdir)
+        elseif not g_state.fpath and saved_matches_tracked_name then
+          -- The tracked file didn't exist before; this save might have just created it.
+          M.get_colors_from_file(g_state.depth, g_state.fname, g_state.fdir)
+        end
+        -- Any other *.css save is irrelevant: skip entirely, no I/O at all.
+      end)
+    end,
+  })
 end
 
--- Analyze the arguments provided
-local function parse_args(args)
-  local attempt_limit = tonumber(cfg.options.parent_search_limit)
-  local fname = g_lastFile or cfg.options.filename_to_track
-  local fdir = g_lastDir or nil
-  local num_args = #args.fargs
+--- Analyze the arguments provided to :CSSVarHighlight
+local function parse_args(fargs)
+  local depth = g_state.depth or tonumber(cfg.options.parent_search_limit)
+  local fname = g_state.fname or (cfg.options.filename_to_track .. ".css")
+  local fdir = g_state.fdir
 
-  if num_args > 0 then
-    local arg1, numArg1 = args.fargs[1], tonumber(arg1)
-    if numArg1 then
-      attempt_limit = numArg1
+  if fargs[1] then
+    local as_number = tonumber(fargs[1])
+    if as_number then
+      depth = as_number
     else
-      fname = arg1
+      fname = fargs[1] .. ".css"
     end
   end
 
-  if num_args > 1 then
-    local arg2 = args.fargs[2]
-    if string.match(arg2, '^%d+$')  then
-      attempt_limit = tonumber(arg2)
+  if fargs[2] then
+    if fargs[2]:match('^%d+$') then
+      depth = tonumber(fargs[2])
     else
-      fdir = arg2
+      fdir = fargs[2]
     end
   end
 
-  return attempt_limit, fname, fdir
+  return depth, fname, fdir
 end
 
---- Create a user command
 vim.api.nvim_create_user_command("CSSVarHighlight", function(args)
-  local attempt_limit, fname, fdir = parse_args(args)
-  g_lastFile, g_lastDir = fname, fdir
-  if g_lastFile ~= fname then
-    g_showLog = true
+  local depth, fname, fdir = parse_args(args.fargs)
+  local fname_changed = fname ~= g_state.fname
+
+  g_state.fname, g_state.fdir, g_state.depth = fname, fdir, depth
+  g_state.fpath = nil -- explicit invocation always re-searches from scratch
+
+  M.get_colors_from_file(depth, fname, fdir, fname_changed)
+end, { desc = "Track the colors of the CSS variables", nargs = "*" })
+
+--- Retrieves color values from a file and updates the mini.hipatterns plugin.
+-- @param log_reload boolean|nil Forces the "data updated" message even if
+--        the file name hasn't changed (used on explicit command calls).
+M.get_colors_from_file = function(depth, fname, fdir, log_reload)
+  local fpath = g_state.fpath
+
+  if not fpath or not fos.file_exists(fpath) then
+    fpath = fos.find_file(fname, fdir, depth)
+    if not fpath then
+      vim.print("[CSSVarHighlight] Attempt limit reached. Operation cancelled.")
+      return false
+    end
+    g_state.fpath = fpath
   end
 
-  local data = M.get_colors_from_file(attempt_limit, fname .. ".css", fdir)
-  if not data then
-    return
-  end
-
-  -- Event to auto-reload the data when save
-  if not g_isPluginInitialized then
-    vim.api.nvim_create_autocmd({"BufWritePost"}, {
-      pattern = "*.css",
-      callback = function()
-        vim.schedule(function()
-          vim.cmd('CSSVarHighlight')
-        end)
-      end
-    })
-  end
-
-  g_isPluginInitialized = true
-end, {desc = "Track the colors of the CSS variables", nargs = "*"})
-
---- Retrieves color values from a file and updates the mini.hipatterns plugin
-M.get_colors_from_file = function(attempt_limit, fname, fdir)
-  -- Search for the file with the given parameters.
-  local fpath = fos.find_file(fname, fdir, 1, attempt_limit)
-  if not fpath then
-    vim.print("[CSSVarHighlight] Attempt limit reached. Operation cancelled.")
-    return false
-  end
-  -- Extract colors from the found file.
   local data = gdt.get_css_attribute(fpath, cfg.options.variable_pattern)
   g_colorsFromFile = cvr.convert_color(data)
-  -- Try to load the 'mini.hipatterns' plugin.
-  local plugin_ok, _ = pcall(require, "mini.hipatterns")
-  if not plugin_ok then
-    vim.print("[CSSVarHighlight] The 'mini.hipatterns' plugin was not found.")
-    return
-  end
 
-  vim.cmd('lua MiniHipatterns.update()')
-  if g_showLog then
+  local hipatterns = get_hipatterns()
+  if not hipatterns then return false end
+
+  g_pluginReady = true
+  hipatterns.update() -- direct call, no vim.cmd string parsing involved
+
+  if log_reload or fname ~= g_lastFname then
     vim.print("[CSSVarHighlight] The data has been updated. " .. os.date("%H:%M:%S"))
-    g_showLog = false
   end
+  g_lastFname = fname
+
   return true
 end
 
 --- Retrieves the settings for the mini.hipatterns plugin
 M.get_settings = function()
-  local plugin_ok, plugin = pcall(require, "mini.hipatterns")
-  if not plugin_ok then
-    vim.print("[CSSVarHighlight] The 'mini.hipatterns' plugin was not found.")
-    return
-  end
+  local hipatterns = get_hipatterns()
+  if not hipatterns then return nil end
 
-  local data = {
+  return {
     pattern = "var%(" .. cfg.options.variable_pattern .. "%)",
-    group = function (_, match)
-      local match_value = match:match("var%((.+)%)")
-      local color = g_colorsFromFile[match_value] or cfg.options.initial_variable_color
-      if g_isPluginInitialized then
-        return plugin.compute_hex_color_group(color, "bg")
-      end
-      return nil
-    end
+    group = function(_, match)
+      if not g_pluginReady then return nil end
+      local key = match:match("var%((.+)%)")
+      local color = g_colorsFromFile[key] or cfg.options.initial_variable_color
+      return hipatterns.compute_hex_color_group(color, "bg")
+    end,
   }
-  return data
 end
 
 return M
+

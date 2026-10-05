@@ -1,23 +1,26 @@
 local M = {}
-local fos = require('CSSVarViewer.file_ops')
 
-local extract_key_value = function(data)
-  local key, value = data:match("([-_%w]+)%s*:%s*([^;]+)")
-  return key, value:gsub("^%s+", ""):gsub("%s+$", "")
-end
-
-M.get_css_attribute = function(fpath, properties)
-  local content = fos.open_file(fpath)
-  local captured_data = fos.extract_from_file(content, "[-_%w]+%s*:%s*[^;]+")
-
+--- Extracts CSS custom properties (variables) matching `pattern` from a file.
+-- Single pass over the file: no intermediate tables, no double regex.
+-- @param fpath string Path to the CSS file.
+-- @param pattern string Lua pattern used to filter property names.
+-- @return table<string, string> Map of property name -> value.
+M.get_css_attribute = function(fpath, pattern)
   local key_value_pairs = {}
-  for _, data in ipairs(captured_data) do
-    local key, value = extract_key_value(data)
-    if key:match(properties) then
-      key_value_pairs[key] = value
+
+  local file = io.open(fpath, "r")
+  if not file then return key_value_pairs end
+
+  for line in file:lines() do
+    local key, value = line:match("([-_%w]+)%s*:%s*([^;]+)")
+    if key and key:match(pattern) then
+      key_value_pairs[key] = value:match("^%s*(.-)%s*$")
     end
   end
+  file:close()
+
   return key_value_pairs
 end
 
 return M
+
